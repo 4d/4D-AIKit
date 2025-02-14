@@ -151,8 +151,11 @@ Function _headers() : Object
 	
 	// MARK:- client functions
 	
-Function _request($httpMethod : Text; $path : Text; $body : Object; $parameters : cs:C1710.OpenAIParameters) : cs:C1710.OpenAIResult
-	var $result:=cs:C1710.OpenAIResult.new()
+Function _request($httpMethod : Text; $path : Text; $body : Object; $parameters : cs:C1710.OpenAIParameters; $resultType : 4D:C1709.Class) : cs:C1710.OpenAIResult
+	If ($resultType=Null:C1517)
+		$resultType:=cs:C1710.OpenAIResult
+	End if 
+	var $result:=$resultType.new()
 	
 	var $url:=This:C1470.baseURL+$path
 	var $headers:=This:C1470._headers()
@@ -163,7 +166,7 @@ Function _request($httpMethod : Text; $path : Text; $body : Object; $parameters 
 		$headers["Content-Type"]:="application/json"
 		$options.body:=$body
 	End if 
-	If (($parameter#Null:C1517) && ($parameters.timeout>0))
+	If (($parameters#Null:C1517) && ($parameters.timeout>0))
 		$options.timeout:=$parameters.timeout
 	Else 
 		$options.timeout:=This:C1470.timeout
@@ -175,18 +178,18 @@ Function _request($httpMethod : Text; $path : Text; $body : Object; $parameters 
 	
 	return $result
 	
-Function _get($path : Text; $parameters : cs:C1710.OpenAIParameters) : cs:C1710.OpenAIResult
-	return This:C1470._request("GET"; $path; Null:C1517; $parameters)
+Function _get($path : Text; $parameters : cs:C1710.OpenAIParameters; $resultType : 4D:C1709.Class) : cs:C1710.OpenAIResult
+	return This:C1470._request("GET"; $path; Null:C1517; $parameters; $resultType)
 	
-Function _post($path : Text; $body : Variant; $parameters : cs:C1710.OpenAIParameters) : cs:C1710.OpenAIResult
-	return This:C1470._request("POST"; $path; $body; $parameters)
+Function _post($path : Text; $body : Variant; $parameters : cs:C1710.OpenAIParameters; $resultType : 4D:C1709.Class) : cs:C1710.OpenAIResult
+	return This:C1470._request("POST"; $path; $body; $parameters; $resultType)
 	
-Function _delete($path : Text; $parameters : cs:C1710.OpenAIParameters) : cs:C1710.OpenAIResult
-	return This:C1470._request("DELETE"; $path; Null:C1517; $parameters)
+Function _delete($path : Text; $parameters : cs:C1710.OpenAIParameters; $resultType : 4D:C1709.Class) : cs:C1710.OpenAIResult
+	return This:C1470._request("DELETE"; $path; Null:C1517; $parameters; $resultType)
 	
-Function _getApiList($path : Text; $queryParameters : Object; $parameters : cs:C1710.OpenAIParameters) : cs:C1710.OpenAIResult
+Function _getApiList($path : Text; $queryParameters : Object; $parameters : cs:C1710.OpenAIParameters; $resultType : 4D:C1709.Class) : cs:C1710.OpenAIResult
 	// TODO: same as get but maybe with post processing 
-	return This:C1470._request("GET"; $path+This:C1470._encodeQueryParameters($queryParameters); Null:C1517; $parameters)
+	return This:C1470._request("GET"; $path+This:C1470._encodeQueryParameters($queryParameters); Null:C1517; $parameters; $resultType)
 	
 Function _encodeQueryParameter($value : Variant) : Text
 	// TODO: more encoding stuff, escaping if needed, etc...

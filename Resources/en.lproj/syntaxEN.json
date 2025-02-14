@@ -27,6 +27,32 @@
 				"Summary": ""
 			}
 		},
+		"OpenAIChat": {
+			"new()": {
+				"Syntax": "**.new**( *client* : cs.ai.OpenAI )",
+				"Params": [
+					[
+						"client",
+						"cs.ai.OpenAI",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"OpenAI": {
+			"new()": {
+				"Syntax": "**.new**( *...* : Variant )",
+				"Params": [
+					[
+						"",
+						"Variant",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
 		"OpenAIImageParameters": {
 			"new()": {
 				"Syntax": "**.new**( *object* : Object )",
@@ -66,6 +92,19 @@
 				"Summary": ""
 			}
 		},
+		"OpenAIChatCompletionsListParameters": {
+			"new()": {
+				"Syntax": "**.new**( *object* : Object )",
+				"Params": [
+					[
+						"object",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
 		"OpenAIModerations": {
 			"new()": {
 				"Syntax": "**.new**( *client* : cs.ai.OpenAI )",
@@ -79,7 +118,7 @@
 				"Summary": ""
 			}
 		},
-		"OpenAIChatCompletionsListParameters": {
+		"OpenAIChatCompletionsMessagesParameters": {
 			"new()": {
 				"Syntax": "**.new**( *object* : Object )",
 				"Params": [
@@ -158,45 +197,6 @@
 					[
 						"object",
 						"Object",
-						"->"
-					]
-				],
-				"Summary": ""
-			}
-		},
-		"OpenAIChatCompletionsMessagesParameters": {
-			"new()": {
-				"Syntax": "**.new**( *object* : Object )",
-				"Params": [
-					[
-						"object",
-						"Object",
-						"->"
-					]
-				],
-				"Summary": ""
-			}
-		},
-		"OpenAI": {
-			"new()": {
-				"Syntax": "**.new**( *...* : Variant )",
-				"Params": [
-					[
-						"",
-						"Variant",
-						"->"
-					]
-				],
-				"Summary": ""
-			}
-		},
-		"OpenAIChat": {
-			"new()": {
-				"Syntax": "**.new**( *client* : cs.ai.OpenAI )",
-				"Params": [
-					[
-						"client",
-						"cs.ai.OpenAI",
 						"->"
 					]
 				],
@@ -287,6 +287,47 @@
 		},
 		"_inheritedFrom_": "OpenAIAPIResource"
 	},
+	"OpenAIChat": {
+		"completions": {
+			"Syntax": "completions : cs.ai.OpenAIChatCompletions"
+		},
+		"_inheritedFrom_": "OpenAIAPIResource"
+	},
+	"OpenAI": {
+		"project": {
+			"Syntax": "project : Text"
+		},
+		"organization": {
+			"Syntax": "organization : Text"
+		},
+		"chat": {
+			"Syntax": "chat : cs.ai.OpenAIChat"
+		},
+		"baseURL": {
+			"Syntax": "baseURL : Text"
+		},
+		"apiKey": {
+			"Syntax": "apiKey : Text"
+		},
+		"timeout": {
+			"Syntax": "timeout : Real"
+		},
+		"models": {
+			"Syntax": "models : cs.ai.OpenAIModels"
+		},
+		"moderations": {
+			"Syntax": "moderations : cs.ai.OpenAIModerations"
+		},
+		"completions": {
+			"Syntax": "completions : cs.ai.OpenAICompletions"
+		},
+		"images": {
+			"Syntax": "images : cs.ai.OpenAIImages"
+		},
+		"maxRetries": {
+			"Syntax": "maxRetries : Integer"
+		}
+	},
 	"OpenAIImageParameters": {
 		"body()": {
 			"Syntax": "**.body**() : Object",
@@ -337,6 +378,36 @@
 		},
 		"_inheritedFrom_": "OpenAIAPIResource"
 	},
+	"OpenAIImagesResult": {
+		"saveImageToDisk()": {
+			"Syntax": "**.saveImageToDisk**( *folder* : 4D.Folder ) : Boolean",
+			"Params": [
+				[
+					"folder",
+					"4D.Folder",
+					"->"
+				],
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get images()": {
+			"Syntax": "**.get images**() : Collection",
+			"Params": [
+				[
+					"",
+					"Collection",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIResult"
+	},
 	"OpenAIModels": {
 		"list()": {
 			"Syntax": "**.list**( *parameters* : cs.ai.OpenAIParameters ) : cs.ai.OpenAIResult",
@@ -357,35 +428,6 @@
 		"retrieve()": {
 			"Syntax": "**.retrieve**( *model* : Text; *parameters* : cs.ai.OpenAIParameters ) : cs.ai.OpenAIResult",
 			"Params": [
-				[
-					"model",
-					"Text",
-					"->"
-				],
-				[
-					"parameters",
-					"cs.ai.OpenAIParameters",
-					"->"
-				],
-				[
-					"",
-					"cs.ai.OpenAIResult",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"_inheritedFrom_": "OpenAIAPIResource"
-	},
-	"OpenAIModerations": {
-		"create()": {
-			"Syntax": "**.create**( *input* : Variant; *model* : Text; *parameters* : cs.ai.OpenAIParameters ) : cs.ai.OpenAIResult",
-			"Params": [
-				[
-					"input",
-					"Variant",
-					"->"
-				],
 				[
 					"model",
 					"Text",
@@ -435,6 +477,69 @@
 		},
 		"_inheritedFrom_": "OpenAIParameters"
 	},
+	"OpenAIModerations": {
+		"create()": {
+			"Syntax": "**.create**( *input* : Variant; *model* : Text; *parameters* : cs.ai.OpenAIParameters ) : cs.ai.OpenAIResult",
+			"Params": [
+				[
+					"input",
+					"Variant",
+					"->"
+				],
+				[
+					"model",
+					"Text",
+					"->"
+				],
+				[
+					"parameters",
+					"cs.ai.OpenAIParameters",
+					"->"
+				],
+				[
+					"",
+					"cs.ai.OpenAIResult",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIAPIResource"
+	},
+	"Moderation": {
+		"results": {
+			"Syntax": "results : Collection"
+		},
+		"model": {
+			"Syntax": "model : Text"
+		},
+		"id": {
+			"Syntax": "id : Text"
+		}
+	},
+	"OpenAIChatCompletionsMessagesParameters": {
+		"body()": {
+			"Syntax": "**.body**() : Object",
+			"Params": [
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"order": {
+			"Syntax": "order : Text"
+		},
+		"limit": {
+			"Syntax": "limit : Integer"
+		},
+		"after": {
+			"Syntax": "after : Text"
+		},
+		"_inheritedFrom_": "OpenAIParameters"
+	},
 	"OpenAIAPIResource": {},
 	"OpenAIParameters": {
 		"body()": {
@@ -447,6 +552,12 @@
 				]
 			],
 			"Summary": ""
+		},
+		"user": {
+			"Syntax": "user : Text"
+		},
+		"timeout": {
+			"Syntax": "timeout : Real"
 		}
 	},
 	"OpenAIChatCompletions": {
@@ -562,7 +673,7 @@
 	},
 	"OpenAIImages": {
 		"generate()": {
-			"Syntax": "**.generate**( *prompt* : Text; *parameters* : cs.ai.OpenAIImageParameters ) : cs.ai.OpenAIResult",
+			"Syntax": "**.generate**( *prompt* : Text; *parameters* : cs.ai.OpenAIImageParameters ) : cs.ai.OpenAIImagesResult",
 			"Params": [
 				[
 					"prompt",
@@ -576,7 +687,7 @@
 				],
 				[
 					"",
-					"cs.ai.OpenAIResult",
+					"cs.ai.OpenAIImagesResult",
 					"<-"
 				]
 			],
@@ -624,77 +735,5 @@
 			"Syntax": "model : Text"
 		},
 		"_inheritedFrom_": "OpenAIParameters"
-	},
-	"Moderation": {
-		"results": {
-			"Syntax": "results : Collection"
-		},
-		"model": {
-			"Syntax": "model : Text"
-		},
-		"id": {
-			"Syntax": "id : Text"
-		}
-	},
-	"OpenAIChatCompletionsMessagesParameters": {
-		"body()": {
-			"Syntax": "**.body**() : Object",
-			"Params": [
-				[
-					"",
-					"Object",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"order": {
-			"Syntax": "order : Text"
-		},
-		"limit": {
-			"Syntax": "limit : Integer"
-		},
-		"after": {
-			"Syntax": "after : Text"
-		},
-		"_inheritedFrom_": "OpenAIParameters"
-	},
-	"OpenAI": {
-		"project": {
-			"Syntax": "project : Text"
-		},
-		"organization": {
-			"Syntax": "organization : Text"
-		},
-		"baseURL": {
-			"Syntax": "baseURL : Text"
-		},
-		"apiKey": {
-			"Syntax": "apiKey : Text"
-		},
-		"models": {
-			"Syntax": "models : cs.ai.OpenAIModels"
-		},
-		"moderations": {
-			"Syntax": "moderations : cs.ai.OpenAIModerations"
-		},
-		"completions": {
-			"Syntax": "completions : cs.ai.OpenAICompletions"
-		},
-		"images": {
-			"Syntax": "images : cs.ai.OpenAIImages"
-		},
-		"maxRetries": {
-			"Syntax": "maxRetries : Integer"
-		},
-		"chat": {
-			"Syntax": "chat : cs.ai.OpenAIChat"
-		}
-	},
-	"OpenAIChat": {
-		"completions": {
-			"Syntax": "completions : cs.ai.OpenAIChatCompletions"
-		},
-		"_inheritedFrom_": "OpenAIAPIResource"
 	}
 }

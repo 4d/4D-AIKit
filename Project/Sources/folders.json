@@ -37,6 +37,7 @@
 			"APIObject"
 		],
 		"classes": [
+			"OpenAIImagesResult",
 			"OpenAIResult"
 		]
 	},

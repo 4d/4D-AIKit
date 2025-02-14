@@ -27,7 +27,7 @@ Function body() : Object
 	var $body : Object:=Super:C1706.body()
 	
 	If (Length:C16(This:C1470.model)>0)
-		$body.modeln:=This:C1470.model
+		$body.model:=This:C1470.model
 	End if 
 	If (This:C1470.maxCompletionTokens>0)
 		$body.max_completion_tokens:=This:C1470.maxCompletionTokens

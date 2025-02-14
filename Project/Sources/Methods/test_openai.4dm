@@ -19,7 +19,7 @@ var $image:=$client.images.generate("A futuristic city skyline at sunset"; {size
 
 // MARK:- vision
 
-var $imageUrl : Text:=$image.request.response.body.data.first().url
+var $imageUrl : Text:=$image.images.first()
 
 var $message:=cs:C1710.Message.new()
 $message.role:="user"
@@ -29,4 +29,4 @@ $message.content:=[\
 ]
 
 var $vision:=$client.chat.completions.create([$message]; {model: "gpt-4o-mini"})
-
+var $visionText : Text:=$vision.request.response.body.choices.first().message.content
