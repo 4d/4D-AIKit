@@ -40,7 +40,7 @@
 				"Summary": ""
 			}
 		},
-		"OpenAIImageParameters": {
+		"Moderation": {
 			"new()": {
 				"Syntax": "**.new**( *object* : Object )",
 				"Params": [
@@ -53,7 +53,7 @@
 				"Summary": ""
 			}
 		},
-		"OpenAICompletions": {
+		"OpenAIModerations": {
 			"new()": {
 				"Syntax": "**.new**( *client* : cs.ai.OpenAI )",
 				"Params": [
@@ -92,20 +92,20 @@
 				"Summary": ""
 			}
 		},
-		"OpenAIModerations": {
+		"OpenAIChatCompletionsListParameters": {
 			"new()": {
-				"Syntax": "**.new**( *client* : cs.ai.OpenAI )",
+				"Syntax": "**.new**( *object* : Object )",
 				"Params": [
 					[
-						"client",
-						"cs.ai.OpenAI",
+						"object",
+						"Object",
 						"->"
 					]
 				],
 				"Summary": ""
 			}
 		},
-		"OpenAIChatCompletionsListParameters": {
+		"Model": {
 			"new()": {
 				"Syntax": "**.new**( *object* : Object )",
 				"Params": [
@@ -138,6 +138,19 @@
 					[
 						"client",
 						"cs.ai.OpenAI",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"OpenAICompletionParameters": {
+			"new()": {
+				"Syntax": "**.new**( *object* : Object )",
+				"Params": [
+					[
+						"object",
+						"Object",
 						"->"
 					]
 				],
@@ -183,7 +196,14 @@
 				"Summary": ""
 			}
 		},
-		"Model": {
+		"_Env": {
+			"new()": {
+				"Syntax": "**.new**()",
+				"Params": [],
+				"Summary": ""
+			}
+		},
+		"OpenAIImageParameters": {
 			"new()": {
 				"Syntax": "**.new**( *object* : Object )",
 				"Params": [
@@ -196,20 +216,13 @@
 				"Summary": ""
 			}
 		},
-		"_Env": {
+		"OpenAICompletions": {
 			"new()": {
-				"Syntax": "**.new**()",
-				"Params": [],
-				"Summary": ""
-			}
-		},
-		"OpenAICompletionParameters": {
-			"new()": {
-				"Syntax": "**.new**( *object* : Object )",
+				"Syntax": "**.new**( *client* : cs.ai.OpenAI )",
 				"Params": [
 					[
-						"object",
-						"Object",
+						"client",
+						"cs.ai.OpenAI",
 						"->"
 					]
 				],
@@ -303,86 +316,6 @@
 			"Syntax": "request : 4D.HTTPRequest"
 		}
 	},
-	"OpenAIImageParameters": {
-		"body()": {
-			"Syntax": "**.body**() : Object",
-			"Params": [
-				[
-					"",
-					"Object",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"style": {
-			"Syntax": "style : Text"
-		},
-		"n": {
-			"Syntax": "n : Integer"
-		},
-		"size": {
-			"Syntax": "size : Text"
-		},
-		"model": {
-			"Syntax": "model : Text"
-		},
-		"_inheritedFrom_": "OpenAIParameters"
-	},
-	"OpenAICompletions": {
-		"create()": {
-			"Syntax": "**.create**( *prompt* : Text; *parameters* : cs.ai.OpenAICompletionParameters ) : cs.ai.OpenAIResult",
-			"Params": [
-				[
-					"prompt",
-					"Text",
-					"->"
-				],
-				[
-					"parameters",
-					"cs.ai.OpenAICompletionParameters",
-					"->"
-				],
-				[
-					"",
-					"cs.ai.OpenAIResult",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"_inheritedFrom_": "OpenAIAPIResource"
-	},
-	"OpenAIImagesResult": {
-		"saveImageToDisk()": {
-			"Syntax": "**.saveImageToDisk**( *folder* : 4D.Folder ) : Boolean",
-			"Params": [
-				[
-					"folder",
-					"4D.Folder",
-					"->"
-				],
-				[
-					"",
-					"Boolean",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"get images()": {
-			"Syntax": "**.get images**() : Collection",
-			"Params": [
-				[
-					"",
-					"Collection",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"_inheritedFrom_": "OpenAIResult"
-	},
 	"Moderation": {
 		"results": {
 			"Syntax": "results : Collection"
@@ -393,6 +326,35 @@
 		"id": {
 			"Syntax": "id : Text"
 		}
+	},
+	"OpenAIModerations": {
+		"create()": {
+			"Syntax": "**.create**( *input* : Variant; *model* : Text; *parameters* : cs.ai.OpenAIParameters ) : cs.ai.OpenAIModerationResult",
+			"Params": [
+				[
+					"input",
+					"Variant",
+					"->"
+				],
+				[
+					"model",
+					"Text",
+					"->"
+				],
+				[
+					"parameters",
+					"cs.ai.OpenAIParameters",
+					"->"
+				],
+				[
+					"",
+					"cs.ai.OpenAIModerationResult",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIAPIResource"
 	},
 	"OpenAIChatCompletionsMessagesParameters": {
 		"body()": {
@@ -457,34 +419,19 @@
 		},
 		"_inheritedFrom_": "OpenAIAPIResource"
 	},
-	"OpenAIModerations": {
-		"create()": {
-			"Syntax": "**.create**( *input* : Variant; *model* : Text; *parameters* : cs.ai.OpenAIParameters ) : cs.ai.OpenAIResult",
+	"OpenAIModerationResult": {
+		"get moderation()": {
+			"Syntax": "**.get moderation**() : cs.ai.Moderation",
 			"Params": [
 				[
-					"input",
-					"Variant",
-					"->"
-				],
-				[
-					"model",
-					"Text",
-					"->"
-				],
-				[
-					"parameters",
-					"cs.ai.OpenAIParameters",
-					"->"
-				],
-				[
 					"",
-					"cs.ai.OpenAIResult",
+					"cs.ai.Moderation",
 					"<-"
 				]
 			],
 			"Summary": ""
 		},
-		"_inheritedFrom_": "OpenAIAPIResource"
+		"_inheritedFrom_": "OpenAIResult"
 	},
 	"OpenAIChatCompletionsListParameters": {
 		"body()": {
@@ -515,6 +462,34 @@
 		},
 		"_inheritedFrom_": "OpenAIParameters"
 	},
+	"OpenAIModelResult": {
+		"get model()": {
+			"Syntax": "**.get model**() : cs.ai.Model",
+			"Params": [
+				[
+					"",
+					"cs.ai.Model",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIResult"
+	},
+	"Model": {
+		"owned_by": {
+			"Syntax": "owned_by : Text"
+		},
+		"object": {
+			"Syntax": "object : Text"
+		},
+		"id": {
+			"Syntax": "id : Text"
+		},
+		"created": {
+			"Syntax": "created : Integer"
+		}
+	},
 	"OpenAIChatCompletionsMessages": {
 		"list()": {
 			"Syntax": "**.list**( *completionID* : Text; *parameters* : cs.ai.OpenAIChatCompletionsMessagesParameters ) : cs.ai.OpenAIResult",
@@ -540,6 +515,35 @@
 		"_inheritedFrom_": "OpenAIAPIResource"
 	},
 	"OpenAIAPIResource": {},
+	"OpenAICompletionParameters": {
+		"body()": {
+			"Syntax": "**.body**() : Object",
+			"Params": [
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"temperature": {
+			"Syntax": "temperature : Real"
+		},
+		"n": {
+			"Syntax": "n : Integer"
+		},
+		"maxTokens": {
+			"Syntax": "maxTokens : Integer"
+		},
+		"echo": {
+			"Syntax": "echo : Boolean"
+		},
+		"model": {
+			"Syntax": "model : Text"
+		},
+		"_inheritedFrom_": "OpenAIParameters"
+	},
 	"OpenAIParameters": {
 		"body()": {
 			"Syntax": "**.body**() : Object",
@@ -694,34 +698,6 @@
 		},
 		"_inheritedFrom_": "OpenAIAPIResource"
 	},
-	"Model": {
-		"owned_by": {
-			"Syntax": "owned_by : Text"
-		},
-		"object": {
-			"Syntax": "object : Text"
-		},
-		"id": {
-			"Syntax": "id : Text"
-		},
-		"created": {
-			"Syntax": "created : Integer"
-		}
-	},
-	"OpenAIModelResult": {
-		"get model()": {
-			"Syntax": "**.get model**() : cs.ai.Model",
-			"Params": [
-				[
-					"",
-					"cs.ai.Model",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"_inheritedFrom_": "OpenAIResult"
-	},
 	"_Env": {},
 	"Message": {
 		"user": {
@@ -734,7 +710,21 @@
 			"Syntax": "role : Text"
 		}
 	},
-	"OpenAICompletionParameters": {
+	"OpenAIModelListResult": {
+		"get models()": {
+			"Syntax": "**.get models**() : Collection",
+			"Params": [
+				[
+					"",
+					"Collection",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIResult"
+	},
+	"OpenAIImageParameters": {
 		"body()": {
 			"Syntax": "**.body**() : Object",
 			"Params": [
@@ -746,26 +736,63 @@
 			],
 			"Summary": ""
 		},
-		"temperature": {
-			"Syntax": "temperature : Real"
+		"style": {
+			"Syntax": "style : Text"
 		},
 		"n": {
 			"Syntax": "n : Integer"
 		},
-		"maxTokens": {
-			"Syntax": "maxTokens : Integer"
-		},
-		"echo": {
-			"Syntax": "echo : Boolean"
+		"size": {
+			"Syntax": "size : Text"
 		},
 		"model": {
 			"Syntax": "model : Text"
 		},
 		"_inheritedFrom_": "OpenAIParameters"
 	},
-	"OpenAIModelListResult": {
-		"get models()": {
-			"Syntax": "**.get models**() : Collection",
+	"OpenAICompletions": {
+		"create()": {
+			"Syntax": "**.create**( *prompt* : Text; *parameters* : cs.ai.OpenAICompletionParameters ) : cs.ai.OpenAIResult",
+			"Params": [
+				[
+					"prompt",
+					"Text",
+					"->"
+				],
+				[
+					"parameters",
+					"cs.ai.OpenAICompletionParameters",
+					"->"
+				],
+				[
+					"",
+					"cs.ai.OpenAIResult",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIAPIResource"
+	},
+	"OpenAIImagesResult": {
+		"saveImageToDisk()": {
+			"Syntax": "**.saveImageToDisk**( *folder* : 4D.Folder ) : Boolean",
+			"Params": [
+				[
+					"folder",
+					"4D.Folder",
+					"->"
+				],
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get images()": {
+			"Syntax": "**.get images**() : Collection",
 			"Params": [
 				[
 					"",
