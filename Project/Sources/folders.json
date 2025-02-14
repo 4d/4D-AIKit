@@ -3,10 +3,22 @@
 		"classes": [
 			"OpenAIAPIResource",
 			"OpenAIChat",
+			"OpenAIChatCompletions",
+			"OpenAIChatCompletionsMessages",
 			"OpenAICompletions",
 			"OpenAIImages",
 			"OpenAIModels",
 			"OpenAIModerations"
+		]
+	},
+	"Parameters": {
+		"classes": [
+			"OpenAIChatCompletionParameters",
+			"OpenAIChatCompletionsListParameters",
+			"OpenAIChatCompletionsMessagesParameters",
+			"OpenAICompletionParameters",
+			"OpenAIImageParameters",
+			"OpenAIParameters"
 		]
 	},
 	"trash": {}

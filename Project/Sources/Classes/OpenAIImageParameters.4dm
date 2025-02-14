@@ -12,4 +12,27 @@ property size : Text:="1024x1024"
 // The style of the generated images. Must be one of `vivid` or `natural`
 property style : Text
 
+// property quality: Text = "standard" || "hd" // for generation
+
 Class extends OpenAIParameters
+
+Class constructor($object : Object)
+	Super:C1705($object)
+	
+Function body() : Object
+	var $body:=Super:C1706.body()
+	
+	If (Length:C16(This:C1470.model)>0)
+		$body.model:=This:C1470.model
+	End if 
+	If (This:C1470.n>0)
+		$body.n:=This:C1470.n
+	End if 
+	If (Length:C16(This:C1470.size)>0)
+		$body.size:=This:C1470.size
+	End if 
+	If (Length:C16(This:C1470.style)>0)
+		$body.style:=This:C1470.style
+	End if 
+	
+	return $body

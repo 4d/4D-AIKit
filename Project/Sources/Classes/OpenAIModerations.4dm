@@ -1,5 +1,8 @@
 Class extends OpenAIAPIResource
 
+Class constructor($client : cs:C1710.OpenAI)
+	Super:C1705($client)
+	
 /*
 * Classifies if text and/or image inputs are potentially harmful.
 * - $input: Input (or inputs) to classify. Can be a single text, a collection of texts
