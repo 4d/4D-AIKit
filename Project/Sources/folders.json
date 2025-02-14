@@ -1,7 +1,7 @@
 {
 	"APIObject": {
 		"classes": [
-			"ChatCompletion",
+			"Choice",
 			"Message",
 			"Model",
 			"Moderation"
@@ -44,6 +44,11 @@
 			"OpenAIModelResult",
 			"OpenAIModerationResult",
 			"OpenAIResult"
+		]
+	},
+	"Tests": {
+		"methods": [
+			"test_openai"
 		]
 	},
 	"Utils": {

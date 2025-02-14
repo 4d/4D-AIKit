@@ -1,4 +1,4 @@
-property role : Text  // ex: "user"
+property role : Text  // ex: "developer", "system", "user", "assistant", "tool", "function"
 property content : Variant  // ex: "Say this is a test" or Collection of {test: , type}
 property user : Text  // optionnal user
 

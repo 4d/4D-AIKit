@@ -5,4 +5,4 @@ Function get choices : Collection
 		return []
 	End if 
 	
-	return This:C1470.request.response.body.choices.map(Formula:C1597(cs:C1710.ChatCompletion.new($1.value)))
+	return This:C1470.request.response.body.choices.map(Formula:C1597(cs:C1710.Choice.new($1.value)))
