@@ -1,5 +1,16 @@
 {
+	"APIObject": {
+		"classes": [
+			"Message",
+			"Model",
+			"Moderation"
+		]
+	},
 	"APIResource": {
+		"groups": [
+			"Parameters",
+			"Result"
+		],
 		"classes": [
 			"OpenAIAPIResource",
 			"OpenAIChat",
@@ -19,6 +30,19 @@
 			"OpenAICompletionParameters",
 			"OpenAIImageParameters",
 			"OpenAIParameters"
+		]
+	},
+	"Result": {
+		"groups": [
+			"APIObject"
+		],
+		"classes": [
+			"OpenAIResult"
+		]
+	},
+	"Utils": {
+		"classes": [
+			"_Env"
 		]
 	},
 	"trash": {}

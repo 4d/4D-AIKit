@@ -19,7 +19,7 @@ property organization : Text:=""
 property project : Text:=""
 
 // MARK: clients options
-property version : Text:="v1"
+//property version : Text:="v1"
 property baseURL : Text:=""
 // property websocketBaseURL : Text
 
@@ -63,12 +63,21 @@ Function _fillDefaultParameters()
 	End if 
 	
 Function _configureParameters($object : Object)
-	var $key : Text
-	For each ($key; $object)
-		If (This:C1470._configurable.includes($key))
-			This:C1470[$key]:=$object[$key]
+	If (OB Instance of:C1731($object; 4D:C1709.File))
+		
+		$object:=Try(JSON Parse:C1218($object.getText()))
+		If ($object#Null:C1517)
+			This:C1470._configureParameters($object)
 		End if 
-	End for each 
+		
+	Else 
+		var $key : Text
+		For each ($key; $object)
+			If (This:C1470._configurable.includes($key))
+				This:C1470[$key]:=$object[$key]
+			End if 
+		End for each 
+	End if 
 	
 Class constructor( ...  : Variant)
 	var $parameters:=Copy parameters:C1790()
@@ -94,7 +103,7 @@ Class constructor( ...  : Variant)
 			This:C1470.apiKey:=$parameters[0]
 			
 			Case of 
-				: ((Count parameters:C259>1) && Value type:C1509($parameters[1])=Is text:K8:3)
+				: ((Count parameters:C259>1) && (Value type:C1509($parameters[1])=Is text:K8:3))
 					
 					This:C1470.baseURL:=$parameters[1]
 					
@@ -118,18 +127,39 @@ Class constructor( ...  : Variant)
 	
 	// MARK:- headers
 	
-Function authHeaders() : Object
+Function _authHeaders() : Object
 	return {Authorization: "Bearer "+String:C10(This:C1470.apiKey)}
 	
-	// default headers // OpenAI-Organization, OpenAI-Project
+Function _headers() : Object
+	var $headers:=This:C1470._authHeaders()
 	
+	If (Length:C16(This:C1470.organization)>0)
+		$headers["OpenAI-Organization"]:=This:C1470.organization
+	End if 
+	If (Length:C16(This:C1470.project)>0)
+		$headers["OpenAI-Project"]:=This:C1470.project
+	End if 
+	return $headers
 	
 	// MARK:- client functions
 	
-Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters : cs:C1710.OpenAIParameters) : cs:C1710.OpenAIResult
+Function _request($httpMethod : Text; $path : Text; $body : Object; $parameters : cs:C1710.OpenAIParameters) : cs:C1710.OpenAIResult
 	var $result:=cs:C1710.OpenAIResult.new()
 	
-	// TODO: network stuff
+	var $url:=This:C1470.baseURL+$path
+	var $headers:=This:C1470._headers()
+	// "Content-Type"; "application/json"
+	var $options:={method: $httpMethod; headers: $headers; dataType: "auto"}
+	If ($body#Null:C1517)
+		// XXX: if not only object maybe do other stuff
+		$headers["Content-Type"]:="application/json"
+		$options.body:=$body
+	End if 
+	// TODO: timeout
+	
+	$result.request:=4D:C1709.HTTPRequest.new($url; $options)
+	
+	$result.request.wait()
 	
 	return $result
 	
@@ -142,7 +172,20 @@ Function _post($path : Text; $body : Variant; $parameters : cs:C1710.OpenAIParam
 Function _delete($path : Text; $parameters : cs:C1710.OpenAIParameters) : cs:C1710.OpenAIResult
 	return This:C1470._request("DELETE"; $path; Null:C1517; $parameters)
 	
-Function _getApiList($path : Text; $query : Object; $parameters : cs:C1710.OpenAIParameters) : cs:C1710.OpenAIResult
-	// TODO: same as get but maybe with post processing and manage query
-	return This:C1470._request("GET"; $path; Null:C1517; $parameters)
+Function _getApiList($path : Text; $queryParameters : Object; $parameters : cs:C1710.OpenAIParameters) : cs:C1710.OpenAIResult
+	// TODO: same as get but maybe with post processing 
+	return This:C1470._request("GET"; $path+This:C1470._encodeQueryParameters($queryParameters); Null:C1517; $parameters)
+	
+Function _encodeQueryParameter($value : Variant) : Text
+	// TODO: more encoding stuff, escaping if needed, etc...
+	return String:C10($value)
+	
+Function _encodeQueryParameters($queryParameters : Object) : Text
+	If (($queryParameters=Null:C1517) || OB Is empty:C1297($queryParameters))
+		return ""
+	End if 
+	
+	return "?"+OB Entries:C1720($queryParameters).map(Formula:C1597($1.value.key+"="+This:C1470._encodeQueryParameter($1.value.value))).join("&")
+	
+	
 	

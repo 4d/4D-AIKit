@@ -17,7 +17,7 @@ Function retrieve($model : Text; $parameters : cs:C1710.OpenAIParameters) : cs:C
 * Lists the currently available models
  */
 Function list($parameters : cs:C1710.OpenAIParameters) : cs:C1710.OpenAIResult
-	return This:C1470._client._get("/models/"; $parameters)
+	return This:C1470._client._get("/models"; $parameters)
 	
 /*
 * Delete a fine-tuned model.

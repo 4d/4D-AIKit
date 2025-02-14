@@ -10,14 +10,14 @@ Class constructor($client : cs:C1710.OpenAI)
 /*
 * Creates a model response for the given chat conversation.
  */
-Function create($prompt : Text; $parameters : cs:C1710.OpenAIChatCompletionParameters) : cs:C1710.OpenAIResult
+Function create($messages : Collection; $parameters : cs:C1710.OpenAIChatCompletionParameters) : cs:C1710.OpenAIResult
 	If (Not:C34(OB Instance of:C1731($parameters; cs:C1710.OpenAIChatCompletionParameters)))
 		$parameters:=cs:C1710.OpenAIChatCompletionParameters.new($parameters)
 	End if 
 	
 	var $body:=$parameters.body()
-	$body.prompt:=$prompt
-	return This:C1470._client._post("/completions"; $body; $parameters)
+	$body.messages:=$messages
+	return This:C1470._client._post("/chat/completions"; $body; $parameters)
 	
 /*
 * Get a stored chat completion.
@@ -63,5 +63,5 @@ Function list($parameters : cs:C1710.OpenAIChatCompletionsListParameters) : cs:C
 	End if 
 	
 	var $query:=$parameters.body()
-	return This:C1470._client._getApiList("/chat/completions/"; $query; $parameters)
+	return This:C1470._client._getApiList("/chat/completions"; $query; $parameters)
 	

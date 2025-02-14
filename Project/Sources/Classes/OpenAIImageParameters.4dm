@@ -10,7 +10,7 @@ property n : Integer:=1
 property size : Text:="1024x1024"
 
 // The style of the generated images. Must be one of `vivid` or `natural`
-property style : Text
+property style : Text:=""
 
 // property quality: Text = "standard" || "hd" // for generation
 
