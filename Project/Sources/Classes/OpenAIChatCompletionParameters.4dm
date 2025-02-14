@@ -5,7 +5,7 @@ property model : Text:="gpt-4o-mini"
 // property stream : Boolean:=False
 
 // The maximum number of [tokens](/tokenizer) that can be generated in the completion.
-property maxTokens : Integer
+property maxTokens : Integer:=0
 
 //  How many completions to generate for each prompt.
 property n : Integer:=1
@@ -16,7 +16,7 @@ property n : Integer:=1
 property temperature : Real:=-1
 
 // Whether or not to store the output of this chat completion request.
-property store : Boolean
+property store : Boolean:=False:C215
 
 Class extends OpenAIParameters
 
@@ -24,7 +24,7 @@ Class constructor($object : Object)
 	Super:C1705($object)
 	
 Function body() : Object
-	var $body:=Super:C1706.body()
+	var $body : Object:=Super:C1706.body()
 	
 	If (Length:C16(This:C1470.model)>0)
 		$body.modeln:=This:C1470.model

@@ -30,7 +30,7 @@ property maxRetries : Integer:=2
 // property customQuery : Object
 
 // List of configurable attributes
-property _configurable:=["apiKey"; "baseURL"; "websocketBaseURL"; "organization"; "project"; "version"; "maxRetries"]
+property _configurable : Collection:=["apiKey"; "baseURL"; "websocketBaseURL"; "organization"; "project"; "version"; "maxRetries"]
 
 
 // MARK: - constructor
