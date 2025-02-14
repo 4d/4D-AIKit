@@ -1,0 +1,13 @@
+{
+	"APIResource": {
+		"classes": [
+			"OpenAIAPIResource",
+			"OpenAIChat",
+			"OpenAICompletions",
+			"OpenAIImages",
+			"OpenAIModels",
+			"OpenAIModerations"
+		]
+	},
+	"trash": {}
+}

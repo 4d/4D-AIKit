@@ -1,0 +1,183 @@
+{
+	"_method_": {},
+	"OpenAIResult": {},
+	"OpenAIImageParameters": {
+		"style": {
+			"Syntax": "style : Text"
+		},
+		"n": {
+			"Syntax": "n : Integer"
+		},
+		"size": {
+			"Syntax": "size : Text"
+		},
+		"model": {
+			"Syntax": "model : Text"
+		},
+		"_inheritedFrom_": "OpenAIParameters"
+	},
+	"OpenAICompletions": {
+		"_inheritedFrom_": "OpenAIAPIResource"
+	},
+	"OpenAIChat": {
+		"_inheritedFrom_": "OpenAIAPIResource"
+	},
+	"cs.ai": {
+		"OpenAIAPIResource": {
+			"new()": {
+				"Syntax": "**.new**( *client* : cs.ai.OpenAI )",
+				"Params": [
+					[
+						"client",
+						"cs.ai.OpenAI",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"OpenAI": {
+			"new()": {
+				"Syntax": "**.new**( *...* : Variant )",
+				"Params": [
+					[
+						"",
+						"Variant",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		}
+	},
+	"OpenAIAPIResource": {},
+	"OpenAI": {
+		"version": {
+			"Syntax": "version : Text"
+		},
+		"project": {
+			"Syntax": "project : Text"
+		},
+		"organization": {
+			"Syntax": "organization : Text"
+		},
+		"baseURL": {
+			"Syntax": "baseURL : Text"
+		},
+		"apiKey": {
+			"Syntax": "apiKey : Text"
+		},
+		"models": {
+			"Syntax": "models : cs.ai.OpenAIModels"
+		},
+		"moderations": {
+			"Syntax": "moderations : cs.ai.OpenAIModerations"
+		},
+		"completions": {
+			"Syntax": "completions : cs.ai.OpenAICompletions"
+		},
+		"images": {
+			"Syntax": "images : cs.ai.OpenAIImages"
+		},
+		"maxRetries": {
+			"Syntax": "maxRetries : Integer"
+		},
+		"chat": {
+			"Syntax": "chat : cs.ai.OpenAIChat"
+		}
+	},
+	"OpenAIImages": {
+		"generate()": {
+			"Syntax": "**.generate**( *prompt* : Text; *parameters* : cs.ai.OpenAIImageParameters ) : cs.ai.OpenAIResult",
+			"Params": [
+				[
+					"prompt",
+					"Text",
+					"->"
+				],
+				[
+					"parameters",
+					"cs.ai.OpenAIImageParameters",
+					"->"
+				],
+				[
+					"",
+					"cs.ai.OpenAIResult",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIAPIResource"
+	},
+	"OpenAIModels": {
+		"list()": {
+			"Syntax": "**.list**( *parameters* : cs.ai.OpenAIParameters ) : cs.ai.OpenAIResult",
+			"Params": [
+				[
+					"parameters",
+					"cs.ai.OpenAIParameters",
+					"->"
+				],
+				[
+					"",
+					"cs.ai.OpenAIResult",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"retrieve()": {
+			"Syntax": "**.retrieve**( *model* : Text; *parameters* : cs.ai.OpenAIParameters ) : cs.ai.OpenAIResult",
+			"Params": [
+				[
+					"model",
+					"Text",
+					"->"
+				],
+				[
+					"parameters",
+					"cs.ai.OpenAIParameters",
+					"->"
+				],
+				[
+					"",
+					"cs.ai.OpenAIResult",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIAPIResource"
+	},
+	"OpenAIModerations": {
+		"create()": {
+			"Syntax": "**.create**( *input* : Variant; *model* : Text; *parameters* : cs.ai.OpenAIParameters ) : cs.ai.OpenAIResult",
+			"Params": [
+				[
+					"input",
+					"Variant",
+					"->"
+				],
+				[
+					"model",
+					"Text",
+					"->"
+				],
+				[
+					"parameters",
+					"cs.ai.OpenAIParameters",
+					"->"
+				],
+				[
+					"",
+					"cs.ai.OpenAIResult",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIAPIResource"
+	},
+	"OpenAIParameters": {}
+}
