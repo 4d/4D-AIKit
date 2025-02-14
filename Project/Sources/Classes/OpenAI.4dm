@@ -8,10 +8,13 @@ property chat : cs:C1710.OpenAIChat
 // property embeddings : cs.OpenAIEmbeddings
 // property files : cs.OpenAIFiles
 property images : cs:C1710.OpenAIImages
-//  property audio : cs.OpenAIAudio
+// property audio : cs.OpenAIAudio
 property moderations : cs:C1710.OpenAIModerations
 property models : cs:C1710.OpenAIModels
-// fine tunings, beta, batches, uploads, etc...
+// property fineTunings : cs.OpenAIFineTunings
+// property beta : cs.OpenAIBeta
+// property batches : cs.OpenAIBatches
+// property uploads : cs.OpenAIUploads
 
 // MARK: account options
 property apiKey : Text:=""
@@ -79,6 +82,11 @@ Function _configureParameters($object : Object)
 		End for each 
 	End if 
 	
+/*
+* Build an instance of OpenAI class.
+* You could pass the apiKey as first Text argument
+* and provide additional parameters as Object (as first or second argument)
+ */
 Class constructor( ...  : Variant)
 	var $parameters:=Copy parameters:C1790()
 	
