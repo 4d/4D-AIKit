@@ -27,7 +27,7 @@ property baseURL : Text:=""
 // property websocketBaseURL : Text
 
 property maxRetries : Integer:=2
-// property timeout : Integer or TimeOut object
+property timeout : Real:=10*60
 
 // property customHeaders : Object
 // property customQuery : Object
@@ -156,14 +156,18 @@ Function _request($httpMethod : Text; $path : Text; $body : Object; $parameters 
 	
 	var $url:=This:C1470.baseURL+$path
 	var $headers:=This:C1470._headers()
-	// "Content-Type"; "application/json"
+	
 	var $options:={method: $httpMethod; headers: $headers; dataType: "auto"}
 	If ($body#Null:C1517)
-		// XXX: if not only object maybe do other stuff
+		// XXX: if not only object maybe do other stuff (ex: upload file etc...)
 		$headers["Content-Type"]:="application/json"
 		$options.body:=$body
 	End if 
-	// TODO: timeout
+	If (($parameter#Null:C1517) && ($parameters.timeout>0))
+		$options.timeout:=$parameters.timeout
+	Else 
+		$options.timeout:=This:C1470.timeout
+	End if 
 	
 	$result.request:=4D:C1709.HTTPRequest.new($url; $options)
 	
