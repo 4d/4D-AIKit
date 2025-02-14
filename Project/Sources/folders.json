@@ -1,6 +1,7 @@
 {
 	"APIObject": {
 		"classes": [
+			"ChatCompletion",
 			"Message",
 			"Model",
 			"Moderation"
@@ -37,6 +38,7 @@
 			"APIObject"
 		],
 		"classes": [
+			"OpenAIChatCompletionsResult",
 			"OpenAIImagesResult",
 			"OpenAIModelListResult",
 			"OpenAIModelResult",

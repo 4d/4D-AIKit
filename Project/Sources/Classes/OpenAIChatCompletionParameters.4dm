@@ -10,13 +10,13 @@ property maxCompletionTokens : Integer:=0
 //  How many completions to generate for each prompt.
 property n : Integer:=1
 
-// property seed : Variant
-
 //  What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
 property temperature : Real:=-1
 
 // Whether or not to store the output of this chat completion request.
 property store : Boolean:=False:C215
+
+// seed, metadata, modalities, etc...
 
 Class extends OpenAIParameters
 
