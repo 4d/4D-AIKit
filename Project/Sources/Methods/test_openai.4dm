@@ -6,8 +6,8 @@ var $client:=cs:C1710.OpenAI.new()
 // MARK:- models
 var $models:=$client.models.list()
 
-var $modelId : Text:=$models.request.response.body.data.first().id
-var $model:=$client.models.retrieve($modelId)
+var $modelId : Text:=$models.models.first().id
+var $model : cs:C1710.Model:=$client.models.retrieve($modelId).model
 
 // MARK:- moderation
 

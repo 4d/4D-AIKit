@@ -6,18 +6,18 @@ Class constructor($client : cs:C1710.OpenAI)
 /*
 * Retrieves a model instance to provide basic information.
  */
-Function retrieve($model : Text; $parameters : cs:C1710.OpenAIParameters) : cs:C1710.OpenAIResult
+Function retrieve($model : Text; $parameters : cs:C1710.OpenAIParameters) : cs:C1710.OpenAIModelResult
 	If (Length:C16($model)=0)
 		throw:C1805(1; "Expected a non-empty value for `model`")
 	End if 
 	
-	return This:C1470._client._get("/models/"+$model; $parameters)
+	return This:C1470._client._get("/models/"+$model; $parameters; cs:C1710.OpenAIModelResult)
 	
 /*
 * Lists the currently available models
  */
-Function list($parameters : cs:C1710.OpenAIParameters) : cs:C1710.OpenAIResult
-	return This:C1470._client._get("/models"; $parameters)
+Function list($parameters : cs:C1710.OpenAIParameters) : cs:C1710.OpenAIModelListResult
+	return This:C1470._client._get("/models"; $parameters; cs:C1710.OpenAIModelListResult)
 	
 /*
 * Delete a fine-tuned model.

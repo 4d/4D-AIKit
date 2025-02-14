@@ -38,6 +38,8 @@
 		],
 		"classes": [
 			"OpenAIImagesResult",
+			"OpenAIModelListResult",
+			"OpenAIModelResult",
 			"OpenAIResult"
 		]
 	},
