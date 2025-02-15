@@ -1,7 +1,7 @@
 Class extends OpenAIResult
 
 Function get images : Collection
-	var $body:=This:C1470.objectBody()
+	var $body:=This:C1470._objectBody()
 	If (($body=Null:C1517) || (Not:C34(Value type:C1509($body.data)=Is collection:K8:32)))
 		return []
 	End if 
@@ -9,7 +9,7 @@ Function get images : Collection
 	return $body.data.map(Formula:C1597(cs:C1710.OpenAIImage.new($1.value)))
 	
 Function get image : cs:C1710.OpenAIImage
-	var $body:=This:C1470.objectBody()
+	var $body:=This:C1470._objectBody()
 	If (($body=Null:C1517) || (Not:C34(Value type:C1509($body.data)=Is collection:K8:32)))
 		return Null:C1517
 	End if 

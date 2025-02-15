@@ -359,17 +359,6 @@
 		}
 	},
 	"OpenAIResult": {
-		"objectBody()": {
-			"Syntax": "**.objectBody**() : Object",
-			"Params": [
-				[
-					"",
-					"Object",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
 		"get errors()": {
 			"Syntax": "**.get errors**() : Collection",
 			"Params": [

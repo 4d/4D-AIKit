@@ -9,14 +9,17 @@ Function get success : Boolean
 /*Function get terminated : Boolean
 return This.request.terminated */
 	
-Function objectBody : Object
+Function _objectBody : Object
 	Case of 
 		: (This:C1470.request.response.body=Null:C1517)
 			return Null:C1517
 		: (Value type:C1509(This:C1470.request.response.body)=Is object:K8:27)
 			return This:C1470.request.response.body
 		: (Value type:C1509(This:C1470.request.response.body)=Is text:K8:3)  // sometime not decoded, maybe some errors do not return content type
-			return Try(JSON Parse:C1218(This:C1470.request.response.body))
+			var $parsed:=Try(JSON Parse:C1218(This:C1470.request.response.body))
+			If (Value type:C1509($parsed)=Is object:K8:27)
+				return $parsed
+			End if 
 	End case 
 	
 Function get errors : Collection
@@ -26,7 +29,7 @@ Function get errors : Collection
 	End if 
 	
 	If ((This:C1470.request.response#Null:C1517) && (Value type:C1509(This:C1470.request.response.body)=Is object:K8:27))
-		var $body:=This:C1470.objectBody()
+		var $body:=This:C1470._objectBody()
 		If ($body.error#Null:C1517)
 			return [$body.error]
 		End if 

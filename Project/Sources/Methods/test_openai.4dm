@@ -2,6 +2,7 @@
 
 // create a client
 var $client:=cs:C1710.OpenAI.new()
+// $client.baseURL:="http://127.0.0.1:11434/v1" ,  ex: ollama
 
 // MARK:- models
 var $modelsResult:=$client.models.list()
@@ -11,15 +12,17 @@ var $model : cs:C1710.OpenAIModel:=$client.models.retrieve($models.first().id).m
 
 // MARK:- chat completion
 
+var $modelName:="gpt-4o-mini"
+
 var $messages:=[cs:C1710.OpenAIMessage.new({role: "system"; content: "You are a helpful assistant."})]
 $messages.push({role: "user"; content: "Could you explain me why 42 is a special number"})
-var $chatResult:=$client.chat.completions.create($messages; {model: "gpt-4o-mini"})
+var $chatResult:=$client.chat.completions.create($messages; {model: $modelName})
 
 var $assistantText : Text:=$chatResult.choices.first().message.content
 $messages.push($chatResult.choices.first().message)
 
 $messages.push({role: "user"; content: "and could you decompose this number"})
-$chatResult:=$client.chat.completions.create($messages; {model: "gpt-4o-mini"})
+$chatResult:=$client.chat.completions.create($messages; {model: $modelName})
 $assistantText:=$chatResult.choices.first().message.content
 
 // or
@@ -40,6 +43,7 @@ var $images:=$client.images.generate("A futuristic city skyline at sunset"; {siz
 
 // MARK:- vision
 
+var $visionModelName:=$modelName  // ex: OpenAI=gpt-4o-mini, Ollama=llama3.2-vision
 var $imageUrl : Text:=$images.first().url
 
 var $message:=cs:C1710.OpenAIMessage.new({role: "user"})
@@ -48,7 +52,7 @@ $message.content:=[\
 {type: "image_url"; image_url: {url: $imageUrl; detail: "low"}}\
 ]
 
-$chatResult:=$client.chat.completions.create([$message]; {model: "gpt-4o-mini"})
+$chatResult:=$client.chat.completions.create([$message]; {model: $visionModelName})
 var $visionText : Text:=$chatResult.choices.first().message.content
 
 // or

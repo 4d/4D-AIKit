@@ -1,7 +1,7 @@
 Class extends OpenAIResult
 
 Function get models : Collection
-	var $body:=This:C1470.objectBody()
+	var $body:=This:C1470._objectBody()
 	If (($body=Null:C1517) || (Not:C34(Value type:C1509($body.data)=Is collection:K8:32)))
 		return []
 	End if 
