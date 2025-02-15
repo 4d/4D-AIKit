@@ -2,7 +2,7 @@
 
 // create a client
 var $client:=cs:C1710.OpenAI.new()
-// $client.baseURL:="http://127.0.0.1:11434/v1" ,  ex: ollama
+// $client.baseURL:="http://127.0.0.1:11434/v1"  // ex: ollama
 
 // MARK:- models
 var $modelsResult:=$client.models.list()
@@ -13,6 +13,7 @@ var $model : cs:C1710.OpenAIModel:=$client.models.retrieve($models.first().id).m
 // MARK:- chat completion
 
 var $modelName:="gpt-4o-mini"
+//$modelName:=$model.id
 
 var $messages:=[cs:C1710.OpenAIMessage.new({role: "system"; content: "You are a helpful assistant."})]
 $messages.push({role: "user"; content: "Could you explain me why 42 is a special number"})
@@ -26,11 +27,9 @@ $chatResult:=$client.chat.completions.create($messages; {model: $modelName})
 $assistantText:=$chatResult.choices.first().message.content
 
 // or
-// var $helper:=$client.chat.createChatHelper("You are a helpful assistant.")
-// $chat:=$helper.prompt("Could you explain me why 42 is a special number")
-// $assistantText:=$chat.choices.first().message.content or look at $helper.messages
-// $chat:=$helper.prompt("and could you decompose this number")
-
+var $helper:=$client.chat.createChatHelper("You are a helpful assistant.")
+$chatResult:=$helper.prompt("Could you explain me why 42 is a special number")
+$chatResult:=$helper.prompt("and could you decompose this number")
 
 // MARK:- moderation
 
@@ -38,7 +37,7 @@ var $moderation:=$client.moderations.create("Hello word").moderation
 
 // MARK:- image
 
-var $images:=$client.images.generate("A futuristic city skyline at sunset"; {size: "1024x1024"}).images  // ; responseFormat: "b64_json"
+var $images:=$client.images.generate("A futuristic city skyline at sunset"; {size: "1024x1024"}).images  // ; responseFormat: "b64_json", n: 4
 // $images.first().saveToDisk(Folder(fk desktop folder).file("mycity.png"))
 
 // MARK:- vision
@@ -56,4 +55,4 @@ $chatResult:=$client.chat.completions.create([$message]; {model: $visionModelNam
 var $visionText : Text:=$chatResult.choices.first().message.content
 
 // or
-// $chatResult:=$client.chat.createVisionHelper($imageUrl).prompt("give me a description of the image")
+$chatResult:=$client.chat.createVisionHelper($imageUrl).prompt("give me a description of the image")
