@@ -188,7 +188,6 @@ Function _delete($path : Text; $parameters : cs:C1710.OpenAIParameters; $resultT
 	return This:C1470._request("DELETE"; $path; Null:C1517; $parameters; $resultType)
 	
 Function _getApiList($path : Text; $queryParameters : Object; $parameters : cs:C1710.OpenAIParameters; $resultType : 4D:C1709.Class) : cs:C1710.OpenAIResult
-	// TODO: same as get but maybe with post processing 
 	return This:C1470._request("GET"; $path+This:C1470._encodeQueryParameters($queryParameters); Null:C1517; $parameters; $resultType)
 	
 Function _encodeQueryParameter($value : Variant) : Text
