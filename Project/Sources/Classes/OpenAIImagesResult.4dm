@@ -1,21 +1,23 @@
 Class extends OpenAIResult
 
 Function get images : Collection
-	If (Not:C34(Value type:C1509(This:C1470.request.response.body.data)=Is collection:K8:32))
+	var $body:=This:C1470.objectBody()
+	If (($body=Null:C1517) || (Not:C34(Value type:C1509($body.data)=Is collection:K8:32)))
 		return []
 	End if 
 	
-	return This:C1470.request.response.body.data.map(Formula:C1597(cs:C1710.Image.new($1.value)))
+	return $body.data.map(Formula:C1597(cs:C1710.Image.new($1.value)))
 	
 Function get image : cs:C1710.Image
-	If (Not:C34(Value type:C1509(This:C1470.request.response.body.data)=Is collection:K8:32))
+	var $body:=This:C1470.objectBody()
+	If (($body=Null:C1517) || (Not:C34(Value type:C1509($body.data)=Is collection:K8:32)))
 		return Null:C1517
 	End if 
-	If (This:C1470.request.response.body.data.length=0)
+	If ($body.data.length=0)
 		return Null:C1517
 	End if 
 	
-	return cs:C1710.Image.new(This:C1470.request.response.body.data.first())
+	return cs:C1710.Image.new($body.data.first())
 	
 Function saveImagesToDisk($folder : 4D:C1709.Folder) : Boolean
 	ASSERT:C1129($folder#Null:C1517)

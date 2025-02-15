@@ -381,6 +381,28 @@
 		"_inheritedFrom_": "OpenAIResult"
 	},
 	"OpenAIResult": {
+		"objectBody()": {
+			"Syntax": "**.objectBody**() : Object",
+			"Params": [
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get errors()": {
+			"Syntax": "**.get errors**() : Collection",
+			"Params": [
+				[
+					"",
+					"Collection",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
 		"get success()": {
 			"Syntax": "**.get success**() : Boolean",
 			"Params": [
@@ -1053,6 +1075,17 @@
 				[
 					"",
 					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"asPicture()": {
+			"Syntax": "**.asPicture**() : Picture",
+			"Params": [
+				[
+					"",
+					"Picture",
 					"<-"
 				]
 			],

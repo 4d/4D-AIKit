@@ -161,10 +161,10 @@ Function _request($httpMethod : Text; $path : Text; $body : Object; $parameters 
 	
 	var $options:={method: $httpMethod; headers: $headers; dataType: "auto"}
 	If ($body#Null:C1517)
-		// XXX: if not only object maybe do other stuff (ex: upload file etc...)
-		$headers["Content-Type"]:="application/json"
 		$options.body:=$body
 	End if 
+	// XXX: if not only object maybe do other stuff (ex: upload file etc...)
+	$headers["Content-Type"]:="application/json"
 	If (($parameters#Null:C1517) && ($parameters.timeout>0))
 		$options.timeout:=$parameters.timeout
 	Else 

@@ -1,18 +1,20 @@
 Class extends OpenAIResult
 
 Function get choices : Collection
-	If (Not:C34(Value type:C1509(This:C1470.request.response.body.choices)=Is collection:K8:32))
+	var $body:=This:C1470.objectBody()
+	If (($body=Null:C1517) || (Not:C34(Value type:C1509($body.choices)=Is collection:K8:32)))
 		return []
 	End if 
 	
-	return This:C1470.request.response.body.choices.map(Formula:C1597(cs:C1710.Choice.new($1.value)))
+	return $body.choices.map(Formula:C1597(cs:C1710.Choice.new($1.value)))
 	
 Function get choice : cs:C1710.Choice
-	If (Not:C34(Value type:C1509(This:C1470.request.response.body.choices)=Is collection:K8:32))
+	var $body:=This:C1470.objectBody()
+	If (($body=Null:C1517) || (Not:C34(Value type:C1509($body.choices)=Is collection:K8:32)))
 		return Null:C1517
 	End if 
-	If (This:C1470.request.response.body.choices.length=0)
+	If ($body.choices.length=0)
 		return Null:C1517
 	End if 
 	
-	return cs:C1710.Choice.new(This:C1470.request.response.body.choices.first())
+	return cs:C1710.Choice.new($body.choices.first())
