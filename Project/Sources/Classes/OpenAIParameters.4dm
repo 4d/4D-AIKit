@@ -1,13 +1,26 @@
-// request params
+// MARK:- execution params
 
-property timeout : Real:=0  // Override the client-level default timeout for this request, in seconds
-// extraHeaders: Send extra headers
-// extraQuery: Add additional query parameters to the request
+// Function to call asynchronously when finished
+property formula : 4D:C1709.Function
+// Optional worker name to use if a formula is defined
+property worker : Variant/*workerRef=Text, Longint*/
 
-// body params
+// MARK:- request params
 
-property user : Text  // A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse.
+// Override the client-level default timeout for this request, in seconds
+property timeout : Real:=0
 
+// Send extra headers
+// property extraHeaders: Object
+// Add additional query parameters to the request
+// property extraQuery: Object
+
+// MARK:- body params
+
+// A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse.
+property user : Text
+
+// MARK:- constructor
 Class constructor($object : Object)
 	If ($object=Null:C1517)
 		return 

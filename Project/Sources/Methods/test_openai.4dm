@@ -4,7 +4,8 @@
 var $client:=cs:C1710.OpenAI.new()
 
 // MARK:- models
-var $models:=$client.models.list().models
+var $modelsResult:=$client.models.list()
+var $models:=$modelsResult.models
 
 var $model : cs:C1710.OpenAIModel:=$client.models.retrieve($models.first().id).model
 

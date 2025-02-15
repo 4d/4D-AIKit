@@ -171,11 +171,22 @@ Function _request($httpMethod : Text; $path : Text; $body : Object; $parameters 
 		$options.timeout:=This:C1470.timeout
 	End if 
 	
-	$result.request:=4D:C1709.HTTPRequest.new($url; $options)
+	If ($parameters.formula#Null:C1517)
+		CALL WORKER:C1389($parameters.worker || "OpenAIWorker"; This:C1470._doHTTPRequest; $url; $options; $result; $parameters)
+		return Null:C1517
+	Else 
+		This:C1470._doHTTPRequest($url; $options; $result; $parameters)
+		return $result
+	End if 
 	
+	
+Function _doHTTPRequest($url : Text; $options : Object; $result : cs:C1710.OpenAIResult; $parameters : cs:C1710.OpenAIParameters)
+	$result.request:=4D:C1709.HTTPRequest.new($url; $options)
 	$result.request.wait()
 	
-	return $result
+	If ($parameters.formula#Null:C1517)
+		$parameters.formula.call(This:C1470; $result)
+	End if 
 	
 Function _get($path : Text; $parameters : cs:C1710.OpenAIParameters; $resultType : 4D:C1709.Class) : cs:C1710.OpenAIResult
 	return This:C1470._request("GET"; $path; Null:C1517; $parameters; $resultType)
@@ -190,7 +201,7 @@ Function _getApiList($path : Text; $queryParameters : Object; $parameters : cs:C
 	return This:C1470._request("GET"; $path+This:C1470._encodeQueryParameters($queryParameters); Null:C1517; $parameters; $resultType)
 	
 Function _encodeQueryParameter($value : Variant) : Text
-	// TODO: more encoding stuff, escaping if needed, etc...
+	// TODO: more encoding stuff, escaping, quotes if needed, etc...
 	return String:C10($value)
 	
 Function _encodeQueryParameters($queryParameters : Object) : Text

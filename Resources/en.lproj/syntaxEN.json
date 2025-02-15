@@ -586,11 +586,17 @@
 			],
 			"Summary": ""
 		},
+		"timeout": {
+			"Syntax": "timeout : Real"
+		},
+		"worker": {
+			"Syntax": "worker : Variant"
+		},
 		"user": {
 			"Syntax": "user : Text"
 		},
-		"timeout": {
-			"Syntax": "timeout : Real"
+		"formula": {
+			"Syntax": "formula : 4D.Function"
 		}
 	},
 	"OpenAIMessage": {
