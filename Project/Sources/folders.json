@@ -1,34 +1,35 @@
 {
-	"APIObject": {
-		"classes": [
-			"Choice",
-			"Image",
-			"Message",
-			"Model",
-			"Moderation"
-		]
-	},
 	"APIResource": {
 		"groups": [
 			"Helper",
+			"Object",
 			"Parameters",
 			"Result"
 		],
 		"classes": [
 			"OpenAIAPIResource",
-			"OpenAIChat",
+			"OpenAIChatAPI",
 			"OpenAIChatCompletions",
-			"OpenAIChatCompletionsMessages",
-			"OpenAICompletions",
-			"OpenAIImages",
-			"OpenAIModels",
-			"OpenAIModerations"
+			"OpenAIChatCompletionsMessagesAPI",
+			"OpenAICompletionsAPI",
+			"OpenAIImagesAPI",
+			"OpenAIModelsAPI",
+			"OpenAIModerationsAPI"
 		]
 	},
 	"Helper": {
 		"classes": [
 			"OpenAIChatHelper",
 			"OpenAIVisionHelper"
+		]
+	},
+	"Object": {
+		"classes": [
+			"OpenAIChoice",
+			"OpenAIImage",
+			"OpenAIMessage",
+			"OpenAIModel",
+			"OpenAIModeration"
 		]
 	},
 	"Parameters": {
@@ -42,9 +43,6 @@
 		]
 	},
 	"Result": {
-		"groups": [
-			"APIObject"
-		],
 		"classes": [
 			"OpenAIChatCompletionsResult",
 			"OpenAIImagesResult",

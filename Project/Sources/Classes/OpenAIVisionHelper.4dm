@@ -1,8 +1,8 @@
-property chat : cs:C1710.OpenAIChat
+property chat : cs:C1710.OpenAIChatAPI
 property imageURL : Text
 property parameters : cs:C1710.OpenAIChatCompletionParameters
 
-Class constructor($chat : cs:C1710.OpenAIChat; $imageURL : Text; $parameters : cs:C1710.OpenAIChatCompletionParameters)
+Class constructor($chat : cs:C1710.OpenAIChatAPI; $imageURL : Text; $parameters : cs:C1710.OpenAIChatCompletionParameters)
 	This:C1470.chat:=$chat
 	This:C1470.imageURL:=$imageURL
 	This:C1470.parameters:=$parameters
@@ -15,7 +15,7 @@ Class constructor($chat : cs:C1710.OpenAIChat; $imageURL : Text; $parameters : c
 	
 Function prompt($prompt : Text) : cs:C1710.OpenAIChatCompletionsResult
 	
-	var $message:=cs:C1710.Message.new({role: "user"})
+	var $message:=cs:C1710.OpenAIMessage.new({role: "user"})
 	$message.content:=[\
 		{type: "text"; text: $prompt}; \
 		{type: "image_url"; image_url: {url: This:C1470.imageURL; detail: "low"}}\

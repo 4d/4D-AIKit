@@ -6,11 +6,11 @@ var $client:=cs:C1710.OpenAI.new()
 // MARK:- models
 var $models:=$client.models.list().models
 
-var $model : cs:C1710.Model:=$client.models.retrieve($models.first().id).model
+var $model : cs:C1710.OpenAIModel:=$client.models.retrieve($models.first().id).model
 
 // MARK:- chat completion
 
-var $messages:=[cs:C1710.Message.new({role: "system"; content: "You are a helpful assistant."})]
+var $messages:=[cs:C1710.OpenAIMessage.new({role: "system"; content: "You are a helpful assistant."})]
 $messages.push({role: "user"; content: "Could you explain me why 42 is a special number"})
 var $chatResult:=$client.chat.completions.create($messages; {model: "gpt-4o-mini"})
 
@@ -41,7 +41,7 @@ var $images:=$client.images.generate("A futuristic city skyline at sunset"; {siz
 
 var $imageUrl : Text:=$images.first().url
 
-var $message:=cs:C1710.Message.new({role: "user"})
+var $message:=cs:C1710.OpenAIMessage.new({role: "user"})
 $message.content:=[\
 {type: "text"; text: "give me a description of the image"}; \
 {type: "image_url"; image_url: {url: $imageUrl; detail: "low"}}\

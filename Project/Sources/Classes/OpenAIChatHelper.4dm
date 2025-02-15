@@ -1,13 +1,13 @@
-property chat : cs:C1710.OpenAIChat
+property chat : cs:C1710.OpenAIChatAPI
 property systemPrompt : cs:C1710.Message
 property numberOfMessage : Integer:=5
 property parameters : cs:C1710.OpenAIChatCompletionParameters
 
 property messages : Collection:=[]
 
-Class constructor($chat : cs:C1710.OpenAIChat; $systemPrompt : Text; $parameters : cs:C1710.OpenAIChatCompletionParameters)
+Class constructor($chat : cs:C1710.OpenAIChatAPI; $systemPrompt : Text; $parameters : cs:C1710.OpenAIChatCompletionParameters)
 	This:C1470.chat:=$chat
-	This:C1470.systemPrompt:=cs:C1710.Message.new({role: "system"; content: $systemPrompt})
+	This:C1470.systemPrompt:=cs:C1710.OpenAIMessage.new({role: "system"; content: $systemPrompt})
 	This:C1470.parameters:=$parameters
 	If (This:C1470.parameters=Null:C1517)
 		This:C1470.parameters:={}

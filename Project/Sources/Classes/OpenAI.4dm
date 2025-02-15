@@ -3,18 +3,18 @@
 // MARK:- properties
 
 // MARK: api resources
-property completions : cs:C1710.OpenAICompletions
-property chat : cs:C1710.OpenAIChat
-// property embeddings : cs.OpenAIEmbeddings
-// property files : cs.OpenAIFiles
-property images : cs:C1710.OpenAIImages
-// property audio : cs.OpenAIAudio
-property moderations : cs:C1710.OpenAIModerations
-property models : cs:C1710.OpenAIModels
-// property fineTunings : cs.OpenAIFineTunings
-// property beta : cs.OpenAIBeta
-// property batches : cs.OpenAIBatches
-// property uploads : cs.OpenAIUploads
+property completions : cs:C1710.OpenAICompletionsAPI
+property chat : cs:C1710.OpenAIChatAPI
+// property embeddings : cs.OpenAIEmbeddingsAPI
+// property files : cs.OpenAIFilesAPI
+property images : cs:C1710.OpenAIImagesAPI
+// property audio : cs.OpenAIAudioAPI
+property moderations : cs:C1710.OpenAIModerationsAPI
+property models : cs:C1710.OpenAIModelsAPI
+// property fineTunings : cs.OpenAIFineTuningsAPI
+// property beta : cs.OpenAIBetaAPI
+// property batches : cs.OpenAIBatchesAPI
+// property uploads : cs.OpenAIUploadsAPI
 
 // MARK: account options
 property apiKey : Text:=""
@@ -26,14 +26,14 @@ property project : Text:=""
 property baseURL : Text:=""
 // property websocketBaseURL : Text
 
-property maxRetries : Integer:=2
+//property maxRetries : Integer:=2
 property timeout : Real:=10*60
 
 // property customHeaders : Object
 // property customQuery : Object
 
 // List of configurable attributes
-property _configurable : Collection:=["apiKey"; "baseURL"; "websocketBaseURL"; "organization"; "project"; "version"; "maxRetries"]
+property _configurable : Collection:=["apiKey"; "baseURL"; "organization"; "project"]
 
 
 // MARK: - constructor
@@ -89,14 +89,14 @@ Function _configureParameters($object : Object)
 Class constructor( ...  : Variant)
 	var $parameters:=Copy parameters:C1790()
 	
-	This:C1470.completions:=cs:C1710.OpenAICompletions.new(This:C1470)
-	This:C1470.chat:=cs:C1710.OpenAIChat.new(This:C1470)
-	// This.embeddings:=cs.OpenAIEmbeddings.new(This)
-	// This.files:=cs.OpenAIFiles.new(This)
-	This:C1470.images:=cs:C1710.OpenAIImages.new(This:C1470)
-	// This.audio:=cs.OpenAIAudio.new(This)
-	This:C1470.moderations:=cs:C1710.OpenAIModerations.new(This:C1470)
-	This:C1470.models:=cs:C1710.OpenAIModels.new(This:C1470)
+	This:C1470.completions:=cs:C1710.OpenAICompletionsAPI.new(This:C1470)
+	This:C1470.chat:=cs:C1710.OpenAIChatAPI.new(This:C1470)
+	// This.embeddings:=cs.OpenAIEmbeddingsAPI.new(This)
+	// This.files:=cs.OpenAIFilesAPI.new(This)
+	This:C1470.images:=cs:C1710.OpenAIImagesAPI.new(This:C1470)
+	// This.audio:=cs.OpenAIAudioAPI.new(This)
+	This:C1470.moderations:=cs:C1710.OpenAIModerationsAPI.new(This:C1470)
+	This:C1470.models:=cs:C1710.OpenAIModelsAPI.new(This:C1470)
 	
 	If (Count parameters:C259=0)
 		This:C1470._fillDefaultParameters()

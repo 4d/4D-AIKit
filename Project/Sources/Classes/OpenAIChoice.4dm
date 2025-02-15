@@ -12,5 +12,5 @@ Class constructor($object : Object)
 	End for each 
 	
 	If (This:C1470["message"]#Null:C1517)
-		This:C1470["message"]:=cs:C1710.Message.new(This:C1470["message"])
+		This:C1470["message"]:=cs:C1710.OpenAIMessage.new(This:C1470["message"])
 	End if 

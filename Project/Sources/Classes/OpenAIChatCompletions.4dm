@@ -1,11 +1,11 @@
-property messages : cs:C1710.OpenAIChatCompletionsMessages
+property messages : cs:C1710.OpenAIChatCompletionsMessagesAPI
 
 Class extends OpenAIAPIResource
 
 Class constructor($client : cs:C1710.OpenAI)
 	Super:C1705($client)
 	
-	This:C1470.messages:=cs:C1710.OpenAIChatCompletionsMessages.new($client)
+	This:C1470.messages:=cs:C1710.OpenAIChatCompletionsMessagesAPI.new($client)
 	
 /*
 * Creates a model response for the given chat conversation.

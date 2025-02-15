@@ -6,4 +6,4 @@ Function get models : Collection
 		return []
 	End if 
 	
-	return $body.data.map(Formula:C1597(cs:C1710.Model.new($1.value)))
+	return $body.data.map(Formula:C1597(cs:C1710.OpenAIModel.new($1.value)))

@@ -6,9 +6,9 @@ Function get choices : Collection
 		return []
 	End if 
 	
-	return $body.choices.map(Formula:C1597(cs:C1710.Choice.new($1.value)))
+	return $body.choices.map(Formula:C1597(cs:C1710.OpenAIChoice.new($1.value)))
 	
-Function get choice : cs:C1710.Choice
+Function get choice : cs:C1710.OpenAIChoice
 	var $body:=This:C1470.objectBody()
 	If (($body=Null:C1517) || (Not:C34(Value type:C1509($body.choices)=Is collection:K8:32)))
 		return Null:C1517
@@ -17,4 +17,4 @@ Function get choice : cs:C1710.Choice
 		return Null:C1517
 	End if 
 	
-	return cs:C1710.Choice.new($body.choices.first())
+	return cs:C1710.OpenAIChoice.new($body.choices.first())

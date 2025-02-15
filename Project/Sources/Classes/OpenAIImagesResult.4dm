@@ -6,9 +6,9 @@ Function get images : Collection
 		return []
 	End if 
 	
-	return $body.data.map(Formula:C1597(cs:C1710.Image.new($1.value)))
+	return $body.data.map(Formula:C1597(cs:C1710.OpenAIImage.new($1.value)))
 	
-Function get image : cs:C1710.Image
+Function get image : cs:C1710.OpenAIImage
 	var $body:=This:C1470.objectBody()
 	If (($body=Null:C1517) || (Not:C34(Value type:C1509($body.data)=Is collection:K8:32)))
 		return Null:C1517
@@ -17,13 +17,13 @@ Function get image : cs:C1710.Image
 		return Null:C1517
 	End if 
 	
-	return cs:C1710.Image.new($body.data.first())
+	return cs:C1710.OpenAIImage.new($body.data.first())
 	
 Function saveImagesToDisk($folder : 4D:C1709.Folder) : Boolean
 	ASSERT:C1129($folder#Null:C1517)
 	
 	var $index:=0
-	var $image : cs:C1710.Image
+	var $image : cs:C1710.OpenAIImage
 	For each ($image; This:C1470.images || [])
 		var $blob:=$image.asBlob()
 		If ($blob#Null:C1517)
