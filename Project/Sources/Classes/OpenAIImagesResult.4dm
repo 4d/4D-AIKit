@@ -5,32 +5,29 @@ Function get images : Collection
 		return []
 	End if 
 	
-	return This:C1470.request.response.body.data.extract("url")
+	return This:C1470.request.response.body.data.map(Formula:C1597(cs:C1710.Image.new($1.value)))
 	
-	// TODO:  maybe decode image instead, with different type
-Function get image : Text
+Function get image : cs:C1710.Image
 	If (Not:C34(Value type:C1509(This:C1470.request.response.body.data)=Is collection:K8:32))
-		return ""
+		return Null:C1517
 	End if 
 	If (This:C1470.request.response.body.data.length=0)
-		return ""
+		return Null:C1517
 	End if 
 	
-	return This:C1470.request.response.body.data.first().extract("url")
+	return cs:C1710.Image.new(This:C1470.request.response.body.data.first())
 	
-Function saveImageToDisk($folder : 4D:C1709.Folder) : Boolean
+Function saveImagesToDisk($folder : 4D:C1709.Folder) : Boolean
 	ASSERT:C1129($folder#Null:C1517)
 	
-	var $image : Object
 	var $index:=0
-	For each ($image; This:C1470.images)
-		If ($image.url#Null:C1517)
-			var $request:=4D:C1709.HTTPRequest.new($image.url).wait()
-			If (Num:C11($request.response.status)=200)
-				$folder.file("image"+String:C10($index)+".png").setContent($request.response.body())
-			End if 
+	var $image : cs:C1710.Image
+	For each ($image; This:C1470.images || [])
+		var $blob:=$image.asBlob()
+		If ($blob#Null:C1517)
+			$folder.file("image"+String:C10($index)+".png").setContent($blob)
 		End if 
-		$index+=1
+		$index+=1  // let increment even if failed
 	End for each 
 	
 	return True:C214

@@ -34,11 +34,12 @@ var $moderation:=$client.moderations.create("Hello word").moderation
 
 // MARK:- image
 
-var $images:=$client.images.generate("A futuristic city skyline at sunset"; {size: "1024x1024"}).images
+var $images:=$client.images.generate("A futuristic city skyline at sunset"; {size: "1024x1024"}).images  // ; responseFormat: "b64_json"
+// $images.first().saveToDisk(Folder(fk desktop folder).file("mycity.png"))
 
 // MARK:- vision
 
-var $imageUrl : Text:=$images.first()
+var $imageUrl : Text:=$images.first().url
 
 var $message:=cs:C1710.Message.new({role: "user"})
 $message.content:=[\

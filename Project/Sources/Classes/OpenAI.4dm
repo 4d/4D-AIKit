@@ -39,7 +39,6 @@ property _configurable : Collection:=["apiKey"; "baseURL"; "websocketBaseURL"; "
 // MARK: - constructor
 
 Function _fillDefaultParameters()
-	// TODO: fill with env variable
 	
 	If (Length:C16(This:C1470.apiKey)=0)
 		

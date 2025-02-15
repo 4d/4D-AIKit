@@ -40,6 +40,19 @@
 				"Summary": ""
 			}
 		},
+		"OpenAICompletions": {
+			"new()": {
+				"Syntax": "**.new**( *client* : cs.ai.OpenAI )",
+				"Params": [
+					[
+						"client",
+						"cs.ai.OpenAI",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
 		"OpenAIModerations": {
 			"new()": {
 				"Syntax": "**.new**( *client* : cs.ai.OpenAI )",
@@ -249,19 +262,6 @@
 				"Summary": ""
 			}
 		},
-		"OpenAICompletions": {
-			"new()": {
-				"Syntax": "**.new**( *client* : cs.ai.OpenAI )",
-				"Params": [
-					[
-						"client",
-						"cs.ai.OpenAI",
-						"->"
-					]
-				],
-				"Summary": ""
-			}
-		},
 		"OpenAIModels": {
 			"new()": {
 				"Syntax": "**.new**( *client* : cs.ai.OpenAI )",
@@ -289,6 +289,19 @@
 			}
 		},
 		"Message": {
+			"new()": {
+				"Syntax": "**.new**( *object* : Object )",
+				"Params": [
+					[
+						"object",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"Image": {
 			"new()": {
 				"Syntax": "**.new**( *object* : Object )",
 				"Params": [
@@ -401,6 +414,9 @@
 		"n": {
 			"Syntax": "n : Integer"
 		},
+		"responseFormat": {
+			"Syntax": "responseFormat : Text"
+		},
 		"size": {
 			"Syntax": "size : Text"
 		},
@@ -408,6 +424,30 @@
 			"Syntax": "model : Text"
 		},
 		"_inheritedFrom_": "OpenAIParameters"
+	},
+	"OpenAICompletions": {
+		"create()": {
+			"Syntax": "**.create**( *prompt* : Text; *parameters* : cs.ai.OpenAICompletionParameters ) : cs.ai.OpenAIResult",
+			"Params": [
+				[
+					"prompt",
+					"Text",
+					"->"
+				],
+				[
+					"parameters",
+					"cs.ai.OpenAICompletionParameters",
+					"->"
+				],
+				[
+					"",
+					"cs.ai.OpenAIResult",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIAPIResource"
 	},
 	"OpenAIModerations": {
 		"create()": {
@@ -852,44 +892,9 @@
 			"Syntax": "timeout : Real"
 		}
 	},
-	"OpenAICompletions": {
-		"create()": {
-			"Syntax": "**.create**( *prompt* : Text; *parameters* : cs.ai.OpenAICompletionParameters ) : cs.ai.OpenAIResult",
-			"Params": [
-				[
-					"prompt",
-					"Text",
-					"->"
-				],
-				[
-					"parameters",
-					"cs.ai.OpenAICompletionParameters",
-					"->"
-				],
-				[
-					"",
-					"cs.ai.OpenAIResult",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"_inheritedFrom_": "OpenAIAPIResource"
-	},
 	"OpenAIImagesResult": {
-		"get image()": {
-			"Syntax": "**.get image**() : Text",
-			"Params": [
-				[
-					"",
-					"Text",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"saveImageToDisk()": {
-			"Syntax": "**.saveImageToDisk**( *folder* : 4D.Folder ) : Boolean",
+		"saveImagesToDisk()": {
+			"Syntax": "**.saveImagesToDisk**( *folder* : 4D.Folder ) : Boolean",
 			"Params": [
 				[
 					"folder",
@@ -899,6 +904,17 @@
 				[
 					"",
 					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get image()": {
+			"Syntax": "**.get image**() : cs.ai.Image",
+			"Params": [
+				[
+					"",
+					"cs.ai.Image",
 					"<-"
 				]
 			],
@@ -1000,6 +1016,17 @@
 		},
 		"_inheritedFrom_": "OpenAIParameters"
 	},
+	"Message": {
+		"user": {
+			"Syntax": "user : Text"
+		},
+		"content": {
+			"Syntax": "content : Variant"
+		},
+		"role": {
+			"Syntax": "role : Text"
+		}
+	},
 	"OpenAIModelListResult": {
 		"get models()": {
 			"Syntax": "**.get models**() : Collection",
@@ -1014,15 +1041,42 @@
 		},
 		"_inheritedFrom_": "OpenAIResult"
 	},
-	"Message": {
-		"user": {
-			"Syntax": "user : Text"
+	"Image": {
+		"saveToDisk()": {
+			"Syntax": "**.saveToDisk**( *file* : 4D.File ) : Boolean",
+			"Params": [
+				[
+					"file",
+					"4D.File",
+					"->"
+				],
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
 		},
-		"content": {
-			"Syntax": "content : Variant"
+		"asBlob()": {
+			"Syntax": "**.asBlob**() : 4D.Blob",
+			"Params": [
+				[
+					"",
+					"4D.Blob",
+					"<-"
+				]
+			],
+			"Summary": ""
 		},
-		"role": {
-			"Syntax": "role : Text"
+		"revised_prompt": {
+			"Syntax": "revised_prompt : Variant"
+		},
+		"b64_json": {
+			"Syntax": "b64_json : Text"
+		},
+		"url": {
+			"Syntax": "url : Text"
 		}
 	}
 }

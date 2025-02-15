@@ -2,6 +2,7 @@
 	"APIObject": {
 		"classes": [
 			"Choice",
+			"Image",
 			"Message",
 			"Model",
 			"Moderation"
