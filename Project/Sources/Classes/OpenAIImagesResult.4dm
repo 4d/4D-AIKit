@@ -7,6 +7,17 @@ Function get images : Collection
 	
 	return This:C1470.request.response.body.data.extract("url")
 	
+	// TODO:  maybe decode image instead, with different type
+Function get image : Text
+	If (Not:C34(Value type:C1509(This:C1470.request.response.body.data)=Is collection:K8:32))
+		return ""
+	End if 
+	If (This:C1470.request.response.body.data.length=0)
+		return ""
+	End if 
+	
+	return This:C1470.request.response.body.data.first().extract("url")
+	
 Function saveImageToDisk($folder : 4D:C1709.Folder) : Boolean
 	ASSERT:C1129($folder#Null:C1517)
 	

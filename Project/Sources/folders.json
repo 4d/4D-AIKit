@@ -9,6 +9,7 @@
 	},
 	"APIResource": {
 		"groups": [
+			"Helper",
 			"Parameters",
 			"Result"
 		],
@@ -21,6 +22,12 @@
 			"OpenAIImages",
 			"OpenAIModels",
 			"OpenAIModerations"
+		]
+	},
+	"Helper": {
+		"classes": [
+			"OpenAIChatHelper",
+			"OpenAIVisionHelper"
 		]
 	},
 	"Parameters": {

@@ -6,3 +6,13 @@ Function get choices : Collection
 	End if 
 	
 	return This:C1470.request.response.body.choices.map(Formula:C1597(cs:C1710.Choice.new($1.value)))
+	
+Function get choice : cs:C1710.Choice
+	If (Not:C34(Value type:C1509(This:C1470.request.response.body.choices)=Is collection:K8:32))
+		return Null:C1517
+	End if 
+	If (This:C1470.request.response.body.choices.length=0)
+		return Null:C1517
+	End if 
+	
+	return cs:C1710.Choice.new(This:C1470.request.response.body.choices.first())
