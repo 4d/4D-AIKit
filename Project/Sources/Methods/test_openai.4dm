@@ -51,8 +51,16 @@ var $moderation:=$client.moderations.create("Hello word").moderation
 
 // MARK:- image
 
-var $images:=$client.images.generate("A futuristic city skyline at sunset"; {size: "1024x1024"}).images  // ; responseFormat: "b64_json", n: 4
-// $images.first().saveToDisk(Folder(fk desktop folder).file("mycity.png"))
+var $imagesResult:=$client.images.generate("A futuristic city skyline at sunset"; {size: "1024x1024"})  // ; responseFormat: "b64_json", n: 4
+var $images:=$imagesResult.images
+$images.first().saveToDisk(Folder:C1567(fk desktop folder:K87:19).file("mycity.png"))
+
+// $imagesResult:=$client.images._createVariation(Folder(fk desktop folder).file("mycity.png"))
+// $images.image.saveToDisk(Folder(fk desktop folder).file("mycityvariation.png"))
+
+// $imagesResult:=$client.images._edit(Folder(fk desktop folder).file("mycity.png"); "could you add more yellow")
+// $images.image.saveToDisk(Folder(fk desktop folder).file("mycityvariation.png"))
+
 
 // MARK:- vision
 

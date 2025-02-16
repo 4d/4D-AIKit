@@ -60,7 +60,8 @@
 	},
 	"Utils": {
 		"classes": [
-			"_Env"
+			"_Env",
+			"_ImageUtils"
 		]
 	},
 	"trash": {}

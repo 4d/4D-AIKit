@@ -150,7 +150,7 @@ Function _headers() : Object
 	
 	// MARK:- client functions
 	
-Function _request($httpMethod : Text; $path : Text; $body : Object; $parameters : cs:C1710.OpenAIParameters; $resultType : 4D:C1709.Class) : cs:C1710.OpenAIResult
+Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters : cs:C1710.OpenAIParameters; $resultType : 4D:C1709.Class) : cs:C1710.OpenAIResult
 	If ($resultType=Null:C1517)
 		$resultType:=cs:C1710.OpenAIResult
 	End if 
@@ -160,11 +160,21 @@ Function _request($httpMethod : Text; $path : Text; $body : Object; $parameters 
 	var $headers:=This:C1470._headers()
 	
 	var $options:={method: $httpMethod; headers: $headers; dataType: "auto"}
-	If ($body#Null:C1517)
-		$options.body:=$body
-	End if 
-	// XXX: if not only object maybe do other stuff (ex: upload file etc...)
-	$headers["Content-Type"]:="application/json"
+	Case of 
+		: ($body=Null:C1517)
+			$headers["Content-Type"]:="application/json"
+		: (Value type:C1509($body)=Is object:K8:27)
+			$headers["Content-Type"]:="application/json"
+			$options.body:=$body
+		: ((Value type:C1509($body)=Is text:K8:3) && (Position:C15("{boundary}"; $body)>0))
+			var $boundary:=Generate UUID:C1066
+			$headers["Content-Type"]:="multipart/form-data; boundary="+$boundary
+			$options.body:=Replace string:C233($body; "{boundary}"; $boundary)
+		Else 
+			$options.body:=$body
+	End case 
+	
+	
 	If (($parameters#Null:C1517) && ($parameters.timeout>0))
 		$options.timeout:=$parameters.timeout
 	Else 
@@ -205,9 +215,60 @@ Function _delete($path : Text; $parameters : cs:C1710.OpenAIParameters; $resultT
 Function _getApiList($path : Text; $queryParameters : Object; $parameters : cs:C1710.OpenAIParameters; $resultType : 4D:C1709.Class) : cs:C1710.OpenAIResult
 	return This:C1470._request("GET"; $path+This:C1470._encodeQueryParameters($queryParameters); Null:C1517; $parameters; $resultType)
 	
-Function _encodeQueryParameter($value : Variant) : Text
-	// TODO: more encoding stuff, escaping, quotes if needed, etc...
-	return String:C10($value)
+Function _postFiles($path : Text; $body : Object; $files : Object; $parameters : cs:C1710.OpenAIParameters; $resultType : 4D:C1709.Class) : cs:C1710.OpenAIResult
+	return This:C1470._request("POST"; $path; This:C1470._formData($body; $files); $parameters; $resultType)
+	
+	// MARK:- http utils
+	
+Function _encodeQueryParameter($value : Variant)->$encoded : Text
+	// TODO: more stuff? quotes if needed, etc...
+	
+	var $url : Text:=String:C10($value)
+	
+	var $i; $j : Integer
+	For ($i; 1; Length:C16($url))
+		
+		var $char:=Substring:C12($url; $i; 1)
+		var $code:=Character code:C91($char)
+		
+		var $shouldEncode:=False:C215
+		
+		Case of 
+			: ($code=32)
+				
+			: ($code=45)
+				// -
+			: ($code=46)
+				// .
+			: ($code>47) & ($code<58)
+				// 0 1 2 3 4 5 6 7 8 9
+			: ($code>64) & ($code<91)
+				// A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+			: ($code=95)
+				// _
+			: ($code>96) & ($code<123)
+				// a b c d e f g h i j k l m n o p q r s t u v w x y z
+			: ($code=126)
+				// ~
+			Else 
+				$shouldEncode:=True:C214
+		End case 
+		
+		If ($shouldEncode)
+			CONVERT FROM TEXT:C1011($char; "utf-8"; $data)
+			For ($j; 0; BLOB size:C605($data)-1)
+				var $hex:=String:C10($data{$j}; "&x")
+				$encoded:=$encoded+"%"+Substring:C12($hex; Length:C16($hex)-1)
+			End for 
+		Else 
+			If ($code=32)
+				$encoded:=$encoded+"+"
+			Else 
+				$encoded:=$encoded+$char
+			End if 
+		End if 
+		
+	End for 
 	
 Function _encodeQueryParameters($queryParameters : Object) : Text
 	If (($queryParameters=Null:C1517) || OB Is empty:C1297($queryParameters))
@@ -216,5 +277,21 @@ Function _encodeQueryParameters($queryParameters : Object) : Text
 	
 	return "?"+OB Entries:C1720($queryParameters).map(Formula:C1597($1.value.key+"="+This:C1470._encodeQueryParameter($1.value.value))).join("&")
 	
+Function _formData($body : Object; $files : Object) : Text
 	
+	var $value:=""
 	
+	var $key : Text
+	For each ($key; $body)
+		$value+="------{boundary}\r\n\r\n"
+		$value+=String:C10($body[$key])+"\r\n"
+	End for each 
+	
+	For each ($key; $files)
+		$value+="------{boundary}\r\n\r\n"
+		$value+="Content-Disposition: form-data;name=\""+$key+"\";filename=\""+$key+".png\"\r\n"+"Content-Type: image/png\r\n\r\n"
+		
+		$value+=cs:C1710._ImageUtils.me.toFormData($files[$key])
+	End for each 
+	
+	return $value

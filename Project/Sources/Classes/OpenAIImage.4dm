@@ -22,16 +22,11 @@ Function asBlob() : 4D:C1709.Blob
 	Case of 
 		: (Length:C16(String:C10(This:C1470.url))>0)
 			
-			var $request:=4D:C1709.HTTPRequest.new(This:C1470.url).wait()
-			If (Num:C11($request.response.status)=200)
-				return $request.response.body()
-			End if 
+			return cs:C1710._ImageUtils.me.httpURLToBlob(This:C1470.url)
 			
 		: (Length:C16(String:C10(This:C1470.b64_json))>0)
 			
-			var $blob : 4D:C1709.Blob
-			BASE64 DECODE:C896(This:C1470.b64_json; $blob)
-			return $blob
+			return cs:C1710._ImageUtils.me.base64ToBlob(This:C1470.url)
 			
 	End case 
 	

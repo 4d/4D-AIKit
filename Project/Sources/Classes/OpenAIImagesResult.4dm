@@ -19,15 +19,19 @@ Function get image : cs:C1710.OpenAIImage
 	
 	return cs:C1710.OpenAIImage.new($body.data.first())
 	
-Function saveImagesToDisk($folder : 4D:C1709.Folder) : Boolean
+Function saveImagesToDisk($folder : 4D:C1709.Folder; $prefix : Text) : Boolean
 	ASSERT:C1129($folder#Null:C1517)
+	
+	If (Length:C16(String:C10($prefix))=0)
+		$prefix:="image"
+	End if 
 	
 	var $index:=0
 	var $image : cs:C1710.OpenAIImage
 	For each ($image; This:C1470.images || [])
 		var $blob:=$image.asBlob()
 		If ($blob#Null:C1517)
-			$folder.file("image"+String:C10($index)+".png").setContent($blob)
+			$folder.file($prefix+String:C10($index)+".png").setContent($blob)
 		End if 
 		$index+=1  // let increment even if failed
 	End for each 
