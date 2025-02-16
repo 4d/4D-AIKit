@@ -12,9 +12,15 @@ var $client:=cs:C1710.OpenAI.new()
 // $client.baseURL:="https://api.anthropic.com/v1"
 // $client.baseURL:="https://YOUR_RESOURCE_NAME.openai.azure.com"
 
+If (Folder:C1567(fk desktop folder:K87:19).file("apiKey").exists)  // Just to test, do not do that
+	$client.apiKey:=Folder:C1567(fk desktop folder:K87:19).file("apiKey").getText()
+End if 
+
 // MARK:- models
 var $modelsResult:=$client.models.list()
 var $models:=$modelsResult.models
+// test async
+//$client.models.list({formula: Formula(ALERT(String(Current process)+":"+Current process name+"\n"+JSON Stringify($1.models)))})
 
 var $model : cs:C1710.OpenAIModel:=$client.models.retrieve($models.first().id).model
 

@@ -341,8 +341,8 @@
 		"n": {
 			"Syntax": "n : Integer"
 		},
-		"maxCompletionTokens": {
-			"Syntax": "maxCompletionTokens : Integer"
+		"max_completion_tokens": {
+			"Syntax": "max_completion_tokens : Integer"
 		},
 		"store": {
 			"Syntax": "store : Boolean"
@@ -449,8 +449,8 @@
 		"n": {
 			"Syntax": "n : Integer"
 		},
-		"maxTokens": {
-			"Syntax": "maxTokens : Integer"
+		"max_tokens": {
+			"Syntax": "max_tokens : Integer"
 		},
 		"echo": {
 			"Syntax": "echo : Boolean"
@@ -472,14 +472,17 @@
 			],
 			"Summary": ""
 		},
+		"user": {
+			"Syntax": "user : Text"
+		},
+		"formulaWorker": {
+			"Syntax": "formulaWorker : Variant"
+		},
 		"timeout": {
 			"Syntax": "timeout : Real"
 		},
 		"worker": {
 			"Syntax": "worker : Variant"
-		},
-		"user": {
-			"Syntax": "user : Text"
 		},
 		"formula": {
 			"Syntax": "formula : 4D.Function"
@@ -1059,14 +1062,14 @@
 			],
 			"Summary": ""
 		},
+		"response_format": {
+			"Syntax": "response_format : Text"
+		},
 		"style": {
 			"Syntax": "style : Text"
 		},
 		"n": {
 			"Syntax": "n : Integer"
-		},
-		"responseFormat": {
-			"Syntax": "responseFormat : Text"
 		},
 		"size": {
 			"Syntax": "size : Text"

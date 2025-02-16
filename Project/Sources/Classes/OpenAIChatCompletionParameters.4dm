@@ -5,7 +5,7 @@ property model : Text:="gpt-4o-mini"
 // property stream : Boolean:=False
 
 // The maximum number of [tokens](/tokenizer) that can be generated in the completion.
-property maxCompletionTokens : Integer:=0
+property max_completion_tokens : Integer:=0
 
 //  How many completions to generate for each prompt.
 property n : Integer:=1
@@ -30,7 +30,7 @@ Function body() : Object
 		$body.model:=This:C1470.model
 	End if 
 	If (This:C1470.maxCompletionTokens>0)
-		$body.max_completion_tokens:=This:C1470.maxCompletionTokens
+		$body.max_completion_tokens:=This:C1470.max_completion_tokens
 	End if 
 	If (This:C1470.n>0)
 		$body.n:=This:C1470.n

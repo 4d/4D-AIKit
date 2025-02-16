@@ -15,7 +15,7 @@ property style : Text:=""
 // property quality: Text = "standard" || "hd" // for generation
 
 // The format in which the generated images are returned.
-property responseFormat : Text:="url"  // "url" || "b64_json"
+property response_format : Text:="url"  // "url" || "b64_json"
 
 Class extends OpenAIParameters
 
@@ -37,8 +37,8 @@ Function body() : Object
 	If (Length:C16(This:C1470.style)>0)
 		$body.style:=This:C1470.style
 	End if 
-	If (Length:C16(This:C1470.responseFormat)>0)
-		$body.response_format:=This:C1470.responseFormat
+	If (Length:C16(This:C1470.response_format)>0)
+		$body.response_format:=This:C1470.response_format
 	End if 
 	
 	return $body

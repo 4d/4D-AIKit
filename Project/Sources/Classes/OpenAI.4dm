@@ -171,7 +171,7 @@ Function _request($httpMethod : Text; $path : Text; $body : Object; $parameters 
 		$options.timeout:=This:C1470.timeout
 	End if 
 	
-	If ($parameters.formula#Null:C1517)
+	If (($parameters.formula#Null:C1517) && (OB Instance of:C1731($parameters.formula; 4D:C1709.Function)))
 		CALL WORKER:C1389($parameters.worker || "OpenAIWorker"; This:C1470._doHTTPRequest; $url; $options; $result; $parameters)
 		return Null:C1517
 	Else 
@@ -184,8 +184,13 @@ Function _doHTTPRequest($url : Text; $options : Object; $result : cs:C1710.OpenA
 	$result.request:=4D:C1709.HTTPRequest.new($url; $options)
 	$result.request.wait()
 	
-	If ($parameters.formula#Null:C1517)
-		$parameters.formula.call(This:C1470; $result)
+	If (($parameters.formula#Null:C1517) && (OB Instance of:C1731($parameters.formula; 4D:C1709.Function)))
+		If ($parameters.formulaWorker#Null:C1517)
+			CALL WORKER:C1389($parameters.formulaWorker; $parameters.formula; $result)
+		Else 
+			$parameters.formula.call($parameters._formulaThis || This:C1470; $result)
+		End if 
+		
 	End if 
 	
 Function _get($path : Text; $parameters : cs:C1710.OpenAIParameters; $resultType : 4D:C1709.Class) : cs:C1710.OpenAIResult

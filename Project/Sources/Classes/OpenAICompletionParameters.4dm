@@ -11,7 +11,7 @@ property model : Text:="gpt-3.5-turbo-instruct"
 property echo : Boolean
 
 // The maximum number of [tokens](/tokenizer) that can be generated in the completion.
-property maxTokens : Integer
+property max_tokens : Integer
 
 //  How many completions to generate for each prompt.
 property n : Integer:=1
@@ -38,8 +38,8 @@ Function body() : Object
 	If (This:C1470.echo)
 		$body.echo:=This:C1470.echo
 	End if 
-	If (This:C1470.maxTokens>0)
-		$body.maxTokens:=This:C1470.maxTokens
+	If (This:C1470.max_tokens>0)
+		$body.max_tokens:=This:C1470.max_tokens
 	End if 
 	If (This:C1470.n>0)
 		$body.n:=This:C1470.n

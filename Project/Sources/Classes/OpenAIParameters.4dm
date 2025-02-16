@@ -1,13 +1,21 @@
 // MARK:- execution params
 
-// Function to call asynchronously when finished
+// Function to call asynchronously when finished.
 property formula : 4D:C1709.Function
-// Optional worker name to use if a formula is defined
+
+// Optional worker/process to use do execute HTTP request if a "formula" is defined.
 property worker : Variant/*workerRef=Text, Longint*/
+
+// Optional worker/process to use to execute the "formula" after executing HTTP request. Be sure process remain.
+property formulaWorker : Variant/*workerRef=Text, Longint*/
+
+// replace This object when calling formula
+property _formulaThis : Object
+
 
 // MARK:- request params
 
-// Override the client-level default timeout for this request, in seconds
+// Override the client-level default timeout for this request, in seconds.
 property timeout : Real:=0
 
 // Send extra headers
