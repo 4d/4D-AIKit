@@ -1,8 +1,16 @@
 //%attributes = {}
-
 // create a client
 var $client:=cs:C1710.OpenAI.new()
-// $client.baseURL:="http://127.0.0.1:11434/v1"  // ex: ollama
+
+// $client.baseURL:="http://127.0.0.1:11434/v1"  // ollama 
+// $client.baseURL:="http://127.0.0.1:8080" // mudler/LocalAI
+
+// $client.baseURL:="https://api.mistral.ai/v1"
+// $client.baseURL:="https://api.deepseek.com" 
+// $client.baseURL:="https://api.groq.com/openai/v1" 
+// $client.baseURL:="https://api.perplexity.ai" 
+// $client.baseURL:="https://api.anthropic.com/v1"
+// $client.baseURL:="https://YOUR_RESOURCE_NAME.openai.azure.com"
 
 // MARK:- models
 var $modelsResult:=$client.models.list()
@@ -27,7 +35,7 @@ $chatResult:=$client.chat.completions.create($messages; {model: $modelName})
 $assistantText:=$chatResult.choices.first().message.content
 
 // or
-var $helper:=$client.chat.createChatHelper("You are a helpful assistant.")
+var $helper:=$client.chat.create("You are a helpful assistant.")
 $chatResult:=$helper.prompt("Could you explain me why 42 is a special number")
 $chatResult:=$helper.prompt("and could you decompose this number")
 
@@ -55,4 +63,4 @@ $chatResult:=$client.chat.completions.create([$message]; {model: $visionModelNam
 var $visionText : Text:=$chatResult.choices.first().message.content
 
 // or
-$chatResult:=$client.chat.createVisionHelper($imageUrl).prompt("give me a description of the image")
+$chatResult:=$client.chat.vision.create($imageUrl).prompt("give me a description of the image")

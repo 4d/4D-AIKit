@@ -1,24 +1,23 @@
 property chat : cs:C1710.OpenAIChatAPI
 property imageURL : Text
-property parameters : cs:C1710.OpenAIChatCompletionParameters
 
-Class constructor($chat : cs:C1710.OpenAIChatAPI; $imageURL : Text; $parameters : cs:C1710.OpenAIChatCompletionParameters)
+Class constructor($chat : cs:C1710.OpenAIChatAPI; $imageURL : Text)
 	This:C1470.chat:=$chat
 	This:C1470.imageURL:=$imageURL
-	This:C1470.parameters:=$parameters
-	If (This:C1470.parameters=Null:C1517)
-		This:C1470.parameters:={}
-	End if 
-	If (This:C1470.parameters.model=Null:C1517)
-		This:C1470.parameters.model:="gpt-4o-mini"
-	End if 
 	
-Function prompt($prompt : Text) : cs:C1710.OpenAIChatCompletionsResult
+Function prompt($prompt : Text; $parameters : cs:C1710.OpenAIChatCompletionParameters) : cs:C1710.OpenAIChatCompletionsResult
 	
-	var $message:=cs:C1710.OpenAIMessage.new({role: "user"})
-	$message.content:=[\
+	var $message:=cs:C1710.OpenAIMessage.new({role: "user"; \
+		content: [\
 		{type: "text"; text: $prompt}; \
 		{type: "image_url"; image_url: {url: This:C1470.imageURL; detail: "low"}}\
-		]
+		]})
 	
-	return This:C1470.chat.completions.create([$message]; This:C1470.parameters)
+	If ($parameters=Null:C1517)
+		$parameters:={}
+	End if 
+	If ($parameters.model=Null:C1517)
+		$parameters.model:="gpt-4o-mini"
+	End if 
+	
+	return This:C1470.chat.completions.create([$message]; $parameters)

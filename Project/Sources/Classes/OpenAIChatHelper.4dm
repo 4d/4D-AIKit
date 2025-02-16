@@ -16,14 +16,14 @@ Class constructor($chat : cs:C1710.OpenAIChatAPI; $systemPrompt : Text; $paramet
 		This:C1470.parameters.model:="gpt-4o-mini"
 	End if 
 	
-	
 Function prompt($prompt : Text) : cs:C1710.OpenAIChatCompletionsResult
 	
 	var $messages : Collection:=This:C1470.messages.copy()
 	$messages.unshift(This:C1470.systemPrompt)
 	
 	var $result:=This:C1470.chat.completions.create($messages; This:C1470.parameters)
-	If ($result.success)
+	
+	If (($result#Null:C1517) && ($result.success))
 		This:C1470.messages.push($result.choices.first().message)
 		
 		If (This:C1470.messages.length>This:C1470.numberOfMessage)
