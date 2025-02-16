@@ -4,11 +4,11 @@
 
 ## Overview
 
-4D AIKit is a built-in 4D component that allows you to interact with third-party AI API.
+4D AIKit is a built-in 4D component that enables interaction with third-party AI APIs.
 
 ## OpenAI
 
-The `OpenAI` class allows you to make request to the OpenAI API.
+The `OpenAI` class allows you to make requests to the OpenAI API.
 
 ### Configuration
 
@@ -16,15 +16,37 @@ The `OpenAI` class allows you to make request to the OpenAI API.
 var $client:=cs.ai.OpenAI.new("your api key")
 ```
 
-For provider compatible API you could configure the server url.
+For a compatible provider API, you can configure the server URL.
 
 ```4d
 var $client:=cs.ai.OpenAI.new({apiKey: "your api key"; baseURL: "https://server.ai"})
 ```
 
-### Chat
+or 
 
-#### Completions
+```4d
+$client.baseURL:="https://server.ai"
+```
+
+### Making requests
+
+`OpenAI` provides different endpoints, each offering various functions.
+
+```4d
+var $result:=$client.<endpoint>.<function>(<parameters...>)
+```
+
+The `$result` contains the `HTTPRequest`, a `success` status and  a collection of `errors`.
+
+And if the result is `typed`, you could access decoded returned data as object instance. See example bellow.
+
+#### Chat
+
+https://platform.openai.com/docs/api-reference/chat
+
+##### Completions
+
+https://platform.openai.com/docs/api-reference/chat/create
 
 ```4d
 var $messages:=[{role: "system"; content: "You are a helpful assistant."}]
@@ -33,9 +55,9 @@ var $result:=$client.chat.completions.create($messages; {model: "gpt-4o-mini"})
 // result in $result.choice
 ```
 
-#### Chat helper
+##### Chat helper
 
-This helper allow to keep a list of user message, response from assistant.
+This helper allows you to maintain a list of user messages and assistant responses.
 
 ```4d
 var $helper:=$client.chat.create("You are a helpful assistant.")
@@ -44,21 +66,25 @@ $result:=$helper.prompt("and could you decompose this number")
 // conversation in $helper.messages
 ```
 
-#### Vision helper
+##### Vision helper
 
-This helper allow to analyse an image using the chat.
+This helper enables image analysis through the chat.
 
 ```4d
 var $result:=$client.chat.vision.create($imageUrl).prompt("give me a description of the image")
 ```
 
-### Images
+#### Images
+
+https://platform.openai.com/docs/api-reference/images
 
 ```4d
 var $images:=$client.images.generate("A futuristic city skyline at sunset"; {size: "1024x1024"}).images
 ```
 
-### Models
+#### Models
+
+https://platform.openai.com/docs/api-reference/models
 
 Get full list of models
 
@@ -66,13 +92,15 @@ Get full list of models
 var $models:=$client.models.list().models // you can then extract the `id`
 ```
 
-Get one model information
+Get one model information by id
 
 ```4d
 var $model:=$client.models.retrieve("a model id").model
 ```
 
-### Moderations
+#### Moderations
+
+https://platform.openai.com/docs/api-reference/moderations
 
 ```4d
 var $moderation:=$client.moderations.create("This text contains inappropriate language and offensive behavior.").moderation
