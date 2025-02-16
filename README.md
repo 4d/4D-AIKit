@@ -38,7 +38,7 @@ var $result:=$client.chat.completions.create($messages; {model: "gpt-4o-mini"})
 This helper allow to keep a list of user message, response from assistant.
 
 ```4d
-var $helper:=$client.chat.createChatHelper("You are a helpful assistant.")
+var $helper:=$client.chat.create("You are a helpful assistant.")
 var $result:=$helper.prompt("Could you explain me why 42 is a special number")
 $result:=$helper.prompt("and could you decompose this number")
 // conversation in $helper.messages
@@ -49,7 +49,7 @@ $result:=$helper.prompt("and could you decompose this number")
 This helper allow to analyse an image using the chat.
 
 ```4d
-var $result:=$client.chat.createVisionHelper($imageUrl).prompt("give me a description of the image")
+var $result:=$client.chat.vision.create($imageUrl).prompt("give me a description of the image")
 ```
 
 ### Images
