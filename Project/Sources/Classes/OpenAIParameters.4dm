@@ -9,9 +9,11 @@ property worker : Variant/*workerRef=Text, Longint*/
 // Optional worker/process to use to execute the "formula" after executing HTTP request. Be sure process remain.
 property formulaWorker : Variant/*workerRef=Text, Longint*/
 
+// Optional window to use to execute the "formula" after executing HTTP request.
+property formulaWindow : Integer/*winRef*/
+
 // replace This object when calling formula
 property _formulaThis : Object
-
 
 // MARK:- request params
 

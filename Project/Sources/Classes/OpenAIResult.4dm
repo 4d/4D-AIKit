@@ -41,5 +41,23 @@ Function get errors : Collection
 	
 	return []
 	
+	// MARK:- utils
+	
+Function _requestSharable()
+	This:C1470.request:={agent: Null:C1517; \
+		dataType: This:C1470.request.dataType; \
+		encoding: This:C1470.request.encoding; \
+		errors: This:C1470.request.errors; \
+		headers: This:C1470.request.headers; \
+		method: This:C1470.request.method; \
+		protocol: This:C1470.request.protocol; \
+		response: This:C1470.request.response; \
+		returnResponseBody: This:C1470.request.returnResponseBody; \
+		terminate: Formula:C1597(); \
+		terminated: This:C1470.request.terminated; \
+		timeout: This:C1470.request.timeout; \
+		url: This:C1470.request.url; \
+		wait: Formula:C1597()}
+	
 	
 	

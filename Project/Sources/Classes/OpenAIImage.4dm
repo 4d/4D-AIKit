@@ -26,7 +26,7 @@ Function asBlob() : 4D:C1709.Blob
 			
 		: (Length:C16(String:C10(This:C1470.b64_json))>0)
 			
-			return cs:C1710._ImageUtils.me.base64ToBlob(This:C1470.url)
+			return cs:C1710._ImageUtils.me.base64ToBlob(This:C1470.b64_json)
 			
 	End case 
 	
