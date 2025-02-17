@@ -46,7 +46,7 @@ Function prompt($prompt : Text) : cs:C1710.OpenAIChatCompletionsResult
 	
 Function _manageResponse($result : Object)
 	If ($result.success)
-		This:C1470.messages.push($result.choices.first().message)
+		This:C1470.messages.push($result.choice.message)
 		
 		If (This:C1470.messages.length>This:C1470.numberOfMessage)
 			This:C1470.messages.remove(0)
