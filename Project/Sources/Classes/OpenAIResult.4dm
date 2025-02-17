@@ -53,11 +53,11 @@ Function _requestSharable()
 		protocol: This:C1470.request.protocol; \
 		response: This:C1470.request.response; \
 		returnResponseBody: This:C1470.request.returnResponseBody; \
-		terminate: Formula:C1597(); \
+		terminate: Formula:C1597(1); \
 		terminated: This:C1470.request.terminated; \
 		timeout: This:C1470.request.timeout; \
 		url: This:C1470.request.url; \
-		wait: Formula:C1597()}
+		wait: Formula:C1597(1)}
 	
 	
 	
