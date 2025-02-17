@@ -112,10 +112,12 @@ Class constructor( ...  : Variant)
 			Case of 
 				: ((Count parameters:C259>1) && (Value type:C1509($parameters[1])=Is text:K8:3))
 					
+					// if second string parameter, supose baseURL
 					This:C1470.baseURL:=$parameters[1]
 					
 				: ((Count parameters:C259>1) && (Value type:C1509($parameters[1])=Is object:K8:27))
 					
+					// else configurable parameters as object
 					This:C1470._configureParameters($parameters[1])
 					
 			End case 
@@ -126,7 +128,7 @@ Class constructor( ...  : Variant)
 			
 		Else 
 			
-			throw:C1805(1; "Wrong parameter type. Expecting Object or Text")
+			ASSERT:C1129(False:C215; "Wrong parameter type. Expecting Object or Text")
 			
 	End case 
 	
@@ -166,7 +168,7 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 		: (Value type:C1509($body)=Is object:K8:27)
 			$headers["Content-Type"]:="application/json"
 			$options.body:=$body
-		: ((Value type:C1509($body)=Is text:K8:3) && (Position:C15("{boundary}"; $body)>0))
+		: ((Value type:C1509($body)=Is text:K8:3) && (Position:C15("{boundary}"; $body)>0))  // TODO: if we must use blob for file, could not replace...
 			var $boundary:=Generate UUID:C1066
 			$headers["Content-Type"]:="multipart/form-data; boundary="+$boundary
 			$options.body:=Replace string:C233($body; "{boundary}"; $boundary)
@@ -182,25 +184,46 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 	End if 
 	
 	If (($parameters.formula#Null:C1517) && (OB Instance of:C1731($parameters.formula; 4D:C1709.Function)))
-		CALL WORKER:C1389($parameters.worker || "OpenAIWorker"; This:C1470._doHTTPRequest; $url; $options; $result; $parameters)
-		return Null:C1517
+		
+		If ($parameters.worker#Null:C1517)
+			
+			CALL WORKER:C1389($parameters.worker; This:C1470._doHTTPRequest; $url; $options; $result; True:C214; $parameters)
+			
+		Else 
+			
+			var $this:=This:C1470
+			$options.onTerminate:=Formula:C1597($parameters.formula.call($parameters._formulaThis || $this; $result))
+			This:C1470._doHTTPRequest($url; $options; $result; False:C215; $parameters)
+			
+			return $result
+		End if 
 	Else 
-		This:C1470._doHTTPRequest($url; $options; $result; $parameters)
+		This:C1470._doHTTPRequest($url; $options; $result; True:C214; $parameters)
 		return $result
 	End if 
 	
 	
-Function _doHTTPRequest($url : Text; $options : Object; $result : cs:C1710.OpenAIResult; $parameters : cs:C1710.OpenAIParameters)
-	$result.request:=4D:C1709.HTTPRequest.new($url; $options)
-	$result.request.wait()
 	
-	If (($parameters.formula#Null:C1517) && (OB Instance of:C1731($parameters.formula; 4D:C1709.Function)))
-		If ($parameters.formulaWorker#Null:C1517)
-			CALL WORKER:C1389($parameters.formulaWorker; $parameters.formula; $result)
-		Else 
-			$parameters.formula.call($parameters._formulaThis || This:C1470; $result)
-		End if 
+Function _doHTTPRequest($url : Text; $options : Object; $result : cs:C1710.OpenAIResult; $wait : Boolean; $parameters : cs:C1710.OpenAIParameters)
+	$result.request:=4D:C1709.HTTPRequest.new($url; $options)
+	
+	If ($wait)
+		$result.request.wait()
 		
+		If (($parameters.formula#Null:C1517) && (OB Instance of:C1731($parameters.formula; 4D:C1709.Function)))
+			
+			Case of 
+				: ($parameters.formulaWindow#Null:C1517)
+					$result._requestSharable()
+					CALL FORM:C1391($parameters.formulaWindow; $parameters.formula; $result)
+				: ($parameters.formulaWorker#Null:C1517)
+					$result._requestSharable()
+					CALL WORKER:C1389($parameters.formulaWorker; $parameters.formula; $result)
+				Else 
+					$parameters.formula.call($parameters._formulaThis || This:C1470; $result)
+			End case 
+			
+		End if 
 	End if 
 	
 Function _get($path : Text; $parameters : cs:C1710.OpenAIParameters; $resultType : 4D:C1709.Class) : cs:C1710.OpenAIResult
