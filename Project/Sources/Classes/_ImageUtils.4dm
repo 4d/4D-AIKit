@@ -1,10 +1,9 @@
 singleton Class constructor
 	
-	
 Function httpURLToBlob($url : Text) : 4D:C1709.Blob
 	var $request:=4D:C1709.HTTPRequest.new($url).wait()
 	If (Num:C11($request.response.status)=200)
-		return $request.response.body()
+		return $request.response.body
 	End if 
 	return Null:C1517
 	
