@@ -17,16 +17,16 @@ The `_OpenAIAsyncOptions` internal class provides function to handle asynchronou
 ## HTTP Properties
 
 | Property    | Type    |
-| client      | [OpenAI](OpenAI) |
-| parameters  | [OpenAIChatCompletionParameters](OpenAIChatCompletionParameters) |
-| result      | [OpenAIResult](OpenAIResult) |
+| client      | [OpenAI](OpenAI.md) |
+| parameters  | [OpenAIChatCompletionParameters](OpenAIChatCompletionParameters.md) |
+| result      | [OpenAIResult](OpenAIResult.md) |
 
 ## Functions
 
 ### onTerminate
 
-On terminate send [OpenAIResult](OpenAIResult) to the callback "formula".
+On terminate send [OpenAIResult](OpenAIResult.md) to the callback "formula".
 
 ### onData
 
-On data receive send [OpenAIChatCompletionsStreamResult](OpenAIChatCompletionsStreamResult) to the callback "formula".
+On data receive send [OpenAIChatCompletionsStreamResult](OpenAIChatCompletionsStreamResult.md) to the callback "formula".

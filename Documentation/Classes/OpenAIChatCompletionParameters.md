@@ -4,7 +4,7 @@ The `OpenAIChatCompletionParameters` class is designed to handle the parameters 
 
 ## Inherits
 
-- [OpenAIParameters](OpenAIParameters)
+- [OpenAIParameters](OpenAIParameters.md)
 
 ## Properties
 

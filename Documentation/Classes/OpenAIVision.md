@@ -4,7 +4,7 @@
 
 ### `create($imageURL: Text) : cs.OpenAIVisionHelper`
 
-This function creates a new instance of the [`OpenAIVisionHelper`](OpenAIVisionHelper) using the provided image URL.
+This function creates a new instance of the [`OpenAIVisionHelper`](OpenAIVisionHelper.md) using the provided image URL.
 
 | Parameter   | Type  | Description                   |
 |-------------|-------|-------------------------------|

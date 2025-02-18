@@ -18,7 +18,7 @@ Classifies whether the input is potentially harmful.
 
 #### Returns
 
-This function returns an instance of [OpenAIModerationResult](OpenAIModerationResult).
+This function returns an instance of [OpenAIModerationResult](OpenAIModerationResult.md).
 
 ## Example Usage
 

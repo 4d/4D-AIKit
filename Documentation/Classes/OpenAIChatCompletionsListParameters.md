@@ -4,7 +4,7 @@ This class is used to define parameters for retrieving a list of chat completion
 
 ## Inherits
 
-- [OpenAIParameters](OpenAIParameters)
+- [OpenAIParameters](OpenAIParameters.md)
 
 ## Properties
 

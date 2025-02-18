@@ -4,7 +4,7 @@ The `OpenAICompletionParameters` class defines the parameters needed to create a
 
 ## Inherits
 
-- [OpenAIParameters](OpenAIParameters)
+- [OpenAIParameters](OpenAIParameters.md)
 
 ## Properties
 

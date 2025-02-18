@@ -2,10 +2,10 @@
 
 ## Inherits
 
-- [OpenAIResult](OpenAIResult)
+- [OpenAIResult](OpenAIResult.md)
  
 ## Properties
 
 | Property   | Type                         | Description       |
 |------------|------------------------------|-------------------|
-| `model`      | [OpenAIModel](OpenAIModel)   | The model.        |
+| `model`      | [OpenAIModel](OpenAIModel.md)   | The model.        |

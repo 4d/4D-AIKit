@@ -2,7 +2,7 @@
 
 ## Inherits
 
-- [OpenAIParameters](OpenAIParameters)
+- [OpenAIParameters](OpenAIParameters.md)
 
 ## Properties
 

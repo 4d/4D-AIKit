@@ -6,7 +6,7 @@
 
 | Argument          | Type                                   |
 |-------------------|----------------------------------------|
-| `$chat`           | [OpenAIChatAPI](OpenAIChatAPI)              |
+| `$chat`           | [OpenAIChatAPI](OpenAIChatAPI.md)              |
 | `$imageURL`       | `Text`                                 |
 
 ### Description

@@ -4,10 +4,10 @@ The `OpenAIModerationResult` provides functionality to handle moderation results
 
 ## Inherits
 
-- [OpenAIResult](OpenAIResult)
+- [OpenAIResult](OpenAIResult.md)
  
 ## Properties
 
 | Property    | Type   | Description                          |
 |-------------|------------------|----------------------------|
-| `moderation`  | [OpenAIModeration](OpenAIModeration) | the moderation object .    |
+| `moderation`  | [OpenAIModeration](OpenAIModeration.md) | the moderation object .    |

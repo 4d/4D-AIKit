@@ -4,7 +4,7 @@ The `OpenAIImageParameters` class is designed to configure and manage the parame
 
 ## Inherits
 
-- [OpenAIParameters](OpenAIParameters)
+- [OpenAIParameters](OpenAIParameters.md)
 
 ## Properties
 

@@ -11,9 +11,9 @@ Creates an image given a prompt.
 | Argument     | Type                                           | Description                                          |
 |--------------|------------------------------------------------|------------------------------------------------------|
 | `$prompt`    | `Text`                                         | The prompt to use for image generation.              |
-| `$parameters`| [OpenAIImageParameters](OpenAIImageParameters) | Parameters for image generation.                     |
+| `$parameters`| [OpenAIImageParameters](OpenAIImageParameters.md) | Parameters for image generation.                     |
 
-#### Returns: [OpenAIImagesResult](OpenAIImagesResult)
+#### Returns: [OpenAIImagesResult](OpenAIImagesResult.md)
 
 ## Example Usage
 

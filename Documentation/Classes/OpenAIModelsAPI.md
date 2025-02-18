@@ -12,9 +12,9 @@ Retrieves a model instance to provide basic information.
 | Parameter   | Type                      | Description                                   |
 |-------------|---------------------------|-----------------------------------------------|
 | `$model`    | Text                      | The identifier of the model to retrieve.     |
-| `$parameters` | [OpenAIParameters](OpenAIParameters)     | Additional parameters for the request.       |
+| `$parameters` | [OpenAIParameters](OpenAIParameters.md)     | Additional parameters for the request.       |
 
-#### Return: [OpenAIModelResult](OpenAIModelResult)
+#### Return: [OpenAIModelResult](OpenAIModelResult.md)
 
 #### Example usage:
 
@@ -29,9 +29,9 @@ Lists the currently available models.
 
 | Parameter   | Type                      | Description                                   |
 |-------------|---------------------------|-----------------------------------------------|
-| `$parameters` | [OpenAIParameters](OpenAIParameters) | Additional parameters for the request.       |
+| `$parameters` | [OpenAIParameters](OpenAIParameters.md) | Additional parameters for the request.       |
 
-#### Return: [OpenAIModelListResult](OpenAIModelListResult)
+#### Return: [OpenAIModelListResult](OpenAIModelListResult.md)
 
 #### Example usage:
 

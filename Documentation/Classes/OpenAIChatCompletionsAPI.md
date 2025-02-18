@@ -10,8 +10,8 @@ Creates a model response for the given chat conversation.
 
 | Argument     | Type                                      | Description                               |
 |--------------|-------------------------------------------|-------------------------------------------|
-| `$messages`  | Collection of [OpenAIMessage](OpenAIMessage)   | The chat messages to include in the request. |
-| `$parameters`| [OpenAIChatCompletionParameters](OpenAIChatCompletionParameters)            | The parameters for the chat completion request. |
+| `$messages`  | Collection of [OpenAIMessage](OpenAIMessage.md)   | The chat messages to include in the request. |
+| `$parameters`| [OpenAIChatCompletionParameters](OpenAIChatCompletionParameters.md)            | The parameters for the chat completion request. |
 
 #### Example Usage
 
@@ -29,7 +29,7 @@ Get a stored chat completion.
 | Argument         | Type   | Description                               |
 |------------------|--------|-------------------------------------------|
 | `$completionID`  | Text   | The ID of the chat completion to retrieve. |
-| `$parameters`    | [OpenAIParameters](OpenAIParameters) | Additional parameters for the request.    |
+| `$parameters`    | [OpenAIParameters](OpenAIParameters.md) | Additional parameters for the request.    |
 
 ### update
 
@@ -39,7 +39,7 @@ Modify a stored chat completion.
 |------------------|--------|-------------------------------------------|
 | `$completionID`  | Text   | The ID of the chat completion to update. |
 | `$metadata`      | Object | Metadata to update the completion with.   |
-| `$parameters`    | [OpenAIParameters](OpenAIParameters) | Additional parameters for the request.    |
+| `$parameters`    | [OpenAIParameters](OpenAIParameters.md) | Additional parameters for the request.    |
 
 ### delete
 
@@ -48,7 +48,7 @@ Delete a stored chat completion.
 | Argument         | Type   | Description                               |
 |------------------|--------|-------------------------------------------|
 | `$completionID`  | Text   | The ID of the chat completion to delete.  |
-| `$parameters`    | [OpenAIParameters](OpenAIParameters) | Additional parameters for the request.    |
+| `$parameters`    | [OpenAIParameters](OpenAIParameters.md) | Additional parameters for the request.    |
 
 ### list
 
@@ -56,4 +56,4 @@ List stored chat completions.
 
 | Argument         | Type                                      | Description                               |
 |------------------|-------------------------------------------|-------------------------------------------|
-| `$parameters`    | [OpenAIChatCompletionsListParameters](OpenAIChatCompletionsListParameters)       | Parameters for listing chat completions.  |
+| `$parameters`    | [OpenAIChatCompletionsListParameters](OpenAIChatCompletionsListParameters.md)       | Parameters for listing chat completions.  |

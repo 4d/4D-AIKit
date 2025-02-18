@@ -2,17 +2,17 @@
 
 ## Inherits
 
-- [OpenAIResult](OpenAIResult)
+- [OpenAIResult](OpenAIResult.md)
 
 ## Computed properties
 
 ### images
 
-Returns a collection of [OpenAIImage](OpenAIImage).
+Returns a collection of [OpenAIImage](OpenAIImage.md).
 
 ### image
 
-Returns the first [OpenAIImage](OpenAIImage) from the collection.
+Returns the first [OpenAIImage](OpenAIImage.md) from the collection.
 
 ## Functions
 

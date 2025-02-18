@@ -54,11 +54,11 @@ The API provides access to multiple resources that allow seamless interaction wi
 
 | Property Name     | Type                                           | Description                    |
 |-------------------|------------------------------------------------|--------------------------------|
-| `models`          | [OpenAIModelsAPI](OpenAIModelsAPI)             | Access to the Models API.      |
-| `chat`            | [OpenAIChatAPI](OpenAIChatAPI)                 | Access to the Chat API.        |
-| `images`          | [OpenAIImagesAPI](OpenAIImagesAPI)             | Access to the Images API.      |
-| `moderations`     | [OpenAIModerationsAPI](OpenAIModerationsAPI)   | Access to the Moderations API. |
-| `completions`     | [OpenAICompletionsAPI](OpenAICompletionsAPI)   | Access to the Completions API. (deprecated: use chat.completions) |
+| `models`          | [OpenAIModelsAPI](OpenAIModelsAPI.md)             | Access to the Models API.      |
+| `chat`            | [OpenAIChatAPI](OpenAIChatAPI.md)                 | Access to the Chat API.        |
+| `images`          | [OpenAIImagesAPI](OpenAIImagesAPI.md)             | Access to the Images API.      |
+| `moderations`     | [OpenAIModerationsAPI](OpenAIModerationsAPI.md)   | Access to the Moderations API. |
+| `completions`     | [OpenAICompletionsAPI](OpenAICompletionsAPI)   | Access to the Completions API. (deprecated: use chat.completions.md) |
 
 ### Example Usage
 

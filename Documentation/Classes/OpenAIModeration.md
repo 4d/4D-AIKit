@@ -9,4 +9,4 @@ The `OpenAIModeration` class is designed to handle moderation results from the O
 | `id`       | Text   | The ID associated with the moderation request.            |
 | `model`    | Text   | The moderation model used for processing.                 |
 | `results`  | Collection | A collection of moderation results.                   |
-| `item`  | [OpenAIModerationItem](OpenAIModerationItem) | The first item from the results.               |
+| `item`  | [OpenAIModerationItem](OpenAIModerationItem.md) | The first item from the results.               |

@@ -2,14 +2,14 @@
 
 ## Inherits
 
-- [OpenAIResult](OpenAIResult)
+- [OpenAIResult](OpenAIResult.md)
 
 ## Computed properties
 
 ### choices
 
-Returns a collection of [OpenAIChoice](OpenAIChoice) from the OpenAI response.
+Returns a collection of [OpenAIChoice](OpenAIChoice.md) from the OpenAI response.
 
 ### choice
 
-Returns the first [OpenAIChoice](OpenAIChoice) from the choices collection.
+Returns the first [OpenAIChoice](OpenAIChoice.md) from the choices collection.

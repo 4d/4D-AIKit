@@ -2,7 +2,7 @@
 
 ## Inherits
 
-- [OpenAIResult](OpenAIResult)
+- [OpenAIResult](OpenAIResult.md)
  
 ## Properties
 

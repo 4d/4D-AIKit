@@ -9,7 +9,7 @@ Creates a completion for the provided prompt and parameters.
 | Argument   | Type                                  | Description                                      |
 |------------|---------------------------------------|--------------------------------------------------|
 | `$prompt`    | Text                                  | The prompt to generate a completion for.         |
-| `$parameters` | [OpenAICompletionParameters](OpenAICompletionParameters)        | The parameters to customize the completion request. |
+| `$parameters` | [OpenAICompletionParameters](OpenAICompletionParameters.md)        | The parameters to customize the completion request. |
 
 #### Example Usage
 

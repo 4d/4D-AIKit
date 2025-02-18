@@ -6,11 +6,11 @@ The chat helper allow to keep a list of messages in memory and make consecutive 
 
 | Property Name        | Type                        | Default Value                    | Description                                                                         |
 |---------------------|-----------------------------|----------------------------------|-------------------------------------------------------------------------------------|
-| `chat`                | [OpenAIChatAPI](OpenAIChatAPI)     | -                                | The chat API instance used for communication with OpenAI.                          |
-| `systemPrompt`        | [OpenAIMessage](OpenAIMessage)            | -                                | The system prompt message that guides the chat assistant's responses.              |
+| `chat`                | [OpenAIChatAPI](OpenAIChatAPI.md)     | -                                | The chat API instance used for communication with OpenAI.                          |
+| `systemPrompt`        | [OpenAIMessage](OpenAIMessage.md)            | -                                | The system prompt message that guides the chat assistant's responses.              |
 | `numberOfMessages`     | Integer                     | 5                                | The maximum number of messages to retain in the chat history.                       |
-| `parameters`          | [OpenAIChatCompletionParameters](OpenAIChatCompletionParameters) | -                                | The parameters for the OpenAI chat completion request.                             |
-| `messages`            | Collection of [OpenAIMessage](OpenAIMessage)                 | []                               | The collection of messages exchanged in the chat session.                          |
+| `parameters`          | [OpenAIChatCompletionParameters](OpenAIChatCompletionParameters.md) | -                                | The parameters for the OpenAI chat completion request.                             |
+| `messages`            | Collection of [OpenAIMessage](OpenAIMessage.md)                 | []                               | The collection of messages exchanged in the chat session.                          |
 
 ## Functions
 
