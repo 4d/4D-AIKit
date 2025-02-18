@@ -7,11 +7,12 @@
 |-|-|
 |https://mistral.ai/|https://api.mistral.ai/v1|
 |https://www.deepseek.com/|https://api.deepseek.com| 
-|https://www.perplexity.ai/|https://api.perplexity.ai| 
-|https://www.anthropic.com/|https://api.anthropic.com/v1|
+|https://www.anthropic.com/ (claude)|https://api.anthropic.com/v1|
 |https://docs.api.nvidia.com/|https://integrate.api.nvidia.com/v1|
 |https://groq.com/|https://api.groq.com/openai/v1| 
 |https://ai.azure.com/|https://YOUR_RESOURCE_NAME.openai.azure.com|
+|[https://www.alibabacloud.com/](https://www.alibabacloud.com/help/en/model-studio/developer-reference/use-qwen-by-calling-api) (qwen)| https://dashscope-intl.aliyuncs.com/compatible-mode/v1|
+|https://www.perplexity.ai/|https://api.perplexity.ai| 
 
 ## Local
 
