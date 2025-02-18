@@ -1,11 +1,5 @@
 {
 	"APIResource": {
-		"groups": [
-			"Helper",
-			"Object",
-			"Parameters",
-			"Result"
-		],
 		"classes": [
 			"OpenAIAPIResource",
 			"OpenAIChatAPI",
@@ -15,6 +9,11 @@
 			"OpenAIImagesAPI",
 			"OpenAIModelsAPI",
 			"OpenAIModerationsAPI"
+		]
+	},
+	"Async": {
+		"classes": [
+			"_OpenAIAsyncOptions"
 		]
 	},
 	"Helper": {
@@ -30,7 +29,8 @@
 			"OpenAIImage",
 			"OpenAIMessage",
 			"OpenAIModel",
-			"OpenAIModeration"
+			"OpenAIModeration",
+			"OpenAIModerationItem"
 		]
 	},
 	"Parameters": {
@@ -46,6 +46,7 @@
 	"Result": {
 		"classes": [
 			"OpenAIChatCompletionsResult",
+			"OpenAIChatCompletionsStreamResult",
 			"OpenAIImagesResult",
 			"OpenAIModelListResult",
 			"OpenAIModelResult",

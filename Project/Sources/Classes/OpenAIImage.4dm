@@ -17,6 +17,7 @@ Class constructor($object : Object)
 		This:C1470[$key]:=$object[$key]
 	End for each 
 	
+	// Convert image to blob, if url image, it will download it
 Function asBlob() : 4D:C1709.Blob
 	
 	Case of 
@@ -32,6 +33,7 @@ Function asBlob() : 4D:C1709.Blob
 	
 	return Null:C1517
 	
+	// Create a picture from "asBlob" function
 Function asPicture() : Picture
 	var $picture : Picture
 	
@@ -42,6 +44,8 @@ Function asPicture() : Picture
 	
 	return $picture
 	
+	// Save the image to disk. If an url it will download it before that.
+	// Return false, it could not get image data.
 Function saveToDisk($file : 4D:C1709.File) : Boolean
 	ASSERT:C1129($file#Null:C1517)
 	

@@ -1,9 +1,9 @@
 // MARK:- execution params
 
-// Function to call asynchronously when finished.
+// Function to call asynchronously when finished. /!\ Be sure your current process not die.
 property formula : 4D:C1709.Function
 
-// Optional worker/process to use do execute HTTP request if a "formula" is defined.
+// Optional worker/process to use to execute the HTTP request if a "formula" is defined. If used no result object is returned.
 property worker : Variant/*workerRef=Text, Longint*/
 
 // Optional worker/process to use to execute the "formula" after executing HTTP request. Be sure process remain.

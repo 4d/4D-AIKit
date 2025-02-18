@@ -15,6 +15,10 @@ Function create($messages : Collection; $parameters : cs:C1710.OpenAIChatComplet
 		$parameters:=cs:C1710.OpenAIChatCompletionParameters.new($parameters)
 	End if 
 	
+	If ($parameters.stream)
+		ASSERT:C1129($parameters.formula#Null:C1517; "When streaming you must provide a formula")
+	End if 
+	
 	var $body:=$parameters.body()
 	$body.messages:=$messages
 	return This:C1470._client._post("/chat/completions"; $body; $parameters; cs:C1710.OpenAIChatCompletionsResult)

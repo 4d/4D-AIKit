@@ -162,6 +162,11 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 	var $headers:=This:C1470._headers()
 	
 	var $options:={method: $httpMethod; headers: $headers; dataType: "auto"}
+	var $async:=($parameters.formula#Null:C1517) && (OB Instance of:C1731($parameters.formula; 4D:C1709.Function))
+	If ($async)
+		$options:=cs:C1710._OpenAIAsyncOptions.new($options; This:C1470; $parameters; $result)
+	End if 
+	
 	Case of 
 		: ($body=Null:C1517)
 			$headers["Content-Type"]:="application/json"
@@ -183,11 +188,12 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 		$options.timeout:=This:C1470.timeout
 	End if 
 	
-	If (($parameters.formula#Null:C1517) && (OB Instance of:C1731($parameters.formula; 4D:C1709.Function)))
+	If ($async)
 		
 		If ($parameters.worker#Null:C1517)
 			
 			CALL WORKER:C1389($parameters.worker; This:C1470._doHTTPRequest; $url; $options; $result; True:C214; $parameters)
+			return Null:C1517  // $result will never be updated (because not shared and we cannot share http request)
 			
 		Else 
 			
@@ -201,8 +207,6 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 		This:C1470._doHTTPRequest($url; $options; $result; True:C214; $parameters)
 		return $result
 	End if 
-	
-	
 	
 Function _doHTTPRequest($url : Text; $options : Object; $result : cs:C1710.OpenAIResult; $wait : Boolean; $parameters : cs:C1710.OpenAIParameters)
 	$result.request:=4D:C1709.HTTPRequest.new($url; $options)
