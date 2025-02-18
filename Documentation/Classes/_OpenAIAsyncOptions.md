@@ -4,7 +4,7 @@ The `_OpenAIAsyncOptions` internal class provides function to handle asynchronou
 
 ## Properties
 
-### HTTP Properties
+### HTTP Properties
 
 | Property    | Type    |
 |-------------|---------|
@@ -14,9 +14,10 @@ The `_OpenAIAsyncOptions` internal class provides function to handle asynchronou
 | body        | Variant |
 | timeout     | Integer  |
 
-## HTTP Properties
+### Class instances Properties
 
 | Property    | Type    |
+|-------------|---------|
 | client      | [OpenAI](OpenAI.md) |
 | parameters  | [OpenAIChatCompletionParameters](OpenAIChatCompletionParameters.md) |
 | result      | [OpenAIResult](OpenAIResult.md) |
