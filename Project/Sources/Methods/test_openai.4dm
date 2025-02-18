@@ -38,7 +38,7 @@ $messages.push($chatResult.choices.first().message)
 
 $messages.push({role: "user"; content: "and could you decompose this number"})
 $chatResult:=$client.chat.completions.create($messages; {model: $modelName})
-$assistantText:=$chatResult.choices.first().message.content
+$assistantText:=$chatResult.choice.message.content
 
 // or
 var $helper:=$client.chat.create("You are a helpful assistant.")
@@ -48,6 +48,7 @@ $chatResult:=$helper.prompt("and could you decompose this number")
 // MARK:- moderation
 
 var $moderation:=$client.moderations.create("Hello word").moderation
+// $moderation.item.flagged
 
 // MARK:- image
 
@@ -61,7 +62,6 @@ $images.first().saveToDisk(Folder:C1567(fk desktop folder:K87:19).file("mycity.p
 // $imagesResult:=$client.images._edit(Folder(fk desktop folder).file("mycity.png"); "could you add more yellow")
 // $images.image.saveToDisk(Folder(fk desktop folder).file("mycityvariation.png"))
 
-
 // MARK:- vision
 
 var $visionModelName:=$modelName  // ex: OpenAI=gpt-4o-mini, Ollama=llama3.2-vision
@@ -72,6 +72,9 @@ $message.content:=[\
 {type: "text"; text: "give me a description of the image"}; \
 {type: "image_url"; image_url: {url: $imageUrl; detail: "low"}}\
 ]
+// or
+// $message.text:="give me a description of the image"
+// $message.addImageURL($imageUrl) // ; "low"
 
 $chatResult:=$client.chat.completions.create([$message]; {model: $visionModelName})
 var $visionText : Text:=$chatResult.choices.first().message.content
