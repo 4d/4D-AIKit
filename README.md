@@ -13,13 +13,13 @@ The `OpenAI` class allows you to make requests to the OpenAI API.
 ### Configuration
 
 ```4d
-var $client:=cs.ai.OpenAI.new("your api key")
+var $client:=cs.AIKit.OpenAI.new("your api key")
 ```
 
 For a [compatible provider](Documentation/CompatibleOpenAI.md) API, you can configure the server URL.
 
 ```4d
-var $client:=cs.ai.OpenAI.new({apiKey: "your api key"; baseURL: "https://server.ai"})
+var $client:=cs.AIKit.OpenAI.new({apiKey: "your api key"; baseURL: "https://server.ai"})
 ```
 
 or 

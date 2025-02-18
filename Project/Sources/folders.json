@@ -3,7 +3,7 @@
 		"classes": [
 			"OpenAIAPIResource",
 			"OpenAIChatAPI",
-			"OpenAIChatCompletions",
+			"OpenAIChatCompletionsAPI",
 			"OpenAIChatCompletionsMessagesAPI",
 			"OpenAICompletionsAPI",
 			"OpenAIImagesAPI",
@@ -60,6 +60,9 @@
 		]
 	},
 	"Utils": {
+		"methods": [
+			"_autoClassDoc"
+		],
 		"classes": [
 			"_Env",
 			"_ImageUtils"

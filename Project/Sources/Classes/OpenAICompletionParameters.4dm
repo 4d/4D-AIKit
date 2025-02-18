@@ -5,7 +5,7 @@ property model : Text:="gpt-3.5-turbo-instruct"
 // property stream : Boolean:=False
 
 // Generates `best_of` completions server-side and returns the "best" (the one with the highest log probability per token). Results cannot be streamed.
-// property bestOf: Integer
+// property best_of: Integer
 
 // Echo back the prompt in addition to the completion.
 property echo : Boolean

@@ -1,6 +1,6 @@
 property chat : cs:C1710.OpenAIChatAPI
-property systemPrompt : cs:C1710.Message
-property numberOfMessage : Integer:=5
+property systemPrompt : cs:C1710.OpenAIMessage
+property numberOfMessages : Integer:=5
 property parameters : cs:C1710.OpenAIChatCompletionParameters
 
 property messages : Collection:=[]
@@ -48,7 +48,7 @@ Function _manageResponse($result : Object)
 	If ($result.success)
 		This:C1470.messages.push($result.choice.message)
 		
-		If (This:C1470.messages.length>This:C1470.numberOfMessage)
+		If (This:C1470.messages.length>This:C1470.numberOfMessages)
 			This:C1470.messages.remove(0)
 			// XXX: maybe remove assistant if first?
 		End if 
@@ -61,7 +61,7 @@ Function _manageAsyncResponse($result : Object)
 			Use (This:C1470.messages)
 				This:C1470.messages.push(OB Copy:C1225($result.choices.first().message; ck shared:K85:29; This:C1470.messages))
 				
-				If (This:C1470.messages.length>This:C1470.numberOfMessage)
+				If (This:C1470.messages.length>This:C1470.numberOfMessages)
 					This:C1470.messages.remove(0)
 					// XXX: maybe remove assistant if first?
 				End if 
