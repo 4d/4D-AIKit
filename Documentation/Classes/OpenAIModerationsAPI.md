@@ -1,6 +1,6 @@
 # OpenAIModerationsAPI
 
-The `OpenAIModerationsAPI` class extends `OpenAIAPIResource` and is responsible for classifying if text and/or image inputs are potentially harmful.
+The `OpenAIModerationsAPI` is responsible for classifying if text and/or image inputs are potentially harmful.
  
 ## Functions
 
@@ -12,16 +12,24 @@ Classifies whether the input is potentially harmful.
 
 | Argument   | Type                     | Description                                                   |
 |------------|--------------------------|---------------------------------------------------------------|
-| `$input`     | Variant                  | Input (or inputs) to classify. Can be a single text or a collection of texts. |
+| `$input`     | Variant                  | Input (or inputs) to classify. Can be a single text or a collection of [OpenAIMessage](OpenAIMessage). |
 | `$model`     | Text                     | The content moderation model you would like to use.          |
 | `$parameters` | cs.OpenAIParameters     | Additional parameters for the request.                       |
 
-#### Returns
+#### Returns: [OpenAIModerationResult](OpenAIModerationResult.md)
 
-This function returns an instance of [OpenAIModerationResult](OpenAIModerationResult.md).
+## Examples of Usage
 
-## Example Usage
+### Moderate a text
 
 ```4d
-$result := $client;moderation..create("Some text to classify"; "text-moderation-model"; $parameters)
+var $result := $client.moderation.create("Some text to classify"; "omni-moderation-latest"; $parameters)
+```
+
+### Moderate a text and an image
+
+```4d
+var $messages:=[{type: "text"; text: "...text to classify goes here..."}; \
+{type: "image_url"; image_url: {url: "https://example.com/image.png"}}]
+var $result:=$client.moderation.create($messages; "omni-moderation-latest"; $parameters)
 ```

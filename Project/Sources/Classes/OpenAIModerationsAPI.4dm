@@ -3,9 +3,12 @@ Class extends OpenAIAPIResource
 Class constructor($client : cs:C1710.OpenAI)
 	Super:C1705($client)
 	
+	var $messages:=[{type: "text"; text: "...text to classify goes here..."}; \
+		{type: "image_url"; image_url: {url: "https://example.com/image.png"}}]
+	
 /*
 * Classifies if text and/or image inputs are potentially harmful.
-* - $input: Input (or inputs) to classify. Can be a single text, a collection of texts
+* - $input: Input (or inputs) to classify. Could be a single Text or a collection of OpenAIMessage
 * - $model: he content moderation model you would like to use
  */
 Function create($input : Variant; $model : Text; $parameters : cs:C1710.OpenAIParameters) : cs:C1710.OpenAIModerationResult

@@ -1,6 +1,6 @@
 # OpenAIImagesAPI
 
-The `OpenAIImagesAPI` class extends `OpenAIAPIResource` and provides functionalities to generate, edit, and create variations of images using OpenAI's API.
+The `OpenAIImagesAPI` provides functionalities to generate images using OpenAI's API.
 
 ## Functions Description
 

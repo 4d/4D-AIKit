@@ -1,6 +1,6 @@
 # OpenAIChatCompletionParameters
 
-The `OpenAIChatCompletionParameters` class is designed to handle the parameters required for chat completions using the OpenAI API. It extends the `OpenAIParameters` class.
+The `OpenAIChatCompletionParameters` class is designed to handle the parameters required for chat completions using the OpenAI API.
 
 ## Inherits
 
