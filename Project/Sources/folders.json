@@ -56,7 +56,12 @@
 	},
 	"Tests": {
 		"methods": [
-			"test_openai"
+			"test_openai_chat",
+			"test_openai_images",
+			"test_openai_models",
+			"test_openai_moderations",
+			"test_openai_vision",
+			"TestOpenAI"
 		]
 	},
 	"Utils": {
