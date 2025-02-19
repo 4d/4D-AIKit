@@ -1,11 +1,16 @@
 # OpenAIModelsAPI
 
 ## Class Description
+
 `OpenAIModelsAPI` is a class that allows interaction with OpenAI models through various functions, such as retrieving model information, listing available models, and (optionally) deleting fine-tuned models.
+
+https://platform.openai.com/docs/api-reference/models
 
 ## Functions
 
 ### `retrieve`
+
+https://platform.openai.com/docs/api-reference/models/retrieve
 
 Retrieves a model instance to provide basic information.
 
@@ -24,6 +29,8 @@ var $result:=$client.model.retrieve("text-davinci-003"; $parameters)
 ```
 
 ### `list`
+
+https://platform.openai.com/docs/api-reference/models/list
 
 Lists the currently available models.
 

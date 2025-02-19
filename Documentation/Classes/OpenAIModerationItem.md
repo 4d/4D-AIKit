@@ -1,5 +1,7 @@
 # OpenAIModerationItem
 
+https://platform.openai.com/docs/api-reference/moderations/object#moderations/object-results
+
 ## Properties
 
 | Property Name | Type    | Description                              |

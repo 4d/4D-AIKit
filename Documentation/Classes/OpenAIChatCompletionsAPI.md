@@ -2,9 +2,13 @@
 
 The `OpenAIChatCompletionsAPI` class is designed for managing chat completions with OpenAI's API. It provides methods to create, retrieve, update, delete, and list chat completions.
 
+https://platform.openai.com/docs/api-reference/chat
+
 ## Functions
 
 ### create
+
+https://platform.openai.com/docs/api-reference/chat/create
 
 Creates a model response for the given chat conversation.
 
@@ -24,6 +28,8 @@ var $result:=$client.chat.completions.create($messages; $parameters)
 
 ### retrieve
 
+https://platform.openai.com/docs/api-reference/chat/get
+
 Get a stored chat completion.
 
 | Argument         | Type   | Description                               |
@@ -32,6 +38,8 @@ Get a stored chat completion.
 | `$parameters`    | [OpenAIParameters](OpenAIParameters.md) | Additional parameters for the request.    |
 
 ### update
+
+https://platform.openai.com/docs/api-reference/chat/update
 
 Modify a stored chat completion.
 
@@ -43,6 +51,8 @@ Modify a stored chat completion.
 
 ### delete
 
+https://platform.openai.com/docs/api-reference/chat/delete
+
 Delete a stored chat completion.
 
 | Argument         | Type   | Description                               |
@@ -51,6 +61,8 @@ Delete a stored chat completion.
 | `$parameters`    | [OpenAIParameters](OpenAIParameters.md) | Additional parameters for the request.    |
 
 ### list
+
+https://platform.openai.com/docs/api-reference/chat/list
 
 List stored chat completions.
 

@@ -6,6 +6,8 @@ The `OpenAIChatCompletionsMessagesAPI` class is designed to interact with the Op
 
 ### list
 
+https://platform.openai.com/docs/api-reference/chat/getMessages
+
 | Argument      | Type                                                                          | Description                                                  |
 |---------------|-------------------------------------------------------------------------------|--------------------------------------------------------------|
 | `$completionID` | Text                                                                          | The ID of the chat completion to retrieve messages for.      |

@@ -58,7 +58,7 @@ The API provides access to multiple resources that allow seamless interaction wi
 | `chat`            | [OpenAIChatAPI](OpenAIChatAPI.md)                 | Access to the Chat API.        |
 | `images`          | [OpenAIImagesAPI](OpenAIImagesAPI.md)             | Access to the Images API.      |
 | `moderations`     | [OpenAIModerationsAPI](OpenAIModerationsAPI.md)   | Access to the Moderations API. |
-| `completions`     | [OpenAICompletionsAPI](OpenAICompletionsAPI)   | Access to the Completions API. (deprecated: use chat.completions.md) |
+
 
 ### Example Usage
 

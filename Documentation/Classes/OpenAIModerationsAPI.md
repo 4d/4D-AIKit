@@ -2,9 +2,13 @@
 
 The `OpenAIModerationsAPI` is responsible for classifying if text and/or image inputs are potentially harmful.
  
+ https://platform.openai.com/docs/api-reference/moderations
+
 ## Functions
 
 ### create
+
+https://platform.openai.com/docs/api-reference/moderations/create
 
 Classifies whether the input is potentially harmful. 
 
@@ -30,6 +34,6 @@ var $result := $client.moderation.create("Some text to classify"; "omni-moderati
 
 ```4d
 var $messages:=[{type: "text"; text: "...text to classify goes here..."}; \
-{type: "image_url"; image_url: {url: "https://example.com/image.png"}}]
+                {type: "image_url"; image_url: {url: "https://example.com/image.png"}}]
 var $result:=$client.moderation.create($messages; "omni-moderation-latest"; $parameters)
 ```
