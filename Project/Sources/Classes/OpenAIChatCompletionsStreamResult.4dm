@@ -1,10 +1,9 @@
-// Initial request
-property request : 4D:C1709.HTTPRequest
-
 // Contain the stream data send by server
 property data : Object
 
-property isComplete : Boolean
+property _terminated : Boolean
+
+Class extends OpenAIResult
 
 // Build stream result with event blob data.
 Class constructor($request : 4D:C1709.HTTPRequest; $data : 4D:C1709.Blob)
@@ -19,6 +18,12 @@ Class constructor($request : 4D:C1709.HTTPRequest; $data : 4D:C1709.Blob)
 	End if 
 	
 	This:C1470.data:=Try(JSON Parse:C1218($textData))
+	
+Function get terminated : Boolean
+	return This:C1470._terminated
+	
+Function set terminated($newValue : Boolean)
+	This:C1470._terminated:=$newValue
 	
 	// Return True if we success to decode the streaming data as object.
 Function get success : Boolean

@@ -6,8 +6,8 @@ Function get success : Boolean
 	End if 
 	return (300>This:C1470.request.response.status) && (This:C1470.request.response.status>=200)
 	
-/*Function get terminated : Boolean
-return This.request.terminated */
+Function get terminated : Boolean
+	return This:C1470.request.terminated
 	
 Function _objectBody : Object
 	Case of 

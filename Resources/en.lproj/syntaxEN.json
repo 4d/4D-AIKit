@@ -436,6 +436,17 @@
 		}
 	},
 	"OpenAIResult": {
+		"get terminated()": {
+			"Syntax": "**.get terminated**() : Boolean",
+			"Params": [
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
 		"get errors()": {
 			"Syntax": "**.get errors**() : Collection",
 			"Params": [
@@ -495,12 +506,6 @@
 			],
 			"Summary": ""
 		},
-		"result": {
-			"Syntax": "result : cs.AIKit.OpenAIResult"
-		},
-		"parameters": {
-			"Syntax": "parameters : cs.AIKit.OpenAIChatCompletionParameters"
-		},
 		"headers": {
 			"Syntax": "headers : Object"
 		},
@@ -509,9 +514,6 @@
 		},
 		"timeout": {
 			"Syntax": "timeout : Integer"
-		},
-		"client": {
-			"Syntax": "client : cs.AIKit.OpenAI"
 		},
 		"dataType": {
 			"Syntax": "dataType : Text"
@@ -961,6 +963,28 @@
 		}
 	},
 	"OpenAIChatCompletionsStreamResult": {
+		"set terminated()": {
+			"Syntax": "**.set terminated**( *newValue* : Boolean )",
+			"Params": [
+				[
+					"newValue",
+					"Boolean",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"get errors()": {
+			"Syntax": "**.get errors**() : Collection",
+			"Params": [
+				[
+					"",
+					"Collection",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
 		"get choices()": {
 			"Syntax": "**.get choices**() : Collection",
 			"Params": [
@@ -972,34 +996,12 @@
 			],
 			"Summary": ""
 		},
-		"get choice()": {
-			"Syntax": "**.get choice**() : cs.AIKit.OpenAIChoice",
-			"Params": [
-				[
-					"",
-					"cs.AIKit.OpenAIChoice",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"get isComplete()": {
-			"Syntax": "**.get isComplete**() : Boolean",
+		"get terminated()": {
+			"Syntax": "**.get terminated**() : Boolean",
 			"Params": [
 				[
 					"",
 					"Boolean",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"get errors()": {
-			"Syntax": "**.get errors**() : Collection",
-			"Params": [
-				[
-					"",
-					"Collection",
 					"<-"
 				]
 			],
@@ -1016,12 +1018,21 @@
 			],
 			"Summary": ""
 		},
+		"get choice()": {
+			"Syntax": "**.get choice**() : cs.AIKit.OpenAIChoice",
+			"Params": [
+				[
+					"",
+					"cs.AIKit.OpenAIChoice",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
 		"data": {
 			"Syntax": "data : Object"
 		},
-		"request": {
-			"Syntax": "request : 4D.HTTPRequest"
-		}
+		"_inheritedFrom_": "OpenAIResult"
 	},
 	"OpenAI": {
 		"project": {
