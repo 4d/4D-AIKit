@@ -1,0 +1,79 @@
+{
+	"APIResource": {
+		"classes": [
+			"OpenAIAPIResource",
+			"OpenAIChatAPI",
+			"OpenAIChatCompletionsAPI",
+			"OpenAIChatCompletionsMessagesAPI",
+			"OpenAICompletionsAPI",
+			"OpenAIImagesAPI",
+			"OpenAIModelsAPI",
+			"OpenAIModerationsAPI"
+		]
+	},
+	"Async": {
+		"classes": [
+			"_OpenAIAsyncOptions"
+		]
+	},
+	"Helper": {
+		"classes": [
+			"OpenAIChatHelper",
+			"OpenAIVision",
+			"OpenAIVisionHelper"
+		]
+	},
+	"Object": {
+		"classes": [
+			"OpenAIChoice",
+			"OpenAIImage",
+			"OpenAIMessage",
+			"OpenAIModel",
+			"OpenAIModeration",
+			"OpenAIModerationItem"
+		]
+	},
+	"Parameters": {
+		"classes": [
+			"OpenAIChatCompletionParameters",
+			"OpenAIChatCompletionsListParameters",
+			"OpenAIChatCompletionsMessagesParameters",
+			"OpenAICompletionParameters",
+			"OpenAIImageParameters",
+			"OpenAIParameters"
+		]
+	},
+	"Result": {
+		"classes": [
+			"OpenAIChatCompletionsResult",
+			"OpenAIChatCompletionsStreamResult",
+			"OpenAIImagesResult",
+			"OpenAIModelListResult",
+			"OpenAIModelResult",
+			"OpenAIModerationResult",
+			"OpenAIResult"
+		]
+	},
+	"Tests": {
+		"methods": [
+			"_runTests",
+			"_runTestsCLI",
+			"test_openai_chat",
+			"test_openai_images",
+			"test_openai_models",
+			"test_openai_moderations",
+			"test_openai_vision",
+			"TestOpenAI"
+		]
+	},
+	"Utils": {
+		"methods": [
+			"_autoClassDoc"
+		],
+		"classes": [
+			"_Env",
+			"_ImageUtils"
+		]
+	},
+	"trash": {}
+}
