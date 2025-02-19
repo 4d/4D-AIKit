@@ -197,8 +197,6 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 			
 		Else 
 			
-			var $this:=This:C1470
-			$options.onTerminate:=Formula:C1597($parameters.formula.call($parameters._formulaThis || $this; $result))
 			This:C1470._doHTTPRequest($url; $options; $result; False:C215; $parameters)
 			
 			return $result

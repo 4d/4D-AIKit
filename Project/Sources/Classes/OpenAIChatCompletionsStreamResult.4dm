@@ -4,6 +4,8 @@ property request : 4D:C1709.HTTPRequest
 // Contain the stream data send by server
 property data : Object
 
+property isComplete : Boolean
+
 // Build stream result with event blob data.
 Class constructor($request : 4D:C1709.HTTPRequest; $data : 4D:C1709.Blob)
 	

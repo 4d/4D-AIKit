@@ -983,6 +983,17 @@
 			],
 			"Summary": ""
 		},
+		"get isComplete()": {
+			"Syntax": "**.get isComplete**() : Boolean",
+			"Params": [
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
 		"get errors()": {
 			"Syntax": "**.get errors**() : Collection",
 			"Params": [

@@ -20,11 +20,20 @@ Class constructor($options : Object; $client : cs:C1710.OpenAI; $parameters : cs
 	This:C1470.client:=$client
 	This:C1470.parameters:=$parameters
 	This:C1470.result:=$result
+	If (Bool:C1537(This:C1470.parameters.stream))
+		This:C1470.dataType:="blob"
+	End if 
 	
 	// MARK:- HTTP callback
 Function onTerminate($request : 4D:C1709.HTTPRequest; $event : Object)
 	If (This:C1470.parameters.formula#Null:C1517)
-		This:C1470.parameters.formula.call(This:C1470.parameters._formulaThis || This:C1470.client; This:C1470.result)
+		If (Bool:C1537(This:C1470.parameters.stream))
+			var $endResult:=cs:C1710.OpenAIChatCompletionsStreamResult.new($request; $request.response.body)
+			$endResult.isComplete:=True:C214
+			This:C1470.parameters.formula.call(This:C1470.parameters._formulaThis || This:C1470.client; $endResult)
+		Else 
+			This:C1470.parameters.formula.call(This:C1470.parameters._formulaThis || This:C1470.client; This:C1470.result)
+		End if 
 	End if 
 	
 Function onData($request : 4D:C1709.HTTPRequest; $event : Object)
