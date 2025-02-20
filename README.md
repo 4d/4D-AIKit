@@ -8,37 +8,39 @@
 
 ## OpenAI
 
-The `OpenAI` class allows you to make requests to the OpenAI API.
+The [`OpenAI`](Documentation/Classes/OpenAI.md) class allows you to make requests to the [OpenAI API](https://platform.openai.com/docs/api-reference/).
 
 ### Configuration
+
+First of all, initialize the OpenAI client using your API key
 
 ```4d
 var $client:=cs.AIKit.OpenAI.new("your api key")
 ```
 
-For a [compatible provider](Documentation/CompatibleOpenAI.md) API, you can configure the server URL.
+For a [compatible provider](Documentation/CompatibleOpenAI.md) API, you can configure the server URL by setting the `baseURL` parameter.
 
 ```4d
-var $client:=cs.AIKit.OpenAI.new({apiKey: "your api key"; baseURL: "https://server.ai"})
+var $client:=cs.AIKit.OpenAI.new({apiKey: "your api key"; baseURL: "https://your.server.ai"})
 ```
 
 or 
 
 ```4d
-$client.baseURL:="https://server.ai"
+$client.baseURL:="https://your.server.ai"
 ```
 
 ### Making requests
 
-`OpenAI` provides different endpoints, each offering various functions.
+`OpenAI` provides different endpoints called resources, each offering various functions.
 
 ```4d
-var $result:=$client.<endpoint>.<function>(<parameters...>)
+var $result:=$client.<resource>.<function>(<parameters...>)
 ```
 
-The `$result` contains the `HTTPRequest`, a `success` status and  a collection of `errors`.
+The `$result` contains the `HTTPRequest`, a `success` status and a collection of `errors`.
 
-And if the result is `typed`, you could access decoded returned data as object instance. See example bellow.
+And if the result is `typed`, you could access the decoded returned data as an object instance. See the example bellow.
 
 #### Chat
 
