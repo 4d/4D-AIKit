@@ -27,11 +27,6 @@ Function create($messages : Collection; $parameters : cs:C1710.OpenAIChatComplet
 * Get a stored chat completion.
  */
 Function retrieve($completionID : Text; $parameters : cs:C1710.OpenAIParameters) : cs:C1710.OpenAIResult
-	
-	If (Length:C16($completionID)=0)
-		throw:C1805(1; "Expected a non-empty value for `completionID`")
-	End if 
-	
 	return This:C1470._client._get("/chat/completions/"+$completionID; $parameters)
 	
 	
@@ -39,22 +34,12 @@ Function retrieve($completionID : Text; $parameters : cs:C1710.OpenAIParameters)
 * Modify a stored chat completion.
  */
 Function update($completionID : Text; $metadata : Object; $parameters : cs:C1710.OpenAIParameters) : cs:C1710.OpenAIResult
-	
-	If (Length:C16($completionID)=0)
-		throw:C1805(1; "Expected a non-empty value for `completionID`")
-	End if 
-	
 	return This:C1470._client._post("/chat/completions/"+$completionID; {metadata: $metadata}; $parameters)
 	
 /*
 * Delete a stored chat completion.
  */
 Function delete($completionID : Text; $parameters : cs:C1710.OpenAIParameters) : cs:C1710.OpenAIResult
-	
-	If (Length:C16($completionID)=0)
-		throw:C1805(1; "Expected a non-empty value for `completionID`")
-	End if 
-	
 	return This:C1470._client._delete("/chat/completions/"+$completionID; $parameters)
 	
 /*

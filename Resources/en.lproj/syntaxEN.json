@@ -120,6 +120,13 @@
 				"Summary": ""
 			}
 		},
+		"_TestSignal": {
+			"new()": {
+				"Syntax": "**.new**()",
+				"Params": [],
+				"Summary": ""
+			}
+		},
 		"OpenAIChatCompletionsAPI": {
 			"new()": {
 				"Syntax": "**.new**( *client* : cs.AIKit.OpenAI )",
@@ -283,23 +290,16 @@
 				"Summary": ""
 			}
 		},
-		"OpenAIChatAPI": {
+		"OpenAIImage": {
 			"new()": {
-				"Syntax": "**.new**( *client* : cs.AIKit.OpenAI )",
+				"Syntax": "**.new**( *object* : Object )",
 				"Params": [
 					[
-						"client",
-						"cs.AIKit.OpenAI",
+						"object",
+						"Object",
 						"->"
 					]
 				],
-				"Summary": ""
-			}
-		},
-		"_ImageUtils": {
-			"new()": {
-				"Syntax": "**.new**()",
-				"Params": [],
 				"Summary": ""
 			}
 		},
@@ -316,20 +316,27 @@
 				"Summary": ""
 			}
 		},
-		"OpenAIImage": {
+		"_Env": {
 			"new()": {
-				"Syntax": "**.new**( *object* : Object )",
+				"Syntax": "**.new**()",
+				"Params": [],
+				"Summary": ""
+			}
+		},
+		"OpenAIChatAPI": {
+			"new()": {
+				"Syntax": "**.new**( *client* : cs.AIKit.OpenAI )",
 				"Params": [
 					[
-						"object",
-						"Object",
+						"client",
+						"cs.AIKit.OpenAI",
 						"->"
 					]
 				],
 				"Summary": ""
 			}
 		},
-		"_Env": {
+		"_ImageUtils": {
 			"new()": {
 				"Syntax": "**.new**()",
 				"Params": [],
@@ -646,6 +653,46 @@
 			"Summary": ""
 		},
 		"_inheritedFrom_": "OpenAIAPIResource"
+	},
+	"_TestSignal": {
+		"trigger()": {
+			"Syntax": "**.trigger**( *result* : cs.AIKit.OpenAIResult )",
+			"Params": [
+				[
+					"result",
+					"cs.AIKit.OpenAIResult",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"wait()": {
+			"Syntax": "**.wait**( *time* : Integer )",
+			"Params": [
+				[
+					"time",
+					"Integer",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"reset()": {
+			"Syntax": "**.reset**()",
+			"Params": [],
+			"Summary": ""
+		},
+		"init()": {
+			"Syntax": "**.init**()",
+			"Params": [],
+			"Summary": ""
+		},
+		"signal": {
+			"Syntax": "signal : 4D.Signal"
+		},
+		"result": {
+			"Syntax": "result : cs.AIKit.OpenAIResult"
+		}
 	},
 	"OpenAIChatCompletionsResult": {
 		"get choice()": {
@@ -1092,6 +1139,96 @@
 			"Syntax": "chat : cs.AIKit.OpenAIChatAPI"
 		}
 	},
+	"OpenAIImage": {
+		"saveToDisk()": {
+			"Syntax": "**.saveToDisk**( *file* : 4D.File ) : Boolean",
+			"Params": [
+				[
+					"file",
+					"4D.File",
+					"->"
+				],
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"asPicture()": {
+			"Syntax": "**.asPicture**() : Picture",
+			"Params": [
+				[
+					"",
+					"Picture",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"asBlob()": {
+			"Syntax": "**.asBlob**() : 4D.Blob",
+			"Params": [
+				[
+					"",
+					"4D.Blob",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"revised_prompt": {
+			"Syntax": "revised_prompt : Variant"
+		},
+		"b64_json": {
+			"Syntax": "b64_json : Text"
+		},
+		"url": {
+			"Syntax": "url : Text"
+		}
+	},
+	"OpenAIModelsAPI": {
+		"list()": {
+			"Syntax": "**.list**( *parameters* : cs.AIKit.OpenAIParameters ) : cs.AIKit.OpenAIModelListResult",
+			"Params": [
+				[
+					"parameters",
+					"cs.AIKit.OpenAIParameters",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit.OpenAIModelListResult",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"retrieve()": {
+			"Syntax": "**.retrieve**( *model* : Text; *parameters* : cs.AIKit.OpenAIParameters ) : cs.AIKit.OpenAIModelResult",
+			"Params": [
+				[
+					"model",
+					"Text",
+					"->"
+				],
+				[
+					"parameters",
+					"cs.AIKit.OpenAIParameters",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit.OpenAIModelResult",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIAPIResource"
+	},
+	"_Env": {},
 	"OpenAIChatAPI": {
 		"create()": {
 			"Syntax": "**.create**( *systemPrompt* : Text; *parameters* : cs.AIKit.OpenAIChatCompletionParameters ) : cs.AIKit.OpenAIChatHelper",
@@ -1220,110 +1357,6 @@
 			"Summary": ""
 		}
 	},
-	"OpenAIModerationResult": {
-		"get moderation()": {
-			"Syntax": "**.get moderation**() : cs.AIKit.OpenAIModeration",
-			"Params": [
-				[
-					"",
-					"cs.AIKit.OpenAIModeration",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"_inheritedFrom_": "OpenAIResult"
-	},
-	"OpenAIModelsAPI": {
-		"list()": {
-			"Syntax": "**.list**( *parameters* : cs.AIKit.OpenAIParameters ) : cs.AIKit.OpenAIModelListResult",
-			"Params": [
-				[
-					"parameters",
-					"cs.AIKit.OpenAIParameters",
-					"->"
-				],
-				[
-					"",
-					"cs.AIKit.OpenAIModelListResult",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"retrieve()": {
-			"Syntax": "**.retrieve**( *model* : Text; *parameters* : cs.AIKit.OpenAIParameters ) : cs.AIKit.OpenAIModelResult",
-			"Params": [
-				[
-					"model",
-					"Text",
-					"->"
-				],
-				[
-					"parameters",
-					"cs.AIKit.OpenAIParameters",
-					"->"
-				],
-				[
-					"",
-					"cs.AIKit.OpenAIModelResult",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"_inheritedFrom_": "OpenAIAPIResource"
-	},
-	"OpenAIImage": {
-		"saveToDisk()": {
-			"Syntax": "**.saveToDisk**( *file* : 4D.File ) : Boolean",
-			"Params": [
-				[
-					"file",
-					"4D.File",
-					"->"
-				],
-				[
-					"",
-					"Boolean",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"asPicture()": {
-			"Syntax": "**.asPicture**() : Picture",
-			"Params": [
-				[
-					"",
-					"Picture",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"asBlob()": {
-			"Syntax": "**.asBlob**() : 4D.Blob",
-			"Params": [
-				[
-					"",
-					"4D.Blob",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"revised_prompt": {
-			"Syntax": "revised_prompt : Variant"
-		},
-		"b64_json": {
-			"Syntax": "b64_json : Text"
-		},
-		"url": {
-			"Syntax": "url : Text"
-		}
-	},
-	"_Env": {},
 	"OpenAIChoice": {
 		"delta": {
 			"Syntax": "delta : cs.AIKit.OpenAIMessage"
@@ -1379,20 +1412,11 @@
 			],
 			"Summary": ""
 		},
-		"user": {
-			"Syntax": "user : Text"
-		},
-		"worker": {
-			"Syntax": "worker : Variant"
-		},
 		"timeout": {
 			"Syntax": "timeout : Real"
 		},
-		"formulaWindow": {
-			"Syntax": "formulaWindow : Integer"
-		},
-		"formulaWorker": {
-			"Syntax": "formulaWorker : Variant"
+		"user": {
+			"Syntax": "user : Text"
 		},
 		"formula": {
 			"Syntax": "formula : 4D.Function"
@@ -1434,6 +1458,20 @@
 				[
 					"",
 					"Collection",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIResult"
+	},
+	"OpenAIModerationResult": {
+		"get moderation()": {
+			"Syntax": "**.get moderation**() : cs.AIKit.OpenAIModeration",
+			"Params": [
+				[
+					"",
+					"cs.AIKit.OpenAIModeration",
 					"<-"
 				]
 			],

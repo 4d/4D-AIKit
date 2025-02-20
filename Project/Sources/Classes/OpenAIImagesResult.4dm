@@ -20,7 +20,9 @@ Function get image : cs:C1710.OpenAIImage
 	return cs:C1710.OpenAIImage.new($body.data.first())
 	
 Function saveImagesToDisk($folder : 4D:C1709.Folder; $prefix : Text) : Boolean
-	ASSERT:C1129($folder#Null:C1517)
+	If (Not:C34(Asserted:C1132($folder#Null:C1517; "You must provide a non null folder")))
+		return False:C215
+	End if 
 	
 	If (Length:C16(String:C10($prefix))=0)
 		$prefix:="image"

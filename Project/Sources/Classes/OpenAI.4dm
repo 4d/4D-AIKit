@@ -128,7 +128,7 @@ Class constructor( ...  : Variant)
 			
 		Else 
 			
-			ASSERT:C1129(False:C215; "Wrong parameter type. Expecting Object or Text")
+			ASSERT:C1129(False:C215; "Wrong parameter type ("+String:C10(Value type:C1509($parameters[0]))+") Expecting Object or Text")
 			
 	End case 
 	
@@ -164,7 +164,12 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 	var $options:={method: $httpMethod; headers: $headers; dataType: "auto"}
 	var $async:=($parameters.formula#Null:C1517) && (OB Instance of:C1731($parameters.formula; 4D:C1709.Function))
 	If ($async)
-		$options:=cs:C1710._OpenAIAsyncOptions.new($options; This:C1470; $parameters; $result)
+		var $processType : Integer:=Process info:C1843(Current process:C322).type
+		If (Asserted:C1132((($processType#Created from execution dialog:K36:14) && ($processType#Other user process:K36:15)) || ($parameters._worker#Null:C1517); "Formula callback will never be called asynchronously with user process. Please create a worker or be in form/app context"))
+			$options:=cs:C1710._OpenAIAsyncOptions.new($options; This:C1470; $parameters; $result)
+		Else 
+			$async:=False:C215  // transform into sync
+		End if 
 	End if 
 	
 	Case of 
@@ -190,9 +195,9 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 	
 	If ($async)
 		
-		If ($parameters.worker#Null:C1517)
+		If ($parameters._worker#Null:C1517)
 			
-			CALL WORKER:C1389($parameters.worker; This:C1470._doHTTPRequest; $url; $options; $result; True:C214; $parameters)
+			CALL WORKER:C1389($parameters._worker; This:C1470._doHTTPRequest; $url; $options; $result; True:C214; $parameters)
 			return Null:C1517  // $result will never be updated (because not shared and we cannot share http request)
 			
 		Else 
@@ -215,12 +220,12 @@ Function _doHTTPRequest($url : Text; $options : Object; $result : cs:C1710.OpenA
 		If (($parameters.formula#Null:C1517) && (OB Instance of:C1731($parameters.formula; 4D:C1709.Function)))
 			
 			Case of 
-				: ($parameters.formulaWindow#Null:C1517)
+				: ($parameters._formulaWindow#Null:C1517)
 					$result._requestSharable()
-					CALL FORM:C1391($parameters.formulaWindow; $parameters.formula; $result)
-				: ($parameters.formulaWorker#Null:C1517)
+					CALL FORM:C1391($parameters._formulaWindow; $parameters.formula; $result)
+				: ($parameters._formulaWorker#Null:C1517)
 					$result._requestSharable()
-					CALL WORKER:C1389($parameters.formulaWorker; $parameters.formula; $result)
+					CALL WORKER:C1389($parameters._formulaWorker; $parameters.formula; $result)
 				Else 
 					$parameters.formula.call($parameters._formulaThis || This:C1470; $result)
 			End case 

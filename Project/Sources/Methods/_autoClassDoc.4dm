@@ -1,22 +1,38 @@
 //%attributes = {}
 var $client:=cs:C1710.OpenAI.new()
 
-
-If (Folder:C1567(fk desktop folder:K87:19).file("apiKey").exists)  // Just to test, do not do that
+If ((Folder:C1567(fk desktop folder:K87:19).file("apiKey").exists) && ($client.apiKey#Null:C1517))
 	$client.apiKey:=Folder:C1567(fk desktop folder:K87:19).file("apiKey").getText()
 End if 
-var $class : Text
-For each ($class; cs:C1710)
-	If ($class="DataStore")
-		return 
+
+var $databaseFolder:=Folder:C1567(fk home folder:K87:24).folder("git/packageManager")
+
+var $systemPrompt:="You are a helpful assistant. You will generate markdown description of a 4D class."
+$systemPrompt+="Starting with class name as main title."
+$systemPrompt+="Provide functions description with arguments in tables if any."
+$systemPrompt+="Some example using 4d code block. Using modern var syntax no C_."
+$systemPrompt+=" In code no :C1710 or :C<number>."
+$systemPrompt+="Return only the markdown for the provided code by user"
+$systemPrompt+="No need to document constructor if only one object is passed"
+
+var $classFile : 4D:C1709.File
+For each ($classFile; $databaseFolder.folder("Project/Sources/Classes/").files().filter(Formula:C1597($1.value.extension=".4dm")))
+	
+	var $class:=$classFile.name
+	var $docFile:=$databaseFolder.file("Documentation/Classes/"+$class+".md")
+	
+	If ($docFile.exists)
+		continue  // we skip
 	End if 
 	
-	var $code:=Folder:C1567(fk database folder:K87:14).file("Project/Sources/Classes/"+$class+".4dm").getText()
+	var $code:=$classFile.getText()
 	
-	var $messages:=[{role: "system"; content: "You are a helpful assistant. You will generate markdown description of a 4D class. Starting with class name as main title. Provide functions description with arguments in tables if any. Some example using 4d code block. Remove :C1710 from code. Ret"+"urn only the markdown for the provi"+"ded code by u"+"ser"}]
-	$messages.push({role: "user"; content: "Class Name="+$class+"\n"+$code})
+	var $messages:=[{role: "system"; content: $systemPrompt}; {role: "user"; content: "Class Name="+$class+"\n"+$code}]
+	
 	var $chatResult:=$client.chat.completions.create($messages)
 	
-	Folder:C1567(fk database folder:K87:14).file("Documentation/Classes/"+$class+".md").setText($chatResult.choice.message.text)
+	If ($chatResult.success)
+		$docFile.setText($chatResult.choice.message.text)
+	End if 
 	
 End for each 

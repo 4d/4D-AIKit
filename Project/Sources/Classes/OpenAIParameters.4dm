@@ -4,13 +4,13 @@
 property formula : 4D:C1709.Function
 
 // Optional worker/process to use to execute the HTTP request if a "formula" is defined. If used no result object is returned.
-property worker : Variant/*workerRef=Text, Longint*/
+property _worker : Variant/*workerRef=Text, Longint*/
 
 // Optional worker/process to use to execute the "formula" after executing HTTP request. Be sure process remain.
-property formulaWorker : Variant/*workerRef=Text, Longint*/
+property _formulaWorker : Variant/*workerRef=Text, Longint*/
 
 // Optional window to use to execute the "formula" after executing HTTP request.
-property formulaWindow : Integer/*winRef*/
+property _formulaWindow : Integer/*winRef*/
 
 // replace This object when calling formula
 property _formulaThis : Object

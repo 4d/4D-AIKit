@@ -47,7 +47,9 @@ Function asPicture() : Picture
 	// Save the image to disk. If an url it will download it before that.
 	// Return false, it could not get image data.
 Function saveToDisk($file : 4D:C1709.File) : Boolean
-	ASSERT:C1129($file#Null:C1517)
+	If (Not:C34(Asserted:C1132($file#Null:C1517; "You must provide a non null file")))
+		return False:C215
+	End if 
 	
 	var $blob:=This:C1470.asBlob()
 	If ($blob#Null:C1517)
