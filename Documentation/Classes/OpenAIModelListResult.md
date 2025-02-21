@@ -8,4 +8,4 @@
 
 | Property   | Type   | Description                 |
 |------------|--------|-----------------------------|
-| `models`     | Text   | The list of models.         |
+| `models`     | Collection of [OpenAIModel](OpenAIModel.md)   | The list of models.         |

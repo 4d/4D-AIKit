@@ -14,13 +14,13 @@ The asynchronous method is based on 4D HTTPRequest, so the response will be rece
 $client.models.list({formula: Formula(MyReceiveMethod($1))})
 ```
 
-`$1` will be an instance of [OpenAIResult](Classes/OpenAIResult.md) (specifically, in this example, [OpenAIModelResult](Classes/OpenAIModelResult.md)).
+`$1` will be an instance of [OpenAIResult](Classes/OpenAIResult.md) (specifically, in this example, [OpenAIModelListResult](Classes/OpenAIModelListResult.md)).
 
 
 `MyReceiveMethod` method could be:
 
 ```4d
-#DECLARE($result: cs.AIKit.OpenAIModelResult)
+#DECLARE($result: cs.AIKit.OpenAIModelListResult)
 
 If($result.success)
 
