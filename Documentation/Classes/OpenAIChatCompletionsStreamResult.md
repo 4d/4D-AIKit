@@ -1,40 +1,39 @@
 # OpenAIChatCompletionsStreamResult
 
+## Inherits
+
+- [OpenAIResult](OpenAIResult.md)
+ 
 ## Properties
 
 | Property  | Type                         | Description                                      |
 |-----------|------------------------------|--------------------------------------------------|
-| request   | HTTPRequest                  | The initial request object.                      |
 | data      | Object                       | Contains the stream data sent by the server.    |
 
-## Functions
-
-### success
-
-**Description**: Return True if we successfully decoded the streaming data as an object.
-
-**Returns**: Boolean
-
----
-
-### errors
-
-**Description**: Return errors if any are found during the request.
-
-**Returns**: Collection
-
----
+## Computed properties
 
 ### choice
 
-**Description**: Return a choice data, with a delta message.
+**Description**: Return a choice data, with a `delta` message.
 
-**Returns**: OpenAIChoice or Null
+**Returns**: [OpenAIChoice](OpenAIChoice.md) or Null
 
 ---
 
 ### choices
 
-**Description**: Return choices data, with delta messages.
+**Description**: Return choices data, with `delta` messages.
 
-**Returns**: Collection
+**Returns**: Collection of [OpenAIChoice](OpenAIChoice.md)
+
+---
+
+### Overrided properties
+
+#### `success`
+
+**Description**: Returns `True` if the streaming data was successfully decoded as an object.
+
+#### `terminated` 
+
+**Description**: A Boolean indicating whether the HTTP request was terminated. ie `onTerminate` called.

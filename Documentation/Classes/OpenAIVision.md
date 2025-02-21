@@ -2,7 +2,7 @@
 
 ## Functions
 
-### `create($imageURL: Text) : cs.OpenAIVisionHelper`
+### `create($imageURL: Text) : OpenAIVisionHelper`
 
 This function creates a new instance of the [`OpenAIVisionHelper`](OpenAIVisionHelper.md) using the provided image URL.
 
@@ -13,5 +13,6 @@ This function creates a new instance of the [`OpenAIVisionHelper`](OpenAIVisionH
 ### Example Usage
 
 ```4d
-$helper := $client.chat.vision.create("http://example.com/image.jpg")
+var $helper:=$client.chat.vision.create("http://example.com/image.jpg")
+var $result:=$helper.prompt("Could you describe it")
 ```

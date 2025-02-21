@@ -15,7 +15,7 @@ Converts a URL to a Blob object by making an HTTP request.
 **Returns**: Blob or Null if the request fails.
 
 ```4d
-var $blob := cs._ImageUtils.me.httpURLToBlob("http://example.com/image.png")
+var $blob:=cs._ImageUtils.me.httpURLToBlob("http://example.com/image.png")
 ```
 
 ### base64ToBlob
@@ -29,7 +29,7 @@ Converts a base64 encoded string to a Blob object.
 **Returns**: Blob representing the decoded image.
 
 ```4d
-var $blob := cs._ImageUtils.me.base64ToBlob("iVBORw0KGgoAAAANSUhEUgAAAAUA...")
+var $blob:=cs._ImageUtils.me.base64ToBlob("iVBORw0KGgoAAAANSUhEUgAAAAUA...")
 ```
 
 ### toBlob
@@ -43,7 +43,7 @@ Converts various types of image representations to a Blob object.
 **Returns**: Blob or Null if the input is invalid.
 
 ```4d
-var $blob := cs._ImageUtils.me.toBlob($image)
+var $blob:=cs._ImageUtils.me.toBlob($image)
 ```
 
 ### toBase64
@@ -57,7 +57,7 @@ Converts an image to a base64 encoded string.
 **Returns**: Base64 encoded Text or an empty string if conversion fails.
 
 ```4d
-var $base64 := cs._ImageUtils.me.toBase64($image)
+var $base64:=cs._ImageUtils.me.toBase64($image)
 ```
 
 ### toInlinedPng
@@ -71,7 +71,7 @@ Generates an inline PNG data URI from the given image information.
 **Returns**: Text containing the inline PNG data URI or an empty string if conversion fails.
 
 ```4d
-var $dataUri := cs._ImageUtils.me.toInlinedPng($image)
+var $dataUri:=cs._ImageUtils.me.toInlinedPng($image)
 ```
 
 ### toFormData
@@ -85,5 +85,5 @@ Converts an image to a text format suitable for form data submission.
 **Returns**: Text representing the form data or an empty string if conversion fails.
 
 ```4d
-var $formData := cs._ImageUtils.me.toFormData($image)
+var $formData:=cs._ImageUtils.me.toFormData($image)
 ```

@@ -1,17 +1,5 @@
 # OpenAIVisionHelper
 
-## Class Constructor
-
-### OpenAIVisionHelper constructor
-
-| Argument          | Type                                   |
-|-------------------|----------------------------------------|
-| `$chat`           | [OpenAIChatAPI](OpenAIChatAPI.md)              |
-| `$imageURL`       | `Text`                                 |
-
-### Description
-Initializes an instance of the OpenAIVisionHelper class with the specified OpenAIChatAPI and image URL.
-
 ## Functions
 
 ### prompt
@@ -19,7 +7,7 @@ Initializes an instance of the OpenAIVisionHelper class with the specified OpenA
 | Argument     | Type                                         |
 |--------------|----------------------------------------------|
 | `$prompt`    | `Text`                                       |
-| `$parameters`| `cs.OpenAIChatCompletionParameters`    |
+| `$parameters`| [`OpenAIChatCompletionParameters`](OpenAIChatCompletionParameters.md)    |
 
 ### Description
 
@@ -28,7 +16,7 @@ Sends a prompt to the OpenAI chat API along with an associated image URL, and op
 ### Example Usage
 
 ```4d
-var $helper := $client.chat.vision.create($imageURL)
+var $helper:=$client.chat.vision.create($imageURL)
 
-$result := $helper.prompt($prompt; $parameters)
+var $result:=$helper.prompt($prompt; $parameters)
 ```

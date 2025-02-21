@@ -10,6 +10,8 @@ The `OpenAIParameters` class is designed to handle execution and request paramet
 |-------------------|---------|-----------------------------------------------------------------------------------------------------------------------|
 | `formula`         | Function| A function to be called asynchronously when finished. Ensure that the current process does not terminate.            |
 
+See [documentation about asynchronous code](../AsynchronousCall.md)
+
 ### Network properties
 
 | Property           | Type    | Description                                                                                                           |

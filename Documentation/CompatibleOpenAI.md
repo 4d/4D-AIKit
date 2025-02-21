@@ -1,4 +1,3 @@
-<!-- Type your summary here -->
 # Providers
 
 ## Remote
@@ -16,7 +15,8 @@
 
 ## Local
 
-|Provider|Base url|
-|-|-|
-|https://ollama.com/|http://127.0.0.1:11434/v1|
-|https://localai.io/|http://127.0.0.1:8080| 
+| Provider           | Default base url          | Doc                                           |
+|------------------  |---------------------------|-----------------------------------------------|
+|https://ollama.com/ | http://127.0.0.1:11434/v1 | https://ollama.com/blog/openai-compatibility  |
+|https://lmstudio.ai/| http://localhost:1234/v1  | https://lmstudio.ai/docs/api/endpoints/openai |
+|https://localai.io/ | http://127.0.0.1:8080     |  |

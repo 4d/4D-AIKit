@@ -24,7 +24,7 @@ Adds an image URL to the content of the message.
 
 ```4d
 // Create an instance of OpenAIMessage
-var $message := OpenAIMessage({role: "user"; content: "Hello!"})
+var $message:=OpenAIMessage({role: "user"; content: "Hello!"})
 
 // Add an image URL with details
 $message.addImageURL("http://example.com/image.jpg"; "high")

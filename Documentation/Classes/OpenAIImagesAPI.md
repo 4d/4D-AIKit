@@ -22,5 +22,5 @@ Creates an image given a prompt.
 ## Example Usage
 
 ```4d
-var $result := $client.image.generate($prompt; $parameters)
+var $result:=$client.image.generate($prompt; $parameters)
 ```
