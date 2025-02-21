@@ -52,12 +52,13 @@ $client.baseURL:="https://server.ai"
 
 The API provides access to multiple resources that allow seamless interaction with OpenAI's services. Each resource is encapsulated within a dedicated API class, offering a structured and intuitive way to interact with different functionalities.
 
-| Property Name     | Type                                           | Description                    |
-|-------------------|------------------------------------------------|--------------------------------|
-| `models`          | [OpenAIModelsAPI](OpenAIModelsAPI.md)             | Access to the Models API.      |
-| `chat`            | [OpenAIChatAPI](OpenAIChatAPI.md)                 | Access to the Chat API.        |
-| `images`          | [OpenAIImagesAPI](OpenAIImagesAPI.md)             | Access to the Images API.      |
-| `moderations`     | [OpenAIModerationsAPI](OpenAIModerationsAPI.md)   | Access to the Moderations API. |
+| Property Name     | Type                                            | Description                    |
+|-------------------|-------------------------------------------------|--------------------------------|
+| `models`          | [OpenAIModelsAPI](OpenAIModelsAPI.md)           | Access to the Models API.      |
+| `chat`            | [OpenAIChatAPI](OpenAIChatAPI.md)               | Access to the Chat API.        |
+| `images`          | [OpenAIImagesAPI](OpenAIImagesAPI.md)           | Access to the Images API.      |
+| `moderations`     | [OpenAIModerationsAPI](OpenAIModerationsAPI.md) | Access to the Moderations API. |
+| `embeddings`      | [OpenAIEmbeddingsAPI](OpenAIEmbeddingsAPI.md)   | Access to the Embeddings API.  |
 
 
 ### Example Usage

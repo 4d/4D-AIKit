@@ -6,6 +6,7 @@
 			"OpenAIChatCompletionsAPI",
 			"OpenAIChatCompletionsMessagesAPI",
 			"OpenAICompletionsAPI",
+			"OpenAIEmbeddingsAPI",
 			"OpenAIImagesAPI",
 			"OpenAIModelsAPI",
 			"OpenAIModerationsAPI"
@@ -26,6 +27,7 @@
 	"Object": {
 		"classes": [
 			"OpenAIChoice",
+			"OpenAIEmbedding",
 			"OpenAIImage",
 			"OpenAIMessage",
 			"OpenAIModel",
@@ -39,6 +41,7 @@
 			"OpenAIChatCompletionsListParameters",
 			"OpenAIChatCompletionsMessagesParameters",
 			"OpenAICompletionParameters",
+			"OpenAIEmbeddingsParameters",
 			"OpenAIImageParameters",
 			"OpenAIParameters"
 		]
@@ -47,6 +50,7 @@
 		"classes": [
 			"OpenAIChatCompletionsResult",
 			"OpenAIChatCompletionsStreamResult",
+			"OpenAIEmbeddingsResult",
 			"OpenAIImagesResult",
 			"OpenAIModelListResult",
 			"OpenAIModelResult",
@@ -59,6 +63,7 @@
 			"_runTests",
 			"_runTestsCLI",
 			"test_openai_chat",
+			"test_openai_embeddings",
 			"test_openai_images",
 			"test_openai_models",
 			"test_openai_models_async",
