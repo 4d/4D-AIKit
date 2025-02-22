@@ -1,26 +1,46 @@
 {
-	"APIResource": {
-		"groups": [
-			"Helper",
-			"Object",
-			"Parameters",
-			"Result"
-		],
+	"_Completions": {
 		"classes": [
-			"OpenAIAPIResource",
-			"OpenAIChatAPI",
-			"OpenAIChatCompletionsAPI",
-			"OpenAIChatCompletionsMessagesAPI",
-			"OpenAICompletionsAPI",
-			"OpenAIEmbeddingsAPI",
-			"OpenAIImagesAPI",
-			"OpenAIModelsAPI",
-			"OpenAIModerationsAPI"
+			"OpenAICompletionParameters",
+			"OpenAICompletionsAPI"
 		]
 	},
 	"Async": {
 		"classes": [
 			"_OpenAIAsyncOptions"
+		]
+	},
+	"Chat": {
+		"groups": [
+			"Completions",
+			"Helper"
+		],
+		"classes": [
+			"OpenAIChatAPI"
+		]
+	},
+	"Completions": {
+		"groups": [
+			"Async"
+		],
+		"classes": [
+			"OpenAIChatCompletionParameters",
+			"OpenAIChatCompletionsAPI",
+			"OpenAIChatCompletionsListParameters",
+			"OpenAIChatCompletionsMessagesAPI",
+			"OpenAIChatCompletionsMessagesParameters",
+			"OpenAIChatCompletionsResult",
+			"OpenAIChatCompletionsStreamResult",
+			"OpenAIChoice",
+			"OpenAIMessage"
+		]
+	},
+	"Embeddings": {
+		"classes": [
+			"OpenAIEmbedding",
+			"OpenAIEmbeddingsAPI",
+			"OpenAIEmbeddingsParameters",
+			"OpenAIEmbeddingsResult"
 		]
 	},
 	"Helper": {
@@ -30,38 +50,28 @@
 			"OpenAIVisionHelper"
 		]
 	},
-	"Object": {
+	"Image": {
 		"classes": [
-			"OpenAIChoice",
-			"OpenAIEmbedding",
 			"OpenAIImage",
-			"OpenAIMessage",
-			"OpenAIModel",
-			"OpenAIModeration",
-			"OpenAIModerationItem"
-		]
-	},
-	"Parameters": {
-		"classes": [
-			"OpenAIChatCompletionParameters",
-			"OpenAIChatCompletionsListParameters",
-			"OpenAIChatCompletionsMessagesParameters",
-			"OpenAICompletionParameters",
-			"OpenAIEmbeddingsParameters",
 			"OpenAIImageParameters",
-			"OpenAIParameters"
+			"OpenAIImagesAPI",
+			"OpenAIImagesResult"
 		]
 	},
-	"Result": {
+	"Model": {
 		"classes": [
-			"OpenAIChatCompletionsResult",
-			"OpenAIChatCompletionsStreamResult",
-			"OpenAIEmbeddingsResult",
-			"OpenAIImagesResult",
+			"OpenAIModel",
 			"OpenAIModelListResult",
 			"OpenAIModelResult",
+			"OpenAIModelsAPI"
+		]
+	},
+	"Moderation": {
+		"classes": [
+			"OpenAIModeration",
+			"OpenAIModerationItem",
 			"OpenAIModerationResult",
-			"OpenAIResult"
+			"OpenAIModerationsAPI"
 		]
 	},
 	"Tests": {

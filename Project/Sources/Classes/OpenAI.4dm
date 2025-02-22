@@ -30,7 +30,7 @@ property baseURL : Text:=""
 property timeout : Real:=10*60
 property httpAgent : 4D:C1709.HTTPAgent:=Null:C1517
 
-// property customHeaders : Object
+property customHeaders : Object
 // property customQuery : Object
 
 // List of configurable attributes
@@ -186,6 +186,18 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 		Else 
 			$options.body:=$body
 	End case 
+	
+	var $headerKey : Text
+	If (This:C1470.customHeaders#Null:C1517)
+		For each ($headerKey; This:C1470.customHeaders)
+			$headers[$headerKey]:=This:C1470.customHeaders[$headerKey]
+		End for each 
+	End if 
+	If (($parameters#Null:C1517) && ($parameters.extraHeaders#Null:C1517))
+		For each ($headerKey; $parameters.extraHeaders)
+			$headers[$headerKey]:=$parameters.extraHeaders[$headerKey]
+		End for each 
+	End if 
 	
 	
 	If (($parameters#Null:C1517) && ($parameters.timeout>0))

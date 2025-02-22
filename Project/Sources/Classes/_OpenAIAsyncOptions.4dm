@@ -52,7 +52,7 @@ Function onData($request : 4D:C1709.HTTPRequest; $event : Object)
 			End if 
 			
 			var $chunkResult:=cs:C1710.OpenAIChatCompletionsStreamResult.new($request; $line)
-			This:C1470.parameters.formula.call(This:C1470.parameters._formulaThis || This:C1470.client; $chunkResult)
+			This:C1470._parameters.formula.call(This:C1470._parameters._formulaThis || This:C1470._client; $chunkResult)
 			
 		End for each 
 		

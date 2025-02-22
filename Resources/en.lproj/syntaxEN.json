@@ -256,7 +256,7 @@
 		},
 		"OpenAIChatCompletionsStreamResult": {
 			"new()": {
-				"Syntax": "**.new**( *request* : 4D.HTTPRequest; *data* : 4D.Blob )",
+				"Syntax": "**.new**( *request* : 4D.HTTPRequest; *textData* : Text )",
 				"Params": [
 					[
 						"request",
@@ -264,8 +264,8 @@
 						"->"
 					],
 					[
-						"data",
-						"4D.Blob",
+						"textData",
+						"Text",
 						"->"
 					]
 				],
@@ -1201,6 +1201,9 @@
 		"_inheritedFrom_": "OpenAIResult"
 	},
 	"OpenAI": {
+		"customHeaders": {
+			"Syntax": "customHeaders : Object"
+		},
 		"project": {
 			"Syntax": "project : Text"
 		},
@@ -1542,6 +1545,9 @@
 		},
 		"timeout": {
 			"Syntax": "timeout : Real"
+		},
+		"extraHeaders": {
+			"Syntax": "extraHeaders : Object"
 		},
 		"user": {
 			"Syntax": "user : Text"

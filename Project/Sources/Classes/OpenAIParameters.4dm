@@ -23,7 +23,7 @@ property timeout : Real:=0
 property httpAgent : 4D:C1709.HTTPAgent:=Null:C1517
 
 // Send extra headers
-// property extraHeaders: Object
+property extraHeaders : Object
 // Add additional query parameters to the request
 // property extraQuery: Object
 
