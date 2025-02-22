@@ -287,7 +287,7 @@
 		},
 		"OpenAIVisionHelper": {
 			"new()": {
-				"Syntax": "**.new**( *chat* : cs.AIKit.OpenAIChatAPI; *imageURL* : Text )",
+				"Syntax": "**.new**( *chat* : cs.AIKit.OpenAIChatAPI; *imageData* : Variant )",
 				"Params": [
 					[
 						"chat",
@@ -295,8 +295,8 @@
 						"->"
 					],
 					[
-						"imageURL",
-						"Text",
+						"imageData",
+						"Variant",
 						"->"
 					]
 				],
@@ -891,6 +891,38 @@
 	},
 	"OpenAIAPIResource": {},
 	"OpenAIVision": {
+		"fromPicture()": {
+			"Syntax": "**.fromPicture**( *image* : Picture ) : cs.AIKit.OpenAIVisionHelper",
+			"Params": [
+				[
+					"image",
+					"Picture",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit.OpenAIVisionHelper",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"fromFile()": {
+			"Syntax": "**.fromFile**( *imageFile* : 4D.File ) : cs.AIKit.OpenAIVisionHelper",
+			"Params": [
+				[
+					"imageFile",
+					"4D.File",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit.OpenAIVisionHelper",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
 		"create()": {
 			"Syntax": "**.create**( *imageURL* : Text ) : cs.AIKit.OpenAIVisionHelper",
 			"Params": [
