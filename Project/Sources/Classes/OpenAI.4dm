@@ -28,6 +28,7 @@ property baseURL : Text:=""
 
 //property maxRetries : Integer:=2
 property timeout : Real:=10*60
+property httpAgent : 4D:C1709.HTTPAgent:=Null:C1517
 
 // property customHeaders : Object
 // property customQuery : Object
@@ -191,6 +192,12 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 		$options.timeout:=$parameters.timeout
 	Else 
 		$options.timeout:=This:C1470.timeout
+	End if 
+	
+	If (($parameters#Null:C1517) && ($parameters.httpAgent#Null:C1517))
+		$options.agent:=$parameters.httpAgent
+	Else 
+		$options.agent:=This:C1470.httpAgent
 	End if 
 	
 	If ($async)

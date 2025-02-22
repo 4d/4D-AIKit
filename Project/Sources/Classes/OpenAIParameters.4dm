@@ -19,6 +19,8 @@ property _formulaThis : Object
 
 // Override the client-level default timeout for this request, in seconds.
 property timeout : Real:=0
+// Override the client-level default httpAgent for this request.
+property httpAgent : 4D:C1709.HTTPAgent:=Null:C1517
 
 // Send extra headers
 // property extraHeaders: Object

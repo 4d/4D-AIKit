@@ -1207,11 +1207,17 @@
 		"organization": {
 			"Syntax": "organization : Text"
 		},
+		"chat": {
+			"Syntax": "chat : cs.AIKit.OpenAIChatAPI"
+		},
 		"baseURL": {
 			"Syntax": "baseURL : Text"
 		},
 		"apiKey": {
 			"Syntax": "apiKey : Text"
+		},
+		"httpAgent": {
+			"Syntax": "httpAgent : 4D.HTTPAgent"
 		},
 		"timeout": {
 			"Syntax": "timeout : Real"
@@ -1227,9 +1233,6 @@
 		},
 		"images": {
 			"Syntax": "images : cs.AIKit.OpenAIImagesAPI"
-		},
-		"chat": {
-			"Syntax": "chat : cs.AIKit.OpenAIChatAPI"
 		}
 	},
 	"OpenAIVisionHelper": {
@@ -1533,6 +1536,9 @@
 				]
 			],
 			"Summary": ""
+		},
+		"httpAgent": {
+			"Syntax": "httpAgent : 4D.HTTPAgent"
 		},
 		"timeout": {
 			"Syntax": "timeout : Real"
