@@ -1,0 +1,186 @@
+{
+	"$4d": {
+		"version": "1",
+		"kind": "form"
+	},
+	"windowSizingX": "variable",
+	"windowSizingY": "variable",
+	"windowMinWidth": 0,
+	"windowMinHeight": 0,
+	"windowMaxWidth": 32767,
+	"windowMaxHeight": 32767,
+	"rightMargin": 20,
+	"bottomMargin": 20,
+	"events": [
+		"onLoad",
+		"onPageChange",
+		"onValidate",
+		"onClick",
+		"onDoubleClick",
+		"onOutsideCall",
+		"onBeginDragOver",
+		"onDragOver",
+		"onDrop",
+		"onAfterKeystroke",
+		"onMenuSelect",
+		"onPluginArea",
+		"onAfterEdit",
+		"onTimer",
+		"onBoundVariableChange"
+	],
+	"windowTitle": "OpenAI Demo",
+	"destination": "detailScreen",
+	"pages": [
+		{
+			"objects": {
+				"Tab Control": {
+					"type": "tab",
+					"text": "Tab control",
+					"top": 8,
+					"left": 8,
+					"width": 788,
+					"height": 719,
+					"labelsPlacement": "top",
+					"labels": [
+						"Chat",
+						"Image",
+						"Vision",
+						"Moderation"
+					],
+					"action": "gotoPage"
+				},
+				"userPrompt": {
+					"type": "input",
+					"left": 13,
+					"top": 747,
+					"width": 694,
+					"height": 33,
+					"dataSource": "Form:C1466.prompt",
+					"events": [
+						"onValidate"
+					],
+					"hideFocusRing": false,
+					"placeholder": "Talk to your assistant"
+				},
+				"SendButton": {
+					"type": "button",
+					"text": "➤✨",
+					"top": 747,
+					"left": 719,
+					"width": 77,
+					"height": 33,
+					"events": [
+						"onClick"
+					],
+					"method": "ObjectMethods/SendButton.4dm",
+					"style": "regular"
+				},
+				"Popup Dropdown List": {
+					"type": "dropdown",
+					"left": 25,
+					"top": 613,
+					"width": 756,
+					"height": 33,
+					"events": [
+						"onDataChange"
+					],
+					"dataSource": "Form:C1466.models",
+					"dataSourceTypeHint": "object"
+				}
+			}
+		},
+		{
+			"objects": {
+				"Input": {
+					"type": "input",
+					"left": 28,
+					"top": 48,
+					"width": 751,
+					"height": 545,
+					"dataSource": "Form:C1466.chat",
+					"enterable": false,
+					"focusable": false
+				},
+				"ChatStreamButton": {
+					"type": "checkbox",
+					"text": "Stream",
+					"top": 661,
+					"left": 27,
+					"width": 112,
+					"height": 30,
+					"events": [
+						"onClick"
+					],
+					"dataSource": "Form:C1466.stream"
+				}
+			}
+		},
+		{
+			"objects": {
+				"Input1": {
+					"type": "input",
+					"left": 139,
+					"top": 64,
+					"width": 512,
+					"height": 512,
+					"dataSourceTypeHint": "picture",
+					"dataSource": "Form:C1466.picture",
+					"sizingX": "fixed",
+					"pictureFormat": "scaled"
+				}
+			}
+		},
+		{
+			"objects": {
+				"Input2": {
+					"type": "input",
+					"left": 28,
+					"top": 48,
+					"width": 751,
+					"height": 545,
+					"dataSource": "Form:C1466.vision",
+					"enterable": false,
+					"focusable": false
+				},
+				"VisionFileInput": {
+					"type": "input",
+					"left": 27,
+					"top": 668,
+					"width": 754,
+					"height": 33,
+					"dataSource": "Form:C1466.visionFile.path",
+					"enterable": false,
+					"events": [
+						"onClick",
+						"onDrop"
+					],
+					"method": "ObjectMethods/VisionFileInput.4dm",
+					"placeholder": "Click to select on image to analyse"
+				}
+			}
+		},
+		{
+			"objects": {
+				"Input3": {
+					"type": "input",
+					"left": 28,
+					"top": 48,
+					"width": 751,
+					"height": 545,
+					"dataSource": "Form:C1466.moderation",
+					"enterable": false,
+					"focusable": false
+				}
+			}
+		}
+	],
+	"geometryStamp": 117,
+	"editor": {
+		"activeView": "View 1",
+		"defaultView": "View 1",
+		"views": {
+			"View 1": {}
+		}
+	},
+	"method": "method.4dm"
+}

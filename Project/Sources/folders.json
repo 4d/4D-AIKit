@@ -87,7 +87,11 @@
 			"test_openai_vision",
 			"TestOpenAI"
 		],
+		"forms": [
+			"_FormDemo"
+		],
 		"classes": [
+			"_FormDemo",
 			"_TestSignal"
 		]
 	},
