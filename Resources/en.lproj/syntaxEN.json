@@ -408,6 +408,13 @@
 				"Summary": ""
 			}
 		},
+		"_FormDemo": {
+			"new()": {
+				"Syntax": "**.new**()",
+				"Params": [],
+				"Summary": ""
+			}
+		},
 		"OpenAIEmbedding": {
 			"new()": {
 				"Syntax": "**.new**( *object* : Object )",
@@ -1585,6 +1592,157 @@
 		},
 		"_inheritedFrom_": "OpenAIParameters"
 	},
+	"_FormDemo": {
+		"sendVision()": {
+			"Syntax": "**.sendVision**()",
+			"Params": [],
+			"Summary": ""
+		},
+		"onModelReceive()": {
+			"Syntax": "**.onModelReceive**( *result* : cs.AIKit.OpenAIModelListResult )",
+			"Params": [
+				[
+					"result",
+					"cs.AIKit.OpenAIModelListResult",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"onVisionDroped()": {
+			"Syntax": "**.onVisionDroped**()",
+			"Params": [],
+			"Summary": ""
+		},
+		"onStreamChatReceive()": {
+			"Syntax": "**.onStreamChatReceive**( *result* : cs.AIKit.OpenAIChatCompletionsStreamResult )",
+			"Params": [
+				[
+					"result",
+					"cs.AIKit.OpenAIChatCompletionsStreamResult",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"sendImage()": {
+			"Syntax": "**.sendImage**()",
+			"Params": [],
+			"Summary": ""
+		},
+		"onChatReceive()": {
+			"Syntax": "**.onChatReceive**( *result* : cs.AIKit.OpenAIChatCompletionsResult )",
+			"Params": [
+				[
+					"result",
+					"cs.AIKit.OpenAIChatCompletionsResult",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"onPageChange()": {
+			"Syntax": "**.onPageChange**()",
+			"Params": [],
+			"Summary": ""
+		},
+		"onClicked()": {
+			"Syntax": "**.onClicked**()",
+			"Params": [],
+			"Summary": ""
+		},
+		"sendChat()": {
+			"Syntax": "**.sendChat**()",
+			"Params": [],
+			"Summary": ""
+		},
+		"onModerationReceive()": {
+			"Syntax": "**.onModerationReceive**( *result* : cs.AIKit.OpenAIModerationResult )",
+			"Params": [
+				[
+					"result",
+					"cs.AIKit.OpenAIModerationResult",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"onImageReceive()": {
+			"Syntax": "**.onImageReceive**( *result* : cs.AIKit.OpenAIImagesResult )",
+			"Params": [
+				[
+					"result",
+					"cs.AIKit.OpenAIImagesResult",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"enableSendButton()": {
+			"Syntax": "**.enableSendButton**( *enable* : Boolean )",
+			"Params": [
+				[
+					"enable",
+					"Boolean",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"getModels()": {
+			"Syntax": "**.getModels**()",
+			"Params": [],
+			"Summary": ""
+		},
+		"onLoad()": {
+			"Syntax": "**.onLoad**()",
+			"Params": [],
+			"Summary": ""
+		},
+		"get model()": {
+			"Syntax": "**.get model**() : Text",
+			"Params": [
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"sendModeration()": {
+			"Syntax": "**.sendModeration**()",
+			"Params": [],
+			"Summary": ""
+		},
+		"onVisionCliked()": {
+			"Syntax": "**.onVisionCliked**()",
+			"Params": [],
+			"Summary": ""
+		},
+		"onVisionReceive()": {
+			"Syntax": "**.onVisionReceive**( *result* : cs.AIKit.OpenAIChatCompletionsResult )",
+			"Params": [
+				[
+					"result",
+					"cs.AIKit.OpenAIChatCompletionsResult",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"get client()": {
+			"Syntax": "**.get client**() : cs.AIKit.OpenAI",
+			"Params": [
+				[
+					"",
+					"cs.AIKit.OpenAI",
+					"<-"
+				]
+			],
+			"Summary": ""
+		}
+	},
 	"OpenAIModelListResult": {
 		"get models()": {
 			"Syntax": "**.get models**() : Collection",
@@ -1609,20 +1767,6 @@
 		"index": {
 			"Syntax": "index : Integer"
 		}
-	},
-	"OpenAIModerationResult": {
-		"get moderation()": {
-			"Syntax": "**.get moderation**() : cs.AIKit.OpenAIModeration",
-			"Params": [
-				[
-					"",
-					"cs.AIKit.OpenAIModeration",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"_inheritedFrom_": "OpenAIResult"
 	},
 	"OpenAIEmbeddingsAPI": {
 		"create()": {
@@ -1652,6 +1796,20 @@
 			"Summary": ""
 		},
 		"_inheritedFrom_": "OpenAIAPIResource"
+	},
+	"OpenAIModerationResult": {
+		"get moderation()": {
+			"Syntax": "**.get moderation**() : cs.AIKit.OpenAIModeration",
+			"Params": [
+				[
+					"",
+					"cs.AIKit.OpenAIModeration",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIResult"
 	},
 	"OpenAIImagesResult": {
 		"saveImagesToDisk()": {

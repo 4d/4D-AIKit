@@ -119,7 +119,7 @@ Function sendChat()
 	
 	var $options : cs:C1710.OpenAIChatCompletionParameters:={\
 		stream: Bool:C1537(Form:C1466.stream); \
-		model: This:C1470.modelSETDRAGICON; \
+		model: This:C1470.model; \
 		formula: Formula:C1597(Bool:C1537(Form:C1466.stream) ? cs:C1710._FormDemo.me.onStreamChatReceive($1) : cs:C1710._FormDemo.me.onChatReceive($1))}
 	
 	
