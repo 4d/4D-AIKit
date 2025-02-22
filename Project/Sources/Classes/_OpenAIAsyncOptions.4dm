@@ -17,7 +17,7 @@ Class constructor($options : Object; $client : cs:C1710.OpenAI; $parameters : cs
 	End for each 
 	
 	If (Bool:C1537(This:C1470._parameters.stream))
-		This:C1470.dataType:="blob"
+		This:C1470.dataType:="text"
 	End if 
 	
 	This:C1470._client:=$client
@@ -40,6 +40,20 @@ Function onTerminate($request : 4D:C1709.HTTPRequest; $event : Object)
 Function onData($request : 4D:C1709.HTTPRequest; $event : Object)
 	// $event: {chunk: true; type: "data"; data: blob}
 	If ((This:C1470._parameters.formula#Null:C1517) && (Bool:C1537(This:C1470._parameters.stream)))
-		var $result:=cs:C1710.OpenAIChatCompletionsStreamResult.new($request; $event.data)
-		This:C1470._parameters.formula.call(This:C1470._parameters._formulaThis || This:C1470._client; $result)
+		
+		var $textData:=BLOB to text:C555($event.data; UTF8 C string:K22:15)
+		var $line : Text
+		For each ($line; Split string:C1554($textData; "\n"))
+			If ((Length:C16($line)=0))
+				continue
+			End if 
+			If ($line="data: [DONE]")
+				continue  // XXX: maybe use that to replace terminated event?
+			End if 
+			
+			var $chunkResult:=cs:C1710.OpenAIChatCompletionsStreamResult.new($request; $line)
+			This:C1470.parameters.formula.call(This:C1470.parameters._formulaThis || This:C1470.client; $chunkResult)
+			
+		End for each 
+		
 	End if 

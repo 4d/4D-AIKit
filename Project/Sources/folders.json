@@ -1,5 +1,11 @@
 {
 	"APIResource": {
+		"groups": [
+			"Helper",
+			"Object",
+			"Parameters",
+			"Result"
+		],
 		"classes": [
 			"OpenAIAPIResource",
 			"OpenAIChatAPI",
