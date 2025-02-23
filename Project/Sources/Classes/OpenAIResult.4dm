@@ -1,11 +1,14 @@
+// The HTTP request used
 property request : 4D:C1709.HTTPRequest
 
+// True if success ie. response receive and no API errors.
 Function get success : Boolean
 	If (This:C1470.request.response=Null:C1517)
 		return False:C215
 	End if 
 	return (300>This:C1470.request.response.status) && (This:C1470.request.response.status>=200)
 	
+	// True if the requested is terminated
 Function get terminated : Boolean
 	return This:C1470.request.terminated
 	
@@ -22,6 +25,7 @@ Function _objectBody : Object
 			End if 
 	End case 
 	
+	// List of errors if any
 Function get errors : Collection
 	
 	If ((This:C1470.request.errors#Null:C1517) && (This:C1470.request.errors.length>0))
@@ -41,8 +45,16 @@ Function get errors : Collection
 	
 	return []
 	
+	// The response headers
+Function get headers : Object
+	If (This:C1470.request.response=Null:C1517)
+		return Null:C1517
+	End if 
+	return This:C1470.request.response.headers
+	
 	// MARK:- utils
 	
+	// http request seems to not be sharable
 Function _requestSharable()
 	This:C1470.request:={agent: Null:C1517; \
 		dataType: This:C1470.request.dataType; \

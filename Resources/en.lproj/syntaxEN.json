@@ -454,8 +454,23 @@
 			],
 			"Summary": ""
 		},
+		"response_format": {
+			"Syntax": "response_format : Object"
+		},
+		"reasoning_effort": {
+			"Syntax": "reasoning_effort : Text"
+		},
+		"tools": {
+			"Syntax": "tools : Collection"
+		},
 		"store": {
 			"Syntax": "store : Boolean"
+		},
+		"prediction": {
+			"Syntax": "prediction : Object"
+		},
+		"tool_choice": {
+			"Syntax": "tool_choice : Variant"
 		},
 		"stream": {
 			"Syntax": "stream : Boolean"
@@ -489,6 +504,17 @@
 		}
 	},
 	"OpenAIResult": {
+		"get success()": {
+			"Syntax": "**.get success**() : Boolean",
+			"Params": [
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
 		"get terminated()": {
 			"Syntax": "**.get terminated**() : Boolean",
 			"Params": [
@@ -500,23 +526,23 @@
 			],
 			"Summary": ""
 		},
+		"get headers()": {
+			"Syntax": "**.get headers**() : Object",
+			"Params": [
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
 		"get errors()": {
 			"Syntax": "**.get errors**() : Collection",
 			"Params": [
 				[
 					"",
 					"Collection",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"get success()": {
-			"Syntax": "**.get success**() : Boolean",
-			"Params": [
-				[
-					"",
-					"Boolean",
 					"<-"
 				]
 			],

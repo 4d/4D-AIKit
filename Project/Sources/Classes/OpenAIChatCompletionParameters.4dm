@@ -16,6 +16,21 @@ property temperature : Real:=-1
 // Whether or not to store the output of this chat completion request.
 property store : Boolean:=False:C215
 
+// Constrains effort on reasoning for reasoning models. Currently supported values are low, medium, and high
+property reasoning_effort : Text
+
+// An object specifying the format that the model must output. ex: `{ "type": "json_schema", "json_schema": {...} }`
+property response_format : Object
+
+// A list of tools the model may call.
+property tools : Collection
+
+// Controls which (if any) tool is called by the model.
+property tool_choice : Variant
+
+// Static predicted output content, such as the content of a text file that is being regenerated.
+property prediction : Object
+
 // seed, metadata, modalities, etc...
 
 Class extends OpenAIParameters
@@ -26,7 +41,7 @@ Class constructor($object : Object)
 Function body() : Object
 	var $body : Object:=Super:C1706.body()
 	
-	If (Length:C16(This:C1470.model)>0)
+	If (Length:C16(String:C10(This:C1470.model))>0)
 		$body.model:=This:C1470.model
 	End if 
 	If (This:C1470.max_completion_tokens>0)
@@ -44,5 +59,19 @@ Function body() : Object
 	If (This:C1470.stream)
 		$body.stream:=This:C1470.stream
 	End if 
-	
+	If (Length:C16(String:C10(This:C1470.reasoning_effort))>0)
+		$body.reasoning_effort:=This:C1470.reasoning_effort
+	End if 
+	If (This:C1470.response_format#Null:C1517)
+		$body.response_format:=This:C1470.response_format
+	End if 
+	If (This:C1470.tools#Null:C1517)
+		$body.tools:=This:C1470.tools
+	End if 
+	If (This:C1470.tool_choice#Null:C1517)
+		$body.tool_choice:=This:C1470.tool_choice
+	End if 
+	If (This:C1470.prediction#Null:C1517)
+		$body.prediction:=This:C1470.prediction
+	End if 
 	return $body

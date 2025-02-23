@@ -2,6 +2,7 @@
 property role : Text
 // a Text (ex: "Say this is a test") or a Collection of object {type: ...}
 property content : Variant
+
 // optionnal user
 property user : Text
 
@@ -14,6 +15,7 @@ Class constructor($object : Object)
 		This:C1470[$key]:=$object[$key]
 	End for each 
 	
+	// shortcut to get text data
 Function get text : Text
 	Case of 
 		: (Value type:C1509(This:C1470.content)=Is text:K8:3)
@@ -27,6 +29,7 @@ Function get text : Text
 	
 	return ""
 	
+	// allow to set text data to this message
 Function set text($text : Text)
 	Case of 
 		: ((This:C1470.content=Null:C1517) || (Value type:C1509(This:C1470.content)=Is text:K8:3))
