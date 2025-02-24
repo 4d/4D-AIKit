@@ -1,6 +1,9 @@
 // The HTTP request used
 property request : 4D:C1709.HTTPRequest
 
+// Cache if parsed response
+property _parsed : Object
+
 // True if success ie. response receive and no API errors.
 Function get success : Boolean
 	If (This:C1470.request.response=Null:C1517)
@@ -12,7 +15,10 @@ Function get success : Boolean
 Function get terminated : Boolean
 	return This:C1470.request.terminated
 	
-Function _objectBody : Object
+Function _objectBody() : Object
+	If (This:C1470._parsed#Null:C1517)
+		return This:C1470._parsed
+	End if 
 	Case of 
 		: (This:C1470.request.response.body=Null:C1517)
 			return Null:C1517
@@ -21,6 +27,7 @@ Function _objectBody : Object
 		: (Value type:C1509(This:C1470.request.response.body)=Is text:K8:3)  // sometime not decoded, maybe some errors do not return content type
 			var $parsed:=Try(JSON Parse:C1218(This:C1470.request.response.body))
 			If (Value type:C1509($parsed)=Is object:K8:27)
+				This:C1470._parsed:=$parsed
 				return $parsed
 			End if 
 	End case 
@@ -51,6 +58,59 @@ Function get headers : Object
 		return Null:C1517
 	End if 
 	return This:C1470.request.response.headers
+	
+	// RateLimit information
+	// https://platform.openai.com/docs/guides/rate-limits
+Function get rateLimit : Object
+	If (This:C1470.headers=Null:C1517)
+		return Null:C1517
+	End if 
+	// https://platform.openai.com/docs/guides/rate-limits#rate-limits-in-headers
+	return {limit: {request: (This:C1470.headers["x-ratelimit-limit-requests"]#Null:C1517) ? Num:C11(This:C1470.headers["x-ratelimit-limit-requests"]) : Null:C1517; \
+		tokens: (This:C1470.headers["x-ratelimit-limit-tokens"]#Null:C1517) ? Num:C11(This:C1470.headers["x-ratelimit-limit-tokens"]) : Null:C1517}; \
+		remaining: {request: (This:C1470.headers["x-ratelimit-remaining-requests"]#Null:C1517) ? Num:C11(This:C1470.headers["x-ratelimit-remaining-requests"]) : Null:C1517; \
+		tokens: (This:C1470.headers["x-ratelimit-remaining-tokens"]#Null:C1517) ? Num:C11(This:C1470.headers["x-ratelimit-remaining-tokens"]) : Null:C1517}; \
+		reset: {request: This:C1470.headers["x-ratelimit-reset-requests"]; tokens: This:C1470.headers["x-ratelimit-reset-tokens"]}}
+	
+Function get usage : Object
+	var $body:=This:C1470._objectBody()
+	If ($body=Null:C1517)
+		return Null:C1517
+	End if 
+	return $body.usage
+	
+Function _shouldRetry() : Boolean
+	If (This:C1470.request.response=Null:C1517)
+		return False:C215
+	End if 
+	
+	If ((This:C1470.headers#Null:C1517) && This:C1470.headers["x-should-retry"])
+		return This:C1470.headers["x-should-retry"]="true"  // XXX could check if false
+	End if 
+	
+	return ((This:C1470.request.response.status=408) || (This:C1470.request.response.status=409) || (This:C1470.request.response.status=429) || (This:C1470.request.response.status>=500))
+	
+Function _retryAfterValue : Integer
+	If (This:C1470.headers=Null:C1517)
+		return 0
+	End if 
+	
+	If (This:C1470.headers["retry-after-ms"]#Null:C1517)
+		return Num:C11(This:C1470.headers["retry-after-ms"])/1000
+	End if 
+	
+	If (This:C1470.headers["retry-after"]=Null:C1517)
+		return 0
+	End if 
+	
+	If (Match regex:C1019("^[0-9]+$"; This:C1470.headers["retry-after"]))
+		return Num:C11(This:C1470.headers["retry-after"])
+	End if 
+	
+	var $date:=Date:C102(This:C1470.headers["retry-after"])
+	var $time:=Time:C179(This:C1470.headers["retry-after"])
+	
+	return ($date-Current date:C33)*86400+($time-Current time:C178)
 	
 	// MARK:- utils
 	

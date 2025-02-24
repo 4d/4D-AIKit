@@ -4,15 +4,29 @@ The `OpenAIResult` class is designed to handle the response from HTTP requests a
 
 ## Computed properties
 
-### `success` 
+| Property    | Type       | Description                                                                 |
+|-------------|------------|-----------------------------------------------------------------------------|
+| `success`   | Boolean    | A Boolean indicating whether the HTTP request was successful.               |
+| `errors`    | Collection | Returns a collection of errors. These could be network errors or errors returned by OpenAI. |
+| `terminated`| Boolean    | A Boolean indicating whether the HTTP request was terminated.               |
+| `headers`   | Object     | Returns the response headers as an object.                                  |
+| `rateLimit` | Object     | Returns rate limit information from the response headers.                   |
+| `usage`     | Object     | Returns usage information from the response body if any.                    |
 
-A Boolean indicating whether the HTTP request was successful.
+### rateLimit
 
-### `errors` 
+The `rateLimit` property returns an object containing rate limit information from the response headers.
+This information includes the limits, remaining requests, and reset times for both requests and tokens.
 
-Returns a collection of errors. These could be network errors or errors returned by OpenAI.
+For more details on rate limits and the specific headers used, refer to [the OpenAI Rate Limits Documentation](https://platform.openai.com/docs/guides/rate-limits#rate-limits-in-headers).
 
-### `terminated` 
+The structure of the `rateLimit` object is as follows:
 
-A Boolean indicating whether the HTTP request was terminated.
-
+| Field       | Type   | Description                                      |
+|-------------|--------|--------------------------------------------------|
+| `limit.request` | Integer | Number of allowed requests.                    |
+| `limit.tokens`  | Integer | Number of allowed tokens.                      |
+| `remaining.request` | Integer | Number of remaining requests.                |
+| `remaining.tokens`  | Integer | Number of remaining tokens.                  |
+| `reset.request` | String | Time until request limit resets.               |
+| `reset.tokens`  | String | Time until token limit resets.                 |

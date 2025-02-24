@@ -504,6 +504,28 @@
 		}
 	},
 	"OpenAIResult": {
+		"get usage()": {
+			"Syntax": "**.get usage**() : Object",
+			"Params": [
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get rateLimit()": {
+			"Syntax": "**.get rateLimit**() : Object",
+			"Params": [
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
 		"get success()": {
 			"Syntax": "**.get success**() : Boolean",
 			"Params": [
@@ -1237,6 +1259,9 @@
 		"customHeaders": {
 			"Syntax": "customHeaders : Object"
 		},
+		"httpAgent": {
+			"Syntax": "httpAgent : 4D.HTTPAgent"
+		},
 		"project": {
 			"Syntax": "project : Text"
 		},
@@ -1252,9 +1277,6 @@
 		"apiKey": {
 			"Syntax": "apiKey : Text"
 		},
-		"httpAgent": {
-			"Syntax": "httpAgent : 4D.HTTPAgent"
-		},
 		"timeout": {
 			"Syntax": "timeout : Real"
 		},
@@ -1269,6 +1291,9 @@
 		},
 		"images": {
 			"Syntax": "images : cs.AIKit.OpenAIImagesAPI"
+		},
+		"maxRetries": {
+			"Syntax": "maxRetries : Integer"
 		}
 	},
 	"OpenAIVisionHelper": {
@@ -1581,6 +1606,9 @@
 		},
 		"extraHeaders": {
 			"Syntax": "extraHeaders : Object"
+		},
+		"maxRetries": {
+			"Syntax": "maxRetries : Real"
 		},
 		"user": {
 			"Syntax": "user : Text"

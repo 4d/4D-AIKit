@@ -12,7 +12,9 @@ The `OpenAIMessage` class represents a structured message containing a role, con
 
 ## Computed properties
 
-| `text`     | Text    | A propertyrepresenting the text message. |
+| Property | Type    | Description                        |
+|----------|---------|------------------------------------|
+| `text`     | Text    | A property representing the text message. |
 
 ## Functions
 

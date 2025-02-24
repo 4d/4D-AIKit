@@ -22,6 +22,8 @@ property timeout : Real:=0
 // Override the client-level default httpAgent for this request.
 property httpAgent : 4D:C1709.HTTPAgent:=Null:C1517
 
+property maxRetries:=0
+
 // Send extra headers
 property extraHeaders : Object
 // Add additional query parameters to the request
@@ -41,6 +43,7 @@ Class constructor($object : Object)
 	For each ($key; $object)
 		This:C1470[$key]:=$object[$key]
 	End for each 
+	This:C1470._formulaThis:=$object
 	
 Function body() : Object
 	var $body:={}

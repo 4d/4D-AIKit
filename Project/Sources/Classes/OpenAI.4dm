@@ -26,7 +26,8 @@ property project : Text:=""
 property baseURL : Text:=""
 // property websocketBaseURL : Text
 
-//property maxRetries : Integer:=2
+// The maximum number of retry attempts for failed requests. Defaults to 2.
+property maxRetries : Integer:=2
 property timeout : Real:=10*60
 property httpAgent : 4D:C1709.HTTPAgent:=Null:C1517
 
@@ -34,8 +35,7 @@ property customHeaders : Object
 // property customQuery : Object
 
 // List of configurable attributes
-property _configurable : Collection:=["apiKey"; "baseURL"; "organization"; "project"]
-
+property _configurable : Collection:=["apiKey"; "baseURL"; "organization"; "project"; "maxRetries"; "timeout"; "httpAgent"; "customHeaders"]
 
 // MARK: - constructor
 
@@ -212,6 +212,9 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 		$options.agent:=This:C1470.httpAgent
 	End if 
 	
+	
+	This:C1470._initRetry($options; $parameters)
+	
 	If ($async)
 		
 		If ($parameters._worker#Null:C1517)
@@ -235,6 +238,13 @@ Function _doHTTPRequest($url : Text; $options : Object; $result : cs:C1710.OpenA
 	
 	If ($wait)
 		$result.request.wait()
+		
+		If ((Not:C34($result.success)) && ($result._shouldRetry()) && ($options._remainingRetries>0))
+			This:C1470._delayProcessAfterRetry($options; $result)
+			$options._remainingRetries-=1
+			This:C1470._doHTTPRequest($url; $options; $result; $wait; $parameters)
+			return 
+		End if 
 		
 		If (($parameters.formula#Null:C1517) && (OB Instance of:C1731($parameters.formula; 4D:C1709.Function)))
 			
@@ -266,6 +276,41 @@ Function _getApiList($path : Text; $queryParameters : Object; $parameters : cs:C
 	
 Function _postFiles($path : Text; $body : Object; $files : Object; $parameters : cs:C1710.OpenAIParameters; $resultType : 4D:C1709.Class) : cs:C1710.OpenAIResult
 	return This:C1470._request("POST"; $path; This:C1470._formData($body; $files); $parameters; $resultType)
+	
+	
+	// MARK:- retry utils
+	
+Function _initRetry($options : Object; $parameters : cs:C1710.OpenAIParameters)
+	If (($parameters#Null:C1517) && ($parameters.maxRetries>0))
+		$options._maxRetries:=$parameters.maxRetries
+	Else 
+		$options._maxRetries:=This:C1470.maxRetries
+	End if 
+	$options._remainingRetries:=$options._maxRetries
+	
+Function _calculateRetryTimeout($options : Object; $result : cs:C1710.OpenAIResult) : Integer
+	
+	var $retryAfter:=$result._retryAfterValue()
+	If (($retryAfter>0) && ($retryAfter<=60))  // if it's a reasonable amount
+		return $retryAfter
+	End if 
+	
+	var $maxRetries : Integer:=$options._maxRetries || 0
+	var $remainingRetries : Integer:=$options._remainingRetries || 0
+	var $nbRetries : Integer:=$maxRetries-$remainingRetries
+	$nbRetries:=($nbRetries>1000) ? 1000 : $nbRetries  // max 1000 to aovid pow failed
+	
+	var $sleepSeconds:=2^$nbRetries
+	$sleepSeconds:=($sleepSeconds>80) ? 80 : $sleepSeconds
+	
+	var $jitter:=1-(0.25*((Random:C100%100)/100.0001))
+	var $timeout : Integer:=$sleepSeconds*$jitter
+	
+	return ($timeout>=0) ? $timeout : 0
+	
+Function _delayProcessAfterRetry($options : Object; $result : cs:C1710.OpenAIResult) : Integer
+	var $duration:=This:C1470._calculateRetryTimeout($options; $result)
+	DELAY PROCESS:C323(Current process:C322; $duration)
 	
 	// MARK:- http utils
 	
