@@ -20,9 +20,6 @@
 		]
 	},
 	"Completions": {
-		"groups": [
-			"Async"
-		],
 		"classes": [
 			"OpenAIChatCompletionParameters",
 			"OpenAIChatCompletionsAPI",

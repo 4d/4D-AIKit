@@ -454,6 +454,9 @@
 			],
 			"Summary": ""
 		},
+		"prediction": {
+			"Syntax": "prediction : Object"
+		},
 		"response_format": {
 			"Syntax": "response_format : Object"
 		},
@@ -463,26 +466,26 @@
 		"tools": {
 			"Syntax": "tools : Collection"
 		},
-		"store": {
-			"Syntax": "store : Boolean"
-		},
-		"prediction": {
-			"Syntax": "prediction : Object"
-		},
-		"tool_choice": {
-			"Syntax": "tool_choice : Variant"
-		},
 		"stream": {
 			"Syntax": "stream : Boolean"
 		},
+		"store": {
+			"Syntax": "store : Boolean"
+		},
 		"temperature": {
 			"Syntax": "temperature : Real"
+		},
+		"stream_options": {
+			"Syntax": "stream_options : Object"
 		},
 		"n": {
 			"Syntax": "n : Integer"
 		},
 		"max_completion_tokens": {
 			"Syntax": "max_completion_tokens : Integer"
+		},
+		"tool_choice": {
+			"Syntax": "tool_choice : Variant"
 		},
 		"model": {
 			"Syntax": "model : Text"
@@ -1184,6 +1187,28 @@
 		}
 	},
 	"OpenAIChatCompletionsStreamResult": {
+		"get usage()": {
+			"Syntax": "**.get usage**() : Object",
+			"Params": [
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get text()": {
+			"Syntax": "**.get text**() : Text",
+			"Params": [
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
 		"set terminated()": {
 			"Syntax": "**.set terminated**( *newValue* : Boolean )",
 			"Params": [

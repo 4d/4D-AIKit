@@ -72,3 +72,10 @@ Function get choices : Collection
 	
 	return $body.choices.map(Formula:C1597(cs:C1710.OpenAIChoice.new($1.value)))
 	
+	// Return text data
+Function get text : Text
+	return This:C1470.choices.map(Formula:C1597($1.delta.text)).join("")
+	
+	// Return the usage data for the second-to-last Stream result. For other it will be null.
+Function get usage : Object
+	return (This:C1470.data=Null:C1517) ? Null:C1517 : This:C1470.data.usage

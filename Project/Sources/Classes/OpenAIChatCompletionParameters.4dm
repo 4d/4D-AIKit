@@ -4,6 +4,9 @@ property model : Text:="gpt-4o-mini"
 // Whether to stream back partial progress. If set, tokens will be sent as data-only. Callback formula required.
 property stream : Boolean:=False:C215
 
+// Property for stream=True. {include_usage: True}
+property stream_options : Object
+
 // The maximum number of [tokens](/tokenizer) that can be generated in the completion.
 property max_completion_tokens : Integer:=0
 
@@ -58,6 +61,9 @@ Function body() : Object
 	End if 
 	If (This:C1470.stream)
 		$body.stream:=This:C1470.stream
+	End if 
+	If (This:C1470.stream_options#Null:C1517)
+		$body.stream_options:=This:C1470.stream_options
 	End if 
 	If (Length:C16(String:C10(This:C1470.reasoning_effort))>0)
 		$body.reasoning_effort:=This:C1470.reasoning_effort

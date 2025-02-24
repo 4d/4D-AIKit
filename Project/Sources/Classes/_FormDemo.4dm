@@ -49,6 +49,11 @@ Function onClicked()
 	
 	If (Shift down:C543)
 		Form:C1466.openAI.apiKey:=""
+		
+		If ((Folder:C1567(fk home folder:K87:24).file(".openai").exists))
+			Form:C1466.openAI.apiKey:=Folder:C1567(fk home folder:K87:24).file(".openai").getText()
+		End if 
+		
 	End if 
 	
 	If (Length:C16(String:C10(Form:C1466.openAI.apiKey))=0)
@@ -121,6 +126,10 @@ Function sendChat()
 		stream: Bool:C1537(Form:C1466.stream); \
 		model: This:C1470.model; \
 		formula: Formula:C1597(Bool:C1537(Form:C1466.stream) ? cs:C1710._FormDemo.me.onStreamChatReceive($1) : cs:C1710._FormDemo.me.onChatReceive($1))}
+	
+	If ($options.stream)
+		$options.stream_options:={include_usage: True:C214}
+	End if 
 	
 	
 	If (Form:C1466.messages=Null:C1517)
