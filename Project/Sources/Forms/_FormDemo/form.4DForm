@@ -45,7 +45,8 @@
 						"Chat",
 						"Image",
 						"Vision",
-						"Moderation"
+						"Moderation",
+						"Models"
 					],
 					"action": "gotoPage"
 				},
@@ -75,12 +76,12 @@
 					"method": "ObjectMethods/SendButton.4dm",
 					"style": "regular"
 				},
-				"Popup Dropdown List": {
+				"ModelDropdown": {
 					"type": "dropdown",
 					"left": 25,
 					"top": 613,
 					"width": 756,
-					"height": 33,
+					"height": 28,
 					"events": [
 						"onDataChange"
 					],
@@ -172,9 +173,75 @@
 					"focusable": false
 				}
 			}
+		},
+		{
+			"objects": {
+				"List Box": {
+					"type": "listbox",
+					"left": 25,
+					"top": 62,
+					"width": 756,
+					"height": 526,
+					"events": [
+						"onClick",
+						"onHeaderClick",
+						"onDataChange",
+						"onSelectionChange"
+					],
+					"dataSource": "Form:C1466.modelsRemote",
+					"listboxType": "collection",
+					"columns": [
+						{
+							"header": {
+								"text": "ID",
+								"name": "Header1"
+							},
+							"name": "Column1",
+							"footer": {
+								"name": "Footer1"
+							},
+							"dataSource": "This:C1470.id",
+							"width": 301
+						},
+						{
+							"header": {
+								"name": "Header2",
+								"text": "Created"
+							},
+							"name": "Column2",
+							"footer": {
+								"name": "Footer2"
+							},
+							"dataSource": "This:C1470.created"
+						},
+						{
+							"header": {
+								"name": "Header3",
+								"text": "object"
+							},
+							"name": "Column3",
+							"footer": {
+								"name": "Footer3"
+							},
+							"dataSource": "This:C1470.object"
+						},
+						{
+							"header": {
+								"name": "Header4",
+								"text": "owned_by"
+							},
+							"name": "Column4",
+							"footer": {
+								"name": "Footer4"
+							},
+							"dataSource": "This:C1470.owned_by"
+						}
+					]
+				}
+			}
 		}
 	],
-	"geometryStamp": 117,
+	"geometryStamp": 126,
 	"editor": {
 		"activeView": "View 1",
 		"defaultView": "View 1",

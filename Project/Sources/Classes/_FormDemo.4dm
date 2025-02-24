@@ -14,11 +14,15 @@ Function onLoad()
 	Form:C1466.modelsByPage[2]:=["dall-e-2"; "dall-e-3"]
 	Form:C1466.modelsByPage[3]:=["gpt-4o-mini"]
 	Form:C1466.modelsByPage[4]:=["omni-moderation-latest"; "text-moderation-latest"; "text-moderation-stable"; "text-moderation-007"; "omni-moderation-2024-9-26"]
+	Form:C1466.modelsByPage[5]:=[]
 	
 	Form:C1466.models:={values: Form:C1466.modelsByPage[1]; index: 0}
 	
 Function onPageChange()
 	Form:C1466.models:={values: Form:C1466.modelsByPage[FORM Get current page:C276]; index: 0}
+	
+	OBJECT SET ENABLED:C1123(*; "userPrompt"; True:C214)
+	OBJECT SET ENABLED:C1123(*; "ModelDropdown"; True:C214)
 	
 	Case of 
 		: (FORM Get current page:C276=1)  // chat
@@ -37,12 +41,18 @@ Function onPageChange()
 			
 			OBJECT SET PLACEHOLDER:C1295(*; "userPrompt"; "Propose sentence to analyse")
 			
+		: (FORM Get current page:C276=5)  // model
+			
+			OBJECT SET PLACEHOLDER:C1295(*; "userPrompt"; "Connect and refresh model")
+			OBJECT SET ENABLED:C1123(*; "userPrompt"; False:C215)
+			OBJECT SET ENABLED:C1123(*; "ModelDropdown"; False:C215)
+			
 	End case 
 	
 	
 Function onClicked()
 	
-	If (Length:C16(String:C10(Form:C1466.prompt))=0)
+	If ((Length:C16(String:C10(Form:C1466.prompt))=0) && (FORM Get current page:C276#5))
 		ALERT:C41("Please fill the prompt")
 		return 
 	End if 
@@ -52,6 +62,7 @@ Function onClicked()
 		
 		If ((Folder:C1567(fk home folder:K87:24).file(".openai").exists))
 			Form:C1466.openAI.apiKey:=Folder:C1567(fk home folder:K87:24).file(".openai").getText()
+			This:C1470.getModels()
 		End if 
 		
 	End if 
@@ -87,6 +98,10 @@ Function onClicked()
 		: (FORM Get current page:C276=4)  // moderation
 			
 			This:C1470.sendModeration()
+			
+		: (FORM Get current page:C276=5)  // model
+			
+			This:C1470.getModels()
 			
 	End case 
 	
@@ -199,7 +214,7 @@ Function onModelReceive($result : cs:C1710.OpenAIModelListResult)
 	
 	If ($result.success)
 		
-		Form:C1466.modelsRemote:=$result.models.extract("id")
+		Form:C1466.modelsRemote:=$result.models
 		
 	Else 
 		

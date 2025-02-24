@@ -74,7 +74,7 @@ Function get choices : Collection
 	
 	// Return text data
 Function get text : Text
-	return This:C1470.choices.map(Formula:C1597($1.delta.text)).join("")
+	return This:C1470.choices.map(Formula:C1597($1.delta=Null:C1517 ? "" : $1.delta.text)).join("")
 	
 	// Return the usage data for the second-to-last Stream result. For other it will be null.
 Function get usage : Object
