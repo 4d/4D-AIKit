@@ -46,7 +46,8 @@
 						"Image",
 						"Vision",
 						"Moderation",
-						"Models"
+						"Models",
+						"Embeddings"
 					],
 					"action": "gotoPage"
 				},
@@ -100,7 +101,9 @@
 					"height": 545,
 					"dataSource": "Form:C1466.chat",
 					"enterable": false,
-					"focusable": false
+					"focusable": false,
+					"scrollbarVertical": "automatic",
+					"scrollbarHorizontal": "automatic"
 				},
 				"ChatStreamButton": {
 					"type": "checkbox",
@@ -141,7 +144,9 @@
 					"height": 545,
 					"dataSource": "Form:C1466.vision",
 					"enterable": false,
-					"focusable": false
+					"focusable": false,
+					"scrollbarVertical": "automatic",
+					"scrollbarHorizontal": "automatic"
 				},
 				"VisionFileInput": {
 					"type": "input",
@@ -170,7 +175,9 @@
 					"height": 545,
 					"dataSource": "Form:C1466.moderation",
 					"enterable": false,
-					"focusable": false
+					"focusable": false,
+					"scrollbarVertical": "automatic",
+					"scrollbarHorizontal": "automatic"
 				}
 			}
 		},
@@ -201,7 +208,7 @@
 								"name": "Footer1"
 							},
 							"dataSource": "This:C1470.id",
-							"width": 301
+							"width": 349
 						},
 						{
 							"header": {
@@ -212,7 +219,8 @@
 							"footer": {
 								"name": "Footer2"
 							},
-							"dataSource": "This:C1470.created"
+							"dataSource": "This:C1470.created",
+							"width": 150
 						},
 						{
 							"header": {
@@ -223,7 +231,9 @@
 							"footer": {
 								"name": "Footer3"
 							},
-							"dataSource": "This:C1470.object"
+							"dataSource": "This:C1470.object",
+							"width": 90,
+							"textAlign": "right"
 						},
 						{
 							"header": {
@@ -234,14 +244,31 @@
 							"footer": {
 								"name": "Footer4"
 							},
-							"dataSource": "This:C1470.owned_by"
+							"dataSource": "This:C1470.owned_by",
+							"width": 152,
+							"textAlign": "right"
 						}
 					]
 				}
 			}
+		},
+		{
+			"objects": {
+				"Input4": {
+					"type": "input",
+					"left": 28,
+					"top": 48,
+					"width": 751,
+					"height": 545,
+					"dataSource": "Form:C1466.embeddings",
+					"enterable": false,
+					"focusable": false,
+					"scrollbarVertical": "visible"
+				}
+			}
 		}
 	],
-	"geometryStamp": 126,
+	"geometryStamp": 128,
 	"editor": {
 		"activeView": "View 1",
 		"defaultView": "View 1",
