@@ -1,8 +1,6 @@
 // Contain the stream data send by server
 property data : Object
 
-property _terminated : Boolean
-
 property _decodingErrors : Collection
 
 Class extends OpenAIResult
@@ -27,9 +25,6 @@ Class constructor($request : 4D:C1709.HTTPRequest; $textData : Text)
 	
 Function get terminated : Boolean
 	return This:C1470._terminated
-	
-Function set terminated($newValue : Boolean)
-	This:C1470._terminated:=$newValue
 	
 	// Return True if we success to decode the streaming data as object.
 Function get success : Boolean

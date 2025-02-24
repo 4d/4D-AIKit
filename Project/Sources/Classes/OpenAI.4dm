@@ -8,7 +8,7 @@ property chat : cs:C1710.OpenAIChatAPI
 property embeddings : cs:C1710.OpenAIEmbeddingsAPI
 // property files : cs.OpenAIFilesAPI
 property images : cs:C1710.OpenAIImagesAPI
-// property audio : cs.OpenAIAudioAPI
+property audio : cs:C1710.OpenAIAudioAPI
 property moderations : cs:C1710.OpenAIModerationsAPI
 property models : cs:C1710.OpenAIModelsAPI
 // property fineTunings : cs.OpenAIFineTuningsAPI
@@ -95,7 +95,7 @@ Class constructor( ...  : Variant)
 	This:C1470.embeddings:=cs:C1710.OpenAIEmbeddingsAPI.new(This:C1470)
 	// This.files:=cs.OpenAIFilesAPI.new(This)
 	This:C1470.images:=cs:C1710.OpenAIImagesAPI.new(This:C1470)
-	// This.audio:=cs.OpenAIAudioAPI.new(This)
+	This:C1470.audio:=cs:C1710.OpenAIAudioAPI.new(This:C1470)
 	This:C1470.moderations:=cs:C1710.OpenAIModerationsAPI.new(This:C1470)
 	This:C1470.models:=cs:C1710.OpenAIModelsAPI.new(This:C1470)
 	
@@ -177,12 +177,16 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 		: ($body=Null:C1517)
 			$headers["Content-Type"]:="application/json"
 		: (Value type:C1509($body)=Is object:K8:27)
-			$headers["Content-Type"]:="application/json"
-			$options.body:=$body
-		: ((Value type:C1509($body)=Is text:K8:3) && (Position:C15("{boundary}"; $body)>0))  // TODO: if we must use blob for file, could not replace...
-			var $boundary:=Generate UUID:C1066
-			$headers["Content-Type"]:="multipart/form-data; boundary="+$boundary
-			$options.body:=Replace string:C233($body; "{boundary}"; $boundary)
+			Case of 
+				: (OB Instance of:C1731($body; 4D:C1709.File))
+					$headers["Content-Type"]:="application/octet-stream"
+					$options.body:=$body.getContent()
+				: (OB Instance of:C1731($body; cs:C1710._MultipartFormData))
+					$options:=$body.configure($options)
+				Else 
+					$headers["Content-Type"]:="application/json"
+					$options.body:=$body
+			End case 
 		Else 
 			$options.body:=$body
 	End case 
@@ -371,21 +375,21 @@ Function _encodeQueryParameters($queryParameters : Object) : Text
 	
 	return "?"+OB Entries:C1720($queryParameters).map(Formula:C1597($1.value.key+"="+This:C1470._encodeQueryParameter($1.value.value))).join("&")
 	
-Function _formData($body : Object; $files : Object) : Text
+Function _formData($body : Object; $files : Object) : cs:C1710._MultipartFormData
 	
-	var $value:=""
-	
+	var $formData:=cs:C1710._MultipartFormData.new()
 	var $key : Text
-	For each ($key; $body)
-		$value+="------{boundary}\r\n\r\n"
-		$value+=String:C10($body[$key])+"\r\n"
-	End for each 
+	If ($body#Null:C1517)
+		For each ($key; $body)
+			$formData.addField($key; $body[$key])
+		End for each 
+	End if 
 	
-	For each ($key; $files)
-		$value+="------{boundary}\r\n\r\n"
-		$value+="Content-Disposition: form-data;name=\""+$key+"\";filename=\""+$key+".png\"\r\n"+"Content-Type: image/png\r\n\r\n"
-		
-		$value+=cs:C1710._ImageUtils.me.toFormData($files[$key])
-	End for each 
+	If ($files#Null:C1517)
+		For each ($key; $files)
+			$formData.addFile($key; $files[$key])
+		End for each 
+	End if 
 	
-	return $value
+	
+	return $formData

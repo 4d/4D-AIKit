@@ -10,6 +10,16 @@
 			"_OpenAIAsyncOptions"
 		]
 	},
+	"Audio": {
+		"classes": [
+			"_OpenAIAudioSpeechAPI",
+			"OpenAIAudioAPI",
+			"OpenAIAudioParameters",
+			"OpenAIAudioResult",
+			"OpenAIAudioTranscriptionsAPI",
+			"OpenAIAudioTranslationsAPI"
+		]
+	},
 	"Chat": {
 		"groups": [
 			"Completions",
@@ -75,7 +85,10 @@
 		"methods": [
 			"_runTests",
 			"_runTestsCLI",
+			"test_multi",
+			"test_openai_audio",
 			"test_openai_chat",
+			"test_openai_chat_async",
 			"test_openai_embeddings",
 			"test_openai_images",
 			"test_openai_models",
@@ -89,7 +102,8 @@
 		],
 		"classes": [
 			"_FormDemo",
-			"_TestSignal"
+			"_TestSignal",
+			"_TestWeb"
 		]
 	},
 	"Utils": {
@@ -98,7 +112,8 @@
 		],
 		"classes": [
 			"_Env",
-			"_ImageUtils"
+			"_ImageUtils",
+			"_MultipartFormData"
 		]
 	},
 	"trash": {}
