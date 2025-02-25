@@ -9,3 +9,7 @@
 | Property   | Type                         | Description       |
 |------------|------------------------------|-------------------|
 | `model`      | [OpenAIModel](OpenAIModel.md)   | The model.        |
+
+## See also
+
+- [OpenAIModelsAPI](OpenAIModelsAPI.md)

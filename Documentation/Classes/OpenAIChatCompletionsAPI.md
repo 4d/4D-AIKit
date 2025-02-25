@@ -19,11 +19,24 @@ Creates a model response for the given chat conversation.
 
 #### Example Usage
 
+Provide the full messages list
+
 ```4d
 var $messages:=[]
-$messages.push({"role":"user"; "content":"Hello, how are you?"})
+$messages.push({role: "system"; content: "You are a helpful assistant."})
+$messages.push({"role":"user"; "content": "Hello, how are you?"})
+// ...
 
-var $result:=$client.chat.completions.create($messages; $parameters)
+var $result:=$client.chat.completions.create($messages; {model: "gpt-4o-mini" })
+```
+
+Get the response as text
+```4d
+var $text:=$result.choice.text
+```
+Append assistant response for next completion request
+```
+$messages.push($result.choice.message) // {"role":"assistant"; "content": "xxx" }
 ```
 
 ### retrieve

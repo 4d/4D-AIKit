@@ -22,5 +22,19 @@ Creates an image given a prompt.
 ## Example Usage
 
 ```4d
-var $result:=$client.image.generate($prompt; $parameters)
+var $result:=$client.image.generate("A futuristic city skyline at sunset"; {size: "1024x1024"})
+
+var $image:=$result.image
+If($image#Null)
+  $image.saveToDisk(Folder(fk desktop folder).file("skylinecity.png"))
+End if
+```
+
+If more than one image generated
+
+```4d
+var $image: cs.AIKit.OpenAIImage
+For each($image; $resule.images || [])
+  // asBlob, asPicture, saveToDisk
+End for each
 ```

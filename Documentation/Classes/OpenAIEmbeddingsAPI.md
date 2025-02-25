@@ -21,5 +21,6 @@ Creates an embeddings for the provided input, model and parameters.
 #### Example Usage
 
 ```4d
-var $result:=$client.embedding.create("some data"; "text-embedding-ada-002"; $parameters)
+var $result:=$client.embedding.create("some data"; "text-embedding-ada-002")
+var $embedding:=$result.embedding
 ```

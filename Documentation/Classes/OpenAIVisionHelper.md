@@ -16,7 +16,9 @@ Sends a prompt to the OpenAI chat API along with an associated image URL, and op
 ### Example Usage
 
 ```4d
-var $helper:=$client.chat.vision.create($imageURL)
+var $helper:=$client.chat.vision.create("http://example.com/image.jpg")
 
-var $result:=$helper.prompt($prompt; $parameters)
+var $result:=$helper.prompt("Could you describe?")
+
+$result:=$helper.prompt("Have any red element?"; {model: "gpt-4o-mini"; max_completion_tokens: 100 })
 ```

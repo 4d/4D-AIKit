@@ -24,8 +24,8 @@ Retrieves a model instance to provide basic information.
 #### Example usage:
 
 ```4d
-var $result:=$client.model.retrieve("text-davinci-003"; $parameters)
-// $result.model
+var $result:=$client.model.retrieve("text-davinci-003")
+var $model:=$result.model
 ```
 
 ### `list`
@@ -44,5 +44,5 @@ Lists the currently available models.
 
 ```4d 
 var $result:=$client.model.list($parameters)
-// $result.models
+var $models: Collection:=$result.models
 ```

@@ -14,5 +14,5 @@ Creates a completion for the provided prompt and parameters.
 #### Example Usage
 
 ```4d
-var $result:=$client.completion.create($prompt; $parameters)
+var $result:=$client.completion.create("Hello")
 ```

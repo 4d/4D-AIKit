@@ -28,3 +28,8 @@ Saves images to the specified disk folder.
 | Return Type | Description |
 |-------------|-------------|
 | Boolean     | Returns `True` if the images are successfully saved. |
+
+
+## See also
+
+- [OpenAIImagesAPI](OpenAIImagesAPI.md)

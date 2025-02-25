@@ -6,7 +6,7 @@ The `OpenAI` class provides a client for accessing various OpenAI API resources.
 
 | Property Name     | Type  | Description                       | Optional |
 |-------------------|-------|-----------------------------------|----------|
-| `apiKey`          | Text  | Your [OpenAI API Key](https://platform.openai.com/api-keys).              | No	   |
+| `apiKey`          | Text  | Your [OpenAI API Key](https://platform.openai.com/api-keys).              | No for OpenAI	   |
 | `baseURL`         | Text  | Base URL for OpenAI API requests. | Yes      |
 | `organization`    | Text  | Your OpenAI Organization ID.      | Yes      |
 | `project`         | Text  | Your OpenAI Project ID.           | Yes      |
@@ -17,7 +17,7 @@ The `OpenAI` class provides a client for accessing various OpenAI API resources.
 |-------------------|-------|-----------------------------------|
 | `timeout`         | Real  | Time in seconds before timeout occurs. | 
 | `maxRetries`      | Real  | Maximum number of retry attempts in case of failure. | 
-| `httpAgent`      | 4D.HTTPAgent  | HTTP agent used for making requests. | 
+| `httpAgent`      | [4D.HTTPAgent](https://developer.4d.com/docs/API/HTTPAgentClass)  | HTTP agent used for making requests. | 
 | `customHeaders`      | Real  | Custom headers to be included in the HTTP requests. | 
 
 ### Class constructor

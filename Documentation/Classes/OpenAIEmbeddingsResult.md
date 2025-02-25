@@ -13,3 +13,7 @@ Returns a collection of [OpenAIEmbedding](OpenAIEmbedding.md).
 ### embedding
 
 Returns the first [OpenAIEmbedding](OpenAIEmbedding.md) from the collection.
+
+## See also
+
+- [OpenAIEmbeddingsAPI](OpenAIEmbeddingsAPI.md)
