@@ -42,18 +42,22 @@ Function get errors : Collection
 		return This:C1470.request.errors
 	End if 
 	
-	If ((This:C1470.request.response#Null:C1517) && (Value type:C1509(This:C1470.request.response.body)=Is object:K8:27))
-		var $body:=This:C1470._objectBody()
-		If ($body.error#Null:C1517)
-			return [$body.error]
-		End if 
+	If (This:C1470.request.response=Null:C1517)
+		return []
 	End if 
 	
-	If ((This:C1470.request.response#Null:C1517) && (This:C1470.request.response.status>=300))
-		return [{code: This:C1470.request.response.status; message: This:C1470.request.response.statusText}]
+	var $body:=This:C1470._objectBody()
+	If ((($body#Null:C1517) && ($body.error#Null:C1517)) || (This:C1470.request.response.status>=300))
+		return [cs:C1710.OpenAIError.new(This:C1470.request.response; $body)]
 	End if 
 	
 	return []
+	
+Function throw()
+	var $error : Object
+	For each ($error; This:C1470.errors || [])
+		throw:C1805($error)
+	End for each 
 	
 	// The response headers
 Function get headers : Object

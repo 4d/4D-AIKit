@@ -38,6 +38,12 @@ The structure of the `rateLimit` object is as follows:
 | `reset.request` | String | Time until request limit resets.               |
 | `reset.tokens`  | String | Time until token limit resets.                 |
 
+## Functions
+
+### `throw()`
+
+Throws the first error in the `errors` collection. This function is useful for propagating errors up the call stack.
+
 ## Inherited Classes
 
 Several classes inherit from `OpenAIResult` to extend its functionality for specific use cases. Below are some of the classes that extend `OpenAIResult`:
