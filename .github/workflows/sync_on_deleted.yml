@@ -1,30 +1,10 @@
-name: Build
+name: Delete
+
 on:
-  push:
-  pull_request:
+    delete
 
 jobs:
-  build:
-    name: "Build on ${{ matrix.os }}"
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ macOS,Windows,ubuntu-24.04 ]
-    runs-on: ${{ matrix.os }}
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-
-    - name: Build
-      uses: 4d/build4d-action@main
-      with:
-        product-line: main
-        version: main
-        build: latest
-        token: ${{ secrets.DLTK }}
-
   sync:
-    needs: ["build"]
     runs-on: [self-hosted, macOS, ARM64]
     name: Git Repo Sync
     steps:
