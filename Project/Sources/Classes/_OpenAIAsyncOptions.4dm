@@ -30,10 +30,11 @@ Function onTerminate($request : 4D:C1709.HTTPRequest; $event : Object)
 	If (This:C1470._parameters.formula#Null:C1517)
 		If (Bool:C1537(This:C1470._parameters.stream))
 			var $result:=cs:C1710.OpenAIChatCompletionsStreamResult.new($request; $request.response.body)
-			$result.terminated:=True:C214
 			This:C1470._parameters.formula.call(This:C1470._parameters._formulaThis || This:C1470._client; $result)
+			$result._terminated:=True:C214
 		Else 
 			This:C1470._parameters.formula.call(This:C1470._parameters._formulaThis || This:C1470._client; This:C1470._result)
+			This:C1470._result._terminated:=True:C214  // force terminated because onTerminate is before onTerminated
 		End if 
 	End if 
 	

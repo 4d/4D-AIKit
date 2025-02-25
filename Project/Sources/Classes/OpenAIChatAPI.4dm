@@ -12,10 +12,4 @@ Class constructor($client : cs:C1710.OpenAI)
 	// MARK:- Lazy-friendly helper class
 	
 Function create($systemPrompt : Text; $parameters : cs:C1710.OpenAIChatCompletionParameters) : cs:C1710.OpenAIChatHelper
-	var $helper:=cs:C1710.OpenAIChatHelper.new(This:C1470; $systemPrompt; $parameters)
-	
-	If ($parameters.formula#Null:C1517)
-		$helper:=OB Copy:C1225($helper; ck shared:K85:29)
-	End if 
-	
-	return $helper
+	return cs:C1710.OpenAIChatHelper.new(This:C1470; $systemPrompt; $parameters)

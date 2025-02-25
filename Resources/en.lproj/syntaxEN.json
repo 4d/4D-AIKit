@@ -1154,6 +1154,11 @@
 		}
 	},
 	"OpenAIChatHelper": {
+		"reset()": {
+			"Syntax": "**.reset**()",
+			"Params": [],
+			"Summary": ""
+		},
 		"prompt()": {
 			"Syntax": "**.prompt**( *prompt* : Text ) : cs.AIKit.OpenAIChatCompletionsResult",
 			"Params": [
@@ -1175,6 +1180,9 @@
 		},
 		"parameters": {
 			"Syntax": "parameters : cs.AIKit.OpenAIChatCompletionParameters"
+		},
+		"lastErrors": {
+			"Syntax": "lastErrors : Collection"
 		},
 		"systemPrompt": {
 			"Syntax": "systemPrompt : cs.AIKit.OpenAIMessage"
@@ -1209,39 +1217,6 @@
 			],
 			"Summary": ""
 		},
-		"set terminated()": {
-			"Syntax": "**.set terminated**( *newValue* : Boolean )",
-			"Params": [
-				[
-					"newValue",
-					"Boolean",
-					"->"
-				]
-			],
-			"Summary": ""
-		},
-		"get errors()": {
-			"Syntax": "**.get errors**() : Collection",
-			"Params": [
-				[
-					"",
-					"Collection",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"get choices()": {
-			"Syntax": "**.get choices**() : Collection",
-			"Params": [
-				[
-					"",
-					"Collection",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
 		"get terminated()": {
 			"Syntax": "**.get terminated**() : Boolean",
 			"Params": [
@@ -1264,12 +1239,34 @@
 			],
 			"Summary": ""
 		},
+		"get choices()": {
+			"Syntax": "**.get choices**() : Collection",
+			"Params": [
+				[
+					"",
+					"Collection",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
 		"get choice()": {
 			"Syntax": "**.get choice**() : cs.AIKit.OpenAIChoice",
 			"Params": [
 				[
 					"",
 					"cs.AIKit.OpenAIChoice",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get errors()": {
+			"Syntax": "**.get errors**() : Collection",
+			"Params": [
+				[
+					"",
+					"Collection",
 					"<-"
 				]
 			],
@@ -1677,6 +1674,11 @@
 			"Params": [],
 			"Summary": ""
 		},
+		"sendEmbeddings()": {
+			"Syntax": "**.sendEmbeddings**()",
+			"Params": [],
+			"Summary": ""
+		},
 		"onModelReceive()": {
 			"Syntax": "**.onModelReceive**( *result* : cs.AIKit.OpenAIModelListResult )",
 			"Params": [
@@ -1785,6 +1787,17 @@
 					"",
 					"Text",
 					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"onEmbeddingsReceive()": {
+			"Syntax": "**.onEmbeddingsReceive**( *result* : cs.AIKit.OpenAIEmbeddingsResult )",
+			"Params": [
+				[
+					"result",
+					"cs.AIKit.OpenAIEmbeddingsResult",
+					"->"
 				]
 			],
 			"Summary": ""

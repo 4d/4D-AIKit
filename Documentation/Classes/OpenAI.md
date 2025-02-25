@@ -4,17 +4,25 @@ The `OpenAI` class provides a client for accessing various OpenAI API resources.
 
 ## Configuration Properties
 
+| Property Name     | Type  | Description                       | Optional |
+|-------------------|-------|-----------------------------------|----------|
+| `apiKey`          | Text  | Your [OpenAI API Key](https://platform.openai.com/api-keys).              | No	   |
+| `baseURL`         | Text  | Base URL for OpenAI API requests. | Yes      |
+| `organization`    | Text  | Your OpenAI Organization ID.      | Yes      |
+| `project`         | Text  | Your OpenAI Project ID.           | Yes      |
+
+### Additional HTTP properties
+
 | Property Name     | Type  | Description                       |
 |-------------------|-------|-----------------------------------|
-| `apiKey`          | Text  | Your OpenAI API Key.              |
-| `baseURL`         | Text  | Base URL for OpenAI API requests. |
-| `organization`    | Text  | Your OpenAI Organization ID.      |
-| `project`         | Text  | Your OpenAI Project ID.           |
-| `timeout`         | Real  | Time in seconds before timeout occurs. |
+| `timeout`         | Real  | Time in seconds before timeout occurs. | 
+| `maxRetries`      | Real  | Maximum number of retry attempts in case of failure. | 
+| `httpAgent`      | 4D.HTTPAgent  | HTTP agent used for making requests. | 
+| `customHeaders`      | Real  | Custom headers to be included in the HTTP requests. | 
 
 ### Class constructor
 
-Create an instance of the OpenAI class.
+Create an instance of the OpenAI client class.
 
 | Argument Name | Type     | Description                                           |
 |---------------|----------|-------------------------------------------------------|
@@ -22,15 +30,10 @@ Create an instance of the OpenAI class.
 
 #### API key
 
-as text
-
 ```4d
+// as text
 var $client:=cs.AIKit.OpenAI.new("your api key")
-```
-
-as object
-
-```4d
+// as object
 var $client:=cs.AIKit.OpenAI.new({apiKey: "your api key"})
 ```
 
@@ -64,5 +67,7 @@ The API provides access to multiple resources that allow seamless interaction wi
 ### Example Usage
 
 ```4d
+$client.chat.completions.create(...)
 $client.images.generate(...)
+$client.model.lists(...)
 ```

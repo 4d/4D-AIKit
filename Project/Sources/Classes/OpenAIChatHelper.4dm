@@ -7,6 +7,8 @@ property messages : Collection:=[]
 
 property _userFormula : 4D:C1709.Function
 
+property lastErrors : Collection
+
 Class constructor($chat : cs:C1710.OpenAIChatAPI; $systemPrompt : Text; $parameters : cs:C1710.OpenAIChatCompletionParameters)
 	This:C1470.chat:=$chat
 	This:C1470.systemPrompt:=cs:C1710.OpenAIMessage.new({role: "system"; content: $systemPrompt})
@@ -44,33 +46,41 @@ Function prompt($prompt : Text) : cs:C1710.OpenAIChatCompletionsResult
 	End if 
 	return $result
 	
+	// Reset chat context, ie. remove messages
+Function reset()
+	This:C1470.messages:=[]
+	
+	// Remove the first message if there are more than numberOfMessages.
+Function _trim()
+	If (This:C1470.numberOfMessages>0)
+		While (This:C1470.messages.length>This:C1470.numberOfMessages)
+			This:C1470.messages.remove(0)
+		End while 
+	End if 
+	
 Function _manageResponse($result : Object)
+	If ($result=Null:C1517)
+		return 
+	End if 
+	
 	If ($result.success)
+		
 		This:C1470.messages.push($result.choice.message)
 		
-		If (This:C1470.messages.length>This:C1470.numberOfMessages)
-			This:C1470.messages.remove(0)
-			// XXX: maybe remove assistant if first?
-		End if 
+		This:C1470._trim()
+		
+	Else 
+		
+		This:C1470.lastErrors:=$result.error
 		
 	End if 
 	
 Function _manageAsyncResponse($result : Object)
+	
+	This:C1470._manageResponse($result)
+	
 	If ($result#Null:C1517)
-		If ($result.success)
-			Use (This:C1470.messages)
-				This:C1470.messages.push(OB Copy:C1225($result.choices.first().message; ck shared:K85:29; This:C1470.messages))
-				
-				If (This:C1470.messages.length>This:C1470.numberOfMessages)
-					This:C1470.messages.remove(0)
-					// XXX: maybe remove assistant if first?
-				End if 
-				
-			End use 
-			
-		End if 
 		If (This:C1470._userFormula#Null:C1517)
 			This:C1470._userFormula.call(This:C1470.chat._client; $result)
 		End if 
-		
 	End if 
