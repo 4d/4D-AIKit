@@ -15,7 +15,7 @@ Creates a model response for the given chat conversation.
 | Argument     | Type                                      | Description                               |
 |--------------|-------------------------------------------|-------------------------------------------|
 | `$messages`  | Collection of [OpenAIMessage](OpenAIMessage.md)   | The chat messages to include in the request. |
-| `$parameters`| [OpenAIChatCompletionParameters](OpenAIChatCompletionParameters.md)            | The parameters for the chat completion request. |
+| `$parameters`| [OpenAIChatCompletionsParameters](OpenAIChatCompletionsParameters.md)            | The parameters for the chat completion request. |
 
 #### Example Usage
 

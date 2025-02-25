@@ -21,11 +21,11 @@
 	},
 	"Completions": {
 		"classes": [
-			"OpenAIChatCompletionParameters",
 			"OpenAIChatCompletionsAPI",
 			"OpenAIChatCompletionsListParameters",
 			"OpenAIChatCompletionsMessagesAPI",
 			"OpenAIChatCompletionsMessagesParameters",
+			"OpenAIChatCompletionsParameters",
 			"OpenAIChatCompletionsResult",
 			"OpenAIChatCompletionsStreamResult",
 			"OpenAIChoice",

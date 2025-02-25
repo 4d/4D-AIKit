@@ -38,9 +38,9 @@ $client.baseURL:="https://your.server.ai"
 var $result:=$client.<resource>.<function>(<parameters...>)
 ```
 
-The `$result` contains the `HTTPRequest`, a `success` status and a collection of `errors`.
+The `$result` contains the `HTTPRequest`, a `success` status, a collection of `errors` and more. See [OpenAIResult](Documentation/Classes/OpenAIResult.md)
 
-And if the result is `typed`, you could access the decoded returned data as an object instance. See the example bellow.
+See some examples bellow.
 
 #### Chat
 
@@ -106,7 +106,13 @@ https://platform.openai.com/docs/api-reference/moderations
 
 ```4d
 var $moderation:=$client.moderations.create("This text contains inappropriate language and offensive behavior.").moderation
-```
+``` 
+
+#### Asynchronous code
+
+If you do not want to wait for the OpenAPI response when making a request to its API, you need to use asynchronous code. The result object will be receive in a callback function.
+
+See [detailled documentation for examples](Documentation/AsynchronousCall.md)
 
 ## License
 

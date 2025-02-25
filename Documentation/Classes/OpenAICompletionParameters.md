@@ -16,3 +16,7 @@ The `OpenAICompletionParameters` class defines the parameters needed to create a
 | `max_tokens`      | Integer| The maximum number of tokens that can be generated in the completion.|
 | `n`               | Integer| How many completions to generate for each prompt (default: 1).      |
 | `temperature`     | Real   | What sampling temperature to use (default: -1).                     |
+
+## See also
+
+- [OpenAICompletionsAPI](OpenAICompletionsAPI.md)

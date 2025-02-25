@@ -15,3 +15,7 @@ This class is used to define parameters for retrieving a list of chat completion
 | `order`     | Text   | "asc"         | Sort order for messages by timestamp. Use `asc` for ascending order or `desc` for descending order. |
 | `metadata`  | Text   | -             | A list of metadata keys to filter the chat completions by. Example: `metadata[key1]=value1&metadata[key2]=value2` |
 | `model`     | Text   | ""            | The model used to generate the chat completions. |
+
+## See also
+
+- [OpenAIChatCompletionsAPI](OpenAIChatCompletionsAPI.md)

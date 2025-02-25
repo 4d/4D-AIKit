@@ -15,3 +15,7 @@ The `OpenAIImageParameters` class is designed to configure and manage the parame
 | `size`            | Text    | "1024x1024"    | The size of the generated images. Must conform to model specifications.                          |
 | `style`           | Text    | ""             | The style of the generated images (must be either `vivid` or `natural`).                       |
 | `response_format` | Text    | "url"          | The format for returned images, can be either `url` or `b64_json`.                             |
+
+## See also
+
+- [OpenAIImagesAPI](OpenAIImagesAPI.md)

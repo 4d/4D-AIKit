@@ -10,9 +10,9 @@ Class constructor($client : cs:C1710.OpenAI)
 /*
 * Creates a model response for the given chat conversation.
  */
-Function create($messages : Collection; $parameters : cs:C1710.OpenAIChatCompletionParameters) : cs:C1710.OpenAIChatCompletionsResult
-	If (Not:C34(OB Instance of:C1731($parameters; cs:C1710.OpenAIChatCompletionParameters)))
-		$parameters:=cs:C1710.OpenAIChatCompletionParameters.new($parameters)
+Function create($messages : Collection; $parameters : cs:C1710.OpenAIChatCompletionsParameters) : cs:C1710.OpenAIChatCompletionsResult
+	If (Not:C34(OB Instance of:C1731($parameters; cs:C1710.OpenAIChatCompletionsParameters)))
+		$parameters:=cs:C1710.OpenAIChatCompletionsParameters.new($parameters)
 	End if 
 	
 	If ($parameters.stream)

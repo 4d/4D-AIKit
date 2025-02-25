@@ -6,11 +6,11 @@ property body : Variant
 property timeout : Integer
 
 property _client : cs:C1710.OpenAI
-property _parameters : cs:C1710.OpenAIChatCompletionParameters
+property _parameters : cs:C1710.OpenAIChatCompletionsParameters
 property _result : cs:C1710.OpenAIResult
 
 // MARK:- constructor
-Class constructor($options : Object; $client : cs:C1710.OpenAI; $parameters : cs:C1710.OpenAIChatCompletionParameters; $result : cs:C1710.OpenAIResult)
+Class constructor($options : Object; $client : cs:C1710.OpenAI; $parameters : cs:C1710.OpenAIChatCompletionsParameters; $result : cs:C1710.OpenAIResult)
 	var $key : Text
 	For each ($key; $options)
 		This:C1470[$key]:=$options[$key]

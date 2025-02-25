@@ -1,7 +1,7 @@
 property chat : cs:C1710.OpenAIChatAPI
 property systemPrompt : cs:C1710.OpenAIMessage
 property numberOfMessages : Integer:=5
-property parameters : cs:C1710.OpenAIChatCompletionParameters
+property parameters : cs:C1710.OpenAIChatCompletionsParameters
 
 property messages : Collection:=[]
 
@@ -9,12 +9,12 @@ property _userFormula : 4D:C1709.Function
 
 property lastErrors : Collection
 
-Class constructor($chat : cs:C1710.OpenAIChatAPI; $systemPrompt : Text; $parameters : cs:C1710.OpenAIChatCompletionParameters)
+Class constructor($chat : cs:C1710.OpenAIChatAPI; $systemPrompt : Text; $parameters : cs:C1710.OpenAIChatCompletionsParameters)
 	This:C1470.chat:=$chat
 	This:C1470.systemPrompt:=cs:C1710.OpenAIMessage.new({role: "system"; content: $systemPrompt})
 	
-	If (Not:C34(OB Instance of:C1731($parameters; cs:C1710.OpenAIChatCompletionParameters)))
-		$parameters:=cs:C1710.OpenAIChatCompletionParameters.new($parameters)
+	If (Not:C34(OB Instance of:C1731($parameters; cs:C1710.OpenAIChatCompletionsParameters)))
+		$parameters:=cs:C1710.OpenAIChatCompletionsParameters.new($parameters)
 	End if 
 	This:C1470.parameters:=$parameters
 	If (This:C1470.parameters.model=Null:C1517)

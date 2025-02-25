@@ -16,3 +16,7 @@ The `OpenAIChatCompletionParameters` class is designed to handle the parameters 
 | `n`                       | Integer | `1`                     | How many completions to generate for each prompt.                                               |
 | `temperature`             | Real    | `-1`                    | What sampling temperature to use, between 0 and 2. Higher values make the output more random, while lower values make it more focused and deterministic. |
 | `store`                   | Boolean | `False`                 | Whether or not to store the output of this chat completion request.                              |
+
+## See also
+
+- [OpenAIChatCompletionsAPI](OpenAIChatCompletionsAPI.md)

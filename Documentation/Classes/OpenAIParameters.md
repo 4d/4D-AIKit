@@ -23,3 +23,13 @@ See [documentation about asynchronous code](../AsynchronousCall.md)
 | Property           | Type    | Description                                                                                                           |
 |-------------------|---------|-----------------------------------------------------------------------------------------------------------------------|
 | `user`            | Text    | A unique identifier representing the end-user, which helps OpenAI monitor and detect abuse.                           |
+
+## Inherited Classes
+
+Several classes inherit from `OpenAIParameters` to extend its functionality for specific use cases. Below are some of the classes that extend `OpenAIParameters`:
+
+- [OpenAIChatCompletionsParameters](OpenAIChatCompletionsParameters.md)
+- [OpenAIChatCompletionsMessagesParameters](OpenAIChatCompletionsMessagesParameters.md)
+- [OpenAIImageParameters](OpenAIImageParameters.md)
+- [OpenAIModerationParameters](OpenAIModerationParameters.md)
+- [OpenAIEmbeddingsParameters](OpenAIEmbeddingsParameters.md)

@@ -11,5 +11,5 @@ Class constructor($client : cs:C1710.OpenAI)
 	
 	// MARK:- Lazy-friendly helper class
 	
-Function create($systemPrompt : Text; $parameters : cs:C1710.OpenAIChatCompletionParameters) : cs:C1710.OpenAIChatHelper
+Function create($systemPrompt : Text; $parameters : cs:C1710.OpenAIChatCompletionsParameters) : cs:C1710.OpenAIChatHelper
 	return cs:C1710.OpenAIChatHelper.new(This:C1470; $systemPrompt; $parameters)

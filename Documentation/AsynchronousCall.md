@@ -10,14 +10,13 @@ The asynchronous method is based on 4D HTTPRequest, so the response will be rece
 
 ## Examples of Usage
 
+### model list
+
 ```4d
 $client.models.list({formula: Formula(MyReceiveMethod($1))})
 ```
 
-`$1` will be an instance of [OpenAIResult](Classes/OpenAIResult.md) (specifically, in this example, [OpenAIModelListResult](Classes/OpenAIModelListResult.md)).
-
-
-`MyReceiveMethod` method could be:
+`$1` will be an instance of [OpenAIModelListResult](Classes/OpenAIModelListResult.md), so `MyReceiveMethod` method could be:
 
 ```4d
 #DECLARE($result: cs.AIKit.OpenAIModelListResult)
@@ -28,7 +27,28 @@ If($result.success)
 
 Else
 
-// Alert($result.errors.formula(Formula(JSON Stringify($1))).join("\n"))
+  Alert($result.errors.formula(Formula(JSON Stringify($1))).join("\n"))
+
+End if
+```
+
+### chat completions
+
+```4d
+var $messages:=[{role: "system"; content: "You are a helpful assistant."}]
+$messages.push({role: "user"; content: "Could you explain me why 42 is a special number"})
+
+$client.chat.completions.create($messages; { formula: Formula(MyChatCompletionsReceiveMethod($1))})
+```
+
+`$1` will be an instance of [OpenAIChatCompletionResult](Classes/OpenAIChatCompletionResult.md), so `MyChatCompletionsReceiveMethod` method could be:
+
+```4d
+#DECLARE($result: cs.AIKit.OpenAIChatCompletionsResult)
+
+If($result.success)
+
+   Form.assistantMessage:=$result.choices[0].text
 
 End if
 ```

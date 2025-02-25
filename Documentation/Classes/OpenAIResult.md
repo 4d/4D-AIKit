@@ -30,3 +30,15 @@ The structure of the `rateLimit` object is as follows:
 | `remaining.tokens`  | Integer | Number of remaining tokens.                  |
 | `reset.request` | String | Time until request limit resets.               |
 | `reset.tokens`  | String | Time until token limit resets.                 |
+
+## Inherited Classes
+
+Several classes inherit from `OpenAIResult` to extend its functionality for specific use cases. Below are some of the classes that extend `OpenAIResult`:
+
+- [OpenAIChatCompletionsResult](OpenAIChatCompletionsResult.md)
+- [OpenAIChatCompletionsStreamResult](OpenAIChatCompletionsStreamResult.md)
+- [OpenAIImagesResult](OpenAIImagesResult.md)
+- [OpenAIModelResult](OpenAIModelResult.md)
+- [OpenAIModelListResult](OpenAIModelListResult.md)
+- [OpenAIModerationResult](OpenAIModerationResult.md)
+- [OpenAIEmbeddingsResult](OpenAIEmbeddingsResult.md)

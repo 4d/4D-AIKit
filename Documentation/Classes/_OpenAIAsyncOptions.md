@@ -19,7 +19,7 @@ The `_OpenAIAsyncOptions` internal class provides function to handle asynchronou
 | Property    | Type    |
 |-------------|---------|
 | client      | [OpenAI](OpenAI.md) |
-| parameters  | [OpenAIChatCompletionParameters](OpenAIChatCompletionParameters.md) |
+| parameters  | [OpenAIChatCompletionsParameters](OpenAIChatCompletionParameters.md) |
 | result      | [OpenAIResult](OpenAIResult.md) |
 
 ## Functions
