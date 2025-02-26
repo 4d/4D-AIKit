@@ -33,7 +33,7 @@ If (Asserted:C1132(Bool:C1537($result.success); "Cannot generate images : "+JSON
 End if 
 
 // MARK:- as b64
-$result:=$client.images.generate("A futuristic city skyline at sunset"; {size: "512x512"; responseFormat: "b64_json"})
+$result:=$client.images.generate("A futuristic city skyline at sunset"; {size: "512x512"; response_format: "b64_json"})
 If (Asserted:C1132(Bool:C1537($result.success); "Cannot generate images : "+JSON Stringify:C1217($result)))
 	
 	If (Asserted:C1132($result.images#Null:C1517 && $result.image#Null:C1517; "images or image must not be null"))
