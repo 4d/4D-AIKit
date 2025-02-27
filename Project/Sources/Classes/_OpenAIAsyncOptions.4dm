@@ -27,20 +27,18 @@ Class constructor($options : Object; $client : cs:C1710.OpenAI; $parameters : cs
 	
 	// MARK:- HTTP callback
 Function onTerminate($request : 4D:C1709.HTTPRequest; $event : Object)
-	If (This:C1470._parameters.formula#Null:C1517)
-		If (Bool:C1537(This:C1470._parameters.stream))
-			var $result:=cs:C1710.OpenAIChatCompletionsStreamResult.new($request; $request.response.body)
-			This:C1470._parameters.formula.call(This:C1470._parameters._formulaThis || This:C1470._client; $result)
-			$result._terminated:=True:C214
-		Else 
-			This:C1470._parameters.formula.call(This:C1470._parameters._formulaThis || This:C1470._client; This:C1470._result)
-			This:C1470._result._terminated:=True:C214  // force terminated because onTerminate is before onTerminated
-		End if 
+	If (Bool:C1537(This:C1470._parameters.stream))
+		var $result:=cs:C1710.OpenAIChatCompletionsStreamResult.new($request; $request.response.body)
+		$result._terminated:=True:C214
+		This:C1470._callbacks(This:C1470._parameters; $result; This:C1470._client)
+	Else 
+		This:C1470._result._terminated:=True:C214  // force terminated because onTerminate is before onTerminated
+		This:C1470._callbacks(This:C1470._parameters; This:C1470._result; This:C1470._client)
 	End if 
 	
 Function onData($request : 4D:C1709.HTTPRequest; $event : Object)
 	// $event: {chunk: true; type: "data"; data: blob}
-	If ((This:C1470._parameters.formula#Null:C1517) && (Bool:C1537(This:C1470._parameters.stream)))
+	If (((This:C1470._parameters.onData#Null:C1517) || (This:C1470._parameters.formula#Null:C1517)) && (Bool:C1537(This:C1470._parameters.stream)))
 		
 		var $textData:=BLOB to text:C555($event.data; UTF8 C string:K22:15)
 		var $line : Text
@@ -53,8 +51,29 @@ Function onData($request : 4D:C1709.HTTPRequest; $event : Object)
 			End if 
 			
 			var $chunkResult:=cs:C1710.OpenAIChatCompletionsStreamResult.new($request; $line)
-			This:C1470._parameters.formula.call(This:C1470._parameters._formulaThis || This:C1470._client; $chunkResult)
+			
+			var $formula:=(This:C1470._parameters.onData=Null:C1517) ? This:C1470._parameters.onData : This:C1470._parameters.formula
+			$formula.call(This:C1470._parameters._formulaThis || This:C1470._client; $chunkResult)
 			
 		End for each 
 		
+	End if 
+	
+	// MARK:- utils
+	
+	// async
+Function _callbacks($parameters : cs:C1710.OpenAIParameters; $result : cs:C1710.OpenAIResult; $client : cs:C1710.OpenAI)
+	
+	If ($result.success)
+		If (($parameters.onResponse#Null:C1517) && (OB Instance of:C1731($parameters.onResponse; 4D:C1709.Function)))
+			$parameters.onResponse.call($parameters._formulaThis || $client; $result)
+		End if 
+	Else 
+		If (($parameters.onError#Null:C1517) && (OB Instance of:C1731($parameters.onError; 4D:C1709.Function)))
+			$parameters.onError.call($parameters._formulaThis || $client; $result)
+		End if 
+	End if 
+	
+	If (($parameters.formula#Null:C1517) && (OB Instance of:C1731($parameters.formula; 4D:C1709.Function)))
+		$parameters.formula.call($parameters._formulaThis || This:C1470._client; $result)
 	End if 

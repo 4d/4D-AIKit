@@ -1504,6 +1504,9 @@
 			],
 			"Summary": ""
 		},
+		"onData": {
+			"Syntax": "onData : 4D.Function"
+		},
 		"prediction": {
 			"Syntax": "prediction : Object"
 		},
@@ -1867,6 +1870,33 @@
 		}
 	},
 	"OpenAIParameters": {
+		"set onTerminate()": {
+			"Syntax": "**.set onTerminate**( *new* : 4D.Function ) : 4D.Function",
+			"Params": [
+				[
+					"new",
+					"4D.Function",
+					"->"
+				],
+				[
+					"",
+					"4D.Function",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get onTerminate()": {
+			"Syntax": "**.get onTerminate**() : 4D.Function",
+			"Params": [
+				[
+					"",
+					"4D.Function",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
 		"body()": {
 			"Syntax": "**.body**() : Object",
 			"Params": [
@@ -1878,20 +1908,29 @@
 			],
 			"Summary": ""
 		},
+		"user": {
+			"Syntax": "user : Text"
+		},
 		"httpAgent": {
 			"Syntax": "httpAgent : 4D.HTTPAgent"
 		},
 		"timeout": {
 			"Syntax": "timeout : Real"
 		},
+		"onError": {
+			"Syntax": "onError : 4D.Function"
+		},
+		"onResponse": {
+			"Syntax": "onResponse : 4D.Function"
+		},
+		"throw": {
+			"Syntax": "throw : Boolean"
+		},
 		"extraHeaders": {
 			"Syntax": "extraHeaders : Object"
 		},
 		"maxRetries": {
 			"Syntax": "maxRetries : Real"
-		},
-		"user": {
-			"Syntax": "user : Text"
 		},
 		"formula": {
 			"Syntax": "formula : 4D.Function"
@@ -1973,6 +2012,160 @@
 		"_inheritedFrom_": "OpenAIResult"
 	},
 	"OpenAIError": {
+		"get isInternalServerError()": {
+			"Syntax": "**.get isInternalServerError**() : Boolean",
+			"Params": [
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get isRateLimitError()": {
+			"Syntax": "**.get isRateLimitError**() : Boolean",
+			"Params": [
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get isNotFoundError()": {
+			"Syntax": "**.get isNotFoundError**() : Boolean",
+			"Params": [
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get isBadRequestError()": {
+			"Syntax": "**.get isBadRequestError**() : Boolean",
+			"Params": [
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get isPermissionDeniedError()": {
+			"Syntax": "**.get isPermissionDeniedError**() : Boolean",
+			"Params": [
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get status()": {
+			"Syntax": "**.get status**() : Integer",
+			"Params": [
+				[
+					"",
+					"Integer",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get code()": {
+			"Syntax": "**.get code**() : Variant",
+			"Params": [
+				[
+					"",
+					"Variant",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get requestID()": {
+			"Syntax": "**.get requestID**() : Text",
+			"Params": [
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get type()": {
+			"Syntax": "**.get type**() : Text",
+			"Params": [
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get param()": {
+			"Syntax": "**.get param**() : Text",
+			"Params": [
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get statusText()": {
+			"Syntax": "**.get statusText**() : Text",
+			"Params": [
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get headers()": {
+			"Syntax": "**.get headers**() : Object",
+			"Params": [
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get isUnprocessableEntityError()": {
+			"Syntax": "**.get isUnprocessableEntityError**() : Boolean",
+			"Params": [
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get isAuthenticationError()": {
+			"Syntax": "**.get isAuthenticationError**() : Boolean",
+			"Params": [
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
 		"response": {
 			"Syntax": "response : Object"
 		},

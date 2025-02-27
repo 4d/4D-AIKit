@@ -36,6 +36,9 @@ property prediction : Object
 
 // seed, metadata, modalities, etc...
 
+// Function to call asynchronously when receiving data. /!\ Be sure your current process not die.
+property onData : 4D:C1709.Function
+
 Class extends OpenAIParameters
 
 Class constructor($object : Object)
@@ -81,3 +84,7 @@ Function body() : Object
 		$body.prediction:=This:C1470.prediction
 	End if 
 	return $body
+	
+Function _isAsync() : Boolean
+	return Super:C1706._isAsync()\
+		 || ((Bool:C1537(This:C1470.stream)) && (This:C1470.onData#Null:C1517) && (OB Instance of:C1731(This:C1470.onData; 4D:C1709.Function)))

@@ -9,7 +9,11 @@ Class constructor($response : Object; $body : Object)
 	This:C1470.response:=$response
 	This:C1470.body:=$body
 	
-	This:C1470.errCode:=$body.error.code || This:C1470.response.status
+	If (Value type:C1509($body.error.code)=Is integer:K8:5)
+		This:C1470.errCode:=$body.error.code
+	Else 
+		This:C1470.errCode:=This:C1470.response.status
+	End if 
 	This:C1470.message:=This:C1470._makeMessage()
 	
 Function _makeMessage() : Text
@@ -23,43 +27,46 @@ Function _makeMessage() : Text
 	End case 
 	
 	// Uncomment if we could throw with computed properties ACI0105458 
-/* 
+	
 Function get headers : Object
-return (This.response=Null) ? Null : This.response.headers
+	return (This:C1470.response=Null:C1517) ? Null:C1517 : This:C1470.response.headers
 	
 Function get requestID : Text
-return (This.headers=Null) ? "" : This.headers["x-request-id"]
+	return (This:C1470.headers=Null:C1517) ? "" : This:C1470.headers["x-request-id"]
 	
 Function get type : Text
-return String(This.body.error.type)
+	return String:C10(This:C1470.body.error.type)
 	
 Function get param : Text
-return String(This.body.error.param)
+	return String:C10(This:C1470.body.error.param)
+	
+Function get code : Variant
+	return String:C10(This:C1470.body.error.code)
 	
 Function get statusText : Text
-return String(This.response.statusText)
+	return String:C10(This:C1470.response.statusText)
 	
 Function get status : Integer
-return Num(This.response.status)
+	return Num:C11(This:C1470.response.status)
 	
 Function get isBadRequestError : Boolean
-return This.status=400
+	return This:C1470.status=400
 	
 Function get isAuthenticationError : Boolean
-return This.status=401
+	return This:C1470.status=401
 	
 Function get isPermissionDeniedError : Boolean
-return This.status=403
+	return This:C1470.status=403
 	
 Function get isNotFoundError : Boolean
-return This.status=404
+	return This:C1470.status=404
 	
 Function get isUnprocessableEntityError : Boolean
-return This.status=422
+	return This:C1470.status=422
 	
 Function get isRateLimitError : Boolean
-return This.status=429
+	return This:C1470.status=429
 	
 Function get isInternalServerError : Boolean
-return This.status>=500
-*/
+	return This:C1470.status>=500
+	

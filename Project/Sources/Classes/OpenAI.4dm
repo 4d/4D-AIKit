@@ -163,10 +163,14 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 	var $headers:=This:C1470._headers()
 	
 	var $options:={method: $httpMethod; headers: $headers; dataType: "auto"}
-	var $async:=($parameters.formula#Null:C1517) && (OB Instance of:C1731($parameters.formula; 4D:C1709.Function))
+	
+	If (Not:C34(OB Instance of:C1731($parameters; cs:C1710.OpenAIParameters)))
+		$parameters:=cs:C1710.OpenAIParameters.new($parameters)
+	End if 
+	var $async:=$parameters._isAsync()
 	If ($async)
 		var $processType : Integer:=Process info:C1843(Current process:C322).type
-		If (Asserted:C1132((($processType#Created from execution dialog:K36:14) && ($processType#Other user process:K36:15)) || ($parameters._worker#Null:C1517); "Formula callback will never be called asynchronously with user process. Please create a worker or be in form/app context"))
+		If (Asserted:C1132(($processType#Created from execution dialog:K36:14) && ($processType#Other user process:K36:15); "Formula callback will never be called asynchronously with user process. Please create a worker or be in form/app context"))
 			$options:=cs:C1710._OpenAIAsyncOptions.new($options; This:C1470; $parameters; $result)
 		Else 
 			$async:=False:C215  // transform into sync
@@ -200,38 +204,22 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 	End if 
 	
 	
-	If (($parameters#Null:C1517) && ($parameters.timeout>0))
+	If ($parameters.timeout>0)
 		$options.timeout:=$parameters.timeout
 	Else 
 		$options.timeout:=This:C1470.timeout
 	End if 
 	
-	If (($parameters#Null:C1517) && ($parameters.httpAgent#Null:C1517))
+	If ($parameters.httpAgent#Null:C1517)
 		$options.agent:=$parameters.httpAgent
 	Else 
 		$options.agent:=This:C1470.httpAgent
 	End if 
 	
-	
 	This:C1470._initRetry($options; $parameters)
+	This:C1470._doHTTPRequest($url; $options; $result; Not:C34($async); $parameters)
 	
-	If ($async)
-		
-		If ($parameters._worker#Null:C1517)
-			
-			CALL WORKER:C1389($parameters._worker; This:C1470._doHTTPRequest; $url; $options; $result; True:C214; $parameters)
-			return Null:C1517  // $result will never be updated (because not shared and we cannot share http request)
-			
-		Else 
-			
-			This:C1470._doHTTPRequest($url; $options; $result; False:C215; $parameters)
-			
-			return $result
-		End if 
-	Else 
-		This:C1470._doHTTPRequest($url; $options; $result; True:C214; $parameters)
-		return $result
-	End if 
+	return $result
 	
 Function _doHTTPRequest($url : Text; $options : Object; $result : cs:C1710.OpenAIResult; $wait : Boolean; $parameters : cs:C1710.OpenAIParameters)
 	$result.request:=4D:C1709.HTTPRequest.new($url; $options)
@@ -246,20 +234,10 @@ Function _doHTTPRequest($url : Text; $options : Object; $result : cs:C1710.OpenA
 			return 
 		End if 
 		
-		If (($parameters.formula#Null:C1517) && (OB Instance of:C1731($parameters.formula; 4D:C1709.Function)))
-			
-			Case of 
-				: ($parameters._formulaWindow#Null:C1517)
-					$result._requestSharable()
-					CALL FORM:C1391($parameters._formulaWindow; $parameters.formula; $result)
-				: ($parameters._formulaWorker#Null:C1517)
-					$result._requestSharable()
-					CALL WORKER:C1389($parameters._formulaWorker; $parameters.formula; $result)
-				Else 
-					$parameters.formula.call($parameters._formulaThis || This:C1470; $result)
-			End case 
-			
+		If (Bool:C1537($parameters.throw))
+			$result.throw()
 		End if 
+		
 	End if 
 	
 Function _get($path : Text; $parameters : cs:C1710.OpenAIParameters; $resultType : 4D:C1709.Class) : cs:C1710.OpenAIResult
@@ -276,7 +254,6 @@ Function _getApiList($path : Text; $queryParameters : Object; $parameters : cs:C
 	
 Function _postFiles($path : Text; $body : Object; $files : Object; $parameters : cs:C1710.OpenAIParameters; $resultType : 4D:C1709.Class) : cs:C1710.OpenAIResult
 	return This:C1470._request("POST"; $path; This:C1470._formData($body; $files); $parameters; $resultType)
-	
 	
 	// MARK:- retry utils
 	
