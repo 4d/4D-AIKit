@@ -61,6 +61,34 @@ If (Asserted:C1132(Bool:C1537($result.success); "Cannot generate images : "+JSON
 End if 
 
 
+
+//MARK:- Artistic Style
+$result:=$client.images.generate("a nature picture"; {style: "natural"})
+
+If (Asserted:C1132(Bool:C1537($result.success); "Cannot generate images : "+JSON Stringify:C1217($result)))
+	
+	If (Asserted:C1132($result.images#Null:C1517 && $result.image#Null:C1517; "images or image must not be null"))
+		
+		$blob:=$result.image.asBlob()
+		
+		If (Asserted:C1132($blob#Null:C1517; "must have image blob"))
+			
+			ASSERT:C1129($blob.size>0; "image blob must not be empty")
+			
+		End if 
+		
+		$picture:=$result.image.asPicture()
+		
+		If (Asserted:C1132($picture#Null:C1517; "must have $picture"))
+			
+			ASSERT:C1129(Picture size:C356($picture)>0; "image must not be empty")
+			
+		End if 
+		
+	End if 
+	
+End if 
+
 // MARK:- not implemented
 
 // $imagesResult:=$client.images._createVariation(Folder(fk desktop folder).file("mycity.png"))
