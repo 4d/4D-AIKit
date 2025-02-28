@@ -234,6 +234,9 @@ Function _doHTTPRequest($url : Text; $options : Object; $result : cs:C1710.OpenA
 			return 
 		End if 
 		
+		// sync with call back (due to fallback)
+		_openAICallbacks($parameters; $result; This:C1470)
+		
 		If (Bool:C1537($parameters.throw))
 			$result.throw()
 		End if 
