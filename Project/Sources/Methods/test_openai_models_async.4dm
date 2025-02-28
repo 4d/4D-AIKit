@@ -23,7 +23,7 @@ cs:C1710._TestSignal.me.reset()
 // MARK: -onResponse
 cs:C1710._TestSignal.me.init()
 
-CALL WORKER:C1389(Current method name:C684; Formula:C1597($client.models.list({onResponse: Formula:C1597(cs:C1710._TestSignal.me.trigger($1))})))
+CALL WORKER:C1389(Current method name:C684; Formula:C1597($client.models.list({onResponse: Formula:C1597(cs:C1710._TestSignal.me.trigger($1)); onError: Formula:C1597(cs:C1710._TestSignal.me.trigger($1))})))
 
 cs:C1710._TestSignal.me.wait(10*1000)
 
