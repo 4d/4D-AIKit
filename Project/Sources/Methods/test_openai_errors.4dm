@@ -10,35 +10,32 @@ var $result:=$helper.prompt("")
 ASSERT:C1129(Length:C16($result.choice.message.text)>0; "chat do not return a message text")
 
 $result:=$client.chat.completions.create([])
-ASSERT:C1129(Not:C34($result.success))
-ASSERT:C1129($result.errors.length>0; JSON Stringify:C1217($result.errors))
+ASSERT:C1129(Not:C34($result.success); "must not success with no messages")
+ASSERT:C1129($result.errors.length>0; JSON Stringify:C1217($result))
 
 //MARK:- Unsupported Model
-$modelName:="fake-Model"+Generate UUID:C1066
+var $modelName:="fake-Model"+Generate UUID:C1066
 var $messages:=[cs:C1710.OpenAIMessage.new({role: "system"; content: "You are a helpful assistant."})]
 $result:=$client.chat.completions.create($messages; {model: $modelName})
-ASSERT:C1129(Not:C34($result.success))
+ASSERT:C1129(Not:C34($result.success); "must not success with fake model")
 ASSERT:C1129($result.errors.length>0; "The model `fake-Model` does not exist or you do not have access to it.")
-
 
 //MARK:- Empty image prompt
 //# Empty value
 $result:=$client.images.generate("")
-ASSERT:C1129($result.errors.length>0; "You must provide a prompt "+JSON Stringify:C1217($result.errors))
+ASSERT:C1129($result.errors.length>0; "You must provide a prompt "+JSON Stringify:C1217($result))
 
 
 //MARK:- Wrong model
 //# wrong model
-var $modelName:="o1-mini"
 $result:=$client.images.generate("a cat"; {model: $modelName})
-ASSERT:C1129($result.errors.length>0; "Invalid model o1-mini. The model argument should be left blank. "+JSON Stringify:C1217($result.errors))
+ASSERT:C1129($result.errors.length>0; "Invalid model. The model argument should be left blank. "+JSON Stringify:C1217($result))
 
-
-//MARK:- failed connection to model
+//MARK:- failed connection
 var $tmpBaseURL:=$client.baseURL
 $client.baseURL:="http://192.222.222.222"
-$result:=$client.images.generate("a cat"; {model: $modelName})
-ASSERT:C1129($result.errors.length>0; "Failed to create a connected socket "+JSON Stringify:C1217($result.errors))
+$result:=$client.images.generate("a cat")
+ASSERT:C1129($result.errors.length>0; "Failed to create a connected socket "+JSON Stringify:C1217($result))
 $client.baseURL:=$tmpBaseURL
 
 //MARK:- wrong apiKey
@@ -60,8 +57,7 @@ cs:C1710._TestSignal.me.wait(10*1000)
 
 var $value : cs:C1710.OpenAIModelListResult:=cs:C1710._TestSignal.me.result
 ASSERT:C1129(Not:C34($value.success))
-ASSERT:C1129($value.errors.length>0; "Failed to create a connected socket"+JSON Stringify:C1217($value.errors))
+ASSERT:C1129($value.errors.length>0; "Failed to create a connected socket"+JSON Stringify:C1217($value))
 cs:C1710._TestSignal.me.reset()
 
 KILL WORKER:C1390(Current method name:C684)
-

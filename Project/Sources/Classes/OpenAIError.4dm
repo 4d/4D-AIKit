@@ -9,7 +9,7 @@ Class constructor($response : Object; $body : Object)
 	This:C1470.response:=$response
 	This:C1470.body:=$body
 	
-	If (Value type:C1509($body.error.code)=Is integer:K8:5)
+	If (Value type:C1509($body.error.code)=Is integer:K8:5)  // text mainly
 		This:C1470.errCode:=$body.error.code
 	Else 
 		This:C1470.errCode:=This:C1470.response.status
@@ -35,13 +35,13 @@ Function get requestID : Text
 	return (This:C1470.headers=Null:C1517) ? "" : This:C1470.headers["x-request-id"]
 	
 Function get type : Text
-	return String:C10(This:C1470.body.error.type)
+	return (This:C1470.body=Null:C1517) ? "" : String:C10(This:C1470.body.error.type)
 	
 Function get param : Text
-	return String:C10(This:C1470.body.error.param)
+	return (This:C1470.body=Null:C1517) ? "" : String:C10(This:C1470.body.error.param)
 	
 Function get code : Variant
-	return String:C10(This:C1470.body.error.code)
+	return (This:C1470.body=Null:C1517) ? Null:C1517 : This:C1470.body.error.code
 	
 Function get statusText : Text
 	return String:C10(This:C1470.response.statusText)

@@ -28,7 +28,7 @@ End if
 //MARK:- Not image
 $imageUrl:="https://upload.wikimedia.org/wikipedia/commons/f/f0/"
 $result:=$client.chat.vision.create($imageUrl).prompt("give me a description of the image"; {})
-ASSERT:C1129(Not:C34($result.success); "Cannot get vision info : "+JSON Stringify:C1217($result))
+ASSERT:C1129(Not:C34($result.success); "Must not get vision info : "+JSON Stringify:C1217($result))
 ASSERT:C1129($result.errors.length>0; JSON Stringify:C1217($result.errors))
 ASSERT:C1129($result.errors.first().code="invalid_image_url"; $result.errors.first().code)
 
@@ -37,6 +37,6 @@ ASSERT:C1129($result.errors.first().code="invalid_image_url"; $result.errors.fir
 //MARK:- Wrong image
 $imageUrl:="https://commons.wikimedia.org/wiki/File:En-us-PDF.oga"
 $result:=$client.chat.vision.create($imageUrl).prompt("give me a description of the image"; {})
-ASSERT:C1129(Not:C34($result.success); "Cannot get vision info : "+JSON Stringify:C1217($result))
+ASSERT:C1129(Not:C34($result.success); "Must not get vision info : "+JSON Stringify:C1217($result))
 ASSERT:C1129($result.errors.length>0; JSON Stringify:C1217($result.errors))
 ASSERT:C1129($result.errors.first().code="invalid_image_format"; $result.errors.first().code)

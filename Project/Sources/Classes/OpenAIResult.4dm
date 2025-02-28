@@ -28,11 +28,26 @@ Function _objectBody() : Object
 		: (Value type:C1509(This:C1470.request.response.body)=Is object:K8:27)
 			return This:C1470.request.response.body
 		: (Value type:C1509(This:C1470.request.response.body)=Is text:K8:3)  // sometime not decoded, maybe some errors do not return content type
-			var $parsed:=Try(JSON Parse:C1218(This:C1470.request.response.body))
-			If (Value type:C1509($parsed)=Is object:K8:27)
-				This:C1470._parsed:=$parsed
-				return $parsed
-			End if 
+			Case of 
+				: (Length:C16(This:C1470.request.response.body)=0)
+					return Null:C1517
+					//%W-533.1
+				: (This:C1470.request.response.body[[1]]="<")  // html/xml
+					//%W+533.1
+					return Null:C1517
+				Else 
+					Try
+						var $parsed:=(JSON Parse:C1218(This:C1470.request.response.body))
+						If (Value type:C1509($parsed)=Is object:K8:27)
+							This:C1470._parsed:=$parsed
+							return $parsed
+						End if 
+					Catch
+						// ignore
+						Try(True:C214)  // reset errors stack
+					End try
+			End case 
+			
 	End case 
 	
 	// List of errors if any
