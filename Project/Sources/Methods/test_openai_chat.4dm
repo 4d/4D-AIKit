@@ -61,3 +61,11 @@ If (Asserted:C1132(Bool:C1537($result.success); "Cannot complete chat : "+JSON S
 	End if 
 	
 End if 
+
+
+// MARK:- number Of Messages
+$helper.numberOfMessages:=2
+$result:=$helper.prompt("are you sure")
+ASSERT:C1129(($helper.messages.length<=2) && ($helper.messages.length>1); "The number of the messages is not respected")
+$result:=$helper.prompt("Thank you")
+ASSERT:C1129(($helper.messages.length<=2) && ($helper.messages.length>1); "The number of the messages is not respected")

@@ -78,6 +78,7 @@
 			"test_openai_chat",
 			"test_openai_chat_async",
 			"test_openai_embeddings",
+			"test_openai_errors",
 			"test_openai_images",
 			"test_openai_models",
 			"test_openai_models_async",
