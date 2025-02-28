@@ -30,10 +30,10 @@ Function onTerminate($request : 4D:C1709.HTTPRequest; $event : Object)
 	If (Bool:C1537(This:C1470._parameters.stream))
 		var $result:=cs:C1710.OpenAIChatCompletionsStreamResult.new($request; $request.response.body)
 		$result._terminated:=True:C214
-		This:C1470._callbacks(This:C1470._parameters; $result; This:C1470._client)
+		_openAICallbacks(This:C1470._parameters; $result; This:C1470._client)
 	Else 
 		This:C1470._result._terminated:=True:C214  // force terminated because onTerminate is before onTerminated
-		This:C1470._callbacks(This:C1470._parameters; This:C1470._result; This:C1470._client)
+		_openAICallbacks(This:C1470._parameters; This:C1470._result; This:C1470._client)
 	End if 
 	
 Function onData($request : 4D:C1709.HTTPRequest; $event : Object)
@@ -59,21 +59,3 @@ Function onData($request : 4D:C1709.HTTPRequest; $event : Object)
 		
 	End if 
 	
-	// MARK:- utils
-	
-	// async
-Function _callbacks($parameters : cs:C1710.OpenAIParameters; $result : cs:C1710.OpenAIResult; $client : cs:C1710.OpenAI)
-	
-	If ($result.success)
-		If (($parameters.onResponse#Null:C1517) && (OB Instance of:C1731($parameters.onResponse; 4D:C1709.Function)))
-			$parameters.onResponse.call($parameters._formulaThis || $client; $result)
-		End if 
-	Else 
-		If (($parameters.onError#Null:C1517) && (OB Instance of:C1731($parameters.onError; 4D:C1709.Function)))
-			$parameters.onError.call($parameters._formulaThis || $client; $result)
-		End if 
-	End if 
-	
-	If (($parameters.formula#Null:C1517) && (OB Instance of:C1731($parameters.formula; 4D:C1709.Function)))
-		$parameters.formula.call($parameters._formulaThis || This:C1470._client; $result)
-	End if 

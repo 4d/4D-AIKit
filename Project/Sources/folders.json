@@ -6,6 +6,9 @@
 		]
 	},
 	"Async": {
+		"methods": [
+			"_openAICallbacks"
+		],
 		"classes": [
 			"_OpenAIAsyncOptions"
 		]
