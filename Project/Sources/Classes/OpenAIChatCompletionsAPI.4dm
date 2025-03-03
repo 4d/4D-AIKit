@@ -16,7 +16,7 @@ Function create($messages : Collection; $parameters : cs:C1710.OpenAIChatComplet
 	End if 
 	
 	If ($parameters.stream)
-		ASSERT:C1129($parameters.formula#Null:C1517; "When streaming you must provide a formula")
+		ASSERT:C1129($parameters.formula#Null:C1517 || $parameters.onData#Null:C1517; "When streaming you must provide a formula: onData")
 	End if 
 	
 	var $body:=$parameters.body()
