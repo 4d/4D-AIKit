@@ -21,9 +21,16 @@ Class constructor($chat : cs:C1710.OpenAIChatAPI; $systemPrompt : Text; $paramet
 		This:C1470.parameters.model:="gpt-4o-mini"
 	End if 
 	
-	If (This:C1470.parameters.formula#Null:C1517)
-		This:C1470._userFormula:=This:C1470.parameters.formula
-		This:C1470.parameters.formula:=This:C1470._manageAsyncResponse
+	If (This:C1470.parameters._isAsync())
+		// save user formula
+		If (This:C1470.parameters.stream)
+			This:C1470._userFormula:=This:C1470.parameters.onData || This:C1470.parameters.formula
+			This:C1470.parameters.onData:=This:C1470._manageAsyncResponse
+		Else 
+			This:C1470._userFormula:=This:C1470.parameters.onTerminate || This:C1470.parameters.formula
+			This:C1470.parameters.onTerminate:=This:C1470._manageAsyncResponse
+		End if 
+		// to replace by one of us
 		This:C1470.parameters._formulaThis:=This:C1470
 	End if 
 	
@@ -63,15 +70,42 @@ Function _manageResponse($result : Object)
 		return 
 	End if 
 	
-	If ($result.success)
+	If (This:C1470.parameters.stream)
 		
-		This:C1470.messages.push($result.choice.message)
+		If (($result.choice=Null:C1517) || ($result.choice.delta=Null:C1517))
+			return 
+		End if 
 		
-		This:C1470._trim()
+		If ($result.terminated)
+			
+		Else 
+			
+			var $message:=This:C1470.messages.last()
+			Case of 
+				: ($message.role="user")
+					This:C1470.messages.push($result.choice.delta)
+				: ($message.role="assistant")
+					$message.text+=$result.choice.delta.text
+			End case 
+			
+		End if 
 		
 	Else 
+		If (Not:C34($result.terminated))
+			return 
+		End if 
 		
-		This:C1470.lastErrors:=$result.error
+		If ($result.success)
+			
+			This:C1470.messages.push($result.choice.message)
+			
+			This:C1470._trim()
+			
+		Else 
+			
+			This:C1470.lastErrors:=$result.error
+			
+		End if 
 		
 	End if 
 	
@@ -83,4 +117,5 @@ Function _manageAsyncResponse($result : Object)
 		If (This:C1470._userFormula#Null:C1517)
 			This:C1470._userFormula.call(This:C1470.chat._client; $result)
 		End if 
+		
 	End if 

@@ -9,6 +9,10 @@ Function get model : Text
 Function onLoad()
 	Form:C1466.openAI:=cs:C1710.OpenAI.new()
 	
+	If ((Length:C16(Form:C1466.openAI.apiKey)=0) && (Folder:C1567(fk home folder:K87:24).file(".openai").exists))
+		Form:C1466.openAI.apiKey:=Folder:C1567(fk home folder:K87:24).file(".openai").getText()
+	End if 
+	
 	Form:C1466.modelsByPage:=[]
 	Form:C1466.modelsByPage[1]:=["gpt-4o-mini"; "gpt-4o"]
 	Form:C1466.modelsByPage[2]:=["dall-e-2"; "dall-e-3"]
@@ -16,8 +20,12 @@ Function onLoad()
 	Form:C1466.modelsByPage[4]:=["omni-moderation-latest"; "text-moderation-latest"; "text-moderation-stable"; "text-moderation-007"; "omni-moderation-2024-9-26"]
 	Form:C1466.modelsByPage[5]:=[]
 	Form:C1466.modelsByPage[6]:=["text-embedding-3-small"; "text-embedding-3-large"; "text-embedding-ada-002"]
+	Form:C1466.modelsByPage[7]:=["gpt-4o-mini"]
 	
 	Form:C1466.models:={values: Form:C1466.modelsByPage[1]; index: 0}
+	
+	Form:C1466.chats:=[]
+	Form:C1466.roleEmoticon:=This:C1470.roleEmoticon
 	
 Function onPageChange()
 	Form:C1466.models:={values: Form:C1466.modelsByPage[FORM Get current page:C276]; index: 0}
@@ -25,7 +33,7 @@ Function onPageChange()
 	OBJECT SET ENABLED:C1123(*; "userPrompt"; True:C214)
 	
 	Case of 
-		: (FORM Get current page:C276=1)  // chat
+		: ((FORM Get current page:C276=1) || (FORM Get current page:C276=7))  // chat
 			
 			OBJECT SET PLACEHOLDER:C1295(*; "userPrompt"; "Talk to your assistant")
 			
@@ -109,6 +117,10 @@ Function onClicked()
 		: (FORM Get current page:C276=6)  // embeddings
 			
 			This:C1470.sendEmbeddings()
+			
+		: (FORM Get current page:C276=7)  // embeddings
+			
+			This:C1470.sendChatHelper()
 			
 	End case 
 	
@@ -195,7 +207,8 @@ Function onStreamChatReceive($result : cs:C1710.OpenAIChatCompletionsStreamResul
 			
 		Else 
 			
-			Form:C1466.streamed+=$result.choices.map(Formula:C1597($1.value.delta.text)).join("")
+			var $morceau:=$result.choice.delta.text
+			Form:C1466.streamed+=$morceau
 			
 		End if 
 		
@@ -335,4 +348,66 @@ Function onEmbeddingsReceive($result : cs:C1710.OpenAIEmbeddingsResult)
 		ALERT:C41(JSON Stringify:C1217($result.errors))
 		
 	End if 
+	
+	
+	
+	// MARK:- ChatHelper
+	
+Function roleEmoticon($role : Text) : Text
+	Case of 
+		: ($role="assistant")
+			return "🤖"
+		: ($role="user")
+			return "👤"
+		Else 
+			return ""
+	End case 
+	
+Function createChatHelper()
+	var $name:=Request:C163("Chat name?")
+	If (Length:C16($name)=0)
+		$name:="Chat "+String:C10(Form:C1466.chats.length+1)
+	End if 
+	
+	var $stream:=Shift down:C543
+	
+	var $chat:=This:C1470.client.chat.create("You are a helpful assistant."; {stream: $stream; onTerminate: Formula:C1597(cs:C1710._FormDemo.me.onChatHelperReceive($1)); onData: Formula:C1597(cs:C1710._FormDemo.me.onChatHelperReceiveStream($1))})
+	
+	Form:C1466.chats.push({name: $name; chat: $chat})
+	
+	If (Form:C1466.chats.length=1)
+		Form:C1466.currentChatIndex:=1
+	End if 
+	
+Function removeChatHelper()
+	
+	If (Form:C1466.currentChatIndex>0)
+		Form:C1466.chats.remove(Form:C1466.currentChatIndex-1)
+	End if 
+	
+Function sendChatHelper()
+	If (Form:C1466.currentChat=Null:C1517)
+		This:C1470.enableSendButton(True:C214)
+		ALERT:C41("Select or create a chat")
+		return 
+	End if 
+	Form:C1466.currentChat.chat.prompt(Form:C1466.prompt)
+	
+Function onChatHelperReceive($result : cs:C1710.OpenAIChatCompletionsResult)
+	
+	This:C1470.enableSendButton(True:C214)
+	
+	If ($result.success)
+		
+		
+	Else 
+		
+		ALERT:C41(JSON Stringify:C1217($result.errors))
+		
+	End if 
+	
+	
+Function onChatHelperReceiveStream($result : cs:C1710.OpenAIChatCompletionsStreamResult)
+	
+	// XXX: want to do something?
 	

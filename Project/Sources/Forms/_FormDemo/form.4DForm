@@ -47,7 +47,8 @@
 						"Vision",
 						"Moderation",
 						"Models",
-						"Embeddings"
+						"Embeddings",
+						"ChatHelper"
 					],
 					"action": "gotoPage"
 				},
@@ -266,9 +267,135 @@
 					"scrollbarVertical": "visible"
 				}
 			}
+		},
+		{
+			"objects": {
+				"List Box1": {
+					"type": "listbox",
+					"left": 30,
+					"top": 48,
+					"width": 219,
+					"height": 528,
+					"events": [
+						"onClick",
+						"onHeaderClick",
+						"onDataChange",
+						"onSelectionChange"
+					],
+					"listboxType": "collection",
+					"dataSource": "Form:C1466.chats",
+					"currentItemSource": "Form:C1466.currentChat",
+					"currentItemPositionSource": "Form:C1466.currentChatIndex",
+					"columns": [
+						{
+							"header": {
+								"text": "Chats",
+								"name": "Header5"
+							},
+							"name": "Column5",
+							"footer": {
+								"name": "Footer5"
+							},
+							"width": 205,
+							"dataSource": "This:C1470.name"
+						}
+					]
+				},
+				"Rectangle": {
+					"type": "rectangle",
+					"top": 583,
+					"left": 30,
+					"width": 219,
+					"height": 25,
+					"fill": "automatic",
+					"stroke": "transparent",
+					"strokeWidth": 0,
+					"strokeDashArray": [
+						1,
+						2
+					]
+				},
+				"CreateChatHelper": {
+					"type": "button",
+					"text": "+",
+					"top": 589,
+					"left": 33,
+					"width": 19,
+					"height": 12,
+					"events": [
+						"onClick"
+					],
+					"method": "ObjectMethods/CreateChatHelper.4dm"
+				},
+				"DeleteChatHelper": {
+					"type": "button",
+					"text": "-",
+					"top": 589,
+					"left": 54,
+					"width": 19,
+					"height": 12,
+					"events": [
+						"onClick"
+					],
+					"method": "ObjectMethods/DeleteChatHelper.4dm"
+				},
+				"List Box2": {
+					"type": "listbox",
+					"left": 264,
+					"top": 48,
+					"width": 508,
+					"height": 538,
+					"events": [
+						"onClick",
+						"onHeaderClick",
+						"onDataChange",
+						"onSelectionChange"
+					],
+					"listboxType": "collection",
+					"dataSource": "Form:C1466.currentChat.chat.messages",
+					"showFooters": false,
+					"rowHeight": "1em",
+					"rowHeightAutoMin": "1em",
+					"rowHeightAutoMax": "1600em",
+					"columns": [
+						{
+							"header": {
+								"name": "Header7",
+								"text": "",
+								"tooltip": "Role"
+							},
+							"name": "Column7",
+							"footer": {
+								"name": "Footer7"
+							},
+							"dataSource": "Form:C1466.roleEmoticon(This:C1470.role)",
+							"width": 27,
+							"alternateFill": "automaticAlternate",
+							"enterable": false
+						},
+						{
+							"header": {
+								"text": "Messages",
+								"name": "Header6"
+							},
+							"name": "Column6",
+							"footer": {
+								"name": "Footer6"
+							},
+							"width": 494,
+							"dataSource": "This:C1470.text",
+							"alternateFill": "automaticAlternate",
+							"rowHeightAuto": true,
+							"enterable": false,
+							"truncateMode": "none",
+							"wordwrap": "normal"
+						}
+					]
+				}
+			}
 		}
 	],
-	"geometryStamp": 128,
+	"geometryStamp": 220,
 	"editor": {
 		"activeView": "View 1",
 		"defaultView": "View 1",

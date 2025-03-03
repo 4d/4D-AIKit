@@ -1546,13 +1546,44 @@
 		"_inheritedFrom_": "OpenAIParameters"
 	},
 	"_FormDemo": {
+		"onChatHelperReceive()": {
+			"Syntax": "**.onChatHelperReceive**( *result* : cs.AIKit.OpenAIChatCompletionsResult )",
+			"Params": [
+				[
+					"result",
+					"cs.AIKit.OpenAIChatCompletionsResult",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"createChatHelper()": {
+			"Syntax": "**.createChatHelper**()",
+			"Params": [],
+			"Summary": ""
+		},
 		"sendVision()": {
 			"Syntax": "**.sendVision**()",
 			"Params": [],
 			"Summary": ""
 		},
+		"onVisionDroped()": {
+			"Syntax": "**.onVisionDroped**()",
+			"Params": [],
+			"Summary": ""
+		},
 		"sendEmbeddings()": {
 			"Syntax": "**.sendEmbeddings**()",
+			"Params": [],
+			"Summary": ""
+		},
+		"sendChatHelper()": {
+			"Syntax": "**.sendChatHelper**()",
+			"Params": [],
+			"Summary": ""
+		},
+		"sendModeration()": {
+			"Syntax": "**.sendModeration**()",
 			"Params": [],
 			"Summary": ""
 		},
@@ -1567,9 +1598,15 @@
 			],
 			"Summary": ""
 		},
-		"onVisionDroped()": {
-			"Syntax": "**.onVisionDroped**()",
-			"Params": [],
+		"onImageReceive()": {
+			"Syntax": "**.onImageReceive**( *result* : cs.AIKit.OpenAIImagesResult )",
+			"Params": [
+				[
+					"result",
+					"cs.AIKit.OpenAIImagesResult",
+					"->"
+				]
+			],
 			"Summary": ""
 		},
 		"onStreamChatReceive()": {
@@ -1609,6 +1646,11 @@
 			"Params": [],
 			"Summary": ""
 		},
+		"getModels()": {
+			"Syntax": "**.getModels**()",
+			"Params": [],
+			"Summary": ""
+		},
 		"sendChat()": {
 			"Syntax": "**.sendChat**()",
 			"Params": [],
@@ -1625,12 +1667,12 @@
 			],
 			"Summary": ""
 		},
-		"onImageReceive()": {
-			"Syntax": "**.onImageReceive**( *result* : cs.AIKit.OpenAIImagesResult )",
+		"onChatHelperReceiveStream()": {
+			"Syntax": "**.onChatHelperReceiveStream**( *result* : cs.AIKit.OpenAIChatCompletionsStreamResult )",
 			"Params": [
 				[
 					"result",
-					"cs.AIKit.OpenAIImagesResult",
+					"cs.AIKit.OpenAIChatCompletionsStreamResult",
 					"->"
 				]
 			],
@@ -1647,9 +1689,31 @@
 			],
 			"Summary": ""
 		},
-		"getModels()": {
-			"Syntax": "**.getModels**()",
-			"Params": [],
+		"roleEmoticon()": {
+			"Syntax": "**.roleEmoticon**( *role* : Text ) : Text",
+			"Params": [
+				[
+					"role",
+					"Text",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"onVisionReceive()": {
+			"Syntax": "**.onVisionReceive**( *result* : cs.AIKit.OpenAIChatCompletionsResult )",
+			"Params": [
+				[
+					"result",
+					"cs.AIKit.OpenAIChatCompletionsResult",
+					"->"
+				]
+			],
 			"Summary": ""
 		},
 		"onLoad()": {
@@ -1668,6 +1732,11 @@
 			],
 			"Summary": ""
 		},
+		"removeChatHelper()": {
+			"Syntax": "**.removeChatHelper**()",
+			"Params": [],
+			"Summary": ""
+		},
 		"onEmbeddingsReceive()": {
 			"Syntax": "**.onEmbeddingsReceive**( *result* : cs.AIKit.OpenAIEmbeddingsResult )",
 			"Params": [
@@ -1679,25 +1748,9 @@
 			],
 			"Summary": ""
 		},
-		"sendModeration()": {
-			"Syntax": "**.sendModeration**()",
-			"Params": [],
-			"Summary": ""
-		},
 		"onVisionCliked()": {
 			"Syntax": "**.onVisionCliked**()",
 			"Params": [],
-			"Summary": ""
-		},
-		"onVisionReceive()": {
-			"Syntax": "**.onVisionReceive**( *result* : cs.AIKit.OpenAIChatCompletionsResult )",
-			"Params": [
-				[
-					"result",
-					"cs.AIKit.OpenAIChatCompletionsResult",
-					"->"
-				]
-			],
 			"Summary": ""
 		},
 		"get client()": {
