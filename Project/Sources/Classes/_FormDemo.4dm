@@ -248,6 +248,7 @@ Function onStreamChatReceive($result : cs:C1710.OpenAIChatCompletionsStreamResul
 			If ($result.choice#Null:C1517)  // could be null if usage send
 				var $morceau:=$result.choice.delta.text
 				Form:C1466.streamed+=$morceau
+			End if 
 			
 		End if 
 		
