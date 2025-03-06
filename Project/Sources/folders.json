@@ -43,6 +43,14 @@
 			"OpenAIEmbeddingsResult"
 		]
 	},
+	"FormDemo": {
+		"forms": [
+			"_FormDemo"
+		],
+		"classes": [
+			"_FormDemo"
+		]
+	},
 	"Helper": {
 		"classes": [
 			"OpenAIChatHelper",
@@ -75,6 +83,9 @@
 		]
 	},
 	"Tests": {
+		"groups": [
+			"FormDemo"
+		],
 		"methods": [
 			"_runTests",
 			"_runTestsCLI",
@@ -89,11 +100,7 @@
 			"test_openai_vision",
 			"TestOpenAI"
 		],
-		"forms": [
-			"_FormDemo"
-		],
 		"classes": [
-			"_FormDemo",
 			"_TestSignal"
 		]
 	},

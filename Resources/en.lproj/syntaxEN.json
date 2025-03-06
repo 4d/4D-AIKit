@@ -1041,8 +1041,14 @@
 			],
 			"Summary": ""
 		},
+		"tool_calls": {
+			"Syntax": "tool_calls : Collection"
+		},
 		"user": {
 			"Syntax": "user : Text"
+		},
+		"tool_call_id": {
+			"Syntax": "tool_call_id : Text"
 		},
 		"content": {
 			"Syntax": "content : Variant"
