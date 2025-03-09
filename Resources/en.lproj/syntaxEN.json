@@ -204,7 +204,7 @@
 		},
 		"OpenAIChatCompletionsStreamResult": {
 			"new()": {
-				"Syntax": "**.new**( *request* : 4D.HTTPRequest; *textData* : Text )",
+				"Syntax": "**.new**( *request* : 4D.HTTPRequest; *body* : Variant )",
 				"Params": [
 					[
 						"request",
@@ -212,8 +212,8 @@
 						"->"
 					],
 					[
-						"textData",
-						"Text",
+						"body",
+						"Variant",
 						"->"
 					]
 				],

@@ -8,6 +8,7 @@ property timeout : Integer
 property _client : cs:C1710.OpenAI
 property _parameters : cs:C1710.OpenAIChatCompletionsParameters
 property _result : cs:C1710.OpenAIResult
+property _onStreamError : Boolean:=False:C215
 
 // MARK:- constructor
 Class constructor($options : Object; $client : cs:C1710.OpenAI; $parameters : cs:C1710.OpenAIChatCompletionsParameters; $result : cs:C1710.OpenAIResult)
@@ -38,9 +39,15 @@ Function onTerminate($request : 4D:C1709.HTTPRequest; $event : Object)
 	
 Function onData($request : 4D:C1709.HTTPRequest; $event : Object)
 	// $event: {chunk: true; type: "data"; data: blob}
-	If (((This:C1470._parameters.onData#Null:C1517) || (This:C1470._parameters.formula#Null:C1517)) && (Bool:C1537(This:C1470._parameters.stream)))
+	If (((This:C1470._parameters.onData#Null:C1517) || (This:C1470._parameters.formula#Null:C1517)) && (Bool:C1537(This:C1470._parameters.stream)) && (Not:C34(This:C1470._onStreamError)))
 		
 		var $textData:=BLOB to text:C555($event.data; UTF8 C string:K22:15)
+		If (Position:C15("{"; $textData)=1)
+			This:C1470._onStreamError:=True:C214
+			// ignore chunk, will be for onTerminate
+			return 
+		End if 
+		
 		var $line : Text
 		For each ($line; Split string:C1554($textData; "\n"))
 			If ((Length:C16($line)=0))

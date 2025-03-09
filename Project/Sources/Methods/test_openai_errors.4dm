@@ -59,5 +59,41 @@ var $value : cs:C1710.OpenAIModelListResult:=cs:C1710._TestSignal.me.result
 ASSERT:C1129(Not:C34($value.success))
 ASSERT:C1129($value.errors.length>0; "Failed to create a connected socket"+JSON Stringify:C1217($value))
 cs:C1710._TestSignal.me.reset()
+$client.baseURL:=$tmpBaseURL
+
+KILL WORKER:C1390(Current method name:C684)
+
+//MARK:- asynchrone stream failed with server response
+$client.apiKey:=""
+cs:C1710._TestSignal.me.init()
+
+$messages:=[cs:C1710.OpenAIMessage.new({role: "system"; content: "You are a helpful assistant."})]
+$messages.push({role: "user"; content: "Could you explain me why 42 is a special number"})
+CALL WORKER:C1389(Current method name:C684; Formula:C1597($client.chat.completions.create($messages; {stream: True:C214; formula: Formula:C1597(cs:C1710._TestSignal.me.trigger($1))})))
+
+cs:C1710._TestSignal.me.wait(10*1000)
+
+var $valueStream : cs:C1710.OpenAIChatCompletionsStreamResult:=cs:C1710._TestSignal.me.result
+ASSERT:C1129(Not:C34($valueStream.success))
+ASSERT:C1129($valueStream.errors.length>0; "Failed to create a connected socket"+JSON Stringify:C1217($valueStream))
+cs:C1710._TestSignal.me.reset()
+$client.apiKey:=$tmpApiKey
+
+
+//MARK:- asynchrone stream failed with socket (no body response)
+$client.baseURL:="http://192.222.222.222"
+cs:C1710._TestSignal.me.init()
+
+$messages:=[cs:C1710.OpenAIMessage.new({role: "system"; content: "You are a helpful assistant."})]
+$messages.push({role: "user"; content: "Could you explain me why 42 is a special number"})
+CALL WORKER:C1389(Current method name:C684; Formula:C1597($client.chat.completions.create($messages; {stream: True:C214; formula: Formula:C1597(cs:C1710._TestSignal.me.trigger($1))})))
+
+cs:C1710._TestSignal.me.wait(10*1000)
+
+$valueStream:=cs:C1710._TestSignal.me.result
+ASSERT:C1129(Not:C34($valueStream.success))
+ASSERT:C1129($valueStream.errors.length>0; "Failed to create a connected socket"+JSON Stringify:C1217($valueStream))
+cs:C1710._TestSignal.me.reset()
+$client.baseURL:=$tmpBaseURL
 
 KILL WORKER:C1390(Current method name:C684)

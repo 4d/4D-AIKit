@@ -12,6 +12,7 @@ To do so you just have to change the original `baseURL` by the service one and u
 |https://www.deepseek.com/|https://api.deepseek.com| 
 |https://www.anthropic.com/ (claude)|https://api.anthropic.com/v1|
 |https://docs.api.nvidia.com/|https://integrate.api.nvidia.com/v1|
+|https://gemini.google.com/|https://generativelanguage.googleapis.com/v1beta/openai|
 |https://groq.com/|https://api.groq.com/openai/v1| 
 |https://ai.azure.com/|https://YOUR_RESOURCE_NAME.openai.azure.com|
 |[https://www.alibabacloud.com/](https://www.alibabacloud.com/help/en/model-studio/developer-reference/use-qwen-by-calling-api) (qwen)| https://dashscope-intl.aliyuncs.com/compatible-mode/v1|

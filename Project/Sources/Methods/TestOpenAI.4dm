@@ -15,6 +15,7 @@ var $client:=cs:C1710.OpenAI.new()
 // $client.baseURL:="https://api.perplexity.ai" 
 // $client.baseURL:="https://api.anthropic.com/v1"
 // $client.baseURL:="https://YOUR_RESOURCE_NAME.openai.azure.com"
+// $client.baseURL:="https://generativelanguage.googleapis.com/v1beta/openai"
 
 // mock
 // $client.baseURL:="http://127.0.0.1:4010" // npm exec --package=@stainless-api/prism-cli@5.8.5 -- prism mock -d "https://storage.googleapis.com/stainless-sdk-openapi-specs/openai-4aa6ee65ba9efc789e05e6a5ef0883b2cadf06def8efd863dbf75e9e233067e1.yml"   
