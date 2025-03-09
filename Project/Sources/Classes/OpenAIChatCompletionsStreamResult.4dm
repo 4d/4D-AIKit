@@ -1,27 +1,39 @@
 // Contain the stream data send by server
 property data : Object
 
+property _body : Object
+
 property _decodingErrors : Collection
 
 Class extends OpenAIResult
 
 // Build stream result with event blob data.
-Class constructor($request : 4D:C1709.HTTPRequest; $textData : Text)
+Class constructor($request : 4D:C1709.HTTPRequest; $body : Variant)
 	This:C1470.request:=$request
 	
-	While ((Length:C16($textData)>0) && $textData[[Length:C16($textData)]]="\n")
-		$textData:=Substring:C12($textData; 1; Length:C16($textData)-1)
-	End while 
-	
-	var $pos:=Position:C15("{"; $textData)
-	If ($pos>0)
-		$textData:=Substring:C12($textData; $pos)  // remove "data:"
-	End if 
-	
-	This:C1470.data:=Try(JSON Parse:C1218($textData))
-	If (This:C1470.data=Null:C1517)
-		This:C1470._decodingErrors:=Last errors:C1799
-	End if 
+	Case of 
+		: (Value type:C1509($body)=Is text:K8:3)
+			var $textData:=$body
+			While ((Length:C16($textData)>0) && $textData[[Length:C16($textData)]]="\n")
+				$textData:=Substring:C12($textData; 1; Length:C16($textData)-1)
+			End while 
+			
+			var $pos:=Position:C15("{"; $textData)
+			If ($pos>0)
+				$textData:=Substring:C12($textData; $pos)  // remove "data:"
+			End if 
+			
+			This:C1470.data:=Try(JSON Parse:C1218($textData))
+			If (This:C1470.data=Null:C1517)
+				This:C1470._decodingErrors:=Last errors:C1799
+			End if 
+			
+		: (Value type:C1509($body)=Is object:K8:27)
+			
+			// This._terminated:=True
+			This:C1470._body:=$body
+			
+	End case 
 	
 Function get terminated : Boolean
 	return This:C1470._terminated
@@ -42,6 +54,10 @@ Function get errors : Collection
 	
 	If ((This:C1470.data=Null:C1517) && (This:C1470._decodingErrors#Null:C1517))
 		return This:C1470._decodingErrors
+	End if 
+	
+	If ((This:C1470._body#Null:C1517) && (This:C1470._body.error#Null:C1517))
+		return [This:C1470._body.error]
 	End if 
 	
 	return []
