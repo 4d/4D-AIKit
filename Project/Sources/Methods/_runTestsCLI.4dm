@@ -1,8 +1,6 @@
 //%attributes = {}
 var $results:=_runTests(True:C214)
 
-Folder:C1567(Temporary folder:C486; fk platform path:K87:2).file("testsAIKIT.json").setText(JSON Stringify:C1217($results; *))
-
 var $test : Object
 For each ($test; $results.tests || [])
 	If ($test.success)
@@ -11,5 +9,12 @@ For each ($test; $results.tests || [])
 		LOG EVENT:C667(Into system standard outputs:K38:9; "❌ "+String:C10($test.name)+" "+JSON Stringify:C1217($test.errors)+"\n")
 	End if 
 End for each 
+
+Try
+	Folder:C1567(fk database folder:K87:14).file("results.json").setText(JSON Stringify:C1217($results; *))
+Catch
+	Folder:C1567(Temporary folder:C486; fk platform path:K87:2).file("testsAIKIT.json").setText(JSON Stringify:C1217($results; *))
+End try
+
 
 QUIT 4D:C291
