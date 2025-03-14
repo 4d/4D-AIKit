@@ -14,7 +14,9 @@ Class constructor($request : 4D:C1709.HTTPRequest; $body : Variant)
 	Case of 
 		: (Value type:C1509($body)=Is text:K8:3)
 			var $textData:=$body
+			//%W-533.1
 			While ((Length:C16($textData)>0) && $textData[[Length:C16($textData)]]="\n")
+				//%W+533.1
 				$textData:=Substring:C12($textData; 1; Length:C16($textData)-1)
 			End while 
 			

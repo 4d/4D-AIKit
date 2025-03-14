@@ -170,7 +170,7 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 	var $async:=$parameters._isAsync()
 	If ($async)
 		var $processType : Integer:=Process info:C1843(Current process:C322).type
-		If (Asserted:C1132(($processType#Created from execution dialog:K36:14) && (($processType#Other user process:K36:15) || (Current form window:C827>0)); "Formula callback will never be called asynchronously with user process. Please create a worker or be in form/app context"))
+		If (Asserted:C1132(($processType#Created from execution dialog:K36:14)/*notThreadSafe:&& (($processType#Other user process) || (Current form window>0))*/; "Formula callback will never be called asynchronously with user process. Please create a worker or be in form/app context"))
 			$options:=cs:C1710._OpenAIAsyncOptions.new($options; This:C1470; $parameters; $result)
 		Else 
 			$async:=False:C215  // transform into sync
