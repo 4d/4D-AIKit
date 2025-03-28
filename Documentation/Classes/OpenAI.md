@@ -61,7 +61,6 @@ The API provides access to multiple resources that allow seamless interaction wi
 | `chat`            | [OpenAIChatAPI](OpenAIChatAPI.md)               | Access to the Chat API.        |
 | `images`          | [OpenAIImagesAPI](OpenAIImagesAPI.md)           | Access to the Images API.      |
 | `moderations`     | [OpenAIModerationsAPI](OpenAIModerationsAPI.md) | Access to the Moderations API. |
-| `embeddings`      | [OpenAIEmbeddingsAPI](OpenAIEmbeddingsAPI.md)   | Access to the Embeddings API.  |
 
 
 ### Example Usage

@@ -35,14 +35,6 @@
 			"OpenAIMessage"
 		]
 	},
-	"Embeddings": {
-		"classes": [
-			"OpenAIEmbedding",
-			"OpenAIEmbeddingsAPI",
-			"OpenAIEmbeddingsParameters",
-			"OpenAIEmbeddingsResult"
-		]
-	},
 	"FormDemo": {
 		"forms": [
 			"_FormDemo"
@@ -91,7 +83,6 @@
 			"_runTestsCLI",
 			"test_openai_chat",
 			"test_openai_chat_async",
-			"test_openai_embeddings",
 			"test_openai_errors",
 			"test_openai_images",
 			"test_openai_models",

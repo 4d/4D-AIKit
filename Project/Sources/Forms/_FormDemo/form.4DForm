@@ -47,7 +47,6 @@
 						"Vision",
 						"Moderation",
 						"Models",
-						"Embeddings",
 						"ChatHelper"
 					],
 					"action": "gotoPage"
@@ -267,21 +266,6 @@
 		},
 		{
 			"objects": {
-				"Input4": {
-					"type": "input",
-					"left": 28,
-					"top": 48,
-					"width": 751,
-					"height": 545,
-					"dataSource": "Form:C1466.embeddings",
-					"enterable": false,
-					"focusable": false,
-					"scrollbarVertical": "visible"
-				}
-			}
-		},
-		{
-			"objects": {
 				"List Box1": {
 					"type": "listbox",
 					"left": 30,
@@ -407,7 +391,7 @@
 			}
 		}
 	],
-	"geometryStamp": 223,
+	"geometryStamp": 224,
 	"editor": {
 		"activeView": "View 1",
 		"defaultView": "View 1",
