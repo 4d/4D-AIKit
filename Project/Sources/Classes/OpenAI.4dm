@@ -5,7 +5,7 @@
 // MARK: api resources
 // property completions : cs:C1710.OpenAICompletionsAPI // deprecated
 property chat : cs:C1710.OpenAIChatAPI
-property embeddings : cs:C1710.OpenAIEmbeddingsAPI
+// property embeddings : cs.OpenAIEmbeddingsAPI
 // property files : cs.OpenAIFilesAPI
 property images : cs:C1710.OpenAIImagesAPI
 // property audio : cs.OpenAIAudioAPI
@@ -92,7 +92,7 @@ Class constructor( ...  : Variant)
 	
 	//  This:C1470.completions:=cs:C1710.OpenAICompletionsAPI.new(This:C1470)
 	This:C1470.chat:=cs:C1710.OpenAIChatAPI.new(This:C1470)
-	This:C1470.embeddings:=cs:C1710.OpenAIEmbeddingsAPI.new(This:C1470)
+	// This.embeddings:=cs.OpenAIEmbeddingsAPI.new(This)
 	// This.files:=cs.OpenAIFilesAPI.new(This)
 	This:C1470.images:=cs:C1710.OpenAIImagesAPI.new(This:C1470)
 	// This.audio:=cs.OpenAIAudioAPI.new(This)
