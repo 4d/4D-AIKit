@@ -128,6 +128,19 @@
 						"onClick"
 					],
 					"dataSource": "Form:C1466.tools"
+				},
+				"ChatJSONFormatButton": {
+					"type": "checkbox",
+					"text": "JSON Format",
+					"top": 661,
+					"left": 262,
+					"width": 112,
+					"height": 30,
+					"events": [
+						"onClick"
+					],
+					"dataSource": "Form:C1466.jsonFormat",
+					"method": "ObjectMethods/ChatJSONFormatButton.4dm"
 				}
 			}
 		},

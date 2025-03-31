@@ -171,6 +171,16 @@ Function sendChat()
 		$options.tools:=[$tool]
 	End if 
 	
+	If (Bool:C1537(Form:C1466.jsonFormat))
+		
+		If (Value type:C1509(Form:C1466.jsonSchema)=Is object:K8:27)
+			$options.response_format:={type: "json_schema"; json_schema: {schema: Form:C1466.jsonSchema; name: "schema"; strict: True:C214}}
+		Else 
+			$options.response_format:={type: "json_object"}
+		End if 
+		
+	End if 
+	
 	
 	If (Form:C1466.messages=Null:C1517)
 		Form:C1466.messages:=[cs:C1710.OpenAIMessage.new({role: "system"; content: "You are a helpful assistant."})]
