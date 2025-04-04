@@ -71,9 +71,16 @@ Function body() : Object
 	If (Length:C16(String:C10(This:C1470.reasoning_effort))>0)
 		$body.reasoning_effort:=This:C1470.reasoning_effort
 	End if 
+	
+	// Handle DataClass to JSON Schema conversion for response_format
 	If (This:C1470.response_format#Null:C1517)
-		$body.response_format:=This:C1470.response_format
+		If (OB Instance of:C1731(This:C1470.response_format; 4D:C1709.DataClass))
+			$body.response_format:={type: "json_schema"; json_schema: {schema: This:C1470._dataClassToJSONSchema(This:C1470.response_format); name: This:C1470.response_format.getInfo().name; strict: False:C215}}
+		Else 
+			$body.response_format:=This:C1470.response_format
+		End if 
 	End if 
+	
 	If (This:C1470.tools#Null:C1517)
 		$body.tools:=This:C1470.tools
 	End if 
@@ -84,6 +91,69 @@ Function body() : Object
 		$body.prediction:=This:C1470.prediction
 	End if 
 	return $body
+	
+	
+Function _dataClassToJSONSchema($dataclass : 4D:C1709.DataClass) : Object
+	var $schema:={type: "object"; properties: {}; required: []}
+	
+	var $field : Object
+	For each ($field; $dataclass)
+		
+		$schema.properties[$field.name]:=This:C1470._fieldTypeToJSONSchema($field)
+		
+		// If (Bool($field.mandatory))
+		$schema.required.push($field.name)
+		// End if 
+		
+	End for each 
+	
+	return $schema
+	
+Function _fieldTypeToJSONSchema($field : Object) : Object
+	var $schema : Object
+	Case of 
+		: ($field.fieldType=1)  // Is real
+			$schema:={type: "number"}
+			
+		: ($field.fieldType=9)  // Is longint
+			$schema:={type: "integer"}
+			
+		: ($field.fieldType=35)  // Is float
+			$schema:={type: "number"}
+			
+		: ($field.fieldType=2)  // Is text
+			$schema:={type: "string"}
+			
+		: ($field.fieldType=6)  // Is Boolean
+			$schema:={type: "boolean"}
+			
+		: ($field.fieldType=4)  // Is date
+			$schema:={type: "string"; format: "date"}
+			
+		: ($field.fieldType=11)  // Is time
+			$schema:={type: "string"; format: "time"}
+			
+		: ($field.fieldType=3)  // Is picture
+			$schema:={type: "string"; format: "binary"}
+			
+		: ($field.fieldType=30)  // Is BLOB
+			$schema:={type: "string"; format: "binary"}
+			
+		: ($field.fieldType=38)  // Is object
+			$schema:={type: "object"}
+			
+		: ($field.fieldType=42)  // Is collection
+			$schema:={type: "array"; items: {type: "object"}}
+			
+		: ($field.fieldType=12)  // Is variant
+			$schema:={}  // No specific type constraints
+			
+		Else 
+			// Default to string for unknown types
+			$schema:={type: "string"; description: "Converted from 4D type: "+String:C10($field.fieldType)}
+	End case 
+	
+	return $schema
 	
 Function _isAsync() : Boolean
 	return Super:C1706._isAsync()\
