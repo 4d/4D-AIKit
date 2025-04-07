@@ -1029,14 +1029,8 @@
 			],
 			"Summary": ""
 		},
-		"tool_calls": {
-			"Syntax": "tool_calls : Collection"
-		},
 		"user": {
 			"Syntax": "user : Text"
-		},
-		"tool_call_id": {
-			"Syntax": "tool_call_id : Text"
 		},
 		"content": {
 			"Syntax": "content : Variant"
@@ -1466,32 +1460,11 @@
 			],
 			"Summary": ""
 		},
-		"onData": {
-			"Syntax": "onData : 4D.Function"
-		},
-		"prediction": {
-			"Syntax": "prediction : Object"
-		},
-		"response_format": {
-			"Syntax": "response_format : Object"
-		},
 		"reasoning_effort": {
 			"Syntax": "reasoning_effort : Text"
 		},
-		"tools": {
-			"Syntax": "tools : Collection"
-		},
-		"stream": {
-			"Syntax": "stream : Boolean"
-		},
 		"store": {
 			"Syntax": "store : Boolean"
-		},
-		"temperature": {
-			"Syntax": "temperature : Real"
-		},
-		"stream_options": {
-			"Syntax": "stream_options : Object"
 		},
 		"n": {
 			"Syntax": "n : Integer"
@@ -1499,8 +1472,17 @@
 		"max_completion_tokens": {
 			"Syntax": "max_completion_tokens : Integer"
 		},
-		"tool_choice": {
-			"Syntax": "tool_choice : Variant"
+		"stream_options": {
+			"Syntax": "stream_options : Object"
+		},
+		"onData": {
+			"Syntax": "onData : 4D.Function"
+		},
+		"temperature": {
+			"Syntax": "temperature : Real"
+		},
+		"stream": {
+			"Syntax": "stream : Boolean"
 		},
 		"model": {
 			"Syntax": "model : Text"

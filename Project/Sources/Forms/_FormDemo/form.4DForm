@@ -116,18 +116,6 @@
 						"onClick"
 					],
 					"dataSource": "Form:C1466.stream"
-				},
-				"ChatToolButton": {
-					"type": "checkbox",
-					"text": "Tools",
-					"top": 661,
-					"left": 143,
-					"width": 112,
-					"height": 30,
-					"events": [
-						"onClick"
-					],
-					"dataSource": "Form:C1466.tools"
 				}
 			}
 		},
@@ -391,7 +379,7 @@
 			}
 		}
 	],
-	"geometryStamp": 224,
+	"geometryStamp": 225,
 	"editor": {
 		"activeView": "View 1",
 		"defaultView": "View 1",
