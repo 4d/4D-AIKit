@@ -145,10 +145,6 @@ Function _formatChat()
 			: ($message.content#Null:C1517)
 				$chat+=$message.content+" \n\n"
 				
-			: ($message.tool_calls#Null:C1517)
-				
-				$chat+="...["+$message.tool_calls.map(Formula:C1597($1.value.function.name)).join(",")+"] \n\n"
-				
 			Else 
 				
 		End case 
@@ -172,15 +168,6 @@ Function sendChat()
 		$options.stream_options:={include_usage: True:C214}
 	End if 
 	
-	If (Bool:C1537(Form:C1466.tools))
-		
-		var $tool:={type: "function"; \
-			function: {name: "get_database_table"; description: "Get the database table list."; parameters: {}; required: []; additionalProperties: False:C215}; \
-			strict: True:C214}
-		$options.tools:=[$tool]
-	End if 
-	
-	
 	If (Form:C1466.messages=Null:C1517)
 		Form:C1466.messages:=[cs:C1710.OpenAIMessage.new({role: "system"; content: "You are a helpful assistant."})]
 	End if 
@@ -203,28 +190,6 @@ Function onChatReceive($result : cs:C1710.OpenAIChatCompletionsResult)
 		Form:C1466.messages.push($assistant)
 		
 		This:C1470._formatChat()
-		
-		If ($assistant.tool_calls#Null:C1517)
-			// XXX: here we respond to the one tool installed, we must execute a tool according to its name
-			var $toolReponse:=cs:C1710.OpenAIMessage.new()
-			$toolReponse.role:="tool"
-			$toolReponse.tool_call_id:=$assistant.tool_calls.first().id
-			$toolReponse.content:=JSON Stringify:C1217(OB Keys:C1719(ds:C1482))
-			
-			Form:C1466.messages.push($toolReponse)
-			
-			var $options : cs:C1710.OpenAIChatCompletionsParameters:={\
-				stream: Bool:C1537(Form:C1466.stream); \
-				model: This:C1470.model; \
-				formula: Formula:C1597(Bool:C1537(Form:C1466.stream) ? cs:C1710._FormDemo.me.onStreamChatReceive($1) : cs:C1710._FormDemo.me.onChatReceive($1))}
-			
-			If ($options.stream)
-				$options.stream_options:={include_usage: True:C214}
-			End if 
-			
-			This:C1470.client.chat.completions.create(Form:C1466.messages; $options)
-			
-		End if 
 		
 	Else 
 		
