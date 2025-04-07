@@ -6,11 +6,6 @@ property content : Variant
 // optionnal user
 property user : Text
 
-// Tool calls request
-property tool_calls : Collection
-// ID if tool call when responding
-property tool_call_id : Text
-
 Class constructor($object : Object)
 	If ($object=Null:C1517)
 		return 
