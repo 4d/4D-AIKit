@@ -14,10 +14,10 @@ https://platform.openai.com/docs/api-reference/models/retrieve
 
 Retrieves a model instance to provide basic information.
 
-| Parameter   | Type                      | Description                                   |
-|-------------|---------------------------|-----------------------------------------------|
-| `$model`    | Text                      | The identifier of the model to retrieve.     |
-| `$parameters` | [OpenAIParameters](OpenAIParameters.md)     | Additional parameters for the request.       |
+| Parameter     | Type                      | Description                                   |
+|---------------|---------------------------|-----------------------------------------------|
+| *model*       | Text                      | The identifier of the model to retrieve.      |
+| *parameters*  | [OpenAIParameters](OpenAIParameters.md) | Additional parameters for the request.       |
 
 #### Return: [OpenAIModelResult](OpenAIModelResult.md)
 
@@ -34,15 +34,15 @@ https://platform.openai.com/docs/api-reference/models/list
 
 Lists the currently available models.
 
-| Parameter   | Type                      | Description                                   |
-|-------------|---------------------------|-----------------------------------------------|
-| `$parameters` | [OpenAIParameters](OpenAIParameters.md) | Additional parameters for the request.       |
+| Parameter     | Type                      | Description                                   |
+|---------------|---------------------------|-----------------------------------------------|
+| *parameters*  | [OpenAIParameters](OpenAIParameters.md) | Additional parameters for the request.       |
 
 #### Return: [OpenAIModelListResult](OpenAIModelListResult.md)
 
 #### Example usage:
 
-```4d 
+```4d
 var $result:=$client.model.list($parameters)
 var $models: Collection:=$result.models
 ```

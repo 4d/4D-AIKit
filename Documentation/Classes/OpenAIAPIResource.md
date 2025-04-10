@@ -4,9 +4,9 @@ Base class to all api resource.
 
 ## Properties
 
-| Property    | Type                       |Description|
-|-------------|----------------------------|-|
-| _client     | [OpenAI](OpenAI.md)        |Private back link to the OpenAI client|
+| Property    | Type                       | Description |
+|-------------|----------------------------|----------------------------------------|
+| `_client`   | [OpenAI](OpenAI.md)        | Private back link to the OpenAI client |
 
 The client allow to make HTTP Request.
 

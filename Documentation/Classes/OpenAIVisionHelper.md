@@ -4,10 +4,10 @@
 
 ### prompt
 
-| Argument     | Type                                         |
-|--------------|----------------------------------------------|
-| `$prompt`    | `Text`                                       |
-| `$parameters`| [`OpenAIChatCompletionsParameters`](OpenAIChatCompletionsParameters.md)    |
+| Parameter    | Type                                         | Description                                                                 |
+|--------------|----------------------------------------------|-----------------------------------------------------------------------------|
+| *prompt*     | `Text`                                       | The text prompt to send to the OpenAI chat API.                            |
+| *parameters* | [`OpenAIChatCompletionsParameters`](OpenAIChatCompletionsParameters.md) | Optional parameters for the chat completion request.                       |
 
 ### Description
 
