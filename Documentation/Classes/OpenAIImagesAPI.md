@@ -12,10 +12,10 @@ https://platform.openai.com/docs/api-reference/images/create
 
 Creates an image given a prompt.
 
-| Argument     | Type                                           | Description                                          |
+| Parameter    | Type                                           | Description                                          |
 |--------------|------------------------------------------------|------------------------------------------------------|
-| `$prompt`    | `Text`                                         | The prompt to use for image generation.              |
-| `$parameters`| [OpenAIImageParameters](OpenAIImageParameters.md) | Parameters for image generation.                     |
+| *prompt*       | `Text`                                         | The prompt to use for image generation.              |
+| *parameters*   | [OpenAIImageParameters](OpenAIImageParameters.md) | Parameters for image generation.                     |
 
 #### Returns: [OpenAIImagesResult](OpenAIImagesResult.md)
 

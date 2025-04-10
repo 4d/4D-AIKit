@@ -8,7 +8,7 @@
 
 | Property  | Type                         | Description                                      |
 |-----------|------------------------------|--------------------------------------------------|
-| data      | Object                       | Contains the stream data sent by the server.    |
+| `data`      | Object                     | Contains the stream data sent by the server.    |
 
 ## Computed properties
 
