@@ -7,7 +7,7 @@
 | Argument     | Type                                         |
 |--------------|----------------------------------------------|
 | `$prompt`    | `Text`                                       |
-| `$parameters`| [`OpenAIChatCompletionParameters`](OpenAIChatCompletionParameters.md)    |
+| `$parameters`| [`OpenAIChatCompletionsParameters`](OpenAIChatCompletionsParameters.md)    |
 
 ### Description
 

@@ -18,7 +18,7 @@ First of all, initialize the OpenAI client using your API key
 var $client:=cs.AIKit.OpenAI.new("your api key")
 ```
 
-For a [compatible provider](Documentation/CompatibleOpenAI.md) API, you can configure the server URL by setting the `baseURL` parameter.
+For a [compatible provider](Documentation/compatible-openai.md) API, you can configure the server URL by setting the `baseURL` parameter.
 
 ```4d
 var $client:=cs.AIKit.OpenAI.new({apiKey: "your api key"; baseURL: "https://your.server.ai"})
@@ -112,7 +112,7 @@ var $moderation:=$client.moderations.create("This text contains inappropriate la
 
 If you do not want to wait for the OpenAPI response when sending a request to its API, you need to use asynchronous code. The result object will be received in a callback function.
 
-See [detailed documentation for examples](Documentation/AsynchronousCall.md)
+See [detailed documentation for examples](Documentation/asynchronous-call.md)
 
 ## License
 
