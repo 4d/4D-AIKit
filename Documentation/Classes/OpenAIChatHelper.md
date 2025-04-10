@@ -14,14 +14,17 @@ The chat helper allow to keep a list of messages in memory and make consecutive 
 
 ## Functions
 
-### `prompt(*prompt* : Text) : OpenAIChatCompletionsResult`
+### prompt()
+
+**prompt**(*prompt* : Text) : OpenAIChatCompletionsResult
+
+| Parameter        | Type  | Description                               |
+|------------------|-------|-------------------------------------------|
+| *prompt*         |  Text | The text prompt to send to OpenAI chat.   |
+| Function result| [OpenAIChatCompletionsResult](OpenAIChatCompletionsResult.md) | The completion result returned by the chat. |
 
 Sends a user prompt to the chat and returns the corresponding completion result.
 
-| Parameter  | Type  | Description                               |
-|-----------|-------|-------------------------------------------|
-| *prompt*   | Text  | The text prompt to send to OpenAI chat.  |
- 
 #### Example Usage
 
 ```4D

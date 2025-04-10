@@ -8,18 +8,19 @@ https://platform.openai.com/docs/api-reference/models
 
 ## Functions
 
-### `retrieve`
+### retrieve()
 
-https://platform.openai.com/docs/api-reference/models/retrieve
-
-Retrieves a model instance to provide basic information.
+**retrieve**(*model* : Text; *parameters* : OpenAIParameters) : OpenAIModelResult
 
 | Parameter     | Type                      | Description                                   |
 |---------------|---------------------------|-----------------------------------------------|
 | *model*       | Text                      | The identifier of the model to retrieve.      |
 | *parameters*  | [OpenAIParameters](OpenAIParameters.md) | Additional parameters for the request.       |
+| Function result| [OpenAIModelResult](OpenAIModelResult.md) | The model result  |
 
-#### Return: [OpenAIModelResult](OpenAIModelResult.md)
+Retrieves a model instance to provide basic information.
+
+https://platform.openai.com/docs/api-reference/models/retrieve
 
 #### Example usage:
 
@@ -28,17 +29,18 @@ var $result:=$client.model.retrieve("text-davinci-003")
 var $model:=$result.model
 ```
 
-### `list`
+### list()
 
-https://platform.openai.com/docs/api-reference/models/list
-
-Lists the currently available models.
+**list**(*parameters* : OpenAIParameters) : OpenAIModelListResult
 
 | Parameter     | Type                      | Description                                   |
 |---------------|---------------------------|-----------------------------------------------|
 | *parameters*  | [OpenAIParameters](OpenAIParameters.md) | Additional parameters for the request.       |
+| Function result| [OpenAIModelListResult](OpenAIModelListResult.md) | The model list result  |
 
-#### Return: [OpenAIModelListResult](OpenAIModelListResult.md)
+Lists the currently available models.
+
+https://platform.openai.com/docs/api-reference/models/list
 
 #### Example usage:
 

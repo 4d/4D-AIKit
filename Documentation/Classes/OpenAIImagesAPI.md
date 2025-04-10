@@ -6,18 +6,19 @@ https://platform.openai.com/docs/api-reference/images
 
 ## Functions
 
-### generate
+### generate()
 
-https://platform.openai.com/docs/api-reference/images/create
+**generate**(*prompt* : Text; *parameters* : OpenAIImageParameters) : OpenAIImagesResult
+
+| Parameter        | Type                                           | Description                                          |
+|------------------|------------------------------------------------|------------------------------------------------------|
+| *prompt*         | Text                                         | The prompt to use for image generation.              |
+| *parameters*     | [OpenAIImageParameters](OpenAIImageParameters.md) | Parameters for image generation.                     |
+| Function result| [OpenAIImagesResult](OpenAIImagesResult.md)       | The result containing the generated image(s).        |
 
 Creates an image given a prompt.
 
-| Parameter    | Type                                           | Description                                          |
-|--------------|------------------------------------------------|------------------------------------------------------|
-| *prompt*       | `Text`                                         | The prompt to use for image generation.              |
-| *parameters*   | [OpenAIImageParameters](OpenAIImageParameters.md) | Parameters for image generation.                     |
-
-#### Returns: [OpenAIImagesResult](OpenAIImagesResult.md)
+https://platform.openai.com/docs/api-reference/images/create
 
 ## Example Usage
 

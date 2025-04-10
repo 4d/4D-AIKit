@@ -6,19 +6,20 @@ https://platform.openai.com/docs/api-reference/moderations
 
 ## Functions
 
-### create
+### create()
 
-https://platform.openai.com/docs/api-reference/moderations/create
+**create**(*input* : Variant; *model* : Text; *parameters* : OpenAIParameters) : OpenAIModerationResult
+
+| Parameter        | Type                     | Description                                                   |
+|------------------|--------------------------|---------------------------------------------------------------|
+| *input*          | Variant                | Input (or inputs) to classify. Can be a single text or a collection of OpenAIMessage. |
+| *model*          | Text                   | The content moderation model you would like to use.           |
+| *parameters*     | [OpenAIParameters](OpenAIParameters.md)       | Additional parameters for the request.                        |
+| Function result | [OpenAIModerationResult](OpenAIModerationResult.md) | The result of the moderation, indicating potential harm.       |
 
 Classifies whether the input is potentially harmful.
 
-| Parameter      | Type                     | Description                                                   |
-|----------------|--------------------------|---------------------------------------------------------------|
-| *input*        | Variant                  | Input (or inputs) to classify. Can be a single text or a collection of [OpenAIMessage](OpenAIMessage). |
-| *model*        | Text                     | The content moderation model you would like to use.           |
-| *parameters*   | [OpenAIParameters](OpenAIParameters.md) | Additional parameters for the request.                        |
-
-#### Returns: [OpenAIModerationResult](OpenAIModerationResult.md)
+https://platform.openai.com/docs/api-reference/moderations/create
 
 ## Examples of Usage
 
