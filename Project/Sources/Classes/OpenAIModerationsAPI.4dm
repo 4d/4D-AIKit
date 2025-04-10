@@ -3,9 +3,6 @@ Class extends OpenAIAPIResource
 Class constructor($client : cs:C1710.OpenAI)
 	Super:C1705($client)
 	
-	var $messages:=[{type: "text"; text: "...text to classify goes here..."}; \
-		{type: "image_url"; image_url: {url: "https://example.com/image.png"}}]
-	
 /*
 * Classifies if text and/or image inputs are potentially harmful.
 * - $input: Input (or inputs) to classify. Could be a single Text or a collection of OpenAIMessage
