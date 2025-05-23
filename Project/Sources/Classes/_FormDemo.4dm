@@ -19,7 +19,8 @@ Function onLoad()
 	Form:C1466.modelsByPage[3]:=["gpt-4o-mini"]
 	Form:C1466.modelsByPage[4]:=["omni-moderation-latest"; "text-moderation-latest"; "text-moderation-stable"; "text-moderation-007"; "omni-moderation-2024-9-26"]
 	Form:C1466.modelsByPage[5]:=[]
-	Form:C1466.modelsByPage[6]:=["gpt-4o-mini"]
+	Form:C1466.modelsByPage[6]:=["text-embedding-3-small"; "text-embedding-3-large"; "text-embedding-ada-002"]
+	Form:C1466.modelsByPage[7]:=Form:C1466.modelsByPage[3]
 	
 	Form:C1466.models:={values: Form:C1466.modelsByPage[1]; index: 0}
 	
@@ -32,7 +33,7 @@ Function onPageChange()
 	OBJECT SET ENABLED:C1123(*; "userPrompt"; True:C214)
 	
 	Case of 
-		: ((FORM Get current page:C276=1) || (FORM Get current page:C276=6))  // chat
+		: ((FORM Get current page:C276=1) || (FORM Get current page:C276=7))  // chat
 			
 			OBJECT SET PLACEHOLDER:C1295(*; "userPrompt"; "Talk to your assistant")
 			
@@ -52,6 +53,10 @@ Function onPageChange()
 			
 			OBJECT SET PLACEHOLDER:C1295(*; "userPrompt"; "Connect and refresh model")
 			OBJECT SET ENABLED:C1123(*; "userPrompt"; False:C215)
+			
+		: (FORM Get current page:C276=6)  // embeddings
+			
+			OBJECT SET PLACEHOLDER:C1295(*; "userPrompt"; "Sentence to vectorize")
 			
 	End case 
 	
@@ -109,7 +114,11 @@ Function onClicked()
 			
 			This:C1470.getModels()
 			
-		: (FORM Get current page:C276=6)  // chat helper
+		: (FORM Get current page:C276=6)  // embeddings
+			
+			This:C1470.sendEmbeddings()
+			
+		: (FORM Get current page:C276=7)  // embeddings
 			
 			This:C1470.sendChatHelper()
 			
@@ -357,6 +366,29 @@ Function onModerationReceive($result : cs:C1710.OpenAIModerationResult)
 		ALERT:C41(JSON Stringify:C1217($result.errors))
 		
 	End if 
+	
+	// MARK:- Embeddings
+	
+Function sendEmbeddings()
+	var $options : cs:C1710.OpenAIEmbeddingsParameters:={\
+		formula: Formula:C1597(cs:C1710._FormDemo.me.onEmbeddingsReceive($1))}
+	
+	This:C1470.client.embeddings.create(Form:C1466.prompt; This:C1470.model; $options)
+	
+Function onEmbeddingsReceive($result : cs:C1710.OpenAIEmbeddingsResult)
+	
+	This:C1470.enableSendButton(True:C214)
+	
+	If ($result.success)
+		
+		Form:C1466.embeddings:=JSON Stringify:C1217($result.embeddings; *)+"\n"+JSON Stringify:C1217($result.embedding.embedding.toCollection(); *)
+		
+	Else 
+		
+		ALERT:C41(JSON Stringify:C1217($result.errors))
+		
+	End if 
+	
 	
 	
 	// MARK:- ChatHelper
