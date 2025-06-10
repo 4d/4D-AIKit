@@ -4,12 +4,15 @@ property request : 4D:C1709.HTTPRequest
 // Cache if parsed response
 property _parsed : Object
 
-// to force terminated
+// to force terminated'
 property _terminated : Boolean
+
+// to force errors'
+property _errors : Collection
 
 // True if success ie. response receive and no API errors.
 Function get success : Boolean
-	If (This:C1470.request.response=Null:C1517)
+	If ((This:C1470.request=Null:C1517) || (This:C1470.request.response=Null:C1517))
 		return False:C215
 	End if 
 	return (300>This:C1470.request.response.status) && (This:C1470.request.response.status>=200)
@@ -52,6 +55,10 @@ Function _objectBody() : Object
 	
 	// List of errors if any
 Function get errors : Collection
+	
+	If (This:C1470._errors#Null:C1517)
+		return This:C1470._errors
+	End if 
 	
 	If ((This:C1470.request.errors#Null:C1517) && (This:C1470.request.errors.length>0))
 		return This:C1470.request.errors
@@ -133,6 +140,10 @@ Function _retryAfterValue : Integer
 	var $time:=Time:C179(This:C1470.headers["retry-after"])
 	
 	return ($date-Current date:C33)*86400+($time-Current time:C178)
+	
+Function _failWith($errors : Collection)
+	This:C1470._errors:=$errors
+	This:C1470._terminated:=True:C214
 	
 	// MARK:- utils
 	

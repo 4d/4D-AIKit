@@ -14,21 +14,40 @@ Class constructor($chat : cs:C1710.OpenAIChatAPI; $imageData : Variant)
 			
 		: ((Value type:C1509($imageData)=Is object:K8:27) && (OB Instance of:C1731($imageData; 4D:C1709.File)))
 			
-			$blob:=$imageData.getContent()
-			
-			BASE64 ENCODE:C895($blob; $encoded)
-			This:C1470.imageURL:="data:image/png;base64,"+$encoded
+			If ($imageData.exists)
+				$blob:=$imageData.getContent()
+				
+				BASE64 ENCODE:C895($blob; $encoded)
+				This:C1470.imageURL:="data:image/png;base64,"+$encoded
+			Else 
+				This:C1470.imageURL:="error:file '"+$imageData.path+"' not exists"
+			End if 
 			
 		: (Value type:C1509($imageData)=Is picture:K8:10)
 			
-			PICTURE TO BLOB:C692($imageData; $blob; "png")
+			PICTURE TO BLOB:C692($imageData; $blob; ".png")
+			Case of 
+				: (OK=0)
+					This:C1470.imageURL:="error:failed to encore picture"
+				: (BLOB size:C605($blob)=0)
+					This:C1470.imageURL:="error:"+((Picture size:C356($imageData)=0) ? "empty picture" : "cannot convert image data")
+				Else 
+					BASE64 ENCODE:C895($blob; $encoded)
+					This:C1470.imageURL:="data:image/png;base64,"+$encoded
+			End case 
 			
-			BASE64 ENCODE:C895($blob; $encoded)
-			This:C1470.imageURL:="data:image/png;base64,"+$encoded
+		Else 
+			
+			This:C1470.imageURL:="error:invalid type for vision "+String:C10(Value type:C1509($imageData))
 			
 	End case 
 	
 Function prompt($prompt : Text; $parameters : cs:C1710.OpenAIChatCompletionsParameters) : cs:C1710.OpenAIChatCompletionsResult
+	If (Position:C15("error:"; This:C1470.imageURL)=1)
+		var $result:=cs:C1710.OpenAIChatCompletionsResult.new()
+		$result._failWith([Substring:C12(This:C1470.imageURL; Length:C16("error:")+1)])
+		return $result
+	End if 
 	
 	var $message:=cs:C1710.OpenAIMessage.new({role: "user"; content: [{type: "text"; text: $prompt}; \
 		{type: "image_url"; image_url: {url: This:C1470.imageURL; detail: "low"}}]})
