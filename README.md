@@ -118,10 +118,6 @@ See [detailed documentation for examples](Documentation/asynchronous-call.md)
 
 See the [LICENSE][license-url] file for details
 
-## Contributing
-
-See [CONTRIBUTING][contributing-url] guide.
-
 ## Copyright
 
 - This library is not affiliated with, endorsed by, or officially connected to OpenAI in any way. 
@@ -132,5 +128,4 @@ See [CONTRIBUTING][contributing-url] guide.
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [code-shield]: https://img.shields.io/static/v1?label=language&message=4d&color=blue
 [code-url]: https://developer.4d.com/
-[contributing-url]: .github/CONTRIBUTING.md
 [license-url]: LICENSE.md
