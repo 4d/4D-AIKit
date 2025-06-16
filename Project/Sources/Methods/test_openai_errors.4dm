@@ -22,19 +22,19 @@ ASSERT:C1129($result.errors.length>0; "The model `fake-Model` does not exist or 
 
 //MARK:- Empty image prompt
 //# Empty value
-$result:=$client.images.generate("")
-ASSERT:C1129($result.errors.length>0; "You must provide a prompt "+JSON Stringify:C1217($result))
+var $resultImage:=$client.images.generate("")
+ASSERT:C1129($resultImage.errors.length>0; "You must provide a prompt "+JSON Stringify:C1217($result))
 
 
 //MARK:- Wrong model
 //# wrong model
-$result:=$client.images.generate("a cat"; {model: $modelName})
-ASSERT:C1129($result.errors.length>0; "Invalid model. The model argument should be left blank. "+JSON Stringify:C1217($result))
+$resultImage:=$client.images.generate("a cat"; {model: $modelName})
+ASSERT:C1129($resultImage.errors.length>0; "Invalid model. The model argument should be left blank. "+JSON Stringify:C1217($result))
 
 //MARK:- failed connection
 var $tmpBaseURL:=$client.baseURL
 $client.baseURL:="http://192.222.222.222"
-$result:=$client.images.generate("a cat")
+$resultImage:=$client.images.generate("a cat")
 ASSERT:C1129($result.errors.length>0; "Failed to create a connected socket "+JSON Stringify:C1217($result))
 $client.baseURL:=$tmpBaseURL
 

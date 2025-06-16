@@ -157,7 +157,7 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 	If ($resultType=Null:C1517)
 		$resultType:=cs:C1710.OpenAIResult
 	End if 
-	var $result:=$resultType.new()
+	var $result : cs:C1710.OpenAIResult:=$resultType.new()
 	
 	var $url:=This:C1470.baseURL+$path
 	var $headers:=This:C1470._headers()
