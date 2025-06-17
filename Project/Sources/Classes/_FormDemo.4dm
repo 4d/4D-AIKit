@@ -315,7 +315,7 @@ Function onImageReceive($result : cs:C1710.OpenAIImagesResult)
 	
 	// MARK:- Vision
 Function sendVision()
-	var $options : cs:C1710.OpenAIChatCompletionsResult:={\
+	var $options:={\
 		model: This:C1470.model; \
 		formula: Formula:C1597(cs:C1710._FormDemo.me.onVisionReceive($1))}
 	
@@ -348,7 +348,7 @@ Function onVisionDroped()
 	
 	// MARK:- Moderation
 Function sendModeration()
-	var $options : cs:C1710.OpenAIChatCompletionsResult:={\
+	var $options:={\
 		formula: Formula:C1597(cs:C1710._FormDemo.me.onModerationReceive($1))}
 	
 	This:C1470.client.moderations.create(Form:C1466.prompt; This:C1470.model; $options)
