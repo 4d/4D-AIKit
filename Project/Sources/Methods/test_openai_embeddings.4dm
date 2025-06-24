@@ -19,6 +19,10 @@ If (Asserted:C1132(Bool:C1537($result.success); "Cannot create embedding : "+JSO
 				
 				ASSERT:C1129($result.embeddings[0].embedding.length>0; "empty embedding")
 				
+				var $resultFormat:=$client.embeddings.create("A futuristic city skyline at sunset"; $model; {encoding_format: "base64"})
+				
+				ASSERT:C1129($resultFormat.embeddings[0].embedding.length=$result.embeddings[0].embedding.length; "not produced same embedding size with encoding format")
+				
 			End if 
 			
 		End if 

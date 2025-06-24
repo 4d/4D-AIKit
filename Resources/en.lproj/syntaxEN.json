@@ -939,6 +939,39 @@
 		}
 	},
 	"OpenAIEmbeddingsResult": {
+		"get vector()": {
+			"Syntax": "**.get vector**() : 4D.Vector",
+			"Params": [
+				[
+					"",
+					"4D.Vector",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get vectors()": {
+			"Syntax": "**.get vectors**() : Collection",
+			"Params": [
+				[
+					"",
+					"Collection",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get model()": {
+			"Syntax": "**.get model**() : Text",
+			"Params": [
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
 		"get embedding()": {
 			"Syntax": "**.get embedding**() : cs.AIKit.OpenAIEmbedding",
 			"Params": [
