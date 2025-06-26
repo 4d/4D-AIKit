@@ -20,7 +20,7 @@ Creates an image given a prompt.
 
 https://platform.openai.com/docs/api-reference/images/create
 
-## Example Usage
+## Example
 
 ```4d
 var $result:=$client.images.generate("A futuristic city skyline at sunset"; {size: "1024x1024"})

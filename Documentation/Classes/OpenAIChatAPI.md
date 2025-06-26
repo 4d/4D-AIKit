@@ -13,7 +13,7 @@ The `OpenAIChatAPI` class provides an interface to interact with OpenAI's chat b
 
 ### create()
 
-create(systemPrompt : Text) : OpenAIChatHelper
+**create**(*systemPrompt* : Text) : OpenAIChatHelper
 
 | Parameter        | Type  | Description                                |
 |------------------|-------|--------------------------------------------|

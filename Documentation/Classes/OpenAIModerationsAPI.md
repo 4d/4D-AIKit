@@ -21,7 +21,7 @@ Classifies whether the input is potentially harmful.
 
 https://platform.openai.com/docs/api-reference/moderations/create
 
-## Examples of Usage
+## Examples
 
 ### Moderate a text
 

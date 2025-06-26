@@ -8,7 +8,7 @@ https://platform.openai.com/docs/api-reference/chat
 
 ### create()
 
-**create**(*messages* : Collection of [OpenAIMessage](OpenAIMessage.md), *parameters* : [OpenAIChatCompletionsParameters](OpenAIChatCompletionsParameters.md))
+**create**(*messages* : Collection of [OpenAIMessage](OpenAIMessage.md) ; *parameters* : [OpenAIChatCompletionsParameters](OpenAIChatCompletionsParameters.md)) : Object
 
 | Parameter         | Type                                      | Description                               |
 |-------------------|-------------------------------------------|-------------------------------------------|
@@ -44,7 +44,7 @@ $messages.push($result.choice.message) // {"role":"assistant"; "content": "xxx" 
 
 ### retrieve()
 
-**retrieve**(*completionID* : Text; *parameters* : OpenAIParameters
+**retrieve**(*completionID* : Text; *parameters* : OpenAIParameters) : Object
 
 | Parameter         | Type                                      | Description                               |
 |-------------------|-------------------------------------------|-------------------------------------------|
@@ -58,7 +58,7 @@ https://platform.openai.com/docs/api-reference/chat/get
 
 ### update()
 
-**update**(*completionID* : Text; *metadata* : Object, *parameters* : OpenAIParameters
+**update**(*completionID* : Text; *metadata* : Object; *parameters* : OpenAIParameters) : Object
 
 | Parameter         | Type                                      | Description                               |
 |-------------------|-------------------------------------------|-------------------------------------------|
@@ -73,7 +73,7 @@ https://platform.openai.com/docs/api-reference/chat/update
 
 ### delete()
 
-**delete**(*completionID* : Text; *parameters* : OpenAIParameters
+**delete**(*completionID* : Text; *parameters* : OpenAIParameters) : Object
 
 | Parameter         | Type                                      | Description                               |
 |-------------------|-------------------------------------------|-------------------------------------------|
@@ -87,7 +87,7 @@ https://platform.openai.com/docs/api-reference/chat/delete
 
 ### list()
 
-**list**(*parameters* : OpenAIChatCompletionsListParameters)
+**list**(*parameters* : OpenAIChatCompletionsListParameters) : Collection
 
 | Parameter         | Type                                      | Description                               |
 |-------------------|-------------------------------------------|-------------------------------------------|
