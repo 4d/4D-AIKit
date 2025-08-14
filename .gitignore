@@ -19,3 +19,5 @@ ehthumbs.db
 Thumbs.db
 
 Logs/*
+data.Match
+python/*

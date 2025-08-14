@@ -76,6 +76,19 @@
 			"OpenAIModerationsAPI"
 		]
 	},
+	"Responses": {
+		"classes": [
+			"OpenAIResponse",
+			"OpenAIResponseInputItemsAPI",
+			"OpenAIResponseOutputItem",
+			"OpenAIResponsesAPI",
+			"OpenAIResponsesHelper",
+			"OpenAIResponsesParameters",
+			"OpenAIResponsesResult",
+			"OpenAIResponsesStreamResult",
+			"OpenAIResponseStreamEvent"
+		]
+	},
 	"Tests": {
 		"groups": [
 			"FormDemo"
@@ -92,6 +105,8 @@
 			"test_openai_models",
 			"test_openai_models_async",
 			"test_openai_moderations",
+			"test_openai_responses",
+			"test_openai_responses_basic",
 			"test_openai_vision",
 			"TestOpenAI"
 		],
