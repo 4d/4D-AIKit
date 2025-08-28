@@ -100,6 +100,36 @@ Get one model information by id
 var $model:=$client.models.retrieve("a model id").model
 ```
 
+#### Files
+
+https://platform.openai.com/docs/api-reference/files
+
+Upload a file for use with other endpoints
+
+```4d
+var $file:=File("/path/to/your/file.jsonl")
+var $result:=$client.files.create($file; "fine-tune")
+var $fileId:=$result.file.id
+```
+
+List all files
+
+```4d
+var $files:=$client.files.list().files
+```
+
+Retrieve file information
+
+```4d
+var $fileInfo:=$client.files.retrieve($fileId).file
+```
+
+Delete a file
+
+```4d
+var $deleteResult:=$client.files.delete($fileId)
+```
+
 #### Moderations
 
 https://platform.openai.com/docs/api-reference/moderations

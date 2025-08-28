@@ -16,3 +16,4 @@ The client allow to make HTTP Request.
 - [OpenAIChatAPI](OpenAIChatAPI.md)
 - [OpenAIImagesAPI](OpenAIImagesAPI.md)
 - [OpenAIModerationsAPI](OpenAIModerationsAPI.md)
+- [OpenAIFilesAPI](OpenAIFilesAPI.md)

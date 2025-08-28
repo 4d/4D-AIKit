@@ -48,7 +48,8 @@
 						"Moderation",
 						"Models",
 						"Embeddings",
-						"ChatHelper"
+						"ChatHelper",
+						"Files"
 					],
 					"action": "gotoPage"
 				},
@@ -405,9 +406,126 @@
 					]
 				}
 			}
+		},
+		{
+			"objects": {
+				"FilesList": {
+					"type": "listbox",
+					"left": 25,
+					"top": 48,
+					"width": 370,
+					"height": 526,
+					"events": [
+						"onClick",
+						"onHeaderClick",
+						"onDataChange",
+						"onSelectionChange"
+					],
+					"dataSource": "Form:C1466.filesRemote",
+					"currentItemSource": "Form:C1466.selectedFile",
+					"listboxType": "collection",
+					"columns": [
+						{
+							"header": {
+								"text": "ID",
+								"name": "HeaderFileId"
+							},
+							"name": "ColumnFileId",
+							"footer": {
+								"name": "FooterFileId"
+							},
+							"dataSource": "This:C1470.id",
+							"width": 120
+						},
+						{
+							"header": {
+								"name": "HeaderFileName",
+								"text": "Filename"
+							},
+							"name": "ColumnFileName",
+							"footer": {
+								"name": "FooterFileName"
+							},
+							"dataSource": "This:C1470.filename",
+							"width": 130
+						},
+						{
+							"header": {
+								"name": "HeaderFilePurpose",
+								"text": "Purpose"
+							},
+							"name": "ColumnFilePurpose",
+							"footer": {
+								"name": "FooterFilePurpose"
+							},
+							"dataSource": "This:C1470.purpose",
+							"width": 105
+						}
+					]
+				},
+				"UploadFileButton": {
+					"type": "button",
+					"text": "📤 Upload File",
+					"top": 669,
+					"left": 25,
+					"width": 120,
+					"height": 30,
+					"events": [
+						"onClick"
+					],
+					"method": "ObjectMethods/UploadFileButton.4dm"
+				},
+				"DeleteFileButton": {
+					"type": "button",
+					"text": "🗑️ Delete Selected File",
+					"top": 669,
+					"left": 145,
+					"width": 165,
+					"height": 30,
+					"events": [
+						"onClick"
+					],
+					"method": "ObjectMethods/DeleteFileButton.4dm"
+				},
+				"RefreshFilesButton": {
+					"type": "button",
+					"text": "🔄 Refresh",
+					"top": 669,
+					"left": 672,
+					"width": 100,
+					"height": 30,
+					"events": [
+						"onClick"
+					],
+					"method": "ObjectMethods/RefreshFilesButton.4dm"
+				},
+				"FileChatResponse": {
+					"type": "input",
+					"left": 410,
+					"top": 85,
+					"width": 371,
+					"height": 473,
+					"dataSource": "Form:C1466.fileChat",
+					"enterable": false,
+					"focusable": false,
+					"scrollbarVertical": "automatic",
+					"scrollbarHorizontal": "automatic",
+					"multiline": "yes"
+				},
+				"FileChatLabel": {
+					"type": "text",
+					"text": "💬 Chat about selected file:",
+					"top": 48,
+					"left": 410,
+					"width": 371,
+					"height": 17,
+					"fontWeight": "bold",
+					"fontSize": 13
+				}
+			}
 		}
 	],
-	"geometryStamp": 223,
+	"geometryStamp": 240,
 	"editor": {
 		"activeView": "View 1",
 		"defaultView": "View 1",
