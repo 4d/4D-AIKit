@@ -6,7 +6,7 @@
 // property completions : cs:C1710.OpenAICompletionsAPI // deprecated
 property chat : cs:C1710.OpenAIChatAPI
 property embeddings : cs:C1710.OpenAIEmbeddingsAPI
-// property files : cs.OpenAIFilesAPI
+property files : cs:C1710.OpenAIFilesAPI
 property images : cs:C1710.OpenAIImagesAPI
 // property audio : cs.OpenAIAudioAPI
 property moderations : cs:C1710.OpenAIModerationsAPI
@@ -93,7 +93,7 @@ Class constructor( ...  : Variant)
 	//  This:C1470.completions:=cs:C1710.OpenAICompletionsAPI.new(This:C1470)
 	This:C1470.chat:=cs:C1710.OpenAIChatAPI.new(This:C1470)
 	This:C1470.embeddings:=cs:C1710.OpenAIEmbeddingsAPI.new(This:C1470)
-	// This.files:=cs.OpenAIFilesAPI.new(This)
+	This:C1470.files:=cs:C1710.OpenAIFilesAPI.new(This:C1470)
 	This:C1470.images:=cs:C1710.OpenAIImagesAPI.new(This:C1470)
 	// This.audio:=cs.OpenAIAudioAPI.new(This)
 	This:C1470.moderations:=cs:C1710.OpenAIModerationsAPI.new(This:C1470)
@@ -349,7 +349,7 @@ Function _encodeQueryParameters($queryParameters : Object) : Text
 		return ""
 	End if 
 	
-	return "?"+OB Entries:C1720($queryParameters).map(Formula:C1597($1.value.key+"="+This:C1470._encodeQueryParameter($1.value.value))).join("&")
+	return "?"+OB Entries:C1720($queryParameters).map(Formula:C1597($1.value.key+"="+$2._encodeQueryParameter($1.value.value)); This:C1470).join("&")
 	
 Function _formData($body : Object; $files : Object) : Text
 	
@@ -357,15 +357,62 @@ Function _formData($body : Object; $files : Object) : Text
 	
 	var $key : Text
 	For each ($key; $body)
-		$value+="------{boundary}\r\n\r\n"
+		$value+="--{boundary}\r\n"
+		$value+="Content-Disposition: form-data; name=\""+$key+"\"\r\n\r\n"
 		$value+=String:C10($body[$key])+"\r\n"
 	End for each 
 	
 	For each ($key; $files)
-		$value+="------{boundary}\r\n\r\n"
-		$value+="Content-Disposition: form-data;name=\""+$key+"\";filename=\""+$key+".png\"\r\n"+"Content-Type: image/png\r\n\r\n"
+		var $file : 4D:C1709.File
 		
-		$value+=cs:C1710._ImageUtils.me.toFormData($files[$key])
+		// Check if it's already an image object or a File object
+		If (Value type:C1509($files[$key])=Is object:K8:27)
+			If (OB Instance of:C1731($files[$key]; 4D:C1709.File))
+				$file:=$files[$key]
+			Else 
+				// It's an image object, use the old method
+				$value+="--{boundary}\r\n"
+				$value+="Content-Disposition: form-data; name=\""+$key+"\"; filename=\""+$key+".png\"\r\n"
+				$value+="Content-Type: image/png\r\n\r\n"
+				$value+=cs:C1710._ImageUtils.me.toFormData($files[$key])
+				continue
+			End if 
+		End if 
+		
+		If ($file#Null:C1517)
+			var $filename:=$file.fullName  // Use fullName instead of name to include extension
+			var $mimeType:=""
+			var $ext:=$file.extension
+			
+			// Determine MIME type based on file extension
+			Case of 
+				: ($ext="jsonl") || ($ext="json") || ($ext=".jsonl") || ($ext=".json")
+					$mimeType:="application/json"
+				: ($ext="txt") || ($ext=".txt")
+					$mimeType:="text/plain"
+				: ($ext="csv") || ($ext=".csv")
+					$mimeType:="text/csv"
+				: ($ext="png") || ($ext=".png")
+					$mimeType:="image/png"
+				: ($ext="jpg") || ($ext="jpeg") || ($ext=".jpg") || ($ext=".jpeg")
+					$mimeType:="image/jpeg"
+				Else 
+					$mimeType:="application/octet-stream"
+			End case 
+			
+			$value+="--{boundary}\r\n"
+			$value+="Content-Disposition: form-data; name=\""+$key+"\"; filename=\""+$filename+"\"\r\n"
+			$value+="Content-Type: "+$mimeType+"\r\n\r\n"
+			
+			// Read file content
+			var $fileBlob : Blob
+			$fileBlob:=$file.getContent()
+			$value+=BLOB to text:C555($fileBlob; UTF8 text without length:K22:17)
+			$value+="\r\n"
+		End if 
 	End for each 
+	
+	// Add closing boundary
+	$value+="--{boundary}--"
 	
 	return $value

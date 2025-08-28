@@ -37,6 +37,18 @@
 			"OpenAIEmbeddingsResult"
 		]
 	},
+	"Files": {
+		"classes": [
+			"OpenAIFile",
+			"OpenAIFileDeleted",
+			"OpenAIFileDeletedResult",
+			"OpenAIFileListParameters",
+			"OpenAIFileListResult",
+			"OpenAIFileParameters",
+			"OpenAIFileResult",
+			"OpenAIFilesAPI"
+		]
+	},
 	"FormDemo": {
 		"forms": [
 			"_FormDemo"
@@ -88,6 +100,7 @@
 			"test_openai_embeddings",
 			"test_openai_embeddings_async",
 			"test_openai_errors",
+			"test_openai_files",
 			"test_openai_images",
 			"test_openai_models",
 			"test_openai_models_async",
