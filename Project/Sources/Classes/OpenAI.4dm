@@ -6,7 +6,7 @@
 // property completions : cs:C1710.OpenAICompletionsAPI // deprecated
 property chat : cs:C1710.OpenAIChatAPI
 property embeddings : cs:C1710.OpenAIEmbeddingsAPI
-// property files : cs.OpenAIFilesAPI
+property files : cs:C1710.OpenAIFilesAPI
 property images : cs:C1710.OpenAIImagesAPI
 // property audio : cs.OpenAIAudioAPI
 property moderations : cs:C1710.OpenAIModerationsAPI
@@ -93,7 +93,7 @@ Class constructor( ...  : Variant)
 	//  This:C1470.completions:=cs:C1710.OpenAICompletionsAPI.new(This:C1470)
 	This:C1470.chat:=cs:C1710.OpenAIChatAPI.new(This:C1470)
 	This:C1470.embeddings:=cs:C1710.OpenAIEmbeddingsAPI.new(This:C1470)
-	// This.files:=cs.OpenAIFilesAPI.new(This)
+	This:C1470.files:=cs:C1710.OpenAIFilesAPI.new(This:C1470)
 	This:C1470.images:=cs:C1710.OpenAIImagesAPI.new(This:C1470)
 	// This.audio:=cs.OpenAIAudioAPI.new(This)
 	This:C1470.moderations:=cs:C1710.OpenAIModerationsAPI.new(This:C1470)
@@ -349,7 +349,7 @@ Function _encodeQueryParameters($queryParameters : Object) : Text
 		return ""
 	End if 
 	
-	return "?"+OB Entries:C1720($queryParameters).map(Formula:C1597($1.value.key+"="+This:C1470._encodeQueryParameter($1.value.value))).join("&")
+	return "?"+OB Entries:C1720($queryParameters).map(Formula:C1597($1.value.key+"="+$2._encodeQueryParameter($1.value.value)); This:C1470).join("&")
 	
 Function _formData($body : Object; $files : Object) : Text
 	
