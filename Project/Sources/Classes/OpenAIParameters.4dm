@@ -39,10 +39,22 @@ Class constructor($object : Object)
 	If ($object=Null:C1517)
 		return 
 	End if 
+	
+	This:C1470._formulaThis:=$object
+	// copy simple attributes
 	var $key : Text
 	For each ($key; $object)
 		This:C1470[$key]:=$object[$key]
 	End for each 
+	
+	// copy function (if real function, not available in $object keys)
+	For each ($key; ["onTerminate"; "onResponse"; "onError"; "formula"])
+		If ((This:C1470[$key]=Null:C1517) && ($object[$key]#Null:C1517))
+			This:C1470[$key]:=$object[$key]
+		End if 
+	End for each 
+	
+	
 	This:C1470._formulaThis:=$object
 	
 Function body() : Object
