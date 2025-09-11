@@ -413,7 +413,7 @@ Function createChatHelper()
 	
 	var $stream:=Shift down:C543
 	
-	var $chat:=This:C1470.client.chat.create("You are a helpful assistant."; {stream: $stream; onTerminate: Formula:C1597(cs:C1710._FormDemo.me.onChatHelperReceive($1)); onData: Formula:C1597(cs:C1710._FormDemo.me.onChatHelperReceiveStream($1))})
+	var $chat:=This:C1470.client.chat.create("You are a helpful assistant."; {stream: $stream; onTerminate: Formula:C1597(cs:C1710._FormDemo.me.onChatHelperReceive($1)); onData: Formula:C1597(cs:C1710._FormDemo.me.onChatHelperReceiveStream($1)); onResponse: Formula:C1597(cs:C1710._FormDemo.me.onChatHelperReceiveStream($1))})
 	
 	Form:C1466.chats.push({name: $name; chat: $chat})
 	

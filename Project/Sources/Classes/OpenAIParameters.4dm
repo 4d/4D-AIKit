@@ -1,7 +1,7 @@
 // MARK:- execution params
 
 // Function to call asynchronously when finished. /!\ Be sure your current process not die.
-property formula : 4D:C1709.Function
+property onTerminate : 4D:C1709.Function
 
 // Function to call asynchronously when finished with success. /!\ Be sure your current process not die.
 property onResponse : 4D:C1709.Function
@@ -54,12 +54,11 @@ Function body() : Object
 	
 	return {}
 	
-Function get onTerminate : 4D:C1709.Function
-	return This:C1470.formula
+Function get formula : 4D:C1709.Function
+	return This:C1470.onTerminate
 	
-Function set onTerminate($new : 4D:C1709.Function) : 4D:C1709.Function
-	This:C1470.formula:=$new
-	
+Function set formula($new : 4D:C1709.Function) : 4D:C1709.Function
+	This:C1470.onTerminate:=$new
 	
 Function _isAsync() : Boolean
 	return ((This:C1470.formula#Null:C1517) && (OB Instance of:C1731(This:C1470.formula; 4D:C1709.Function)))\

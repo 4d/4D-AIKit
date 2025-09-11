@@ -39,10 +39,24 @@ property prediction : Object
 // Function to call asynchronously when receiving data. /!\ Be sure your current process not die.
 property onData : 4D:C1709.Function
 
+
 Class extends OpenAIParameters
 
 Class constructor($object : Object)
 	Super:C1705($object)
+	
+Function get formula : 4D:C1709.Function
+	If (This:C1470.stream)
+		return This:C1470.onData
+	End if 
+	return This:C1470.onTerminate
+	
+Function set formula($new : 4D:C1709.Function) : 4D:C1709.Function
+	If (This:C1470.stream)
+		This:C1470.onData:=$new
+	Else 
+		This:C1470.onTerminate:=$new
+	End if 
 	
 Function body() : Object
 	var $body : Object:=Super:C1706.body()
