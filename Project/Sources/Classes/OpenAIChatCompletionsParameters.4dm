@@ -32,6 +32,10 @@ Class extends OpenAIParameters
 Class constructor($object : Object)
 	Super:C1705($object)
 	
+	If ((This:C1470.onData=Null:C1517) && ($object.onData#Null:C1517))
+		This:C1470.onData:=$object.onData
+	End if 
+	
 Function body() : Object
 	var $body : Object:=Super:C1706.body()
 	
