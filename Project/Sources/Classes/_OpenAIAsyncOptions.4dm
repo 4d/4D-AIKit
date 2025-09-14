@@ -29,8 +29,7 @@ Class constructor($options : Object; $client : cs:C1710.OpenAI; $parameters : cs
 	// MARK:- HTTP callback
 Function onTerminate($request : 4D:C1709.HTTPRequest; $event : Object)
 	If (Bool:C1537(This:C1470._parameters.stream))
-		var $result:=cs:C1710.OpenAIChatCompletionsStreamResult.new($request; $request.response.body)
-		$result._terminated:=True:C214
+		var $result:=cs:C1710.OpenAIChatCompletionsStreamResult.new($request; $request.response.body; True:C214)
 		_openAICallbacks(This:C1470._parameters; $result; This:C1470._client)
 	Else 
 		This:C1470._result._terminated:=True:C214  // force terminated because onTerminate is before onTerminated
@@ -57,10 +56,14 @@ Function onData($request : 4D:C1709.HTTPRequest; $event : Object)
 				continue  // XXX: maybe use that to replace terminated event?
 			End if 
 			
-			var $chunkResult:=cs:C1710.OpenAIChatCompletionsStreamResult.new($request; $line)
+			var $chunkResult:=cs:C1710.OpenAIChatCompletionsStreamResult.new($request; $line; False:C215)
 			
-			var $formula:=(This:C1470._parameters.onData=Null:C1517) ? This:C1470._parameters.formula : This:C1470._parameters.onData
-			$formula.call(This:C1470._parameters._formulaThis || This:C1470._client; $chunkResult)
+			If (This:C1470._parameters.onData#Null:C1517)
+				This:C1470._parameters.onData.call(This:C1470._parameters._formulaThis || This:C1470._client; $chunkResult)
+			End if 
+			If (This:C1470._parameters.formula#Null:C1517)
+				This:C1470._parameters.formula.call(This:C1470._parameters._formulaThis || This:C1470._client; $chunkResult)
+			End if 
 			
 		End for each 
 		
