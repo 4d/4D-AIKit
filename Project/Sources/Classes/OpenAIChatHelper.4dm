@@ -5,7 +5,12 @@ property parameters : cs:C1710.OpenAIChatCompletionsParameters
 
 property messages : Collection:=[]
 
-property _userFormula : 4D:C1709.Function
+// user formula call save
+property _onData : 4D:C1709.Function
+property _onTerminate : 4D:C1709.Function
+property _onError : 4D:C1709.Function
+property _onResponse : 4D:C1709.Function
+property _formula : 4D:C1709.Function
 
 property lastErrors : Collection
 
@@ -23,20 +28,35 @@ Class constructor($chat : cs:C1710.OpenAIChatAPI; $systemPrompt : Text; $paramet
 	
 	If (This:C1470.parameters._isAsync())
 		// save user formula
-		If (This:C1470.parameters.stream)
-			This:C1470._userFormula:=This:C1470.parameters.onData || This:C1470.parameters.formula
+		This:C1470._onData:=This:C1470.parameters.onData
+		This:C1470._onTerminate:=This:C1470.parameters.onTerminate
+		This:C1470._onResponse:=This:C1470.parameters.onResponse
+		This:C1470._onError:=This:C1470.parameters.onError
+		This:C1470._formula:=This:C1470.parameters.formula
+		
+		If (This:C1470.parameters.onData#Null:C1517)
 			This:C1470.parameters.onData:=This:C1470._manageAsyncResponse
-		Else 
-			This:C1470._userFormula:=This:C1470.parameters.onTerminate || This:C1470.parameters.formula
+		End if 
+		If (This:C1470.parameters.onTerminate#Null:C1517)
 			This:C1470.parameters.onTerminate:=This:C1470._manageAsyncResponse
 		End if 
+		If (This:C1470.parameters.onResponse#Null:C1517)
+			This:C1470.parameters.onResponse:=This:C1470._manageAsyncResponse
+		End if 
+		If (This:C1470.parameters.onError#Null:C1517)
+			This:C1470.parameters.onError:=This:C1470._manageAsyncResponse
+		End if 
+		If (This:C1470.parameters.formula#Null:C1517)
+			This:C1470.parameters.formula:=This:C1470._manageAsyncResponse
+		End if 
+		
 		// to replace by one of us
 		This:C1470.parameters._formulaThis:=This:C1470
 	End if 
 	
 Function prompt($prompt : Text) : cs:C1710.OpenAIChatCompletionsResult
 	
-	If (This:C1470.parameters.formula#Null:C1517)
+	If (This:C1470.parameters._isAsync())
 		Use (This:C1470.messages)
 			This:C1470.messages.push(OB Copy:C1225(cs:C1710.OpenAIMessage.new({role: "user"; content: $prompt}); ck shared:K85:29; This:C1470.messages))
 		End use 
@@ -49,7 +69,7 @@ Function prompt($prompt : Text) : cs:C1710.OpenAIChatCompletionsResult
 	
 	var $result:=This:C1470.chat.completions.create($messages; This:C1470.parameters)
 	If ($result#Null:C1517)
-		This:C1470._manageResponse($result)
+		This:C1470._manageResponse($result)  // sync
 	End if 
 	return $result
 	
@@ -72,13 +92,15 @@ Function _manageResponse($result : Object)
 	
 	If (This:C1470.parameters.stream)
 		
-		If (($result.choice=Null:C1517) || ($result.choice.delta=Null:C1517))
-			return 
-		End if 
-		
 		If ($result.terminated)
 			
+			This:C1470._notifyOnTerminate($result)
+			
 		Else 
+			
+			If (($result.choice=Null:C1517) || ($result.choice.delta=Null:C1517))
+				return 
+			End if 
 			
 			var $message:=This:C1470.messages.last()
 			Case of 
@@ -88,10 +110,18 @@ Function _manageResponse($result : Object)
 					$message.text+=$result.choice.delta.text
 			End case 
 			
+			If (This:C1470._onData#Null:C1517)
+				This:C1470._onData.call(This:C1470.chat._client; $result)
+			End if 
+			If (This:C1470._formula#Null:C1517)
+				This:C1470._formula.call(This:C1470.chat._client; $result)
+			End if 
+			
 		End if 
 		
 	Else 
 		If (Not:C34($result.terminated))
+			// must not occurs
 			return 
 		End if 
 		
@@ -107,15 +137,32 @@ Function _manageResponse($result : Object)
 			
 		End if 
 		
+		This:C1470._notifyOnTerminate($result)
+		
 	End if 
 	
-Function _manageAsyncResponse($result : Object)
-	
-	This:C1470._manageResponse($result)
-	
-	If ($result#Null:C1517)
-		If (This:C1470._userFormula#Null:C1517)
-			This:C1470._userFormula.call(This:C1470.chat._client; $result)
+Function _notifyOnTerminate($result)
+	If ($result.success)
+		
+		If (This:C1470._onResponse#Null:C1517)
+			This:C1470._onResponse.call(This:C1470.chat._client; $result)
+		End if 
+		
+	Else 
+		
+		If (This:C1470._onError#Null:C1517)
+			This:C1470._onError.call(This:C1470.chat._client; $result)
 		End if 
 		
 	End if 
+	
+	If (This:C1470._onTerminate#Null:C1517)
+		This:C1470._onTerminate.call(This:C1470.chat._client; $result)
+	End if 
+	If (This:C1470._formula#Null:C1517)
+		This:C1470._formula.call(This:C1470.chat._client; $result)
+	End if 
+	
+Function _manageAsyncResponse($result : Object)
+	This:C1470._manageResponse($result)
+	
