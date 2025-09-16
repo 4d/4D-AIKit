@@ -4,7 +4,8 @@ If ($client=Null:C1517)
 	return   // skip test
 End if 
 
-var $model:="text-embedding-ada-002"
+var $model : Text:=cs:C1710._TestModels.new($client).embeddings
+
 var $result:=$client.embeddings.create("A futuristic city skyline at sunset"; $model; {})
 
 If (Asserted:C1132(Bool:C1537($result.success); "Cannot create embedding : "+JSON Stringify:C1217($result)))

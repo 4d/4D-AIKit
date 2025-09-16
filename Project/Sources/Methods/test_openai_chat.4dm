@@ -5,7 +5,7 @@ If ($client=Null:C1517)
 End if 
 
 // MARK:- chat
-var $modelName:="gpt-4o-mini"
+var $modelName:=cs:C1710._TestModels.new($client).chats
 
 var $messages:=[cs:C1710.OpenAIMessage.new({role: "system"; content: "You are a helpful assistant."})]
 $messages.push({role: "user"; content: "Could you explain me why 42 is a special number"})

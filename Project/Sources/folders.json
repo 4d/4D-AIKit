@@ -96,6 +96,7 @@
 			"TestOpenAI"
 		],
 		"classes": [
+			"_TestModels",
 			"_TestSignal"
 		]
 	},

@@ -4,11 +4,13 @@ If ($client=Null:C1517)
 	return   // skip test
 End if 
 
+var $modelName:=cs:C1710._TestModels.new($client).chats
+
 // MARK:- chat helper
 
 cs:C1710._TestSignal.me.init()
 
-var $helper:=$client.chat.create("You are a helpful assistant."; {formula: Formula:C1597(cs:C1710._TestSignal.me.trigger($1))})
+var $helper:=$client.chat.create("You are a helpful assistant."; {model: $modelName; formula: Formula:C1597(cs:C1710._TestSignal.me.trigger($1))})
 
 CALL WORKER:C1389(Current method name:C684; Formula:C1597($helper.prompt("Could you explain me why 42 is a special number")))
 

@@ -6,6 +6,7 @@ var $client:=cs:C1710.OpenAI.new()
 
 // local
 // $client.baseURL:="http://127.0.0.1:11434/v1"  // ollama 
+// $client.baseURL:="http://ollama:11434/v1"  // ollama in my /etc/hosts
 // $client.baseURL:="http://127.0.0.1:8080" // mudler/LocalAI
 
 // remote
