@@ -5,29 +5,39 @@ property _body : Object
 
 property _decodingErrors : Collection
 
+// property _chunks : Collection
+
 Class extends OpenAIResult
 
 // Build stream result with event blob data.
-Class constructor($request : 4D:C1709.HTTPRequest; $body : Variant)
+Class constructor($request : 4D:C1709.HTTPRequest; $body : Variant; $terminated : Boolean)
 	This:C1470.request:=$request
+	This:C1470._terminated:=$terminated
 	
 	Case of 
 		: (Value type:C1509($body)=Is text:K8:3)
 			var $textData:=$body
+			
+			// trim blank lines at the end
 			//%W-533.1
 			While ((Length:C16($textData)>0) && $textData[[Length:C16($textData)]]="\n")
 				//%W+533.1
 				$textData:=Substring:C12($textData; 1; Length:C16($textData)-1)
 			End while 
 			
-			var $pos:=Position:C15("{"; $textData)
-			If ($pos>0)
-				$textData:=Substring:C12($textData; $pos)  // remove "data:"
-			End if 
-			
-			This:C1470.data:=Try(JSON Parse:C1218($textData))
-			If (This:C1470.data=Null:C1517)
-				This:C1470._decodingErrors:=Last errors:C1799
+			If ($terminated)
+				var $lines:=Split string:C1554($textData; "data: ")
+				var $done : Text:=$lines.pop()
+				If ($done="[DONE]")
+					This:C1470.data:=This:C1470._parseDataLine($lines.last())  // send last chunk with finish reason
+					
+					// This._chunks:=$lines.filter(Formula(Length($1.value)>0)).map(Formula(Try($2._parseDataLine($1.value))); This)
+					
+				Else 
+					This:C1470.data:=This:C1470._parseDataLine($done)  // could have have errors
+				End if 
+			Else 
+				This:C1470.data:=This:C1470._parseDataLine($textData)
 			End if 
 			
 		: (Value type:C1509($body)=Is object:K8:27)
@@ -79,16 +89,32 @@ Function get choice : cs:C1710.OpenAIChoice
 	// Return choices data, with delta messages.
 Function get choices : Collection
 	var $body:=This:C1470.data
-	If (($body=Null:C1517) || (Not:C34(Value type:C1509($body.choices)=Is collection:K8:32)))
-		return []
-	End if 
 	
-	return $body.choices.map(Formula:C1597(cs:C1710.OpenAIChoice.new($1.value)))
-	
-	// Return text data
-Function get text : Text
-	return This:C1470.choices.map(Formula:C1597($1.delta=Null:C1517 ? "" : $1.delta.text)).join("")
+	Case of 
+		: ($body=Null:C1517)
+			return []
+		: (Value type:C1509($body.choices)=Is collection:K8:32)
+			return $body.choices.map(Formula:C1597(cs:C1710.OpenAIChoice.new($1.value)))
+		Else 
+			return []
+	End case 
 	
 	// Return the usage data for the second-to-last Stream result. For other it will be null.
 Function get usage : Object
 	return (This:C1470.data=Null:C1517) ? Null:C1517 : This:C1470.data.usage
+	
+Function _parseDataLine($textData : Text) : Object
+	var $pos:=Position:C15("{"; $textData)
+	If ($pos>0)
+		$textData:=Substring:C12($textData; $pos)  // ie. remove "data: before json line", XXX: maybe just check data: 
+	End if 
+	
+	var $data:=Try(JSON Parse:C1218($textData))
+	If ($data=Null:C1517)
+		If (This:C1470._decodingErrors=Null:C1517)
+			This:C1470._decodingErrors:=Last errors:C1799
+		Else 
+			This:C1470._decodingErrors.combine(Last errors:C1799)
+		End if 
+	End if 
+	return $data

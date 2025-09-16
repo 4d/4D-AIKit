@@ -1,13 +1,16 @@
 // MARK:- execution params
 
 // Function to call asynchronously when finished. /!\ Be sure your current process not die.
-property formula : 4D:C1709.Function
+property onTerminate : 4D:C1709.Function
 
 // Function to call asynchronously when finished with success. /!\ Be sure your current process not die.
 property onResponse : 4D:C1709.Function
 
 // Function to call asynchronously when finished with errors. /!\ Be sure your current process not die.
 property onError : 4D:C1709.Function
+
+// Function to call asynchronously when finished or when data is received. /!\ Be sure your current process not die.
+property formula : 4D:C1709.Function
 
 // replace This object when calling formula
 property _formulaThis : Object
@@ -66,14 +69,8 @@ Function body() : Object
 	
 	return {}
 	
-Function get onTerminate : 4D:C1709.Function
-	return This:C1470.formula
-	
-Function set onTerminate($new : 4D:C1709.Function) : 4D:C1709.Function
-	This:C1470.formula:=$new
-	
-	
 Function _isAsync() : Boolean
-	return ((This:C1470.formula#Null:C1517) && (OB Instance of:C1731(This:C1470.formula; 4D:C1709.Function)))\
+	return ((This:C1470.onTerminate#Null:C1517) && (OB Instance of:C1731(This:C1470.onTerminate; 4D:C1709.Function)))\
 		 || ((This:C1470.onResponse#Null:C1517) && (OB Instance of:C1731(This:C1470.onResponse; 4D:C1709.Function)))\
-		 || ((This:C1470.onError#Null:C1517) && (OB Instance of:C1731(This:C1470.onError; 4D:C1709.Function)))
+		 || ((This:C1470.onError#Null:C1517) && (OB Instance of:C1731(This:C1470.onError; 4D:C1709.Function)))\
+		 || ((This:C1470.formula#Null:C1517) && (OB Instance of:C1731(This:C1470.formula; 4D:C1709.Function)))
