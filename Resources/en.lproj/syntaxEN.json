@@ -1259,6 +1259,33 @@
 		}
 	},
 	"OpenAIChatHelper": {
+		"registerTool()": {
+			"Syntax": "**.registerTool**( *tool* : Object; *handler* : 4D.Function )",
+			"Params": [
+				[
+					"tool",
+					"Object",
+					"->"
+				],
+				[
+					"handler",
+					"4D.Function",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"registerTools()": {
+			"Syntax": "**.registerTools**( *toolsWithHandlers* : Object )",
+			"Params": [
+				[
+					"toolsWithHandlers",
+					"Object",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
 		"reset()": {
 			"Syntax": "**.reset**()",
 			"Params": [],
@@ -1280,17 +1307,26 @@
 			],
 			"Summary": ""
 		},
+		"autoHandleToolCalls": {
+			"Syntax": "autoHandleToolCalls : Boolean"
+		},
 		"lastErrors": {
 			"Syntax": "lastErrors : Collection"
+		},
+		"toolHandlers": {
+			"Syntax": "toolHandlers : Object"
+		},
+		"tools": {
+			"Syntax": "tools : Collection"
+		},
+		"numberOfMessages": {
+			"Syntax": "numberOfMessages : Integer"
 		},
 		"chat": {
 			"Syntax": "chat : cs.AIKit.OpenAIChatAPI"
 		},
 		"parameters": {
 			"Syntax": "parameters : cs.AIKit.OpenAIChatCompletionsParameters"
-		},
-		"numberOfMessages": {
-			"Syntax": "numberOfMessages : Integer"
 		},
 		"messages": {
 			"Syntax": "messages : Collection"
