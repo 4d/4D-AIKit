@@ -10,6 +10,8 @@ property _parameters : cs:C1710.OpenAIChatCompletionsParameters
 property _result : cs:C1710.OpenAIResult
 property _onStreamError : Boolean:=False:C215
 
+property _chunkBuffer : Text:=""
+
 // MARK:- constructor
 Class constructor($options : Object; $client : cs:C1710.OpenAI; $parameters : cs:C1710.OpenAIChatCompletionsParameters; $result : cs:C1710.OpenAIResult)
 	var $key : Text
@@ -41,22 +43,36 @@ Function onData($request : 4D:C1709.HTTPRequest; $event : Object)
 	If (((This:C1470._parameters.onData#Null:C1517) || (This:C1470._parameters.formula#Null:C1517)) && (Bool:C1537(This:C1470._parameters.stream)) && (Not:C34(This:C1470._onStreamError)))
 		
 		var $textData:=BLOB to text:C555($event.data; UTF8 C string:K22:15)
+		
+		$textData:=This:C1470._chunkBuffer+$textData
+		This:C1470._chunkBuffer:=""
+		
 		If (Position:C15("{"; $textData)=1)
 			This:C1470._onStreamError:=True:C214
 			// ignore chunk, will be for onTerminate
 			return 
 		End if 
 		
-		var $line : Text
-		For each ($line; Split string:C1554($textData; "\n"))
+		var $lines:=Split string:C1554($textData; "\n")
+		
+		var $lineIndex : Integer
+		For ($lineIndex; 0; $lines.length-1)
+			
+			var $line : Text:=$lines[$lineIndex]
 			If ((Length:C16($line)=0))
 				continue
 			End if 
 			If ($line="data: [DONE]")
-				continue  // XXX: maybe use that to replace terminated event?
+				break
 			End if 
 			
 			var $chunkResult:=cs:C1710.OpenAIChatCompletionsStreamResult.new($request; $line; False:C215)
+			If (($chunkResult._decodingErrors#Null:C1517) && ($chunkResult._decodingErrors.length>0) && (Position:C15("data:"; $line)>0) && ($lineIndex=($lines.length-1)))
+				// if we cannot decode last line, we suppose packet not complete, keep in buffer for next line
+				// to do better, maybe analyse brackets etc...
+				This:C1470._chunkBuffer:=$line
+				continue
+			End if 
 			
 			If (This:C1470._parameters.onData#Null:C1517)
 				This:C1470._parameters.onData.call(This:C1470._parameters._formulaThis || This:C1470._client; $chunkResult)
@@ -65,7 +81,7 @@ Function onData($request : 4D:C1709.HTTPRequest; $event : Object)
 				This:C1470._parameters.formula.call(This:C1470._parameters._formulaThis || This:C1470._client; $chunkResult)
 			End if 
 			
-		End for each 
+		End for 
 		
 	End if 
 	
