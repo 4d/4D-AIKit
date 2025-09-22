@@ -4,7 +4,7 @@ If ($client=Null:C1517)
 	return   // skip test
 End if 
 
-var $model : Text:=cs:C1710._TestModels.new($client).embeddings
+var $model : Text:=cs:C1710._TestModels.new($client).moderation
 
 var $result:=$client.moderations.create("test input"; $model)
 If (Asserted:C1132(Bool:C1537($result.success); "Cannot get moderations result: "+JSON Stringify:C1217($result)))
