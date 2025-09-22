@@ -35,6 +35,10 @@ jobs:
         env:
           LOGIN_KEYCHAIN_PASSWORD: "${{ secrets.KEYCHAIN }}"
 
+      - name: test
+        if: always()
+        run: security find-identity -v -p codesigning
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
