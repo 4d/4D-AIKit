@@ -14,6 +14,16 @@ property _formula : 4D:C1709.Function
 
 property lastErrors : Collection
 
+// List of registered OpenAI tools. Use "registerTool" if you want to automatically handle tool calls functionally.
+property tools : Collection:=[]
+
+// Contains formulas to execute tool calls
+property _toolHandlers : Object:={}
+
+// Boolean indicating whether tool calls are handled automatically using registered tools
+property autoHandleToolCalls : Boolean:=True:C214
+
+// Initialize the chat helper with a system prompt and some parameters
 Class constructor($chat : cs:C1710.OpenAIChatAPI; $systemPrompt : Text; $parameters : cs:C1710.OpenAIChatCompletionsParameters)
 	This:C1470.chat:=$chat
 	This:C1470.systemPrompt:=cs:C1710.OpenAIMessage.new({role: "system"; content: $systemPrompt})
@@ -24,6 +34,11 @@ Class constructor($chat : cs:C1710.OpenAIChatAPI; $systemPrompt : Text; $paramet
 	This:C1470.parameters:=$parameters
 	If (This:C1470.parameters.model=Null:C1517)
 		This:C1470.parameters.model:="gpt-4o-mini"
+	End if 
+	
+	// Initialize tool-related properties if needed
+	If (This:C1470.parameters.tools#Null:C1517)
+		This:C1470.registerTools(This:C1470.parameters.tools)
 	End if 
 	
 	If (This:C1470.parameters._isAsync())
@@ -69,13 +84,170 @@ Function prompt($prompt : Text) : cs:C1710.OpenAIChatCompletionsResult
 	
 	var $result:=This:C1470.chat.completions.create($messages; This:C1470.parameters)
 	If ($result#Null:C1517)
-		This:C1470._manageResponse($result)  // sync
+		$result:=This:C1470._manageResponse($result)  // sync
 	End if 
 	return $result
 	
-	// Reset chat context, ie. remove messages
+	// Reset chat context, ie. remove messages and tools
 Function reset()
 	This:C1470.messages:=[]
+	
+	This:C1470.unregisterTools()
+	
+	// Register a tool with its handler function
+	// If the handler function is not defined, we try to get one from $tool.handler property.
+Function registerTool($tool : Object; $handler : 4D:C1709.Function)
+	If ($tool=Null:C1517)
+		return 
+	End if 
+	
+	If (Not:C34(OB Instance of:C1731($tool; cs:C1710.OpenAITool)))
+		$tool:=cs:C1710.OpenAITool.new($tool)
+	End if 
+	
+	// If not a function type, just add it to parameters
+	If (Not:C34(String:C10($tool.type)="function"))
+		
+		If (This:C1470.parameters.tools=Null:C1517)
+			This:C1470.parameters.tools:=[]
+		End if 
+		This:C1470.parameters.tools.push($tool)
+		
+		return 
+		
+	End if 
+	
+	var $functionName : Text:=$tool.name
+	
+	// Remove existing tool if it exists (this handles all cleanup)
+	This:C1470.unregisterTool($functionName)
+	
+	If ($handler=Null:C1517)
+		$handler:=$tool.handler
+	End if 
+	
+	If ($handler=Null:C1517)
+		// throw(1; "You must defined an handler for the tool "+$functionName)
+		return 
+	End if 
+	
+	// Add tool to the tools collection
+	This:C1470.tools.push($tool)
+	
+	// Register the handler function
+	This:C1470._toolHandlers[$functionName]:=$handler
+	
+	// Add tools to parameters if not already set
+	If (This:C1470.parameters.tools=Null:C1517)
+		This:C1470.parameters.tools:=[]
+	End if 
+	
+	// Add the new tool to parameters
+	This:C1470.parameters.tools.push($tool)
+	
+	// Register multiple tools at once.
+	// Tools to be registered need an handler function.
+Function registerTools($toolsWithHandlers : Variant)
+	Case of 
+		: ($toolsWithHandlers=Null:C1517)
+			return 
+			
+		: (Value type:C1509($toolsWithHandlers)=Is object:K8:27)
+			
+			var $functionName : Text
+			For each ($functionName; $toolsWithHandlers)
+				var $toolInfo : Object:=$toolsWithHandlers[$functionName]
+				
+				var $tool : Object:=($toolInfo.tool=Null:C1517) ? $toolInfo : $toolInfo.tool
+				If ($tool=Null:C1517)
+					continue
+				End if 
+				
+				// help if name not filled?
+				If (($tool.name=Null:C1517) || (($tool.function#Null:C1517) && (String:C10($tool.type)="function") && ($tool.function.name=Null:C1517)))
+					
+					If ($tool.function#Null:C1517)
+						$tool.function.name:=$functionName
+					Else 
+						$tool.name:=$functionName
+					End if 
+				End if 
+				
+				// finally register
+				This:C1470.registerTool($tool; $toolInfo.handler)
+				
+			End for each 
+			
+		: (Value type:C1509($toolsWithHandlers)=Is collection:K8:32)
+			
+			For each ($toolInfo; $toolsWithHandlers)
+				
+				$tool:=($toolInfo.tool=Null:C1517) ? $toolInfo : $toolInfo.tool
+				If ($tool=Null:C1517)
+					continue
+				End if 
+				
+				If (($tool.name=Null:C1517) && ($tool.type=Null:C1517))
+					continue
+				End if 
+				This:C1470.registerTool($tool; $toolInfo.handler)
+				
+			End for each 
+			
+		Else 
+			
+			ASSERT:C1129(False:C215; "Wrong type parameter when registering tools")
+			
+	End case 
+	
+	
+	// Unregister a specific tool by function name
+Function unregisterTool($functionName : Text)
+	If (Length:C16($functionName)=0)
+		return 
+	End if 
+	
+	// Remove from toolHandlers
+	If (This:C1470._toolHandlers[$functionName]#Null:C1517)
+		OB REMOVE:C1226(This:C1470._toolHandlers; $functionName)
+	End if 
+	
+	// Remove from tools collection
+	var $index : Integer:=0
+	While ($index<This:C1470.tools.length)
+		If (This:C1470.tools[$index].name=$functionName)
+			This:C1470.tools.remove($index)
+			break
+		Else 
+			$index+=1
+		End if 
+	End while 
+	
+	// Remove from parameters.tools collection
+	If (This:C1470.parameters.tools#Null:C1517)
+		$index:=0
+		While ($index<This:C1470.parameters.tools.length)
+			If (This:C1470.parameters.tools[$index].name=$functionName)
+				This:C1470.parameters.tools.remove($index)
+				break
+			Else 
+				$index+=1
+			End if 
+		End while 
+	End if 
+	
+	// Unregister all tools
+Function unregisterTools()
+	// Clear all tool handlers
+	This:C1470._toolHandlers:={}
+	
+	// Clear tools collection
+	This:C1470.tools:=[]
+	
+	// Clear tools from parameters
+	If (This:C1470.parameters.tools#Null:C1517)
+		This:C1470.parameters.tools:=[]
+	End if 
 	
 	// Remove the first message if there are more than numberOfMessages.
 Function _trim()
@@ -85,7 +257,7 @@ Function _trim()
 		End while 
 	End if 
 	
-Function _manageResponse($result : Object)
+Function _manageResponse($result : Object) : Object
 	If ($result=Null:C1517)
 		return 
 	End if 
@@ -122,7 +294,7 @@ Function _manageResponse($result : Object)
 	Else 
 		If (Not:C34($result.terminated))
 			// must not occurs
-			return 
+			return $result
 		End if 
 		
 		If ($result.success)
@@ -130,6 +302,14 @@ Function _manageResponse($result : Object)
 			This:C1470.messages.push($result.choice.message)
 			
 			This:C1470._trim()
+			
+			// Check for tool calls and handle them automatically
+			If (This:C1470.autoHandleToolCalls) && ($result.choice.message.tool_calls#Null:C1517)
+				This:C1470._handleToolCalls($result)
+				If ($result._newResult#Null:C1517)
+					return $result._newResult  // we already manage _notifyOnTerminate
+				End if 
+			End if 
 			
 		Else 
 			
@@ -140,6 +320,7 @@ Function _manageResponse($result : Object)
 		This:C1470._notifyOnTerminate($result)
 		
 	End if 
+	return $result
 	
 Function _notifyOnTerminate($result)
 	If ($result.success)
@@ -165,4 +346,104 @@ Function _notifyOnTerminate($result)
 	
 Function _manageAsyncResponse($result : Object)
 	This:C1470._manageResponse($result)
+	
+	// Handle tool calls automatically
+Function _handleToolCalls($result : cs:C1710.OpenAIChatCompletionsResult)
+	
+	var $toolCalls : Collection:=$result.choice.message.tool_calls
+	If ($toolCalls=Null:C1517) || ($toolCalls.length=0)
+		return 
+	End if 
+	
+	var $toolResponses : Collection:=[]
+	var $toolCall : Object
+	For each ($toolCall; $toolCalls)
+		If ($toolCall.function=Null:C1517) || ($toolCall.function.name=Null:C1517)
+			continue
+		End if 
+		
+		var $functionName : Text:=$toolCall.function.name
+		var $handler : 4D:C1709.Function:=This:C1470._toolHandlers[$functionName]
+		
+		If ($handler=Null:C1517)
+			// No handler registered for this function
+			var $noHandlerResponse:=cs:C1710.OpenAIMessage.new()
+			$noHandlerResponse.role:="tool"
+			$noHandlerResponse.tool_call_id:=$toolCall.id
+			$noHandlerResponse.content:="Error: No handler registered for function '"+$functionName+"'"
+			$toolResponses.push($noHandlerResponse)
+			continue
+		End if 
+		
+		// Parse function arguments
+		var $arguments : Object
+		If ($toolCall.function.arguments#Null:C1517)
+			Try
+				$arguments:=JSON Parse:C1218($toolCall.function.arguments)
+			Catch
+				var $parseErrorResponse:=cs:C1710.OpenAIMessage.new()
+				$parseErrorResponse.role:="tool"
+				$parseErrorResponse.tool_call_id:=$toolCall.id
+				$parseErrorResponse.content:="Error: Invalid JSON arguments for function '"+$functionName+"'"
+				$toolResponses.push($parseErrorResponse)
+				continue
+			End try
+		Else 
+			$arguments:={}
+		End if 
+		
+		// Execute the tool function
+		Try
+			var $resultHandler : Variant:=$handler.call(This:C1470; $arguments)
+			
+			var $toolResponse:=cs:C1710.OpenAIMessage.new()
+			$toolResponse.role:="tool"
+			$toolResponse.tool_call_id:=$toolCall.id
+			
+			// Convert result to string if necessary
+			Case of 
+				: (Value type:C1509($resultHandler)=Is text:K8:3)
+					$toolResponse.content:=$resultHandler
+				: (Value type:C1509($resultHandler)=Is object:K8:27) || (Value type:C1509($resultHandler)=Is collection:K8:32)
+					$toolResponse.content:=JSON Stringify:C1217($resultHandler)
+				Else 
+					$toolResponse.content:=String:C10($resultHandler)
+			End case 
+			
+			$toolResponses.push($toolResponse)
+			
+		Catch
+			var $executionErrorResponse:=cs:C1710.OpenAIMessage.new()
+			$executionErrorResponse.role:="tool"
+			$executionErrorResponse.tool_call_id:=$toolCall.id
+			$executionErrorResponse.content:="Error executing function '"+$functionName+"': "+Last errors:C1799.last().message
+			$toolResponses.push($executionErrorResponse)
+		End try
+		
+	End for each 
+	
+	// Add tool responses to messages
+	var $response : cs:C1710.OpenAIMessage
+	For each ($response; $toolResponses)
+		This:C1470.messages.push($response)
+	End for each 
+	
+	// Continue the conversation by making another API call
+	This:C1470._continueConversationAfterToolCalls($result)
+	
+	// Continue conversation after tool calls
+Function _continueConversationAfterToolCalls($result : cs:C1710.OpenAIChatCompletionsResult)
+	var $messages : Collection:=This:C1470.messages.copy()
+	$messages.unshift(This:C1470.systemPrompt)
+	
+	// Create a copy of parameters without modifying the original
+	var $parameters : cs:C1710.OpenAIChatCompletionsParameters:=cs:C1710.OpenAIChatCompletionsParameters.new(This:C1470.parameters)
+	
+	// Make another call to continue the conversation
+	var $newResult:=This:C1470.chat.completions.create($messages; $parameters)
+	If ($newResult#Null:C1517)
+		//%W-550.26
+		$result._newResult:=This:C1470._manageResponse($newResult)  // This will handle sync
+		//%W+550.26
+	End if 
 	

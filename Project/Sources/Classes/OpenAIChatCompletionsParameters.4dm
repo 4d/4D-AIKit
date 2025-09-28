@@ -48,6 +48,34 @@ Class constructor($object : Object)
 		This:C1470.onData:=$object.onData
 	End if 
 	
+	This:C1470._mapTools()
+	
+	
+Function _mapTools
+	If (This:C1470.tools=Null:C1517)
+		return 
+	End if 
+	If (This:C1470.tools.length=0)
+		return 
+	End if 
+	
+	var $tools:=[]
+	var $tool : Variant
+	For each ($tool; This:C1470.tools)
+		If (Value type:C1509($tool)#Is object:K8:27)
+			continue  // ignore
+		End if 
+		
+		If (OB Instance of:C1731($tool; cs:C1710.OpenAITool))
+			$tools.push($tool)
+		Else 
+			$tools.push(cs:C1710.OpenAITool.new($tool))
+		End if 
+		
+	End for each 
+	
+	This:C1470.tools:=$tools
+	
 Function body() : Object
 	var $body : Object:=Super:C1706.body()
 	
@@ -78,8 +106,10 @@ Function body() : Object
 	If (This:C1470.response_format#Null:C1517)
 		$body.response_format:=This:C1470.response_format
 	End if 
+	
+	This:C1470._mapTools()  // in case of post modification
 	If (This:C1470.tools#Null:C1517)
-		$body.tools:=This:C1470.tools
+		$body.tools:=This:C1470.tools.map(Formula:C1597($1.value.body()))
 	End if 
 	If (This:C1470.tool_choice#Null:C1517)
 		$body.tool_choice:=This:C1470.tool_choice
