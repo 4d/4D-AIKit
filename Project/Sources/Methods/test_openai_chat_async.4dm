@@ -17,7 +17,7 @@ CALL WORKER:C1389(Current method name:C684; Formula:C1597($client.chat.completio
 
 cs:C1710._TestSignal.me.wait(10*1000)
 
-$result:=cs:C1710._TestSignal.me.result
+var $result : cs:C1710.OpenAIChatCompletionsResult:=cs:C1710._TestSignal.me.result
 
 If (Asserted:C1132(Bool:C1537($result.success); "Cannot complete chat : "+JSON Stringify:C1217($result)))
 	
@@ -43,8 +43,8 @@ CALL WORKER:C1389(Current method name:C684; Formula:C1597($client.chat.completio
 
 cs:C1710._TestSignal.me.wait(10*1000)
 
-$streamResult:=cs:C1710._TestSignal.me.result
-$streamResults:=cs:C1710._TestSignal.me.chunks
+var $streamResult : cs:C1710.OpenAIChatCompletionsStreamResult:=cs:C1710._TestSignal.me.result
+var $streamResults:=cs:C1710._TestSignal.me.chunks
 
 If (Asserted:C1132(Bool:C1537($streamResult.success); "Cannot complete chat completions stream : "+JSON Stringify:C1217($streamResult)))
 	
