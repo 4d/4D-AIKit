@@ -1,6 +1,6 @@
 property chat : cs:C1710.OpenAIChatAPI
 property systemPrompt : cs:C1710.OpenAIMessage
-property numberOfMessages : Integer:=5
+property numberOfMessages : Integer:=15
 property parameters : cs:C1710.OpenAIChatCompletionsParameters
 
 property messages : Collection:=[]
@@ -305,7 +305,7 @@ Function _manageResponse($result : Object) : Object
 			var $message:=This:C1470.messages.last()
 			Case of 
 				: ($message.role="assistant")
-					$message._mergeDelta($result.choice.delta)
+					$message._accumulateDelta($result.choice.delta)
 				Else 
 					This:C1470._pushMessage($result.choice.delta)
 			End case 

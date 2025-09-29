@@ -1344,27 +1344,6 @@
 			],
 			"Summary": ""
 		},
-		"unregisterTools()": {
-			"Syntax": "**.unregisterTools**()",
-			"Params": [],
-			"Summary": ""
-		},
-		"registerTool()": {
-			"Syntax": "**.registerTool**( *tool* : Object; *handler* : 4D.Function )",
-			"Params": [
-				[
-					"tool",
-					"Object",
-					"->"
-				],
-				[
-					"handler",
-					"4D.Function",
-					"->"
-				]
-			],
-			"Summary": ""
-		},
 		"registerTools()": {
 			"Syntax": "**.registerTools**( *toolsWithHandlers* : Variant )",
 			"Params": [
@@ -1393,6 +1372,27 @@
 					"",
 					"cs.AIKit.OpenAIChatCompletionsResult",
 					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"unregisterTools()": {
+			"Syntax": "**.unregisterTools**()",
+			"Params": [],
+			"Summary": ""
+		},
+		"registerTool()": {
+			"Syntax": "**.registerTool**( *tool* : Object; *handler* : 4D.Function )",
+			"Params": [
+				[
+					"tool",
+					"Object",
+					"->"
+				],
+				[
+					"handler",
+					"4D.Function",
+					"->"
 				]
 			],
 			"Summary": ""

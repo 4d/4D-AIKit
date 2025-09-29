@@ -94,6 +94,21 @@ $getTableInfoTool.function.parameters.additionalProperties:=False:C215
 var $toolHandlerWithParams:=Formula:C1597(JSON Stringify:C1217({tableName: $1.tableName; columns: ["id"; "name"; "email"; "created_at"]; fieldCount: 4; recordCount: 42; fields: ["id"; "name"; "email"; "created_at"]; description: "User accounts table"}))
 $toolsHelperWithParams.registerTool($getTableInfoTool; $toolHandlerWithParams)
 
+/*$getTableInfoTool2:=OB Copy($getTableInfoTool)
+$getTableInfoTool2.function.name+="2"
+$getTableInfoTool3:=OB Copy($getTableInfoTool)
+$getTableInfoTool2.function.name+="3"
+$getTableInfoTool4:=OB Copy($getTableInfoTool)
+$getTableInfoTool2.function.name+="4"
+$getTableInfoTool5:=OB Copy($getTableInfoTool)
+$getTableInfoTool2.function.name+="5"
+
+$toolsHelperWithParams.registerTool($getTableInfoTool2; $toolHandlerWithParams)
+$toolsHelperWithParams.registerTool($getTableInfoTool3; $toolHandlerWithParams)
+$toolsHelperWithParams.registerTool($getTableInfoTool4; $toolHandlerWithParams)
+$toolsHelperWithParams.registerTool($getTableInfoTool5; $toolHandlerWithParams)*/
+
+
 // Test async tool call with parameters
 CALL WORKER:C1389(Current method name:C684; Formula:C1597($toolsHelperWithParams.prompt("Can you give me detailed information about the Users table?")))
 

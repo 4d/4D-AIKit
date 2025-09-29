@@ -99,6 +99,7 @@
 			"test_openai_models",
 			"test_openai_models_async",
 			"test_openai_moderations",
+			"test_openai_msg_accumulate",
 			"test_openai_vision",
 			"TestOpenAI"
 		],
