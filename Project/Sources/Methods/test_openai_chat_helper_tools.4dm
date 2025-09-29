@@ -19,8 +19,8 @@ required: []; \
 additionalProperties: False:C215}; \
 strict: True:C214}
 
-// Register the tool with its handler
-var $toolHandler:=Formula:C1597(JSON Stringify:C1217(OB Keys:C1719(ds:C1482)))
+// Register the tool with its handler using pre-constructed response
+var $toolHandler:=Formula:C1597(JSON Stringify:C1217(["Users"; "Orders"; "Products"; "Categories"]))
 // This function will be called when OpenAI requests to use the tool
 
 $helper.registerTool($getDatabaseTablesTool; $toolHandler)
@@ -76,8 +76,8 @@ $getTableInfoTool.function.parameters.properties.tableName:={type: "string"; des
 $getTableInfoTool.function.parameters.required:=["tableName"]
 $getTableInfoTool.function.parameters.additionalProperties:=False:C215
 
-// Register the tool with a handler that uses the arguments
-$helper.registerTool($getTableInfoTool; Formula:C1597(_table_info_handler_test($1)))
+// Register the tool with a handler that uses pre-constructed table info response
+$helper.registerTool($getTableInfoTool; Formula:C1597(JSON Stringify:C1217({tableName: $1.tableName; columns: ["id"; "name"; "email"; "created_at"]; fieldCount: 4; recordCount: 42; fields: ["id"; "name"; "email"; "created_at"]; description: "User accounts table"})))
 
 // Test the tool call with arguments
 var $result2:=$helper.prompt("Can you give me detailed information about the Users table?")

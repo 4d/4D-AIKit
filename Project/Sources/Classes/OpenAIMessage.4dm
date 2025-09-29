@@ -94,3 +94,26 @@ Function _extractJSONObject() : Object
 	$message:=Substring:C12($message; 1; $pos)
 	
 	return Try(JSON Parse:C1218($message))
+	
+Function _mergeDelta($delta : cs:C1710.OpenAIMessage)
+	Use (This:C1470)  // xxx: could be check ob is shared...
+		
+		This:C1470.text+=$delta.text
+		
+		If ($delta.tool_calls#Null:C1517)
+			var $tool_call; $delta_tool_call : Object
+			For each ($delta_tool_call; $delta.tool_calls)
+				
+				$tool_call:=This:C1470.tool_calls.find(Formula:C1597($1.value.index=$2); $delta_tool_call.index)
+				If ($tool_call#Null:C1517)
+					
+					$tool_call.function.arguments+=$delta_tool_call.function.arguments
+					
+					// XXX else assert? or log
+				End if 
+				
+			End for each 
+			
+		End if 
+		
+	End use 

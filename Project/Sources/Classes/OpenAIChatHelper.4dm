@@ -42,6 +42,9 @@ Class constructor($chat : cs:C1710.OpenAIChatAPI; $systemPrompt : Text; $paramet
 	End if 
 	
 	If (This:C1470.parameters._isAsync())
+		
+		This:C1470.messages:=New shared collection:C1527
+		
 		// save user formula
 		This:C1470._onData:=This:C1470.parameters.onData
 		This:C1470._onTerminate:=This:C1470.parameters.onTerminate
@@ -69,15 +72,19 @@ Class constructor($chat : cs:C1710.OpenAIChatAPI; $systemPrompt : Text; $paramet
 		This:C1470.parameters._formulaThis:=This:C1470
 	End if 
 	
-Function prompt($prompt : Text) : cs:C1710.OpenAIChatCompletionsResult
+Function _pushMessage($message : cs:C1710.OpenAIMessage)
 	
-	If (This:C1470.parameters._isAsync())
+	If (This:C1470.parameters._isAsync())  // or is shared?
 		Use (This:C1470.messages)
-			This:C1470.messages.push(OB Copy:C1225(cs:C1710.OpenAIMessage.new({role: "user"; content: $prompt}); ck shared:K85:29; This:C1470.messages))
+			This:C1470.messages.push(OB Copy:C1225($message; ck shared:K85:29; This:C1470.messages))
 		End use 
 	Else 
-		This:C1470.messages.push(cs:C1710.OpenAIMessage.new({role: "user"; content: $prompt}))
+		This:C1470.messages.push($message)
 	End if 
+	
+Function prompt($prompt : Text) : cs:C1710.OpenAIChatCompletionsResult
+	
+	This:C1470._pushMessage(cs:C1710.OpenAIMessage.new({role: "user"; content: $prompt}))
 	
 	var $messages : Collection:=This:C1470.messages.copy()
 	$messages.unshift(This:C1470.systemPrompt)
@@ -90,7 +97,12 @@ Function prompt($prompt : Text) : cs:C1710.OpenAIChatCompletionsResult
 	
 	// Reset chat context, ie. remove messages and tools
 Function reset()
-	This:C1470.messages:=[]
+	
+	If (This:C1470.parameters._isAsync())
+		This:C1470.messages:=New shared collection:C1527
+	Else 
+		This:C1470.messages:=[]
+	End if 
 	
 	This:C1470.unregisterTools()
 	
@@ -262,9 +274,20 @@ Function _manageResponse($result : Object) : Object
 		return 
 	End if 
 	
+	// MARK: _manageResponse stream
 	If (This:C1470.parameters.stream)
 		
 		If ($result.terminated)
+			
+			If (This:C1470.autoHandleToolCalls && ($result.success) && ($result.choice#Null:C1517) && (String:C10($result.choice.finish_reason)="tool_calls"))
+				
+				var $lastMessage:=This:C1470.messages.last()
+				This:C1470._handleAsyncToolCalls($result; $lastMessage)
+				If ($result._newResult#Null:C1517)
+					return $result._newResult  // we already manage _notifyOnTerminate
+				End if 
+				
+			End if 
 			
 			This:C1470._notifyOnTerminate($result)
 			
@@ -276,10 +299,10 @@ Function _manageResponse($result : Object) : Object
 			
 			var $message:=This:C1470.messages.last()
 			Case of 
-				: ($message.role="user")
-					This:C1470.messages.push($result.choice.delta)
 				: ($message.role="assistant")
-					$message.text+=$result.choice.delta.text
+					$message._mergeDelta($result.choice.delta)
+				Else 
+					This:C1470._pushMessage($result.choice.delta)
 			End case 
 			
 			If (This:C1470._onData#Null:C1517)
@@ -291,6 +314,7 @@ Function _manageResponse($result : Object) : Object
 			
 		End if 
 		
+		// MARK: _manageResponse no stream
 	Else 
 		If (Not:C34($result.terminated))
 			// must not occurs
@@ -299,7 +323,7 @@ Function _manageResponse($result : Object) : Object
 		
 		If ($result.success)
 			
-			This:C1470.messages.push($result.choice.message)
+			This:C1470._pushMessage($result.choice.message)
 			
 			This:C1470._trim()
 			
@@ -349,10 +373,74 @@ Function _manageAsyncResponse($result : Object)
 	
 	// Handle tool calls automatically
 Function _handleToolCalls($result : cs:C1710.OpenAIChatCompletionsResult)
-	
-	var $toolCalls : Collection:=$result.choice.message.tool_calls
-	If ($toolCalls=Null:C1517) || ($toolCalls.length=0)
+	var $toolResponses:=This:C1470._processToolCalls($result.choice.message)
+	If ($toolResponses=Null:C1517) || ($toolResponses.length=0)
 		return 
+	End if 
+	
+	// Add tool responses to messages
+	var $response : cs:C1710.OpenAIMessage
+	For each ($response; $toolResponses)
+		
+		This:C1470._pushMessage($response)
+		
+	End for each 
+	
+	// Continue the conversation by making another API call
+	This:C1470._continueConversationAfterToolCalls($result)
+	
+	// Continue conversation after tool calls
+Function _continueConversationAfterToolCalls($result : cs:C1710.OpenAIChatCompletionsResult)
+	var $messages : Collection:=This:C1470.messages.copy()
+	$messages.unshift(This:C1470.systemPrompt)
+	
+	// Create a copy of parameters without modifying the original
+	var $parameters : cs:C1710.OpenAIChatCompletionsParameters:=cs:C1710.OpenAIChatCompletionsParameters.new(This:C1470.parameters)
+	
+	// Make another call to continue the conversation
+	var $newResult:=This:C1470.chat.completions.create($messages; $parameters)
+	If ($newResult#Null:C1517)
+		//%W-550.26
+		$result._newResult:=This:C1470._manageResponse($newResult)  // This will handle sync
+		//%W+550.26
+	End if 
+	
+	
+	// Handle tool calls automatically for async/streaming responses
+Function _handleAsyncToolCalls($result : cs:C1710.OpenAIChatCompletionsStreamResult; $lastMessage : cs:C1710.OpenAIMessage)
+	var $toolResponses:=This:C1470._processToolCalls($lastMessage)
+	If ($toolResponses=Null:C1517) || ($toolResponses.length=0)
+		return 
+	End if 
+	
+	// Add tool responses to messages
+	var $response : cs:C1710.OpenAIMessage
+	For each ($response; $toolResponses)
+		This:C1470._pushMessage($response)
+	End for each 
+	
+	// Continue the conversation by making another API call
+	This:C1470._continueAsyncConversationAfterToolCalls($result)
+	
+	
+	// Continue async conversation after tool calls
+Function _continueAsyncConversationAfterToolCalls($result : cs:C1710.OpenAIChatCompletionsStreamResult)
+	var $messages : Collection:=This:C1470.messages.copy()
+	$messages.unshift(This:C1470.systemPrompt)
+	
+	// Make another call to continue the conversation
+	var $newResult:=This:C1470.chat.completions.create($messages; This:C1470.parameters)
+	If ($newResult#Null:C1517)
+		//%W-550.26
+		$result._newResult:=$newResult
+		//%W+550.26
+	End if 
+	
+	// Process tool calls and return collection of response messages
+Function _processToolCalls($message : cs:C1710.OpenAIMessage) : Collection
+	var $toolCalls:=$message.tool_calls
+	If ($toolCalls=Null:C1517) || ($toolCalls.length=0)
+		return Null:C1517
 	End if 
 	
 	var $toolResponses : Collection:=[]
@@ -377,7 +465,7 @@ Function _handleToolCalls($result : cs:C1710.OpenAIChatCompletionsResult)
 		
 		// Parse function arguments
 		var $arguments : Object
-		If ($toolCall.function.arguments#Null:C1517)
+		If (($toolCall.function.arguments#Null:C1517) && (Length:C16(String:C10($toolCall.function.arguments))>0))
 			Try
 				$arguments:=JSON Parse:C1218($toolCall.function.arguments)
 			Catch
@@ -422,28 +510,6 @@ Function _handleToolCalls($result : cs:C1710.OpenAIChatCompletionsResult)
 		
 	End for each 
 	
-	// Add tool responses to messages
-	var $response : cs:C1710.OpenAIMessage
-	For each ($response; $toolResponses)
-		This:C1470.messages.push($response)
-	End for each 
+	return $toolResponses
 	
-	// Continue the conversation by making another API call
-	This:C1470._continueConversationAfterToolCalls($result)
-	
-	// Continue conversation after tool calls
-Function _continueConversationAfterToolCalls($result : cs:C1710.OpenAIChatCompletionsResult)
-	var $messages : Collection:=This:C1470.messages.copy()
-	$messages.unshift(This:C1470.systemPrompt)
-	
-	// Create a copy of parameters without modifying the original
-	var $parameters : cs:C1710.OpenAIChatCompletionsParameters:=cs:C1710.OpenAIChatCompletionsParameters.new(This:C1470.parameters)
-	
-	// Make another call to continue the conversation
-	var $newResult:=This:C1470.chat.completions.create($messages; $parameters)
-	If ($newResult#Null:C1517)
-		//%W-550.26
-		$result._newResult:=This:C1470._manageResponse($newResult)  // This will handle sync
-		//%W+550.26
-	End if 
 	

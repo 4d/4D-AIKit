@@ -35,11 +35,11 @@ If (Asserted:C1132(Bool:C1537($result.success); "Cannot complete chat : "+JSON S
 				var $toolCall:=$result.choice.message.tool_calls.first()
 				ASSERT:C1129($toolCall.function.name="get_database_tables"; "Tool call should be for get_database_tables function")
 				
-				// Create tool response message
+				// Create tool response message using pre-constructed response
 				var $toolResponse:=cs:C1710.OpenAIMessage.new()
 				$toolResponse.role:="tool"
 				$toolResponse.tool_call_id:=$toolCall.id
-				$toolResponse.content:=JSON Stringify:C1217(OB Keys:C1719(ds:C1482))  // Return database table names
+				$toolResponse.content:=JSON Stringify:C1217(["Users"; "Orders"; "Products"; "Categories"])  // Return mock database table names
 				
 				$messages.push($toolResponse)
 				
