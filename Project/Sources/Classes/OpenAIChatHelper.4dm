@@ -300,7 +300,7 @@ Function _manageResponse($result : Object) : Object
 			var $message:=This:C1470.messages.last()
 			Case of 
 				: ($message.role="assistant")
-					$message._mergeDelta($result.choice.delta)
+					$message._accumulateDelta($result.choice.delta)
 				Else 
 					This:C1470._pushMessage($result.choice.delta)
 			End case 

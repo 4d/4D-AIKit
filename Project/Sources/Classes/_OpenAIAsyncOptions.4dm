@@ -42,6 +42,9 @@ Function onData($request : 4D:C1709.HTTPRequest; $event : Object)
 	// $event: {chunk: true; type: "data"; data: blob}
 	If (((This:C1470._parameters.onData#Null:C1517) || (This:C1470._parameters.formula#Null:C1517)) && (Bool:C1537(This:C1470._parameters.stream)) && (Not:C34(This:C1470._onStreamError)))
 		
+		
+		// TODO: ignore if not sse_event.object == "chat.completion.chunk" 
+		
 		var $textData:=BLOB to text:C555($event.data; UTF8 C string:K22:15)
 		
 		$textData:=This:C1470._chunkBuffer+$textData

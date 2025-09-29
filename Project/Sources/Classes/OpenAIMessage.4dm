@@ -95,25 +95,140 @@ Function _extractJSONObject() : Object
 	
 	return Try(JSON Parse:C1218($message))
 	
-Function _mergeDelta($delta : cs:C1710.OpenAIMessage)
-	Use (This:C1470)  // xxx: could be check ob is shared...
+	// delta accumulation
+Function _accumulateDeltaBetween($acc : Object; $delta : Object) : Object
+	If ($acc=Null:C1517)
+		$acc:={}
+	End if 
+	
+	If ($delta=Null:C1517)
+		return $acc
+	End if 
+	
+	var $key : Text
+	For each ($key; $delta)
+		var $delta_value : Variant:=$delta[$key]
 		
-		This:C1470.text+=$delta.text
-		
-		If ($delta.tool_calls#Null:C1517)
-			var $tool_call; $delta_tool_call : Object
-			For each ($delta_tool_call; $delta.tool_calls)
-				
-				$tool_call:=This:C1470.tool_calls.find(Formula:C1597($1.value.index=$2); $delta_tool_call.index)
-				If ($tool_call#Null:C1517)
-					
-					$tool_call.function.arguments+=$delta_tool_call.function.arguments
-					
-					// XXX else assert? or log
-				End if 
-				
-			End for each 
-			
+		// If key doesn't exist in accumulator, just set it
+		If (Undefined:C82($acc[$key]))
+			$acc[$key]:=$delta_value
+			continue
 		End if 
 		
-	End use 
+		var $acc_value : Variant:=$acc[$key]
+		
+		// If accumulated value is null, replace with delta value
+		If ($acc_value=Null:C1517)
+			$acc[$key]:=$delta_value
+			continue
+		End if 
+		
+		// Special handling for index and type properties
+		If (($key="index") || ($key="type"))
+			$acc[$key]:=$delta_value
+			continue
+		End if 
+		
+		// Handle different value types
+		Case of 
+				// String concatenation
+			: ((Value type:C1509($acc_value)=Is text:K8:3) && (Value type:C1509($delta_value)=Is text:K8:3))
+				$acc[$key]:=$acc_value+$delta_value
+				
+				// Numeric addition
+			: (((Value type:C1509($acc_value)=Is real:K8:4) || (Value type:C1509($acc_value)=Is longint:K8:6)) && ((Value type:C1509($delta_value)=Is real:K8:4) || (Value type:C1509($delta_value)=Is longint:K8:6)))
+				$acc[$key]:=$acc_value+$delta_value
+				
+				// Recursive object merging
+			: ((Value type:C1509($acc_value)=Is object:K8:27) && (Value type:C1509($delta_value)=Is object:K8:27))
+				$acc[$key]:=This:C1470._accumulateDeltaBetween($acc_value; $delta_value)
+				
+				// Collection/array handling
+			: ((Value type:C1509($acc_value)=Is collection:K8:32) && (Value type:C1509($delta_value)=Is collection:K8:32))
+				
+				// For collections of primitive values, just extend
+				var $all_primitives : Boolean:=True:C214
+				var $item : Variant
+				For each ($item; $acc_value)
+					If (Not:C34((Value type:C1509($item)=Is text:K8:3) || (Value type:C1509($item)=Is longint:K8:6) || (Value type:C1509($item)=Is real:K8:4)))
+						$all_primitives:=False:C215
+						break
+					End if 
+				End for each 
+				
+				If ($all_primitives)
+					For each ($item; $delta_value)
+						$acc_value.push($item)
+					End for each 
+					continue
+				End if 
+				
+				// For collections of objects, handle by index
+				var $delta_entry : Variant
+				For each ($delta_entry; $delta_value)
+					If (Not:C34((Value type:C1509($delta_entry)=Is object:K8:27)))
+						// Unexpected list delta entry is not a dictionary
+						continue
+					End if 
+					
+					If (Undefined:C82($delta_entry.index))
+						// Expected list delta entry to have an index key
+						continue
+					End if 
+					
+					var $index : Integer:=$delta_entry.index
+					If (Not:C34((Value type:C1509($index)=Is longint:K8:6) || (Value type:C1509($index)=Is real:K8:4)))
+						// Unexpected, list delta entry index value is not an integer
+						continue
+					End if 
+					
+					// Ensure collection is large enough
+					While ($acc_value.length<=$index)
+						$acc_value.push(Null:C1517)
+					End while 
+					
+					If ($acc_value[$index]=Null:C1517)
+						$acc_value[$index]:=$delta_entry
+					Else 
+						If (Not:C34((Value type:C1509($acc_value[$index])=Is object:K8:27)))
+							// Handle case where existing entry is not a dictionary
+							$acc_value[$index]:=$delta_entry
+						Else 
+							$acc_value[$index]:=This:C1470._accumulateDeltaBetween($acc_value[$index]; $delta_entry)
+						End if 
+					End if 
+				End for each 
+				
+			Else 
+				// Default case: replace with delta value
+				$acc[$key]:=$delta_value
+		End case 
+	End for each 
+	
+	return $acc
+	
+Function _accumulateDelta($delta : cs:C1710.OpenAIMessage)
+	
+	var $result : Object:=This:C1470._accumulateDeltaBetween(OB Copy:C1225(This:C1470); $delta)
+	
+	// Apply results back to this message
+	If (OB Is shared:C1759(This:C1470))
+		Use (This:C1470)
+			var $key : Text
+			For each ($key; $result)
+				Case of 
+					: (Value type:C1509($result[$key])=Is object:K8:27)
+						This:C1470[$key]:=OB Copy:C1225($result[$key]; ck shared:K85:29; This:C1470)
+					: (Value type:C1509($result[$key])=Is collection:K8:32)
+						This:C1470[$key]:=$result[$key].copy(ck shared:K85:29; This:C1470)
+					Else 
+						This:C1470[$key]:=$result[$key]
+				End case 
+			End for each 
+			
+		End use 
+	Else 
+		For each ($key; $result)
+			This:C1470[$key]:=$result[$key]
+		End for each 
+	End if 
