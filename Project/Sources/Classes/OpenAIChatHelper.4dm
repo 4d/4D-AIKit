@@ -108,9 +108,14 @@ Function reset()
 	
 	// Register a tool with its handler function
 	// If the handler function is not defined, we try to get one from $tool.handler property.
+	// Tool could be defined in a "tool" attribute too to be separated from handler code
 Function registerTool($tool : Object; $handler : 4D:C1709.Function)
 	If ($tool=Null:C1517)
 		return 
+	End if 
+	
+	If (($handler=Null:C1517) && ($tool.handler#Null:C1517))
+		$handler:=$tool.handler
 	End if 
 	
 	If (Not:C34(OB Instance of:C1731($tool; cs:C1710.OpenAITool)))

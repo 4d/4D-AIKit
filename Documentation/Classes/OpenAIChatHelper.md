@@ -15,6 +15,16 @@ The chat helper allow to keep a list of messages in memory and make consecutive 
 | `autoHandleToolCalls`| Boolean                     | True                             | Boolean indicating whether tool calls are handled automatically using registered tools. |
 | `lastErrors`         | Collection                  | -                                | Collection containing the last errors encountered during chat operations.           |
 
+## Constructor
+
+To create a new `OpenAIChatHelper` instance, it's best to use the `create()` method from the [OpenAI client's chat API](OpenAIChatAPI.md):
+
+```4D
+var $chatHelper:=$client.chat.create("You are a helpful assistant.")
+```
+
+This method creates a new chat helper with the specified system prompt and initializes it with default parameters. The system prompt defines the assistant's role and behavior throughout the conversation.
+
 ## Functions
 
 ### prompt()
@@ -31,8 +41,6 @@ Sends a user prompt to the chat and returns the corresponding completion result.
 #### Example Usage
 
 ```4D
-var $chatHelper:=$client.chat.create("You are a helpful assistant.")
-
 var $result:=$chatHelper.prompt("Hello, how can I help you today?")
 $result:=$chatHelper.prompt("Why 42?")
 ```
@@ -46,7 +54,6 @@ Resets the chat context by clearing all messages and unregistering all tools. Th
 #### Reset Example
 
 ```4D
-var $chatHelper:=$client.chat.create("You are a helpful assistant.")
 $chatHelper.prompt("Hello!")
 $chatHelper.reset()  // Clear all previous messages and tools
 ```
@@ -57,7 +64,7 @@ $chatHelper.reset()  // Clear all previous messages and tools
 
 | Parameter        | Type        | Description                                           |
 |------------------|-------------|-------------------------------------------------------|
-| *tool*           | Object      | The tool definition object (or OpenAITool instance)  |
+| *tool*           | Object      | The tool definition object (or [OpenAITool](OpenAITool.md) instance)  |
 | *handler*        | 4D.Function | The function to handle tool calls (optional)         |
 
 Registers a tool with its handler function for automatic tool call handling. If the handler is not provided, the tool's `handler` property will be used. Only function-type tools require handlers.
@@ -65,8 +72,6 @@ Registers a tool with its handler function for automatic tool call handling. If 
 #### Register Tool Example
 
 ```4D
-var $chatHelper:=$client.chat.create("You are a helpful assistant.")
-
 // Define a simple tool
 var $tool:={type: "function"; function: {name: "get_weather"; description: "Get current weather"; parameters: {type: "object"; properties: {location: {type: "string"; description: "City name"}}}}}
 
@@ -74,6 +79,9 @@ var $tool:={type: "function"; function: {name: "get_weather"; description: "Get 
 var $handler:=Formula(return "Sunny, 25°C in "+$1.location)
 
 $chatHelper.registerTool($tool; $handler)
+// or
+
+$chatHelper.registerTool({tool: $tool; handler: $handler})
 ```
 
 ### registerTools()
@@ -89,8 +97,6 @@ Registers multiple tools at once. The parameter can be either an object with fun
 #### Register Multiple Tools Example
 
 ```4D
-var $chatHelper:=$client.chat.create("You are a helpful assistant.")
-
 // Simple approach: handlers defined directly in tools
 var $weatherTool:={type: "function"; function: {name: "get_weather"; description: "Get current weather"; parameters: {type: "object"; properties: {location: {type: "string"; description: "City name"}}}}; \
     handler: Formula(return "Sunny, 25°C in "+$1.location)}
@@ -127,7 +133,6 @@ Unregisters a specific tool by its function name. This removes the tool from the
 #### Unregister Tool Example
 
 ```4D
-var $chatHelper:=$client.chat.create("You are a helpful assistant.")
 $chatHelper.registerTool($weatherTool; $weatherHandler)
 $chatHelper.unregisterTool("get_weather")  // Remove the weather tool
 ```
@@ -141,7 +146,6 @@ Unregisters all tools at once. This clears all tool handlers, empties the tools 
 #### Unregister All Tools Example
 
 ```4D
-var $chatHelper:=$client.chat.create("You are a helpful assistant.")
 $chatHelper.registerTools($multipleTools)
 $chatHelper.unregisterTools()  // Remove all tools
 ```

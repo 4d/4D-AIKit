@@ -31,7 +31,7 @@ $tool3.handler:=$handler
 
 // Register both tools
 $helper.registerTool($tool1; $handler)
-$helper.registerTool($tool2; $handler)
+$helper.registerTool({tool: $tool2; handler: $handler})
 $helper.registerTool($tool3)
 
 // Verify tools are registered

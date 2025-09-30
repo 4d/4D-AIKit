@@ -20,6 +20,13 @@ Class constructor($object : Object)
 		return 
 	End if 
 	
+	If ($object.tool#Null:C1517)  // support format from registerTools too
+		
+		$object:=$object.tool
+		
+	End if 
+	
+	
 	// allow to provide OpenAI format
 	If ((String:C10($object.type)="function") && (Value type:C1509($object.function)=Is object:K8:27))
 		
