@@ -266,13 +266,86 @@ Function unregisterTools()
 		This:C1470.parameters.tools:=[]
 	End if 
 	
-	// Remove the first message if there are more than numberOfMessages.
+	// Remove messages to keep conversation under numberOfMessages limit.
+	// Prioritize removing complete tool call sequences to maintain coherence.
 Function _trim()
-	If (This:C1470.numberOfMessages>0)
-		While (This:C1470.messages.length>This:C1470.numberOfMessages)
-			This:C1470.messages.remove(0)
-		End while 
+	If (This:C1470.numberOfMessages<=0)
+		return 
 	End if 
+	
+	While (This:C1470.messages.length>This:C1470.numberOfMessages)
+		
+		var $removedSequence : Boolean:=False:C215
+		
+		// First priority: Try to remove complete tool call sequences
+		// Look for assistant messages with tool_calls followed by tool responses
+		var $i : Integer:=0
+		While ($i<This:C1470.messages.length) && (Not:C34($removedSequence))
+			
+			var $message : cs:C1710.OpenAIMessage:=This:C1470.messages[$i]
+			
+			// Check if this is an assistant message with tool calls
+			If ($message.role="assistant") && ($message.tool_calls#Null:C1517) && ($message.tool_calls.length>0)
+				
+				// Find all associated tool response messages
+				var $toolCallIds : Collection:=[]
+				var $toolCall : Object
+				For each ($toolCall; $message.tool_calls)
+					If ($toolCall.id#Null:C1517)
+						$toolCallIds.push($toolCall.id)
+					End if 
+				End for each 
+				
+				// Count how many tool responses follow this message
+				var $toolResponseCount : Integer:=0
+				var $j : Integer:=$i+1
+				var $foundToolCallIds : Collection:=[]
+				
+				While ($j<This:C1470.messages.length)
+					var $nextMessage : cs:C1710.OpenAIMessage:=This:C1470.messages[$j]
+					If ($nextMessage.role="tool") && ($nextMessage.tool_call_id#Null:C1517)
+						
+						// Check if this tool response belongs to our tool call
+						If ($toolCallIds.indexOf($nextMessage.tool_call_id)>=0)
+							$toolResponseCount:=$toolResponseCount+1
+							$foundToolCallIds.push($nextMessage.tool_call_id)
+						Else 
+							// This tool response belongs to a different tool call, stop here
+							break
+						End if 
+						
+					Else 
+						// Not a tool response, stop looking
+						break
+					End if 
+					$j:=$j+1
+				End while 
+				
+				// If we found all expected tool responses, remove the complete sequence
+				If ($foundToolCallIds.length=$toolCallIds.length)
+					// Remove tool responses first (from end to start to maintain indices)
+					var $k : Integer:=$i+$toolResponseCount
+					While ($k>$i)
+						This:C1470.messages.remove($k)
+						$k:=$k-1
+					End while 
+					// Remove the assistant message with tool calls
+					This:C1470.messages.remove($i)
+					$removedSequence:=True:C214
+				End if 
+				
+			End if 
+			
+			$i:=$i+1
+		End while 
+		
+		// If no complete tool call sequence was found, remove the first message
+		// This maintains the original behavior for non-tool messages
+		If (Not:C34($removedSequence))
+			This:C1470.messages.remove(0)
+		End if 
+		
+	End while 
 	
 Function _manageResponse($result : Object) : Object
 	If ($result=Null:C1517)
@@ -284,6 +357,10 @@ Function _manageResponse($result : Object) : Object
 		
 		If ($result.terminated)
 			
+			If ($result.success)
+				This:C1470._trim()
+			End if
+
 			If (This:C1470.autoHandleToolCalls && ($result.success) && ($result.choice#Null:C1517) && (String:C10($result.choice.finish_reason)="tool_calls"))
 				
 				var $lastMessage:=This:C1470.messages.last()
