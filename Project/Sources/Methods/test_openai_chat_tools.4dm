@@ -147,3 +147,82 @@ If (Asserted:C1132(Bool:C1537($result2.success); "Cannot complete chat with para
 	End if 
 	
 End if 
+
+
+If ((Position:C15("127.0.0.1"; $client.baseURL)>0) && ($client.apiKey="none"))  // mock has no implemented wrong tool call
+	return 
+End if 
+
+// MARK:- Test with wrong tool_call_id (error case)
+
+// Define a simple tool for testing wrong tool_call_id
+var $testWrongIdTool:={type: "function"; \
+function: {name: "test_function"; \
+description: "A simple test function"; \
+parameters: {}}; \
+strict: True:C214}
+
+var $messages3:=[cs:C1710.OpenAIMessage.new({role: "system"; content: "You are a helpful assistant."})]
+$messages3.push({role: "user"; content: "Call the test function."})
+
+var $result3:=$client.chat.completions.create($messages3; {model: $modelName; tools: [$testWrongIdTool]})
+
+If (Asserted:C1132(Bool:C1537($result3.success); "Cannot complete chat for wrong tool_call_id test : "+JSON Stringify:C1217($result3)))
+	
+	If (Asserted:C1132($result3.choice#Null:C1517; "chat for wrong tool_call_id test do not return a choice"))
+		
+		If (Asserted:C1132($result3.choice.message#Null:C1517; "chat for wrong tool_call_id test do not return a message"))
+			
+			// Check if the assistant made a tool call
+			If ($result3.choice.message.tool_calls#Null:C1517) & ($result3.choice.message.tool_calls.length>0)
+				
+				// Add the assistant's message with tool call to messages
+				$messages3.push($result3.choice.message)
+				
+				// Get the first tool call
+				var $toolCall3:=$result3.choice.message.tool_calls.first()
+				ASSERT:C1129($toolCall3.function.name="test_function"; "Tool call should be for test_function")
+				
+				// Create tool response message with WRONG tool_call_id
+				var $toolResponse3:=cs:C1710.OpenAIMessage.new()
+				$toolResponse3.role:="tool"
+				$toolResponse3.tool_call_id:="wrong_id_12345"  // This is intentionally wrong
+				$toolResponse3.content:="Function executed successfully"
+				
+				$messages3.push($toolResponse3)
+				
+				// Continue the conversation with the wrong tool_call_id
+				// This should result in an error from the API
+				var $result3b:=$client.chat.completions.create($messages3; {model: $modelName; tools: [$testWrongIdTool]})
+				
+				// We expect this to fail due to wrong tool_call_id
+				If ($result3b.success)
+					ASSERT:C1129(False:C215; "API should reject wrong tool_call_id, but it didn't")
+				Else 
+					// Check that we got an appropriate error
+					ASSERT:C1129($result3b.errors.length>0; "Should have error information when using wrong tool_call_id")
+					// The error should indicate something about invalid tool_call_id
+					var $errorMessage:=""
+					If ($result3b.errors.length>0)
+						var $firstError:=$result3b.errors.first()
+						If ($firstError.message#Null:C1517)
+							$errorMessage:=String:C10($firstError.message)
+						End if 
+						If ($firstError.content#Null:C1517)
+							$errorMessage:=$errorMessage+" "+String:C10($firstError.content)
+						End if 
+					End if 
+					ASSERT:C1129(Length:C16($errorMessage)>0; "Error should have a message describing the problem")
+				End if 
+				
+			Else 
+				
+				ASSERT:C1129(False:C215; "Assistant should make a tool call for this test")
+				
+			End if 
+			
+		End if 
+		
+	End if 
+	
+End if 

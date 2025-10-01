@@ -7,7 +7,6 @@ End if
 var $modelName:=cs:C1710._TestModels.new($client).chats
 
 If ((Position:C15("127.0.0.1"; $client.baseURL)>0) && ($client.apiKey="none"))  // mock not implemented
-	KILL WORKER:C1390(Current method name:C684)
 	return 
 End if 
 // MARK:- automatic tools response test with stream
