@@ -17,6 +17,9 @@ Class constructor($object : Object)
 	End if 
 	var $key : Text
 	For each ($key; $object)
+		If ($key="text")  // computed properties
+			continue
+		End if 
 		This:C1470[$key]:=$object[$key]
 	End for each 
 	
@@ -108,6 +111,11 @@ Function _accumulateDeltaBetween($acc : Object; $delta : Object) : Object
 	var $key : Text
 	For each ($key; $delta)
 		var $delta_value : Variant:=$delta[$key]
+		
+		// If delta value is null, skip it (don't overwrite accumulated value)
+		If ($delta_value=Null:C1517)
+			//continue
+		End if 
 		
 		// If key doesn't exist in accumulator, just set it
 		If (Undefined:C82($acc[$key]))
@@ -243,7 +251,7 @@ Function _asObjectNotShared($object : Object) : Object
 			: (Value type:C1509($object[$key])=Is collection:K8:32)
 				$result[$key]:=This:C1470._asCollectionNotShared($object[$key])
 			Else 
-				$result[$key]:=This:C1470[$key]
+				$result[$key]:=$object[$key]
 		End case 
 		
 	End for each 
