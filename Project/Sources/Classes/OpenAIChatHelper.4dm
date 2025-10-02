@@ -106,16 +106,23 @@ Function reset()
 	
 	This:C1470.unregisterTools()
 	
-	// Register a tool with its handler function
+	// Register a tool with its handler function or a handler object where we call the function with the tool name
 	// If the handler function is not defined, we try to get one from $tool.handler property.
 	// Tool could be defined in a "tool" attribute too to be separated from handler code
-Function registerTool($tool : Object; $handler : 4D:C1709.Function)
+Function registerTool($tool : Object; $handler : Object)
 	If ($tool=Null:C1517)
 		return 
 	End if 
 	
 	If (($handler=Null:C1517) && ($tool.handler#Null:C1517))
 		$handler:=$tool.handler
+	End if 
+	
+	If (($handler=Null:C1517) && ($tool.handler=Null:C1517))
+		var $possibleName : Text:=$tool.name || $tool.tool.name || $tool.function.name || $tool.tool.function.name
+		If ($tool[$possibleName]#Null:C1517)
+			$handler:=$tool
+		End if 
 	End if 
 	
 	If (Not:C34(OB Instance of:C1731($tool; cs:C1710.OpenAITool)))
@@ -168,6 +175,14 @@ Function registerTools($toolsWithHandlers : Variant)
 	Case of 
 		: ($toolsWithHandlers=Null:C1517)
 			return 
+			
+		: ((Value type:C1509($toolsWithHandlers)=Is object:K8:27) && (Value type:C1509($toolsWithHandlers.tools)=Is collection:K8:32))
+			
+			For each ($tool; $toolsWithHandlers.tools)
+				
+				This:C1470.registerTool($tool; $toolsWithHandlers)
+				
+			End for each 
 			
 		: (Value type:C1509($toolsWithHandlers)=Is object:K8:27)
 			
@@ -359,8 +374,8 @@ Function _manageResponse($result : Object) : Object
 			
 			If ($result.success)
 				This:C1470._trim()
-			End if
-
+			End if 
+			
 			If (This:C1470.autoHandleToolCalls && ($result.success) && ($result.choice#Null:C1517) && (String:C10($result.choice.finish_reason)="tool_calls"))
 				
 				var $lastMessage:=This:C1470.messages.last()
@@ -533,7 +548,7 @@ Function _processToolCalls($message : cs:C1710.OpenAIMessage) : Collection
 		End if 
 		
 		var $functionName : Text:=$toolCall.function.name
-		var $handler : 4D:C1709.Function:=This:C1470._toolHandlers[$functionName]
+		var $handler : Object:=This:C1470._toolHandlers[$functionName]
 		
 		If ($handler=Null:C1517)
 			// No handler registered for this function
@@ -562,9 +577,24 @@ Function _processToolCalls($message : cs:C1710.OpenAIMessage) : Collection
 			$arguments:={}
 		End if 
 		
+		// Check function exist in handler object
+		If ((Not:C34(OB Instance of:C1731($handler; 4D:C1709.Function))) && ($handler[$toolCall.function.name]=Null:C1517))
+			var $missingFunctionResponse:=cs:C1710.OpenAIMessage.new()
+			$missingFunctionResponse.role:="tool"
+			$missingFunctionResponse.tool_call_id:=$toolCall.id
+			$missingFunctionResponse.content:="Error: unknown function '"+$functionName+"'. Seems not implemented."
+			$toolResponses.push($missingFunctionResponse)
+			continue
+		End if 
+		
 		// Execute the tool function
 		Try
-			var $resultHandler : Variant:=$handler.call(This:C1470; $arguments)
+			var $resultHandler : Variant
+			If (OB Instance of:C1731($handler; 4D:C1709.Function))
+				$resultHandler:=$handler.call(This:C1470; $arguments)
+			Else 
+				$resultHandler:=$handler[$toolCall.function.name]($arguments)
+			End if 
 			
 			var $toolResponse:=cs:C1710.OpenAIMessage.new()
 			$toolResponse.role:="tool"
