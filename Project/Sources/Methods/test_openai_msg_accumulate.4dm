@@ -2,10 +2,15 @@
 
 // MARK:- Test Delta Accumulation in OpenAI Messages
 
+var $testShared:=Shift down:C543
+
 // Test 1: Basic text accumulation
 var $originalMessage : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({role: "assistant"; content: "Hello"})
 var $deltaMessage : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({content: " world"})
 
+If ($testShared)
+	$originalMessage:=OB Copy:C1225($originalMessage; ck shared:K85:29)
+End if 
 $originalMessage._accumulateDelta($deltaMessage)
 ASSERT:C1129($originalMessage.content="Hello world"; "Text accumulation should concatenate strings, got: '"+String:C10($originalMessage.content)+"'")
 
@@ -14,6 +19,9 @@ var $message : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({role: "assist
 var $delta1 : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({tool_calls: [{index: 0; id: "call_1"; type: "function"; function: {name: "get_weather"}}]})
 var $delta2 : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({tool_calls: [{index: 0; function: {arguments: "{\"location\": \"Paris\"}"}}]})
 
+If ($testShared)
+	$message:=OB Copy:C1225($message; ck shared:K85:29)
+End if 
 $message._accumulateDelta($delta1)
 $message._accumulateDelta($delta2)
 
@@ -28,6 +36,9 @@ var $deltaA : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({tool_calls: [{
 var $deltaB : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({tool_calls: [{index: 1; id: "call_2"; type: "function"; function: {name: "func2"}}]})
 var $deltaC : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({tool_calls: [{index: 0; function: {arguments: "{\"a\": 1}"}}]})
 
+If ($testShared)
+	$messageMulti:=OB Copy:C1225($messageMulti; ck shared:K85:29)
+End if 
 $messageMulti._accumulateDelta($deltaA)
 $messageMulti._accumulateDelta($deltaB)
 $messageMulti._accumulateDelta($deltaC)
@@ -41,6 +52,9 @@ ASSERT:C1129($messageMulti.tool_calls[0].function.arguments="{\"a\": 1}"; "First
 var $visionMessage : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({role: "user"; content: [{type: "text"; text: "What is"}]})
 var $visionDelta : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({content: [{index: 0; text: " in this image?"}]})
 
+If ($testShared)
+	$visionMessage:=OB Copy:C1225($visionMessage; ck shared:K85:29)
+End if 
 $visionMessage._accumulateDelta($visionDelta)
 ASSERT:C1129($visionMessage.content[0].text="What is in this image?"; "Vision content text should be accumulated, got: '"+String:C10($visionMessage.content[0].text)+"'")
 
@@ -48,6 +62,9 @@ ASSERT:C1129($visionMessage.content[0].text="What is in this image?"; "Vision co
 var $numericMessage : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({role: "assistant"; score: 85})
 var $numericDelta : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({score: 15})
 
+If ($testShared)
+	$numericMessage:=OB Copy:C1225($numericMessage; ck shared:K85:29)
+End if 
 $numericMessage._accumulateDelta($numericDelta)
 ASSERT:C1129($numericMessage["score"]=100; "Numeric values should be added together, got: "+String:C10($numericMessage["score"]))
 
@@ -55,6 +72,9 @@ ASSERT:C1129($numericMessage["score"]=100; "Numeric values should be added toget
 var $objMessage : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({role: "assistant"; metadata: {source: "api"; version: 1}})
 var $objDelta : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({metadata: {timestamp: "2023-01-01"; version: 2}})
 
+If ($testShared)
+	$objMessage:=OB Copy:C1225($objMessage; ck shared:K85:29)
+End if 
 $objMessage._accumulateDelta($objDelta)
 ASSERT:C1129($objMessage["metadata"].source="api"; "Original object properties should be preserved, got: '"+String:C10($objMessage["metadata"].source)+"'")
 ASSERT:C1129($objMessage["metadata"].version=3; "Numeric object properties should be added, got: "+String:C10($objMessage["metadata"].version))  // 1 + 2 = 3
@@ -64,6 +84,9 @@ ASSERT:C1129($objMessage["metadata"].timestamp="2023-01-01"; "New object propert
 var $nullMessage : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({role: "assistant"; content: Null:C1517})
 var $nullDelta : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({content: "Hello"})
 
+If ($testShared)
+	$nullMessage:=OB Copy:C1225($nullMessage; ck shared:K85:29)
+End if 
 $nullMessage._accumulateDelta($nullDelta)
 ASSERT:C1129($nullMessage.content="Hello"; "Null values should be replaced by delta values, got: '"+String:C10($nullMessage.content)+"'")
 
@@ -71,6 +94,9 @@ ASSERT:C1129($nullMessage.content="Hello"; "Null values should be replaced by de
 var $emptyMessage : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({role: "assistant"; tool_calls: []})
 var $emptyDelta : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({tool_calls: [{index: 0; id: "call_1"}]})
 
+If ($testShared)
+	$emptyMessage:=OB Copy:C1225($emptyMessage; ck shared:K85:29)
+End if 
 $emptyMessage._accumulateDelta($emptyDelta)
 ASSERT:C1129($emptyMessage.tool_calls.length=1; "Empty collections should accept new entries, got: "+String:C10($emptyMessage.tool_calls.length))
 ASSERT:C1129($emptyMessage.tool_calls[0].id="call_1"; "New entries should be properly added, got: '"+String:C10($emptyMessage.tool_calls[0].id)+"'")
@@ -79,6 +105,9 @@ ASSERT:C1129($emptyMessage.tool_calls[0].id="call_1"; "New entries should be pro
 var $specialMessage : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({role: "assistant"; index: 0; type: "old"})
 var $specialDelta : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({index: 1; type: "new"})
 
+If ($testShared)
+	$specialMessage:=OB Copy:C1225($specialMessage; ck shared:K85:29)
+End if 
 $specialMessage._accumulateDelta($specialDelta)
 ASSERT:C1129($specialMessage["index"]=1; "Index property should be replaced, not added, got: "+String:C10($specialMessage["index"]))
 ASSERT:C1129($specialMessage["type"]="new"; "Type property should be replaced, not concatenated, got: '"+String:C10($specialMessage["type"])+"'")
@@ -86,6 +115,9 @@ ASSERT:C1129($specialMessage["type"]="new"; "Type property should be replaced, n
 // Test 10: Complex streaming scenario simulation
 var $streamMessage : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({role: "assistant"; content: ""})
 
+If ($testShared)
+	$streamMessage:=OB Copy:C1225($streamMessage; ck shared:K85:29)
+End if 
 // Simulate streaming chunks
 var $chunk1 : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({content: "I'll help"})
 var $chunk2 : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({content: " you with"})
@@ -103,6 +135,9 @@ var $toolInit : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({tool_calls: 
 var $toolArg1 : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({tool_calls: [{index: 0; function: {arguments: "{\"operation\": \"add\","}}]})
 var $toolArg2 : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({tool_calls: [{index: 0; function: {arguments: " \"numbers\": [1, 2, 3]}"}}]})
 
+If ($testShared)
+	$toolMessage:=OB Copy:C1225($toolMessage; ck shared:K85:29)
+End if 
 $toolMessage._accumulateDelta($toolInit)
 $toolMessage._accumulateDelta($toolArg1)
 $toolMessage._accumulateDelta($toolArg2)
@@ -114,6 +149,9 @@ ASSERT:C1129($toolMessage.tool_calls[0].function.arguments=$expectedArgs; "Tool 
 var $expandMessage : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({role: "assistant"; tool_calls: []})
 var $expandDelta : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({tool_calls: [{index: 5; id: "call_6"}]})  // Large index
 
+If ($testShared)
+	$expandMessage:=OB Copy:C1225($expandMessage; ck shared:K85:29)
+End if 
 $expandMessage._accumulateDelta($expandDelta)
 If (Asserted:C1132($expandMessage.tool_calls.length=6; "Collection should expand to accommodate large indices, got: "+String:C10($expandMessage.tool_calls.length)))
 	ASSERT:C1129($expandMessage.tool_calls[5].id="call_6"; "Item should be placed at correct index, got: '"+String:C10($expandMessage.tool_calls[5].id)+"'")
