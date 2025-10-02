@@ -83,7 +83,7 @@ ASSERT:C1129($helper.tools.length=6; "Should have 6 tool registered")
 ASSERT:C1129($helper._toolHandlers["test_tool_6"]#Null:C1517; "Handler should be registered")
 
 // Test that it works correctly by invoking the handler
-$testResult:=$helper._toolHandlers["test_tool_6"]["test_tool_6"].call()
+var $testResult : Text:=$helper._toolHandlers["test_tool_6"]["test_tool_6"].call()
 ASSERT:C1129($testResult="formula response"; "Handler should not take priority over formula")
 
 // Test new format with {tool: ...; handler: ...} where handler is null but formula exists

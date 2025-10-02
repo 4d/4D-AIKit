@@ -1382,7 +1382,7 @@
 			"Summary": ""
 		},
 		"registerTool()": {
-			"Syntax": "**.registerTool**( *tool* : Object; *handler* : 4D.Function )",
+			"Syntax": "**.registerTool**( *tool* : Object; *handler* : Object )",
 			"Params": [
 				[
 					"tool",
@@ -1391,7 +1391,7 @@
 				],
 				[
 					"handler",
-					"4D.Function",
+					"Object",
 					"->"
 				]
 			],
