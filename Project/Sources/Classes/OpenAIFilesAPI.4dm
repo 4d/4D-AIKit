@@ -7,10 +7,25 @@ Class constructor($client : cs:C1710.OpenAI)
 * Upload a file that can be used across various endpoints.
 * Individual files can be up to 512 MB, and the size of all files uploaded by one organization can be up to 100 GB.
  */
-Function create($file : 4D:C1709.File; $purpose : Text; $parameters : cs:C1710.OpenAIParameters) : cs:C1710.OpenAIFileResult
-	If ($file=Null:C1517)
-		throw:C1805(1; "Expected a non-empty value for `file`")
+Function create($file : Variant; $purpose : Text; $parameters : cs:C1710.OpenAIParameters) : cs:C1710.OpenAIFileResult
+	// Validate file parameter - must be either 4D.File or 4D.Blob
+	var $isFile:=False:C215
+	var $isBlob:=False:C215
+	
+	If ($file#Null:C1517)
+		Case of 
+			: (Value type:C1509($file)=Is object:K8:27)
+				$isFile:=OB Instance of:C1731($file; 4D:C1709.File)
+				$isBlob:=OB Instance of:C1731($file; 4D:C1709.Blob)
+			: (Value type:C1509($file)=Is BLOB:K8:12)
+				$isBlob:=True:C214
+		End case 
 	End if 
+	
+	If (Not:C34($isFile) && Not:C34($isBlob))
+		throw:C1805(1; "Expected a non-empty value for `file` (must be 4D.File or 4D.Blob/Blob)")
+	End if 
+	
 	If (Length:C16($purpose)=0)
 		throw:C1805(1; "Expected a non-empty value for `purpose`")
 	End if 

@@ -21,7 +21,14 @@ Function toBlob($imageInfo : Variant) : 4D:C1709.Blob
 			
 		: (Value type:C1509($imageInfo)=Is picture:K8:10)
 			
-			PICTURE TO BLOB:C692($imageInfo; $blob; ".png")
+			// Convert to PNG with alpha channel (RGBA format required by OpenAI)
+			// 4D's PNG codec by default creates RGB, we need to ensure RGBA by creating a composite
+			var $width; $height : Integer
+			PICTURE PROPERTIES:C457($imageInfo; $width; $height)
+			var $rgbaPicture : Picture
+			// Create a white background with alpha to force RGBA format
+			CREATE THUMBNAIL:C679($imageInfo; $rgbaPicture; $width; $height; Scaled to fit prop centered:K6:5)
+			PICTURE TO BLOB:C692($rgbaPicture; $blob; ".png")
 			
 		: ((Value type:C1509($imageInfo)=Is object:K8:27) && (OB Instance of:C1731($imageInfo; 4D:C1709.File)))
 			
