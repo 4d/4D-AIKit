@@ -43,7 +43,6 @@ Class constructor($object : Object)
 		return 
 	End if 
 	
-	This:C1470._formulaThis:=$object
 	// copy simple attributes
 	var $key : Text
 	For each ($key; $object)
@@ -56,7 +55,6 @@ Class constructor($object : Object)
 			This:C1470[$key]:=$object[$key]
 		End if 
 	End for each 
-	
 	
 	This:C1470._formulaThis:=$object
 	
