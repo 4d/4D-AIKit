@@ -610,6 +610,17 @@
 			],
 			"Summary": ""
 		},
+		"addFile()": {
+			"Syntax": "**.addFile**( *file* : cs.AIKit.OpenAIFile )",
+			"Params": [
+				[
+					"file",
+					"cs.AIKit.OpenAIFile",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
 		"set text()": {
 			"Syntax": "**.set text**( *text* : Text )",
 			"Params": [
@@ -933,6 +944,17 @@
 	},
 	"_Env": {},
 	"OpenAIFileListParameters": {
+		"body()": {
+			"Syntax": "**.body**() : Object",
+			"Params": [
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
 		"order": {
 			"Syntax": "order : Text"
 		},
@@ -1218,7 +1240,7 @@
 			"Summary": ""
 		},
 		"create()": {
-			"Syntax": "**.create**( *file* : Variant; *purpose* : Text; *parameters* : cs.AIKit.OpenAIParameters ) : cs.AIKit.OpenAIFileResult",
+			"Syntax": "**.create**( *file* : Variant; *purpose* : Text; *parameters* : cs.AIKit.OpenAIFileParameters ) : cs.AIKit.OpenAIFileResult",
 			"Params": [
 				[
 					"file",
@@ -1232,7 +1254,7 @@
 				],
 				[
 					"parameters",
-					"cs.AIKit.OpenAIParameters",
+					"cs.AIKit.OpenAIFileParameters",
 					"->"
 				],
 				[
@@ -1946,6 +1968,39 @@
 		}
 	},
 	"OpenAIFileListResult": {
+		"get has_more()": {
+			"Syntax": "**.get has_more**() : Boolean",
+			"Params": [
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get last_id()": {
+			"Syntax": "**.get last_id**() : Text",
+			"Params": [
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get first_id()": {
+			"Syntax": "**.get first_id**() : Text",
+			"Params": [
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
 		"get files()": {
 			"Syntax": "**.get files**() : Collection",
 			"Params": [

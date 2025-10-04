@@ -67,6 +67,36 @@ Function addImageURL($imageURL : Text; $detail : Text)
 	End if 
 	This:C1470.content.push({type: "image_url"; image_url: $imageObject})
 	
+/*
+* Adds a file to the message content. Only files with purpose "user_data" are allowed.
+* 
+* @param $file {cs.OpenAIFile} The file object to add to the message (must have purpose "user_data")
+* @throws Error if file is null, not an OpenAIFile instance, or doesn't have purpose "user_data"
+*/
+Function addFile($file : cs:C1710.OpenAIFile)
+	
+	// Validate file parameter
+	If ($file=Null:C1517)
+		throw:C1805(1; "Expected a non-empty value for `file`")
+	End if 
+	
+	If (Not:C34(OB Instance of:C1731($file; cs:C1710.OpenAIFile)))
+		throw:C1805(1; "Expected an OpenAIFile instance")
+	End if 
+	
+	// Verify the file has purpose "user_data"
+	If ($file.purpose#"user_data")
+		throw:C1805(1; "File must have purpose 'user_data' (current purpose: '"+$file.purpose+"')")
+	End if 
+	
+	// Ensure content is a collection
+	If (Value type:C1509(This:C1470.content)=Is text:K8:3)
+		This:C1470.content:=[{type: "text"; text: This:C1470.content}]
+	End if 
+	
+	// Add file reference to content
+	This:C1470.content.push({type: "file"; file_id: $file.id})
+	
 	// utility function to find first JSON in message that could be returned by 
 Function _extractJSONObject() : Object
 	

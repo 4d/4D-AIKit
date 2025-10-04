@@ -112,6 +112,63 @@ If (Asserted:C1132(Bool:C1537($filteredListResult.success); "Cannot list files w
 	
 End if 
 
+// MARK:- Test file listing pagination
+var $paginationParams:=cs:C1710.OpenAIFileListParameters.new({\
+limit: 2; \
+order: "asc"\
+})
+
+var $firstPage:=$client.files.list($paginationParams)
+
+If (Asserted:C1132(Bool:C1537($firstPage.success); "Cannot list first page for pagination test: "+JSON Stringify:C1217($firstPage)))
+	If (Asserted:C1132($firstPage.files#Null:C1517; "First page files must not be null"))
+		If (Asserted:C1132($firstPage.files.length>0; "First page must have at least one file"))
+			var $lastFile : cs:C1710.OpenAIFile:=$firstPage.files.last()
+			var $lastFileId:=$lastFile.id
+			// Set after parameter to paginate
+			$paginationParams.after:=$lastFileId
+			var $secondPage:=$client.files.list($paginationParams)
+			If (Asserted:C1132(Bool:C1537($secondPage.success); "Cannot list second page for pagination test: "+JSON Stringify:C1217($secondPage)))
+				If (Asserted:C1132($secondPage.files#Null:C1517; "Second page files must not be null"))
+					// Verify second page does not include lastFileId from first page
+					var $found:=False:C215
+					For each ($file; $secondPage.files)
+						If ($file.id=$lastFileId)
+							$found:=True:C214
+							break
+						End if 
+					End for each 
+					ASSERT:C1129($found=False:C215; "Second page should not include last file from first page")
+				End if 
+			End if 
+		End if 
+	End if 
+End if 
+
+// MARK:- Test file creation with expires_after parameter
+var $expirationParams:=cs:C1710.OpenAIFileParameters.new({\
+expires_after: {anchor: "created_at"; seconds: 3600}\
+})
+
+var $tempFile:=$testDataFolder.file("temp.jsonl")
+$tempFile.setText("test")
+
+var $expiryResult:=$client.files.create($tempFile; "user_data"; $expirationParams)
+
+If (Asserted:C1132(Bool:C1537($expiryResult.success); "Cannot create file with expires_after: "+JSON Stringify:C1217($expiryResult)))
+	If (Asserted:C1132($expiryResult.file#Null:C1517; "Expiry result file must not be null"))
+		ASSERT:C1129($expiryResult.file.expires_at>0; "File should have expiration timestamp")
+		// Clean up remote file
+		var $cleanupExpiry:=$client.files.delete($expiryResult.file.id)
+		ASSERT:C1129(Bool:C1537($cleanupExpiry.success); "Should be able to delete expiry file")
+	End if 
+End if 
+
+// Cleanup local temp file
+If ($tempFile.exists)
+	$tempFile.delete()
+End if 
+
 // MARK:- Test file content retrieval
 If ((Length:C16($uploadedFileId)>0) && False:C215)  // Disabled as OpenAI may restrict content access
 	
