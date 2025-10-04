@@ -1218,11 +1218,11 @@
 			"Summary": ""
 		},
 		"create()": {
-			"Syntax": "**.create**( *file* : 4D.File; *purpose* : Text; *parameters* : cs.AIKit.OpenAIParameters ) : cs.AIKit.OpenAIFileResult",
+			"Syntax": "**.create**( *file* : Variant; *purpose* : Text; *parameters* : cs.AIKit.OpenAIParameters ) : cs.AIKit.OpenAIFileResult",
 			"Params": [
 				[
 					"file",
-					"4D.File",
+					"Variant",
 					"->"
 				],
 				[

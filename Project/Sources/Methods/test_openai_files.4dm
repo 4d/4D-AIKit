@@ -205,28 +205,48 @@ If (Asserted:C1132($lastErrors#Null:C1517; "Should throw error with empty file I
 	ASSERT:C1129(Position:C15("fileId"; $lastErrors[0].message)>0; "Error should mention fileId parameter")
 End if 
 
-// MARK:- Test different file purposes
-var $userDataFile:=$testDataFolder.file("user_test.txt")
-$userDataFile.setText("This is a test file for user-data API.")
+// MARK:- Test uploading Blob (binary file - PDF)
+// Create a PDF blob from base64 https://www.emcken.dk/programming/2024/01/12/very-small-pdf-for-testing/
+var $pdfBase64:="JVBERi0xLjQKMSAwIG9iago8PC9UeXBlIC9DYXRhbG9nCi9QYWdlcyAyIDAgUgo+PgplbmRvYmoK"
+$pdfBase64+="MiAwIG9iago8PC9UeXBlIC9QYWdlcwovS2lkcyBbMyAwIFJdCi9Db3VudCAxCj4+CmVuZG9iagoz"
+$pdfBase64+="IDAgb2JqCjw8L1R5cGUgL1BhZ2UKL1BhcmVudCAyIDAgUgovTWVkaWFCb3ggWzAgMCA1OTUgODQy"
+$pdfBase64+="XQovQ29udGVudHMgNSAwIFIKL1Jlc291cmNlcyA8PC9Qcm9jU2V0IFsvUERGIC9UZXh0XQovRm9u"
+$pdfBase64+="dCA8PC9GMSA0IDAgUj4+Cj4+Cj4+CmVuZG9iago0IDAgb2JqCjw8L1R5cGUgL0ZvbnQKL1N1YnR5"
+$pdfBase64+="cGUgL1R5cGUxCi9OYW1lIC9GMQovQmFzZUZvbnQgL0hlbHZldGljYQovRW5jb2RpbmcgL01hY1Jv"
+$pdfBase64+="bWFuRW5jb2RpbmcKPj4KZW5kb2JqCjUgMCBvYmoKPDwvTGVuZ3RoIDUzCj4+CnN0cmVhbQpCVAov"
+$pdfBase64+="RjEgMjAgVGYKMjIwIDQwMCBUZAooRHVtbXkgUERGKSBUagpFVAplbmRzdHJlYW0KZW5kb2JqCnhy"
+$pdfBase64+="ZWYKMCA2CjAwMDAwMDAwMDAgNjU1MzUgZgowMDAwMDAwMDA5IDAwMDAwIG4KMDAwMDAwMDA2MyAw"
+$pdfBase64+="MDAwMCBuCjAwMDAwMDAxMjQgMDAwMDAgbgowMDAwMDAwMjc3IDAwMDAwIG4KMDAwMDAwMDM5MiAw"
+$pdfBase64+="MDAwMCBuCnRyYWlsZXIKPDwvU2l6ZSA2Ci9Sb290IDEgMCBSCj4+CnN0YXJ0eHJlZgo0OTUKJSVF"
+$pdfBase64+="T0YK"
 
-var $testDataUpload:=$client.files.create($userDataFile; "user_data")
+var $pdfBlob : Blob  // :=4D.Blob.new()
+BASE64 DECODE:C896($pdfBase64; $pdfBlob)
 
-If (Asserted:C1132(Bool:C1537($testDataUpload.success); "Cannot upload userèdata file: "+JSON Stringify:C1217($testDataUpload)))
+// Test uploading blob with user_data purpose
+var $blobUploadResult:=$client.files.create($pdfBlob; "user_data")
+
+If (Asserted:C1132(Bool:C1537($blobUploadResult.success); "Cannot upload blob file: "+JSON Stringify:C1217($blobUploadResult)))
 	
-	ASSERT:C1129($testDataUpload.file.purpose="user_data"; "Purpose should be 'user_data'")
-	
-	// Clean up
-	var $cleanupResult:=$client.files.delete($testDataUpload.file.id)
-	ASSERT:C1129(Bool:C1537($cleanupResult.success); "Should be able to delete assistants file")
+	If (Asserted:C1132($blobUploadResult.file#Null:C1517; "Blob upload file must not be null"))
+		
+		ASSERT:C1129(Length:C16(String:C10($blobUploadResult.file.id))>0; "Blob upload file ID must not be empty")
+		ASSERT:C1129($blobUploadResult.file.object="file"; "Object type must be 'file'")
+		ASSERT:C1129($blobUploadResult.file.purpose="user_data"; "Purpose should be 'user_data'")
+		ASSERT:C1129($blobUploadResult.file.bytes>0; "File size must be greater than 0")
+		ASSERT:C1129($blobUploadResult.file.created_at>0; "Created timestamp must be set")
+		
+		// Clean up
+		var $cleanupResult:=$client.files.delete($blobUploadResult.file.id)
+		ASSERT:C1129(Bool:C1537($cleanupResult.success); "Should be able to delete blob file")
+		
+	End if 
 	
 End if 
 
 // MARK:- Cleanup test files
 If ($testFile.exists)
 	$testFile.delete()
-End if 
-If ($userDataFile.exists)
-	$userDataFile.delete()
 End if 
 If ($testDataFolder.exists)
 	$testDataFolder.delete(fk recursive:K87:7)

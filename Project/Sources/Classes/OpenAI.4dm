@@ -177,21 +177,33 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 		End if 
 	End if 
 	
+	var $headerKey : Text
+	var $boundary : Text
+	var $bodyText : Text
+	
 	Case of 
 		: ($body=Null:C1517)
 			$headers["Content-Type"]:="application/json"
 		: (Value type:C1509($body)=Is object:K8:27)
 			$headers["Content-Type"]:="application/json"
 			$options.body:=$body
-		: ((Value type:C1509($body)=Is text:K8:3) && (Position:C15("{boundary}"; $body)>0))  // TODO: if we must use blob for file, could not replace...
-			var $boundary:=Generate UUID:C1066
+		: (Value type:C1509($body)=Is BLOB:K8:12)
+			// Handle Blob-based multipart form-data
+			// Boundary should be in parameters["_boundary"]
+			If ($parameters#Null:C1517) && ($parameters["_boundary"]#Null:C1517)
+				$boundary:=$parameters["_boundary"]
+			Else 
+				$boundary:=Generate UUID:C1066
+			End if 
+			$headers["Content-Type"]:="multipart/form-data; boundary="+$boundary
+			$options.body:=$body
+		: ((Value type:C1509($body)=Is text:K8:3) && (Position:C15("{boundary}"; $body)>0))
+			$boundary:=Generate UUID:C1066
 			$headers["Content-Type"]:="multipart/form-data; boundary="+$boundary
 			$options.body:=Replace string:C233($body; "{boundary}"; $boundary)
 		Else 
 			$options.body:=$body
-	End case 
-	
-	var $headerKey : Text
+	End case
 	If (This:C1470.customHeaders#Null:C1517)
 		For each ($headerKey; This:C1470.customHeaders)
 			$headers[$headerKey]:=This:C1470.customHeaders[$headerKey]
@@ -256,7 +268,15 @@ Function _getApiList($path : Text; $queryParameters : Object; $parameters : cs:C
 	return This:C1470._request("GET"; $path+This:C1470._encodeQueryParameters($queryParameters); Null:C1517; $parameters; $resultType)
 	
 Function _postFiles($path : Text; $body : Object; $files : Object; $parameters : cs:C1710.OpenAIParameters; $resultType : 4D:C1709.Class) : cs:C1710.OpenAIResult
-	return This:C1470._request("POST"; $path; This:C1470._formData($body; $files); $parameters; $resultType)
+	var $boundary : Text:=Generate UUID:C1066
+	var $formDataBlob : Blob
+	$formDataBlob:=This:C1470._formData($body; $files; $boundary)
+	// Store boundary for _request to use
+	If ($parameters=Null:C1517)
+		$parameters:=cs:C1710.OpenAIParameters.new()
+	End if 
+	$parameters["_boundary"]:=$boundary
+	return This:C1470._request("POST"; $path; $formDataBlob; $parameters; $resultType)
 	
 	// MARK:- retry utils
 	
@@ -351,37 +371,54 @@ Function _encodeQueryParameters($queryParameters : Object) : Text
 	
 	return "?"+OB Entries:C1720($queryParameters).map(Formula:C1597($1.value.key+"="+$2._encodeQueryParameter($1.value.value)); This:C1470).join("&")
 	
-Function _formData($body : Object; $files : Object) : Text
+Function _formData($body : Object; $files : Object; $boundary : Text) : Blob
 	
-	var $value:=""
+	var $result : Blob
+	var $temp : Blob
+	var $textPart : Text
 	
 	var $key : Text
 	For each ($key; $body)
-		$value+="--{boundary}\r\n"
-		$value+="Content-Disposition: form-data; name=\""+$key+"\"\r\n\r\n"
-		$value+=String:C10($body[$key])+"\r\n"
+		$textPart:="--"+$boundary+"\r\n"
+		$textPart+="Content-Disposition: form-data; name=\""+$key+"\"\r\n\r\n"
+		$textPart+=String:C10($body[$key])+"\r\n"
+		TEXT TO BLOB:C554($textPart; $temp; UTF8 text without length:K22:17)
+		COPY BLOB:C558($temp; $result; 0; BLOB size:C605($result); BLOB size:C605($temp))
 	End for each 
 	
 	For each ($key; $files)
 		var $file : 4D:C1709.File
+		var $fileBlob : Blob
+		var $filename : Text
+		var $mimeType : Text
 		
-		// Check if it's already an image object or a File object
-		If (Value type:C1509($files[$key])=Is object:K8:27)
-			If (OB Instance of:C1731($files[$key]; 4D:C1709.File))
-				$file:=$files[$key]
-			Else 
-				// It's an image object, use the old method
-				$value+="--{boundary}\r\n"
-				$value+="Content-Disposition: form-data; name=\""+$key+"\"; filename=\""+$key+".png\"\r\n"
-				$value+="Content-Type: image/png\r\n\r\n"
-				$value+=cs:C1710._ImageUtils.me.toFormData($files[$key])
-				continue
+		// Check if it's a Picture variable
+		If (Value type:C1509($files[$key])=Is picture:K8:10)
+			$filename:=$key+".png"
+			$mimeType:="image/png"
+			$fileBlob:=cs:C1710._ImageUtils.me.toBlob($files[$key])
+		Else   // Check if it's already an image object, File object, or Blob object
+			If (Value type:C1509($files[$key])=Is object:K8:27)
+				If (OB Instance of:C1731($files[$key]; 4D:C1709.File))
+					$file:=$files[$key]
+				Else 
+					If (OB Instance of:C1731($files[$key]; 4D:C1709.Blob))
+						// It's a 4D.Blob object
+						$filename:=$key+".dat"  // Default filename for blob
+						$mimeType:="application/octet-stream"
+						$fileBlob:=$files[$key]
+					Else 
+						// It's an image object, convert to blob
+						$filename:=$key+".png"
+						$mimeType:="image/png"
+						$fileBlob:=cs:C1710._ImageUtils.me.toBlob($files[$key])
+					End if 
+				End if 
 			End if 
 		End if 
 		
 		If ($file#Null:C1517)
-			var $filename:=$file.fullName  // Use fullName instead of name to include extension
-			var $mimeType:=""
+			$filename:=$file.fullName  // Use fullName instead of name to include extension
 			var $ext:=$file.extension
 			
 			// Determine MIME type based on file extension
@@ -400,19 +437,31 @@ Function _formData($body : Object; $files : Object) : Text
 					$mimeType:="application/octet-stream"
 			End case 
 			
-			$value+="--{boundary}\r\n"
-			$value+="Content-Disposition: form-data; name=\""+$key+"\"; filename=\""+$filename+"\"\r\n"
-			$value+="Content-Type: "+$mimeType+"\r\n\r\n"
-			
 			// Read file content
-			var $fileBlob : Blob
 			$fileBlob:=$file.getContent()
-			$value+=BLOB to text:C555($fileBlob; UTF8 text without length:K22:17)
-			$value+="\r\n"
+		End if 
+		
+		If ($fileBlob#Null:C1517)
+			// Add multipart headers as text
+			$textPart:="--"+$boundary+"\r\n"
+			$textPart+="Content-Disposition: form-data; name=\""+$key+"\"; filename=\""+$filename+"\"\r\n"
+			$textPart+="Content-Type: "+$mimeType+"\r\n\r\n"
+			TEXT TO BLOB:C554($textPart; $temp; UTF8 text without length:K22:17)
+			COPY BLOB:C558($temp; $result; 0; BLOB size:C605($result); BLOB size:C605($temp))
+			
+			// Add binary file content
+			COPY BLOB:C558($fileBlob; $result; 0; BLOB size:C605($result); BLOB size:C605($fileBlob))
+			
+			// Add trailing CRLF
+			$textPart:="\r\n"
+			TEXT TO BLOB:C554($textPart; $temp; UTF8 text without length:K22:17)
+			COPY BLOB:C558($temp; $result; 0; BLOB size:C605($result); BLOB size:C605($temp))
 		End if 
 	End for each 
 	
 	// Add closing boundary
-	$value+="--{boundary}--"
+	$textPart:="--"+$boundary+"--"
+	TEXT TO BLOB:C554($textPart; $temp; UTF8 text without length:K22:17)
+	COPY BLOB:C558($temp; $result; 0; BLOB size:C605($result); BLOB size:C605($temp))
 	
-	return $value
+	return $result

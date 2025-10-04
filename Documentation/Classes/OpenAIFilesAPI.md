@@ -12,13 +12,13 @@ Upload a file that can be used across various endpoints.
 
 | Argument Name | Type                           | Description                                               |
 |---------------|--------------------------------|-----------------------------------------------------------|
-| `file`        | [4D.File](https://developer.4d.com/docs/API/FileClass) | The File object to be uploaded.                         |
+| `file`        | [4D.File](https://developer.4d.com/docs/API/FileClass) or [4D.Blob](https://developer.4d.com/docs/API/BlobClass) | The File or Blob object to be uploaded.                         |
 | `purpose`     | Text                           | The intended purpose of the uploaded file.               |
 | `parameters`  | [OpenAIFileParameters](OpenAIFileParameters.md) | Optional parameters for the request.                     |
 
 **Returns:** [OpenAIFileResult](OpenAIFileResult.md)
 
-**Throws:** An error if `file` is Null or if `purpose` is empty.
+**Throws:** An error if `file` is not a 4D.File or 4D.Blob, or if `purpose` is empty.
 
 Individual files can be up to 512 MB, and the size of all files uploaded by one organization can be up to 100 GB.
 
