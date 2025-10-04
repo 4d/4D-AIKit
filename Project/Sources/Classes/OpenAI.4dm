@@ -184,10 +184,10 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 	Case of 
 		: ($body=Null:C1517)
 			$headers["Content-Type"]:="application/json"
-		: (Value type:C1509($body)=Is object:K8:27)
+		: ((Value type:C1509($body)=Is object:K8:27) && (Not:C34(OB Instance of:C1731($body; 4D:C1709.Blob))))
 			$headers["Content-Type"]:="application/json"
 			$options.body:=$body
-		: (Value type:C1509($body)=Is BLOB:K8:12)
+		: ((Value type:C1509($body)=Is BLOB:K8:12) || ((Value type:C1509($body)=Is object:K8:27) && (OB Instance of:C1731($body; 4D:C1709.Blob))))
 			// Handle Blob-based multipart form-data
 			// Boundary should be in parameters["_boundary"]
 			If ($parameters#Null:C1517) && ($parameters["_boundary"]#Null:C1517)
@@ -203,7 +203,7 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 			$options.body:=Replace string:C233($body; "{boundary}"; $boundary)
 		Else 
 			$options.body:=$body
-	End case
+	End case 
 	If (This:C1470.customHeaders#Null:C1517)
 		For each ($headerKey; This:C1470.customHeaders)
 			$headers[$headerKey]:=This:C1470.customHeaders[$headerKey]
@@ -269,8 +269,7 @@ Function _getApiList($path : Text; $queryParameters : Object; $parameters : cs:C
 	
 Function _postFiles($path : Text; $body : Object; $files : Object; $parameters : cs:C1710.OpenAIParameters; $resultType : 4D:C1709.Class) : cs:C1710.OpenAIResult
 	var $boundary : Text:=Generate UUID:C1066
-	var $formDataBlob : Blob
-	$formDataBlob:=This:C1470._formData($body; $files; $boundary)
+	var $formDataBlob:=This:C1470._formData($body; $files; $boundary)
 	// Store boundary for _request to use
 	If ($parameters=Null:C1517)
 		$parameters:=cs:C1710.OpenAIParameters.new()
@@ -379,11 +378,29 @@ Function _formData($body : Object; $files : Object; $boundary : Text) : Blob
 	
 	var $key : Text
 	For each ($key; $body)
-		$textPart:="--"+$boundary+"\r\n"
-		$textPart+="Content-Disposition: form-data; name=\""+$key+"\"\r\n\r\n"
-		$textPart+=String:C10($body[$key])+"\r\n"
-		TEXT TO BLOB:C554($textPart; $temp; UTF8 text without length:K22:17)
-		COPY BLOB:C558($temp; $result; 0; BLOB size:C605($result); BLOB size:C605($temp))
+		
+		If (Value type:C1509($body[$key])=Is object:K8:27)
+			// Handle nested objects with array notation
+			// ex: -F expires_after[anchor]="created_at"
+			// ex: -F expires_after[seconds]=2592000
+			var $subkey : Text
+			For each ($subkey; $body[$key])
+				$textPart:="--"+$boundary+"\r\n"
+				$textPart+="Content-Disposition: form-data; name=\""+$key+"["+$subkey+"]\"\r\n\r\n"
+				$textPart+=String:C10($body[$key][$subkey])+"\r\n"
+				TEXT TO BLOB:C554($textPart; $temp; UTF8 text without length:K22:17)
+				COPY BLOB:C558($temp; $result; 0; BLOB size:C605($result); BLOB size:C605($temp))
+			End for each 
+		Else 
+			// Simple scalar values
+			// ex: -F purpose="fine-tune"
+			$textPart:="--"+$boundary+"\r\n"
+			$textPart+="Content-Disposition: form-data; name=\""+$key+"\"\r\n\r\n"
+			$textPart+=String:C10($body[$key])+"\r\n"
+			TEXT TO BLOB:C554($textPart; $temp; UTF8 text without length:K22:17)
+			COPY BLOB:C558($temp; $result; 0; BLOB size:C605($result); BLOB size:C605($temp))
+		End if 
+		
 	End for each 
 	
 	For each ($key; $files)

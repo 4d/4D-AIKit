@@ -1,5 +1,10 @@
+// The ID of the deleted file
 property id : Text
+
+// Whether the file was successfully deleted
 property deleted : Boolean
+
+// The object type, which is always "file"
 property object : Text
 
 Class constructor($object : Object)
