@@ -44,7 +44,7 @@ The `response_format` parameter allows you to specify the format that the model 
 The default response format returns plain text:
 
 ```4d
-var $params := cs.OpenAIChatCompletionsParameters.new({ \
+var $params := cs.AIKit.OpenAIChatCompletionsParameters.new({ \
     model: "gpt-4o-mini"; \
     response_format: {type: "text"} \
 })
@@ -55,13 +55,13 @@ var $params := cs.OpenAIChatCompletionsParameters.new({ \
 Forces the model to respond with valid JSON:
 
 ```4d
-var $params := cs.OpenAIChatCompletionsParameters.new({ \
+var $params := cs.AIKit.OpenAIChatCompletionsParameters.new({ \
     model: "gpt-4o-mini"; \
     response_format: {type: "json_object"} \
 })
 
 var $messages := [ \
-    cs.OpenAIMessage.new({ \
+    cs.AIKit.OpenAIMessage.new({ \
         role: "system"; \
         content: "You are a helpful assistant that always responds in JSON format." \
     }) \
@@ -91,7 +91,7 @@ var $jsonSchema := { \
     additionalProperties: False \
 }
 
-var $params := cs.OpenAIChatCompletionsParameters.new({ \
+var $params := cs.AIKit.OpenAIChatCompletionsParameters.new({ \
     model: "gpt-4o-mini"; \
     response_format: { \
         type: "json_schema"; \

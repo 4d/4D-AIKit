@@ -21,7 +21,7 @@ The `OpenAIFileListResult` class contains the result of listing files from the O
 ### Basic Usage
 
 ```4d
-var $params:=cs.OpenAIFileListParameters.new()
+var $params:=cs.AIKit.OpenAIFileListParameters.new()
 $params.purpose:="assistants"
 $params.limit:=50
 
@@ -39,7 +39,7 @@ End for each
 ### Pagination Example
 
 ```4d
-var $params:=cs.OpenAIFileListParameters.new()
+var $params:=cs.AIKit.OpenAIFileListParameters.new()
 $params.limit:=100
 
 var $result:=$client.files.list($params)

@@ -24,7 +24,7 @@ The `expires_after` object contains the following properties:
 ## Example Usage
 
 ```4d
-var $params:=cs.OpenAIFileParameters.new()
+var $params:=cs.AIKit.OpenAIFileParameters.new()
 
 // Set expiration after 7 days
 $params.expires_after:={}

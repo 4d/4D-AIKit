@@ -19,7 +19,7 @@ The `OpenAIFileListParameters` class contains parameters for listing files in th
 
 ```4d
 // Get first 100 files with purpose "fine-tune"
-var $params:=cs.OpenAIFileListParameters.new()
+var $params:=cs.AIKit.OpenAIFileListParameters.new()
 $params.limit:=100
 $params.purpose:="fine-tune"
 $params.order:="desc"

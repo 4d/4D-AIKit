@@ -49,7 +49,7 @@ Upload a file that can be used across various endpoints.
 ```4d
 var $file:=File("/RESOURCES/training-data.jsonl")
 
-var $params:=cs.OpenAIFileParameters.new()
+var $params:=cs.AIKit.OpenAIFileParameters.new()
 $params.expires_after:={}
 $params.expires_after.anchor:="created_at"
 $params.expires_after.seconds:=2592000  // 30 days
@@ -107,7 +107,7 @@ Returns a list of files that belong to the user's organization.
 #### Example
 
 ```4d
-var $params:=cs.OpenAIFileListParameters.new()
+var $params:=cs.AIKit.OpenAIFileListParameters.new()
 $params.purpose:="assistants"
 $params.limit:=50
 $params.order:="desc"

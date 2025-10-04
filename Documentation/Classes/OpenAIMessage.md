@@ -52,13 +52,13 @@ Adds a file reference to the content of the message. Only files with the purpose
 
 ```4d
 // Create an instance of OpenAIMessage
-var $message:=cs.OpenAIMessage.new({role: "user"; content: "Hello!"})
+var $message:=cs.AIKit.OpenAIMessage.new({role: "user"; content: "Hello!"})
 ```
 
 ### Adding Images
 
 ```4d
-var $message:=cs.OpenAIMessage.new({role: "user"; content: "Please analyze this image:"})
+var $message:=cs.AIKit.OpenAIMessage.new({role: "user"; content: "Please analyze this image:"})
 
 // Add an image URL with details
 $message.addImageURL("http://example.com/image.jpg"; "high")
@@ -75,7 +75,7 @@ If ($uploadResult.success)
     var $uploadedFile:=$uploadResult.file
     
     // Create message and attach the file
-    var $message:=cs.OpenAIMessage.new({role: "user"; content: "Please analyze this document:"})
+    var $message:=cs.AIKit.OpenAIMessage.new({role: "user"; content: "Please analyze this document:"})
     $message.addFile($uploadedFile)
     
     // $message.content -> [{type: "text"; text: "Please analyze this document:"}; {type: "file"; file_id: "file-abc123"}]
