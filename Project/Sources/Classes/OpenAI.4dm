@@ -370,7 +370,7 @@ Function _encodeQueryParameters($queryParameters : Object) : Text
 	
 	return "?"+OB Entries:C1720($queryParameters).map(Formula:C1597($1.value.key+"="+$2._encodeQueryParameter($1.value.value)); This:C1470).join("&")
 	
-Function _formData($body : Object; $files : Object; $boundary : Text) : Blob
+Function _formData($body : Object; $files : Object; $boundary : Text) : 4D:C1709.Blob
 	
 	var $result : Blob
 	var $temp : Blob
