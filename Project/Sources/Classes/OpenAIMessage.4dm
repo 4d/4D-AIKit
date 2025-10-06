@@ -48,7 +48,7 @@ Function set text($text : Text)
 			// only one text
 			var $textElement : Variant:=This:C1470.content.find(Formula:C1597(String:C10($1.value.type)="text"))
 			If ($textElement=Null:C1517)
-				This:C1470.content.unshift({type: "text"; text: This:C1470.content})
+				This:C1470.content.unshift({type: "text"; text: $text})
 			Else 
 				$textElement.text:=$text
 			End if 
@@ -62,7 +62,7 @@ Function addImageURL($imageURL : Text; $detail : Text)
 		This:C1470.content:=[{type: "text"; text: This:C1470.content}]
 	End if 
 	var $imageObject:={url: $imageURL}
-	If ((Length:C16($detail)>0) && ["auto"; "low"; "high"].includes($detail))
+	If ((Length:C16($detail)>0) && (["auto"; "low"; "high"].includes($detail)))
 		$imageObject.detail:=$detail
 	End if 
 	This:C1470.content.push({type: "image_url"; image_url: $imageObject})
@@ -70,8 +70,8 @@ Function addImageURL($imageURL : Text; $detail : Text)
 /*
 * Adds a file to the message content. Only files with purpose "user_data" are allowed.
 * 
-* @param $file {cs.OpenAIFile} The file object to add to the message (must have purpose "user_data")
-* @throws Error if file is null, not an OpenAIFile instance, or doesn't have purpose "user_data"
+* @param $file {cs.OpenAIFile} The file object to add to the message (must have purpose "user_data" and a valid ID)
+* @throws Error if file is null, doesn't have an ID, or doesn't have purpose "user_data"
 */
 Function addFile($file : cs:C1710.OpenAIFile)
 	
@@ -81,52 +81,29 @@ Function addFile($file : cs:C1710.OpenAIFile)
 	End if 
 	
 	If (Not:C34(OB Instance of:C1731($file; cs:C1710.OpenAIFile)))
-		throw:C1805(1; "Expected an OpenAIFile instance")
+		$file:=cs:C1710.OpenAIFile.new($file)
+	End if 
+	
+	// Verify the file has an ID
+	If (Length:C16(String:C10($file.id))=0)
+		throw:C1805(1; "File must have a valid ID")
 	End if 
 	
 	// Verify the file has purpose "user_data"
-	If ($file.purpose#"user_data")
+	If (String:C10($file.purpose)#"user_data")
 		throw:C1805(1; "File must have purpose 'user_data' (current purpose: '"+$file.purpose+"')")
 	End if 
 	
 	// Ensure content is a collection
-	If (Value type:C1509(This:C1470.content)=Is text:K8:3)
-		This:C1470.content:=[{type: "text"; text: This:C1470.content}]
-	End if 
+	Case of 
+		: (Value type:C1509(This:C1470.content)=Is text:K8:3)
+			This:C1470.content:=[{type: "text"; text: This:C1470.content}]
+		: (This:C1470.content=Null:C1517)
+			This:C1470.content:=[]
+	End case 
 	
 	// Add file reference to content
 	This:C1470.content.push({type: "file"; file_id: $file.id})
-	
-	// utility function to find first JSON in message that could be returned by 
-Function _extractJSONObject() : Object
-	
-	var $message : Text:=This:C1470.text
-	
-	If (Length:C16($message)=0)
-		return Null:C1517
-	End if 
-	
-	var $pos:=Position:C15("{"; $message)
-	
-	If ($pos<=0)
-		return Null:C1517
-	End if 
-	
-	$message:=Substring:C12($message; $pos)
-	
-	ARRAY LONGINT:C221($a_pos; 0)
-	ARRAY LONGINT:C221($a_len; 0)
-	If (Not:C34(Match regex:C1019(".+(\\}.+)$"; $message; 1; $a_pos; $a_len)))
-		return Null:C1517
-	End if 
-	$pos:=$a_pos{1}
-	If ($pos<=0)
-		return Null:C1517
-	End if 
-	
-	$message:=Substring:C12($message; 1; $pos)
-	
-	return Try(JSON Parse:C1218($message))
 	
 	// delta accumulation
 Function _accumulateDeltaBetween($acc : Object; $delta : Object) : Object

@@ -37,14 +37,15 @@ Adds an image URL to the content of the message. If the content is currently tex
 
 | Parameter        | Type  | Description                                |
 |------------------|-------|--------------------------------------------|
-| *file*           | [OpenAIFile](OpenAIFile.md) | The file object to add to the message. Must have `purpose` set to `"user_data"`. |
+| *file*           | [OpenAIFile](OpenAIFile.md) | The file object to add to the message. Must have `purpose` set to `"user_data"` and a valid `id`. |
 
 **Throws:** An error if:
+
 - The file parameter is `Null`
-- The file is not an `OpenAIFile` instance
+- The file doesn't have a valid `id`
 - The file's `purpose` is not `"user_data"`
 
-Adds a file reference to the content of the message. Only files with the purpose `"user_data"` can be attached to messages. If the content is currently text, it will be converted to a collection format.
+Adds a file reference to the content of the message. If the content is currently text, it will be converted to a collection format.
 
 ## Example Usage
 
