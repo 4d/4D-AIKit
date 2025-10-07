@@ -1,0 +1,47 @@
+{
+  // Editor Settings
+  "editor.tabSize": 2,
+  "editor.insertSpaces": false,
+  "editor.detectIndentation": true,
+  "editor.rulers": [120],
+  "editor.wordWrap": "on",
+  "editor.minimap.enabled": true,
+
+  // File Settings
+  "files.insertFinalNewline": true,
+  "files.encoding": "utf8",
+  "files.eol": "\n",
+
+  // Exclude files from explorer
+  "files.exclude": {
+    "**/.DS_Store": true,
+    "**/data.4DD": true,
+    "**/data.journal": true,
+    "**/data.Match": true,
+    "**/*.noindex": true,
+    "Libraries": true,
+    "Logs/**": true,
+    "userPreferences.*/**": true,
+    "!userPreferences.*/dependencies-lock.json": false
+  },
+
+
+  // Search exclusions
+  "search.exclude": {
+    "**/DerivedData": true,
+    "**/CompiledCode": true
+  },
+
+  // 4D Specific Settings
+  "files.associations": {
+    "*.4dm": "4d",
+    "*.4DCatalog": "xml",
+    "*.4DProject": "json",
+    "*.4DSettings": "json"
+  },
+
+  // Explorer Settings
+  "explorer.sortOrder": "type",
+  "explorer.confirmDelete": true,
+  "explorer.confirmDragAndDrop": false
+}

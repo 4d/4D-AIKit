@@ -1,0 +1,72 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Open 4D Project",
+      "type": "shell",
+      "command": "open",
+      "args": [
+        "${workspaceFolder}/Project/4D AIKit.4DProject"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
+    },
+    {
+      "label": "View  Logs",
+      "type": "shell",
+      "command": "cat",
+      "args": [
+        "${workspaceFolder}/Logs/build.txt"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "View Error Dump",
+      "type": "shell",
+      "command": "cat",
+      "args": [
+        "${workspaceFolder}/Logs/errorDump.txt"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Clean",
+      "type": "shell",
+      "command": "rm",
+      "args": [
+        "-rf",
+        "${workspaceFolder}/Logs",
+        "${workspaceFolder}/Project/DerivedData",
+        "${workspaceFolder}/Libraries",
+
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared"
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "searchTerm",
+      "type": "promptString",
+      "description": "Enter search term for 4D classes"
+    }
+  ]
+}
