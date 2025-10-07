@@ -32,6 +32,7 @@ End if
 
 // MARK:- no stream test with mock
 If ((Position:C15("127.0.0.1"; $client.baseURL)>0) && ($client.apiKey="none"))  // mock not implemented
+	KILL WORKER:C1390(Current method name:C684)
 	return 
 End if 
 
@@ -58,3 +59,4 @@ If (Asserted:C1132(Bool:C1537($streamResult.success); "Cannot complete chat comp
 	
 End if 
 
+KILL WORKER:C1390(Current method name:C684)

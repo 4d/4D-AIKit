@@ -109,6 +109,7 @@
 			"test_openai_embeddings_async",
 			"test_openai_errors",
 			"test_openai_files",
+			"test_openai_files_async",
 			"test_openai_images",
 			"test_openai_models",
 			"test_openai_models_async",
