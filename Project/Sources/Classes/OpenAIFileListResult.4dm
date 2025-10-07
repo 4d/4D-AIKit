@@ -14,7 +14,10 @@ Function get files : Collection
 	var $files:=[]
 	var $file : Object
 	For each ($file; $body.data)
-		$files.push(cs:C1710.OpenAIFile.new($file))
+		$file:=Try(cs:C1710.OpenAIFile.new($file))
+		If ($file#Null:C1517)
+			$files.push($file)
+		End if 
 	End for each 
 	
 	return $files

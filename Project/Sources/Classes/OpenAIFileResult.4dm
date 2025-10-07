@@ -11,4 +11,13 @@ Function get file : cs:C1710.OpenAIFile
 		return Null:C1517
 	End if 
 	
-	return cs:C1710.OpenAIFile.new($body)
+	var $file:=Try(cs:C1710.OpenAIFile.new($body))
+	If ($file=Null:C1517)
+		var $errors:=Last errors:C1799
+		If (($errors#Null:C1517) && (This:C1470.errors=Null:C1517))
+			This:C1470._errors:=$errors  //decoding error
+		End if 
+	End if 
+	
+	return $file
+	

@@ -28,11 +28,11 @@ If (Asserted:C1132(Bool:C1537($uploadResult.success); "Cannot upload file: "+JSO
 	If (Asserted:C1132($uploadResult.file#Null:C1517; "File must not be null"))
 		
 		ASSERT:C1129(Length:C16(String:C10($uploadResult.file.id))>0; "File ID must not be empty")
-		ASSERT:C1129($uploadResult.file.object="file"; "Object type must be 'file'")
-		ASSERT:C1129($uploadResult.file.purpose="fine-tune"; "Purpose must match")
-		ASSERT:C1129($uploadResult.file.filename="test_data.jsonl"; "Filename must match")
-		ASSERT:C1129($uploadResult.file.bytes>0; "File size must be greater than 0")
-		ASSERT:C1129($uploadResult.file.created_at>0; "Created timestamp must be set")
+		ASSERT:C1129(String:C10($uploadResult.file.object)="file"; "Object type must be 'file'")
+		ASSERT:C1129(String:C10($uploadResult.file.purpose)="fine-tune"; "Purpose must match")
+		ASSERT:C1129(String:C10($uploadResult.file.filename)="test_data.jsonl"; "Filename must match")
+		ASSERT:C1129((Value type:C1509($uploadResult.file.bytes)=Is real:K8:4) && $uploadResult.file.bytes>0; "File size must be greater than 0")
+		ASSERT:C1129((Value type:C1509($uploadResult.file.created_at)=Is real:K8:4) && $uploadResult.file.created_at>0; "Created timestamp must be set")
 		
 		$uploadedFileId:=$uploadResult.file.id
 		
