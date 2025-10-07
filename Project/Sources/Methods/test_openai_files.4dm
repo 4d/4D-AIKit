@@ -262,6 +262,8 @@ If (Asserted:C1132($lastErrors#Null:C1517; "Should throw error with empty file I
 	ASSERT:C1129(Position:C15("fileId"; $lastErrors[0].message)>0; "Error should mention fileId parameter")
 End if 
 
+Try(True:C214)  // Reset errors
+
 // MARK:- Test uploading Blob (binary file - PDF)
 // Create a PDF blob from base64 https://www.emcken.dk/programming/2024/01/12/very-small-pdf-for-testing/
 var $pdfBase64:="JVBERi0xLjQKMSAwIG9iago8PC9UeXBlIC9DYXRhbG9nCi9QYWdlcyAyIDAgUgo+PgplbmRvYmoK"

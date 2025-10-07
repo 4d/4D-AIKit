@@ -17,6 +17,9 @@ For each ($test; $tests.tests)
 	Try(Formula from string:C1601($test.name).call())
 	
 	$test.errors:=Last errors:C1799
+	If ($test.errors#Null:C1517)
+		// TRACE
+	End if 
 	$test.success:=($test.errors=Null:C1517)
 	
 End for each 

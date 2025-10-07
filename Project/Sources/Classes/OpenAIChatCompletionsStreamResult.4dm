@@ -52,7 +52,13 @@ Function get terminated : Boolean
 	
 	// Return True if we success to decode the streaming data as object.
 Function get success : Boolean
-	return This:C1470.data#Null:C1517
+	If (This:C1470.data=Null:C1517)
+		return False:C215
+	End if 
+	If ((This:C1470.request=Null:C1517) || (This:C1470.request.response=Null:C1517))
+		return True:C214  // we do not have final state
+	End if 
+	return (300>This:C1470.request.response.status) && (This:C1470.request.response.status>=200)
 	
 	// Return errors if we manage to find some. 
 Function get errors : Collection

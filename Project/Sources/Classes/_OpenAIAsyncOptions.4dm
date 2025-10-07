@@ -5,7 +5,6 @@ property dataType : Text
 property body : Variant
 property timeout : Integer
 
-property _client : cs:C1710.OpenAI
 property _parameters : cs:C1710.OpenAIChatCompletionsParameters
 property _result : cs:C1710.OpenAIResult
 property _onStreamError : Boolean:=False:C215
@@ -19,23 +18,21 @@ Class constructor($options : Object; $client : cs:C1710.OpenAI; $parameters : cs
 		This:C1470[$key]:=$options[$key]
 	End for each 
 	
+	This:C1470._parameters:=$parameters
+	This:C1470._result:=$result
 	If (Bool:C1537(This:C1470._parameters.stream))
 		This:C1470.dataType:="text"
 	End if 
-	
-	This:C1470._client:=$client
-	This:C1470._parameters:=$parameters
-	This:C1470._result:=$result
 	
 	
 	// MARK:- HTTP callback
 Function onTerminate($request : 4D:C1709.HTTPRequest; $event : Object)
 	If (Bool:C1537(This:C1470._parameters.stream))
 		var $result:=cs:C1710.OpenAIChatCompletionsStreamResult.new($request; $request.response.body; True:C214)
-		_openAICallbacks(This:C1470._parameters; $result; This:C1470._client)
+		_openAICallbacks(This:C1470._parameters; $result)
 	Else 
 		This:C1470._result._terminated:=True:C214  // force terminated because onTerminate is before onTerminated
-		_openAICallbacks(This:C1470._parameters; This:C1470._result; This:C1470._client)
+		_openAICallbacks(This:C1470._parameters; This:C1470._result)
 	End if 
 	
 Function onData($request : 4D:C1709.HTTPRequest; $event : Object)
@@ -84,10 +81,10 @@ Function onData($request : 4D:C1709.HTTPRequest; $event : Object)
 		End if 
 		
 		If (This:C1470._parameters.onData#Null:C1517)
-			This:C1470._parameters.onData.call(This:C1470._parameters._formulaThis || This:C1470._client; $chunkResult)
+			This:C1470._parameters.onData.call(This:C1470._parameters._formulaThis; $chunkResult)
 		End if 
 		If (This:C1470._parameters.formula#Null:C1517)
-			This:C1470._parameters.formula.call(This:C1470._parameters._formulaThis || This:C1470._client; $chunkResult)
+			This:C1470._parameters.formula.call(This:C1470._parameters._formulaThis; $chunkResult)
 		End if 
 		
 		If (($chunkResult._decodingErrors#Null:C1517) && (Position:C15("data: "; $line)<=0))  // XXX: maybe skip before and even do not try to decode invalid SSE packet

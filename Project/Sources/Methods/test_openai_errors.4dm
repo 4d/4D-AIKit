@@ -74,7 +74,7 @@ CALL WORKER:C1389(Current method name:C684; Formula:C1597($client.chat.completio
 cs:C1710._TestSignal.me.wait(10*1000)
 
 var $valueStream : cs:C1710.OpenAIChatCompletionsStreamResult:=cs:C1710._TestSignal.me.result
-ASSERT:C1129(Not:C34($valueStream.success))
+ASSERT:C1129(Not:C34($valueStream.success); "Must not success"+JSON Stringify:C1217($valueStream))
 ASSERT:C1129($valueStream.errors.length>0; "Failed to create a connected socket"+JSON Stringify:C1217($valueStream))
 cs:C1710._TestSignal.me.reset()
 $client.apiKey:=$tmpApiKey
