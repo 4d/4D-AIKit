@@ -110,10 +110,6 @@ If (Asserted:C1132($result2.success; JSON Stringify:C1217($result2)))
 	
 End if 
 
-If ((Position:C15("127.0.0.1"; $client.baseURL)>0) && ($client.apiKey="none"))  // mock has no implemented wrong tool call
-	return 
-End if 
-
 // MARK:- Test tool with error handling
 
 // Reset the helper for a new conversation
@@ -169,6 +165,13 @@ If (Asserted:C1132($result3.success; JSON Stringify:C1217($result3)))
 	
 End if 
 
+Try(True:C214)  // reset errors
+
+If ((Position:C15("127.0.0.1"; $client.baseURL)>0) && ($client.apiKey="none"))  // mock has no implemented wrong tool call
+	return 
+End if 
+
+
 // MARK:- Test autoHandleToolCalls disabled
 
 // Reset the helper for a new conversation
@@ -198,14 +201,14 @@ If (Asserted:C1132($result4.success; JSON Stringify:C1217($result4)))
 	
 	var $foundToolCallOnly:=False:C215
 	var $foundToolResponseOnly:=False:C215
-	var $noAutoMessage:cs:C1710.OpenAIMessage
+	var $noAutoMessage : cs:C1710.OpenAIMessage
 	
 	For each ($noAutoMessage; $helper.messages)
 		If ($noAutoMessage.role="assistant") && ($noAutoMessage.tool_calls#Null:C1517) && ($noAutoMessage.tool_calls.length>0)
 			$foundToolCallOnly:=True:C214
 			
 			// Check if the tool call is for our registered function
-			var $noAutoToolCall:Object:=$noAutoMessage.tool_calls.first()
+			var $noAutoToolCall : Object:=$noAutoMessage.tool_calls.first()
 			ASSERT:C1129($noAutoToolCall.function.name="no_auto_function"; "Tool call should be for no_auto_function")
 		End if 
 		
@@ -220,7 +223,7 @@ If (Asserted:C1132($result4.success; JSON Stringify:C1217($result4)))
 	ASSERT:C1129(Not:C34($foundToolResponseOnly); "Should NOT have found a tool response message when auto handling is disabled")
 	
 	// The last message should be the assistant's message with tool_calls, not a follow-up response
-	var $lastMessage:cs:C1710.OpenAIMessage:=$helper.messages.last()
+	var $lastMessage : cs:C1710.OpenAIMessage:=$helper.messages.last()
 	ASSERT:C1129($lastMessage.role="assistant"; "Last message should be from assistant")
 	ASSERT:C1129($lastMessage.tool_calls#Null:C1517; "Last message should contain tool_calls")
 	ASSERT:C1129($lastMessage.tool_calls.length>0; "Last message should have at least one tool call")
