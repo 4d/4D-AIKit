@@ -100,77 +100,55 @@ Class constructor($client : cs.AIKit.OpenAI)
 	This.endpoint:="/v1/[endpoint-path]"
 
 // Main API method
-Function [actionName]($params : cs.AIKit.OpenAI[Feature]Parameters) : cs.AIKit.OpenAI[Feature]Result
-	var $result : cs.AIKit.OpenAI[Feature]Result
-	var $options : Object
-	
-	// Build request
-	$options:=New object
-	$options.method:="POST"  // or GET, DELETE, etc.
-	$options.endpoint:=This.endpoint
-	$options.body:=$params.toObject()
-	
-	// Make request
-	$result:=cs.AIKit.OpenAI[Feature]Result.new()
-	$result.response:=This._request($options)
-	
-	// Handle response
-	If ($result.response.success)
-		$result.parse($result.response.data)
-	Else 
-		$result.error:=cs.AIKit.OpenAIError.new($result.response)
+Function [actionName]($requiredParam1 : Type; ... $requiredParamN : Type; $parameters : cs.AIKit.OpenAI[Feature]Parameters) : cs.AIKit.OpenAI[Feature]Result
+	// Ensure parameters is the correct type (optional, but recommended)
+	If (Not(OB Instance of($parameters; cs.AIKit.OpenAI[Feature]Parameters)))
+		$parameters:=cs.AIKit.OpenAI[Feature]Parameters.new($parameters)
 	End if 
 	
-	return $result
+	// Build request body from parameters and add required params
+	var $body : Object
+	$body:=$parameters.body()
+	$body.required_param1:=$requiredParam1
+	// ... add all required parameters
+	$body.required_paramN:=$requiredParamN
+	
+	// Make API request - returns result object directly
+	// For POST: use This._client._post("/[feature-endpoint]"; $body; $parameters; cs.AIKit.OpenAI[Feature]Result)
+	// For GET:  use This._client._get("/[feature-endpoint]"; $parameters; cs.AIKit.OpenAI[Feature]Result)
+	// For GET with ID: use This._client._get("/[feature-endpoint]/"+$resourceId; $parameters; cs.AIKit.OpenAI[Feature]Result)
+	// For DELETE: use This._client._delete("/[feature-endpoint]/"+$resourceId; $parameters; cs.AIKit.OpenAI[Feature]Result)
+	return This._client._post("/[feature-endpoint]"; $body; $parameters; cs.AIKit.OpenAI[Feature]Result)
 
-// Async version
-Function [actionName]Async($params : cs.AIKit.OpenAI[Feature]Parameters; $callback : 4D.Function)
-	var $options : cs._OpenAIAsyncOptions
-	
-	$options:=cs._OpenAIAsyncOptions.new()
-	$options.params:=$params
-	$options.callback:=$callback
-	$options.resultClass:="OpenAI[Feature]Result"
-	
-	This._requestAsync($options)
-```
 
 ### For Parameter Classes
 ```4d
 // Project/Sources/Classes/OpenAI[Feature]Parameters.4dm
 
+// Optional feature-specific properties
+property optionalParam : Text
+property anotherOption : Integer
+
 Class extends OpenAIParameters
 
-Class constructor
-	Super()
-	
-	// Required parameters
-	This.requiredParam:=Null
-	
-	// Optional parameters with defaults
-	This.optionalParam:=Null
-	This.model:="gpt-4"
+Class constructor($object : Object)
+	Super($object)
 
-Function toObject() : Object
-	var $obj : Object
+Function body() : Object
+	// Get base body from parent (includes common params like model, timeout, etc.)
+	var $body : Object
+	$body:=Super.body()
 	
-	$obj:=New object
-	
-	// Add required parameters
-	If (This.requiredParam#Null)
-		$obj.required_param:=This.requiredParam
+	// Add feature-specific optional parameters
+	If (Length(String(This.optionalParam))>0)
+		$body.optional_param:=This.optionalParam
 	End if 
 	
-	// Add optional parameters
-	If (This.optionalParam#Null)
-		$obj.optional_param:=This.optionalParam
+	If (This.anotherOption>0)
+		$body.another_option:=This.anotherOption
 	End if 
 	
-	If (This.model#Null)
-		$obj.model:=This.model
-	End if 
-	
-	return $obj
+	return $body
 ```
 
 ### For Result Classes
