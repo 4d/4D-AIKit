@@ -130,6 +130,39 @@ Delete a file
 var $deleteResult:=$client.files.delete($fileId)
 ```
 
+#### Uploads
+
+https://platform.openai.com/docs/api-reference/uploads
+
+Upload large files (up to 8 GB) in multiple parts
+
+```4d
+var $partIds:=New collection
+
+// Step 1: Create upload
+var $params:=cs.AIKit.OpenAIUploadParameters.new()
+$params.filename:="training_data.jsonl"
+$params.purpose:="fine-tune"
+$params.bytes:=200000000  // File size in bytes
+$params.mime_type:="text/jsonl"
+
+var $result:=$client.uploads.create($params)
+var $uploadId:=$result.upload.id
+
+// Step 2: Add parts (up to 64 MB each)
+For ($i; 1; 4)
+    var $file:=File("/path/to/chunk_"+String($i)+".dat")
+    var $partResult:=$client.uploads.addPart($uploadId; $file; cs.AIKit.OpenAIParameters.new())
+    $partIds.push($partResult.part.id)
+End for 
+
+// Step 3: Complete upload
+var $completeParams:=cs.AIKit.OpenAIUploadCompleteParameters.new()
+$completeParams.part_ids:=$partIds
+var $completeResult:=$client.uploads.complete($uploadId; $completeParams)
+var $fileId:=$completeResult.upload.file.id
+```
+
 #### Moderations
 
 https://platform.openai.com/docs/api-reference/moderations

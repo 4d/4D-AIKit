@@ -116,12 +116,25 @@
 			"test_openai_moderations",
 			"test_openai_msg",
 			"test_openai_msg_accumulate",
+			"test_openai_uploads",
+			"test_openai_uploads_async",
 			"test_openai_vision",
 			"TestOpenAI"
 		],
 		"classes": [
 			"_TestModels",
 			"_TestSignal"
+		]
+	},
+	"Uploads": {
+		"classes": [
+			"OpenAIUpload",
+			"OpenAIUploadCompleteParameters",
+			"OpenAIUploadParameters",
+			"OpenAIUploadPart",
+			"OpenAIUploadPartResult",
+			"OpenAIUploadResult",
+			"OpenAIUploadsAPI"
 		]
 	},
 	"Utils": {

@@ -63,6 +63,7 @@ The API provides access to multiple resources that allow seamless interaction wi
 | `moderations`     | [OpenAIModerationsAPI](OpenAIModerationsAPI.md) | Access to the Moderations API. |
 | `embeddings`      | [OpenAIEmbeddingsAPI](OpenAIEmbeddingsAPI.md)   | Access to the Embeddings API.  |
 | `files`           | [OpenAIFilesAPI](OpenAIFilesAPI.md)             | Access to the Files API.       |
+| `uploads`           | [OpenAIUploadsAPI](OpenAIUploadsAPI.md)             | Access to the Uploads API.       |
 
 ### Example Usage
 
