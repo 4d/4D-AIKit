@@ -610,22 +610,22 @@
 			],
 			"Summary": ""
 		},
-		"addFile()": {
-			"Syntax": "**.addFile**( *file* : cs.AIKit.OpenAIFile )",
-			"Params": [
-				[
-					"file",
-					"cs.AIKit.OpenAIFile",
-					"->"
-				]
-			],
-			"Summary": ""
-		},
 		"set text()": {
 			"Syntax": "**.set text**( *text* : Text )",
 			"Params": [
 				[
 					"text",
+					"Text",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"addFileId()": {
+			"Syntax": "**.addFileId**( *fileId* : Text )",
+			"Params": [
+				[
+					"fileId",
 					"Text",
 					"->"
 				]
@@ -1643,11 +1643,11 @@
 			"Summary": ""
 		},
 		"prompt()": {
-			"Syntax": "**.prompt**( *prompt* : Text ) : cs.AIKit.OpenAIChatCompletionsResult",
+			"Syntax": "**.prompt**( *prompt* : Variant ) : cs.AIKit.OpenAIChatCompletionsResult",
 			"Params": [
 				[
 					"prompt",
-					"Text",
+					"Variant",
 					"->"
 				],
 				[

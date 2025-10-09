@@ -80,45 +80,15 @@ ASSERT:C1129($imgMsg5.content[1].image_url.detail="auto"; "Image detail 'auto' s
 // MARK:- Test addFile
 var $fileMsg1 : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({role: "user"; content: "Check this file"})
 var $validFile : cs:C1710.OpenAIFile:=cs:C1710.OpenAIFile.new({id: "file-123"; purpose: "user_data"})
-$fileMsg1.addFile($validFile)
+$fileMsg1.addFileId($validFile.id)
 ASSERT:C1129(Value type:C1509($fileMsg1.content)=Is collection:K8:32; "addFile should convert content to collection")
 ASSERT:C1129($fileMsg1.content.length=2; "addFile should add file to collection")
 ASSERT:C1129($fileMsg1.content[1].type="file"; "File entry should have correct type")
 ASSERT:C1129($fileMsg1.content[1].file_id="file-123"; "File ID should be set correctly")
 
 var $fileMsg2 : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({role: "user"; content: [{type: "text"; text: "Test"}]})
-$fileMsg2.addFile($validFile)
+$fileMsg2.addFileId($validFile.id)
 ASSERT:C1129($fileMsg2.content.length=2; "addFile should add to existing collection")
-
-// Test error cases for addFile
-var $fileMsg3 : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({role: "user"; content: "Test"})
-var $error : Object
-$error:=Try($fileMsg3.addFile(Null:C1517))
-ASSERT:C1129($error=Null:C1517; "addFile should throw error for null file")
-Try(True:C214)  // reset last errors
-
-var $fileMsg4 : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({role: "user"; content: "Test"})
-$error:=Try($fileMsg4.addFile({id: "123"}))
-ASSERT:C1129($error=Null:C1517; "addFile should throw error for non-OpenAIFile object")
-Try(True:C214)  // reset last errors
-
-var $fileMsg5 : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({role: "user"; content: "Test"})
-var $wrongPurposeFile : cs:C1710.OpenAIFile:=cs:C1710.OpenAIFile.new({id: "file-456"; purpose: "assistants"})
-$error:=Try($fileMsg5.addFile($wrongPurposeFile))
-ASSERT:C1129($error=Null:C1517; "addFile should throw error for file with wrong purpose")
-Try(True:C214)  // reset last errors
-
-var $fileMsg6 : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({role: "user"; content: "Test"})
-var $noIdFile : cs:C1710.OpenAIFile:=cs:C1710.OpenAIFile.new({purpose: "user_data"})
-$error:=Try($fileMsg6.addFile($noIdFile))
-ASSERT:C1129($error=Null:C1517; "addFile should throw error for file without ID")
-Try(True:C214)  // reset last errors
-
-var $fileMsg7 : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({role: "user"; content: "Test"})
-var $emptyIdFile : cs:C1710.OpenAIFile:=cs:C1710.OpenAIFile.new({id: ""; purpose: "user_data"})
-$error:=Try($fileMsg7.addFile($emptyIdFile))
-ASSERT:C1129($error=Null:C1517; "addFile should throw error for file with empty ID")
-Try(True:C214)  // reset last errors
 
 // MARK:- Test _toObject
 var $toObjMsg1 : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({role: "user"; content: "Test"})
