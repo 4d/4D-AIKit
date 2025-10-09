@@ -31,19 +31,13 @@ The `OpenAIMessage` class represents a structured message containing a role, con
 
 Adds an image URL to the content of the message. If the content is currently text, it will be converted to a collection format.
 
-### addFile()
+### addFileId()
 
-**addFile**(*file* : [OpenAIFile](OpenAIFile.md))
+**addFileId**(*fileId* : Text)
 
 | Parameter        | Type  | Description                                |
 |------------------|-------|--------------------------------------------|
-| *file*           | [OpenAIFile](OpenAIFile.md) | The file object to add to the message. Must have `purpose` set to `"user_data"` and a valid `id`. |
-
-**Throws:** An error if:
-
-- The file parameter is `Null`
-- The file doesn't have a valid `id`
-- The file's `purpose` is not `"user_data"`
+| *fileId*         | Text  | The file ID to add to the message. |
 
 Adds a file reference to the content of the message. If the content is currently text, it will be converted to a collection format.
 
@@ -75,9 +69,9 @@ var $uploadResult:=$client.files.create($file; "user_data"; Null)
 If ($uploadResult.success)
     var $uploadedFile:=$uploadResult.file
     
-    // Create message and attach the file
+    // Create message and attach the file using its ID
     var $message:=cs.AIKit.OpenAIMessage.new({role: "user"; content: "Please analyze this document:"})
-    $message.addFile($uploadedFile)
+    $message.addFileId($uploadedFile.id)
     
     // $message.content -> [{type: "text"; text: "Please analyze this document:"}; {type: "file"; file_id: "file-abc123"}]
 End if

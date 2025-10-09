@@ -84,9 +84,28 @@ Function _pushMessage($message : cs:C1710.OpenAIMessage)
 		This:C1470.messages.push($message)
 	End if 
 	
-Function prompt($prompt : Text) : cs:C1710.OpenAIChatCompletionsResult
+Function prompt($prompt : Variant) : cs:C1710.OpenAIChatCompletionsResult
+	var $type:=Value type:C1509($prompt)
+	Case of 
+		: ($type=Is text:K8:3)
+			var $message:=cs:C1710.OpenAIMessage.new({role: "user"; content: $prompt})
+		: ($type=Is object:K8:27)
+			Case of 
+				: (OB Instance of:C1731($prompt; cs:C1710.OpenAIMessage))
+					$message:=$prompt
+				: ($prompt.content#Null:C1517)
+					$message:=cs:C1710.OpenAIMessage.new($prompt)
+					If ($message.role=Null:C1517)
+						$message.role:="user"
+					End if 
+				Else 
+					$message:=cs:C1710.OpenAIMessage.new({role: "user"; content: $prompt})
+			End case 
+		Else 
+			throw:C1805(1; "Cannot prompt with parameter of type "+String:C10(Value type:C1509($type))+". Must a Text or OpenAIMessage")
+	End case 
 	
-	This:C1470._pushMessage(cs:C1710.OpenAIMessage.new({role: "user"; content: $prompt}))
+	This:C1470._pushMessage($message)
 	
 	var $messages : Collection:=This:C1470.messages.copy()
 	$messages.unshift(This:C1470.systemPrompt)

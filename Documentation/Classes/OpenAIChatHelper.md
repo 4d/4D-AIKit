@@ -29,20 +29,31 @@ This method creates a new chat helper with the specified system prompt and initi
 
 ### prompt()
 
-**prompt**(*prompt* : Text) : OpenAIChatCompletionsResult
+**prompt**(*prompt* : Variant) : OpenAIChatCompletionsResult
 
 | Parameter        | Type  | Description                               |
 |------------------|-------|-------------------------------------------|
-| *prompt*         |  Text | The text prompt to send to OpenAI chat.   |
+| *prompt*         |  Text or [OpenAIMessage](OpenAIMessage.md) | The text prompt to send to OpenAI chat, or an OpenAIMessage object for more complex messages (e.g., with images or files).   |
 | Function result| [OpenAIChatCompletionsResult](OpenAIChatCompletionsResult.md) | The completion result returned by the chat. |
 
-Sends a user prompt to the chat and returns the corresponding completion result.
+Sends a user prompt to the chat and returns the corresponding completion result. You can pass either a simple text string or an [OpenAIMessage](OpenAIMessage.md) object for more advanced scenarios like including images or files.
 
 #### Example Usage
 
 ```4D
+// Simple text prompt
 var $result:=$chatHelper.prompt("Hello, how can I help you today?")
 $result:=$chatHelper.prompt("Why 42?")
+
+// Using OpenAIMessage for advanced scenarios (e.g., with images)
+var $message:=cs.AIKit.OpenAIMessage.new({role: "user"; content: "What's in this image?"})
+$message.addImageURL("https://example.com/photo.jpg"; "high")
+$result:=$chatHelper.prompt($message)
+
+// Using OpenAIMessage with files
+var $fileMessage:=cs.AIKit.OpenAIMessage.new({role: "user"; content: "Analyze this document"})
+$fileMessage.addFileId($uploadedFile.id)
+$result:=$chatHelper.prompt($fileMessage)
 ```
 
 ### reset()

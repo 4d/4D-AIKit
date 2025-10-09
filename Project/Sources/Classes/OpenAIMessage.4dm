@@ -70,30 +70,12 @@ Function addImageURL($imageURL : Text; $detail : Text)
 /*
 * Adds a file to the message content. Only files with purpose "user_data" are allowed.
 * 
-* @param $file {cs.OpenAIFile} The file object to add to the message (must have purpose "user_data" and a valid ID)
-* @throws Error if file is null, doesn't have an ID, or doesn't have purpose "user_data"
+* @param $fileId {Text} The file object to add to the message 
 */
-Function addFile($file : cs:C1710.OpenAIFile)
 	
-	// Validate file parameter
-	If ($file=Null:C1517)
-		throw:C1805(1; "Expected a non-empty value for `file`")
-	End if 
+	// $message.addFileId($file.id)
 	
-	If (Not:C34(OB Instance of:C1731($file; cs:C1710.OpenAIFile)))
-		$file:=cs:C1710.OpenAIFile.new($file)
-	End if 
-	
-	// Verify the file has an ID
-	If (Length:C16(String:C10($file.id))=0)
-		throw:C1805(1; "File must have a valid ID")
-	End if 
-	
-	// Verify the file has purpose "user_data"
-	If (String:C10($file.purpose)#"user_data")
-		throw:C1805(1; "File must have purpose 'user_data' (current purpose: '"+$file.purpose+"')")
-	End if 
-	
+Function addFileId($fileId : Text)
 	// Ensure content is a collection
 	Case of 
 		: (Value type:C1509(This:C1470.content)=Is text:K8:3)
@@ -103,7 +85,7 @@ Function addFile($file : cs:C1710.OpenAIFile)
 	End case 
 	
 	// Add file reference to content
-	This:C1470.content.push({type: "file"; file_id: $file.id})
+	This:C1470.content.push({type: "file"; file_id: $fileId})
 	
 	// delta accumulation
 Function _accumulateDeltaBetween($acc : Object; $delta : Object) : Object
