@@ -130,7 +130,8 @@
 		],
 		"classes": [
 			"_Env",
-			"_ImageUtils"
+			"_ImageUtils",
+			"_MimeTypes"
 		]
 	},
 	"trash": {}

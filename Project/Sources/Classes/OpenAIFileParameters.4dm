@@ -3,11 +3,14 @@
 // The expiration policy for a file. By default, files with purpose=batch expire after 30 days and all other files are persisted until they are manually deleted.
 property expires_after : Object
 
+// Chosen filename (mandatory for the blob to be correctly recognized by OpenAI)
+property fileName : Text
+
 Class extends OpenAIParameters
 
 Class constructor($object : Object)
 	Super:C1705($object)
-
+	
 Function body() : Object
 	var $body:=Super:C1706.body()
 	
@@ -26,3 +29,4 @@ Function body() : Object
 	End if 
 	
 	return $body
+	

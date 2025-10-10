@@ -283,7 +283,7 @@ var $pdfBlob : Blob  // :=4D.Blob.new()
 BASE64 DECODE:C896($pdfBase64; $pdfBlob)
 
 // Test uploading blob with user_data purpose
-var $blobUploadResult:=$client.files.create($pdfBlob; "user_data")
+var $blobUploadResult:=$client.files.create($pdfBlob; "user_data"; {fileName: "test.pdf"})
 
 If (Asserted:C1132(Bool:C1537($blobUploadResult.success); "Cannot upload blob file: "+JSON Stringify:C1217($blobUploadResult)))
 	
@@ -294,6 +294,19 @@ If (Asserted:C1132(Bool:C1537($blobUploadResult.success); "Cannot upload blob fi
 		ASSERT:C1129($blobUploadResult.file.purpose="user_data"; "Purpose should be 'user_data'")
 		ASSERT:C1129($blobUploadResult.file.bytes>0; "File size must be greater than 0")
 		ASSERT:C1129($blobUploadResult.file.created_at>0; "Created timestamp must be set")
+		ASSERT:C1129($blobUploadResult.file.filename="test.pdf"; "Created timestamp must be set")
+		
+		
+		var $modelName:=cs:C1710._TestModels.new($client).chats
+		var $messages:=[cs:C1710.OpenAIMessage.new({role: "system"; content: "You are a helpful assistant."})]
+		var $message:=cs:C1710.OpenAIMessage.new({role: "user"; content: "Could you write what is writted in the document"})
+		$message.addFileId($blobUploadResult.file.id)
+		$messages.push($message)
+		
+		var $result:=$client.chat.completions.create($messages; {model: $modelName})
+		
+		ASSERT:C1129(Bool:C1537($result.success); "Should be able to talk with a file")
+		
 		
 		// Clean up
 		var $cleanupResult:=$client.files.delete($blobUploadResult.file.id)

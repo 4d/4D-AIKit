@@ -370,6 +370,10 @@ Function _encodeQueryParameters($queryParameters : Object) : Text
 	
 	return "?"+OB Entries:C1720($queryParameters).map(Formula:C1597($1.value.key+"="+$2._encodeQueryParameter($1.value.value)); This:C1470).join("&")
 	
+Function _mimeType($fileName : Text) : Text
+	var $ext : Text:=Split string:C1554($fileName; ".").last()
+	return cs:C1710._MimeTypes.me.getMimeType($ext)
+	
 Function _formData($body : Object; $files : Object; $boundary : Text) : 4D:C1709.Blob
 	
 	var $result : Blob
@@ -379,12 +383,14 @@ Function _formData($body : Object; $files : Object; $boundary : Text) : 4D:C1709
 	var $key : Text
 	For each ($key; $body)
 		
-		If (Value type:C1509($body[$key])=Is object:K8:27)
+		var $instance : Variant:=$body[$key]
+		
+		If (Value type:C1509($instance)=Is object:K8:27)
 			// Handle nested objects with array notation
 			// ex: -F expires_after[anchor]="created_at"
 			// ex: -F expires_after[seconds]=2592000
 			var $subkey : Text
-			For each ($subkey; $body[$key])
+			For each ($subkey; $instance)
 				$textPart:="--"+$boundary+"\r\n"
 				$textPart+="Content-Disposition: form-data; name=\""+$key+"["+$subkey+"]\"\r\n\r\n"
 				$textPart+=String:C10($body[$key][$subkey])+"\r\n"
@@ -396,7 +402,7 @@ Function _formData($body : Object; $files : Object; $boundary : Text) : 4D:C1709
 			// ex: -F purpose="fine-tune"
 			$textPart:="--"+$boundary+"\r\n"
 			$textPart+="Content-Disposition: form-data; name=\""+$key+"\"\r\n\r\n"
-			$textPart+=String:C10($body[$key])+"\r\n"
+			$textPart+=String:C10($instance)+"\r\n"
 			TEXT TO BLOB:C554($textPart; $temp; UTF8 text without length:K22:17)
 			COPY BLOB:C558($temp; $result; 0; BLOB size:C605($result); BLOB size:C605($temp))
 		End if 
@@ -404,59 +410,55 @@ Function _formData($body : Object; $files : Object; $boundary : Text) : 4D:C1709
 	End for each 
 	
 	For each ($key; $files)
-		var $file : 4D:C1709.File
 		var $fileBlob : Blob
 		var $filename : Text
 		var $mimeType : Text
 		
-		// Check if it's a Picture variable
-		If (Value type:C1509($files[$key])=Is picture:K8:10)
-			$filename:=$key+".png"
-			$mimeType:="image/png"
-			$fileBlob:=cs:C1710._ImageUtils.me.toBlob($files[$key])
-		Else   // Check if it's already an image object, File object, or Blob object
-			If (Value type:C1509($files[$key])=Is object:K8:27)
-				If (OB Instance of:C1731($files[$key]; 4D:C1709.File))
-					$file:=$files[$key]
-				Else 
-					If (OB Instance of:C1731($files[$key]; 4D:C1709.Blob))
-						// It's a 4D.Blob object
-						$filename:=$key+".dat"  // Default filename for blob
-						$mimeType:="application/octet-stream"
-						$fileBlob:=$files[$key]
-					Else 
-						// It's an image object, convert to blob
-						$filename:=$key+".png"
-						$mimeType:="image/png"
-						$fileBlob:=cs:C1710._ImageUtils.me.toBlob($files[$key])
-					End if 
-				End if 
-			End if 
-		End if 
 		
-		If ($file#Null:C1517)
-			$filename:=$file.fullName  // Use fullName instead of name to include extension
-			var $ext:=$file.extension
-			
-			// Determine MIME type based on file extension
-			Case of 
-				: ($ext="jsonl") || ($ext="json") || ($ext=".jsonl") || ($ext=".json")
-					$mimeType:="application/json"
-				: ($ext="txt") || ($ext=".txt")
-					$mimeType:="text/plain"
-				: ($ext="csv") || ($ext=".csv")
-					$mimeType:="text/csv"
-				: ($ext="png") || ($ext=".png")
-					$mimeType:="image/png"
-				: ($ext="jpg") || ($ext="jpeg") || ($ext=".jpg") || ($ext=".jpeg")
-					$mimeType:="image/jpeg"
-				Else 
-					$mimeType:="application/octet-stream"
-			End case 
-			
-			// Read file content
-			$fileBlob:=$file.getContent()
-		End if 
+		$instance:=$files[$key]
+		
+		// Check if it's a Picture variable
+		Case of 
+			: (Value type:C1509($instance)=Is picture:K8:10)
+				
+				$filename:=$key+".png"
+				$mimeType:="image/png"
+				$fileBlob:=cs:C1710._ImageUtils.me.toBlob($instance)
+				
+				// Check if it's already an image object, File object, or Blob object
+			: ((Value type:C1509($instance)=Is object:K8:27) && (OB Instance of:C1731($instance; 4D:C1709.File)))
+				
+				$filename:=$instance.fullName  // Use fullName instead of name to include extension
+				$mimeType:=This:C1470._mimeType($instance.fullName)
+				$fileBlob:=$instance.getContent()
+				
+			: ((Value type:C1509($instance)=Is object:K8:27) && (OB Instance of:C1731($instance.file; 4D:C1709.File)))
+				
+				$filename:=$instance.filename || $instance.file.fullName
+				$mimeType:=This:C1470._mimeType($filename)
+				$fileBlob:=$instance.file.getContent()
+				
+			: ((Value type:C1509($instance)=Is object:K8:27) && (OB Instance of:C1731($instance; 4D:C1709.Blob)))
+				
+				$filename:=$key+".dat"  // Default filename for blob
+				$mimeType:="application/octet-stream"
+				$fileBlob:=$files[$key]
+				
+			: ((Value type:C1509($instance)=Is object:K8:27) && (OB Instance of:C1731($instance.file; 4D:C1709.Blob)))
+				
+				$filename:=$instance.filename || ($key+".dat")  // Default filename for blob
+				$mimeType:=This:C1470._mimeType($filename)
+				$fileBlob:=$instance.file
+				
+			Else 
+				
+				// It's an image object? convert to blob
+				$filename:=$key+".png"
+				$mimeType:="image/png"
+				$fileBlob:=cs:C1710._ImageUtils.me.toBlob($files[$key])
+				
+		End case 
+		
 		
 		If ($fileBlob#Null:C1517)
 			// Add multipart headers as text
@@ -482,3 +484,4 @@ Function _formData($body : Object; $files : Object; $boundary : Text) : 4D:C1709
 	COPY BLOB:C558($temp; $result; 0; BLOB size:C605($result); BLOB size:C605($temp))
 	
 	return $result
+	

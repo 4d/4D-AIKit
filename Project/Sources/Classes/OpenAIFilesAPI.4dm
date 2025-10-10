@@ -55,7 +55,12 @@ Function create($file : Variant; $purpose : Text; $parameters : cs:C1710.OpenAIF
 	
 	var $body:=$parameters.body()
 	$body.purpose:=$purpose
-	var $files:={file: $file}
+	
+	If (Length:C16(String:C10($parameters.fileName))>0)
+		var $files:={file: {file: $file; filename: $parameters.fileName}}
+	Else 
+		$files:={file: $file}
+	End if 
 	
 	return This:C1470._client._postFiles("/files"; $body; $files; $parameters; cs:C1710.OpenAIFileResult)
 	
