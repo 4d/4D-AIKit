@@ -20,7 +20,7 @@ Function create($messages : Collection; $parameters : cs:C1710.OpenAIChatComplet
 	End if 
 	
 	var $body:=$parameters.body()
-	$body.messages:=$messages
+	$body.messages:=$messages.map(Formula:C1597($1.value._toBody()))
 	return This:C1470._client._post("/chat/completions"; $body; $parameters; cs:C1710.OpenAIChatCompletionsResult)
 	
 /*

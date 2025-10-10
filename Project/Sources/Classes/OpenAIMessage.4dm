@@ -85,7 +85,20 @@ Function addFileId($fileId : Text)
 	End case 
 	
 	// Add file reference to content
-	This:C1470.content.push({type: "file"; file_id: $fileId})
+	This:C1470.content.push({type: "file"; file: {file_id: $fileId}})
+	
+	
+Function _toBody() : Object
+	
+	var $body:={}
+	var $key : Text
+	For each ($key; This:C1470)
+		$body[$key]:=This:C1470[$key]
+	End for each 
+	OB REMOVE:C1226($body; "text")
+	
+	return $body
+	
 	
 	// delta accumulation
 Function _accumulateDeltaBetween($acc : Object; $delta : Object) : Object
@@ -324,3 +337,4 @@ Function _accumulateDelta($delta : cs:C1710.OpenAIMessage)
 			This:C1470[$key]:=$result[$key]
 		End for each 
 	End if 
+	
