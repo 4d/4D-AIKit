@@ -20,7 +20,16 @@ Function create($messages : Collection; $parameters : cs:C1710.OpenAIChatComplet
 	End if 
 	
 	var $body:=$parameters.body()
-	$body.messages:=$messages.map(Formula:C1597($1.value._toBody()))
+	$body.messages:=[]
+	If ($messages#Null:C1517)
+		var $message : Object
+		For each ($message; $messages)
+			If (Not:C34(OB Instance of:C1731($message; cs:C1710.OpenAIMessage)))
+				$message:=cs:C1710.OpenAIMessage.new($message)
+			End if 
+			$body.messages.push($message._toBody())
+		End for each 
+	End if 
 	return This:C1470._client._post("/chat/completions"; $body; $parameters; cs:C1710.OpenAIChatCompletionsResult)
 	
 /*
