@@ -84,7 +84,7 @@ $fileMsg1.addFileId($validFile.id)
 ASSERT:C1129(Value type:C1509($fileMsg1.content)=Is collection:K8:32; "addFile should convert content to collection")
 ASSERT:C1129($fileMsg1.content.length=2; "addFile should add file to collection")
 ASSERT:C1129($fileMsg1.content[1].type="file"; "File entry should have correct type")
-ASSERT:C1129($fileMsg1.content[1].file_id="file-123"; "File ID should be set correctly")
+ASSERT:C1129($fileMsg1.content[1].file.file_id="file-123"; "File ID should be set correctly")
 
 var $fileMsg2 : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({role: "user"; content: [{type: "text"; text: "Test"}]})
 $fileMsg2.addFileId($validFile.id)
