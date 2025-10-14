@@ -56,8 +56,8 @@ Function create($file : Variant; $purpose : Text; $parameters : cs:C1710.OpenAIF
 	var $body:=$parameters.body()
 	$body.purpose:=$purpose
 	
-	If (Length:C16(String:C10($parameters.fileName))>0)
-		var $files:={file: {file: $file; filename: $parameters.fileName}}
+	If (Length:C16(String:C10($parameters.filename))>0)
+		var $files:={file: {file: $file; filename: $parameters.filename}}
 	Else 
 		$files:={file: $file}
 	End if 

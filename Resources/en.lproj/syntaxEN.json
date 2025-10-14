@@ -877,8 +877,8 @@
 			],
 			"Summary": ""
 		},
-		"fileName": {
-			"Syntax": "fileName : Text"
+		"filename": {
+			"Syntax": "filename : Text"
 		},
 		"expires_after": {
 			"Syntax": "expires_after : Object"

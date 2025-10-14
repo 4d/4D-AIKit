@@ -440,13 +440,13 @@ Function _formData($body : Object; $files : Object; $boundary : Text) : 4D:C1709
 				
 			: ((Value type:C1509($instance)=Is object:K8:27) && (OB Instance of:C1731($instance; 4D:C1709.Blob)))
 				
-				$filename:=$key+".dat"  // Default filename for blob
+				$filename:=$key+".pdf"  // Default filename for blob
 				$mimeType:="application/octet-stream"
 				$fileBlob:=$files[$key]
 				
 			: ((Value type:C1509($instance)=Is object:K8:27) && (OB Instance of:C1731($instance.file; 4D:C1709.Blob)))
 				
-				$filename:=$instance.filename || ($key+".dat")  // Default filename for blob
+				$filename:=$instance.filename || ($key+".pdf")  // Default filename for blob
 				$mimeType:=This:C1470._mimeType($filename)
 				$fileBlob:=$instance.file
 				

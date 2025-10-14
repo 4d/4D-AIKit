@@ -4,7 +4,7 @@
 property expires_after : Object
 
 // Chosen filename (mandatory for the blob to be correctly recognized by OpenAI)
-property fileName : Text
+property filename : Text
 
 Class extends OpenAIParameters
 
