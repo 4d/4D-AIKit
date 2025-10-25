@@ -34,6 +34,9 @@ property tool_choice : Variant
 // Static predicted output content, such as the content of a text file that is being regenerated.
 property prediction : Object
 
+// Specifies the processing type used for serving the request.
+property service_tier : Text
+
 // seed, metadata, modalities, etc...
 
 // Function to call asynchronously when receiving data. /!\ Be sure your current process not die.
@@ -116,6 +119,9 @@ Function body() : Object
 	End if 
 	If (This:C1470.prediction#Null:C1517)
 		$body.prediction:=This:C1470.prediction
+	End if 
+	If (Length:C16(String:C10(This:C1470.service_tier))>0)
+		$body.service_tier:=This:C1470.service_tier
 	End if 
 	return $body
 	
