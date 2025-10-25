@@ -22,6 +22,7 @@ The `OpenAIChatCompletionsParameters` class is designed to handle the parameters
 | `tools`                 | Collection | `Null`          | A list of tools ([OpenAITool](OpenAITool.md)) the model may call. Only "function" type is supported.                                                                    |
 | `tool_choice`           | Variant    | `Null`          | Controls which (if any) tool is called by the model. Can be `"none"`, `"auto"`, `"required"`, or specify a particular tool.                              |
 | `prediction`            | Object     | `Null`          | Static predicted output content, such as the content of a text file that is being regenerated.                                                           |
+| `service_tier`          | Text       | `Null`          | Specifies the processing type used for serving the request. `"auto"`, `"auto"`, `"default"`, and `"priority"`.                                           |
 
 ### Asynchronous Callback Properties
 
