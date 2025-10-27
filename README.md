@@ -1,6 +1,5 @@
-# 4D-AIKit
+# 4D AIKit
 
-[![language][code-shield]][code-url]
 
 ## Overview
 
