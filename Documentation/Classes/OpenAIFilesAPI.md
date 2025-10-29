@@ -8,8 +8,6 @@ API Reference: <https://platform.openai.com/docs/api-reference/files>
 
 - **Individual files:** up to 512 MB
 - **Organization total:** up to 1 TB
-- **Assistants API:** files up to 2 million tokens
-- **Batch API:** .jsonl files up to 200 MB
 
 ## Functions
 
@@ -43,6 +41,7 @@ Upload a file that can be used across various endpoints.
 - **Fine-tuning API:** Only supports `.jsonl` files with specific required formats
 - **Batch API:** Only supports `.jsonl` files up to 200 MB with specific required format
 - **Assistants API:** Supports specific file types (see Assistants Tools guide)
+- **Chat Completions API:** PDFs are only supported
 
 #### Example
 
@@ -56,7 +55,7 @@ $params.expires_after.seconds:=2592000  // 30 days
 
 var $result:=$client.files.create($file; "fine-tune"; $params)
 
-If ($result.error=Null)
+If ($result.success)
     var $uploadedFile:=$result.file
     // $uploadedFile.id -> "file-abc123"
     // $uploadedFile.filename -> "training-data.jsonl"
@@ -82,9 +81,9 @@ Returns information about a specific file.
 #### Example
 
 ```4d
-var $result:=$client.files.retrieve("file-abc123"; Null)
+var $result:=$client.files.retrieve("file-abc123")
 
-If ($result.error=Null)
+If ($result.success)
     var $file:=$result.file
     // $file.filename -> "mydata.jsonl"
     // $file.bytes -> 120000
@@ -114,7 +113,7 @@ $params.order:="desc"
 
 var $result:=$client.files.list($params)
 
-If ($result.error=Null)
+If ($result.success)
     var $files:=$result.files
     // $files.length -> 2
     
@@ -142,9 +141,9 @@ Delete a file.
 #### Example
 
 ```4d
-var $result:=$client.files.delete("file-abc123"; Null)
+var $result:=$client.files.delete("file-abc123")
 
-If ($result.error=Null)
+If ($result.success)
     var $status:=$result.deleted
     
     If ($status.deleted)

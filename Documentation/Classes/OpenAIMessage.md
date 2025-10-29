@@ -37,7 +37,7 @@ Adds an image URL to the content of the message. If the content is currently tex
 
 | Parameter        | Type  | Description                                |
 |------------------|-------|--------------------------------------------|
-| *fileId*         | Text  | The file ID to add to the message. |
+| *fileId*         | Text  | The file ID to add to the message.         |
 
 Adds a file reference to the content of the message. If the content is currently text, it will be converted to a collection format.
 
@@ -59,12 +59,12 @@ var $message:=cs.AIKit.OpenAIMessage.new({role: "user"; content: "Please analyze
 $message.addImageURL("http://example.com/image.jpg"; "high")
 ```
 
-### Adding Files
+### Adding File
 
 ```4d
 // Upload a file with user_data purpose
 var $file:=File("/RESOURCES/document.pdf")
-var $uploadResult:=$client.files.create($file; "user_data"; Null)
+var $uploadResult:=$client.files.create($file; "user_data")
 
 If ($uploadResult.success)
     var $uploadedFile:=$uploadResult.file

@@ -2,13 +2,6 @@
 
 The `OpenAIFile` class represents a file object in the OpenAI API. Files can be uploaded and used across various endpoints including Assistants, Fine-tuning, Batch, and Vision APIs.
 
-## File Size Limits
-
-- Individual files: up to 512 MB
-- Organization total: up to 1 TB
-- Assistants API: files up to 2 million tokens
-- Batch API: .jsonl files up to 200 MB
-
 ## Properties
 
 | Property Name    | Type     | Description                                                      |
