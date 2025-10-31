@@ -90,6 +90,33 @@ var $fileMsg2 : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({role: "user"
 $fileMsg2.addFileId($validFile.id)
 ASSERT:C1129($fileMsg2.content.length=2; "addFile should add to existing collection")
 
+// MARK:- Test addFile with multiple files (TC-17245-03)
+var $multiFileMsg : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({role: "user"; content: "Check these files"})
+var $file1 : cs:C1710.OpenAIFile:=cs:C1710.OpenAIFile.new({id: "file-123"; purpose: "user_data"})
+var $file2 : cs:C1710.OpenAIFile:=cs:C1710.OpenAIFile.new({id: "file-456"; purpose: "user_data"})
+var $file3 : cs:C1710.OpenAIFile:=cs:C1710.OpenAIFile.new({id: "file-789"; purpose: "user_data"})
+
+$multiFileMsg.addFileId($file1.id)
+$multiFileMsg.addFileId($file2.id)
+$multiFileMsg.addFileId($file3.id)
+
+ASSERT:C1129(Value type:C1509($multiFileMsg.content)=Is collection:K8:32; "Multiple files should convert content to collection")
+ASSERT:C1129($multiFileMsg.content.length=4; "Should have text + 3 files")
+ASSERT:C1129($multiFileMsg.content[1].type="file"; "First file should have correct type")
+ASSERT:C1129($multiFileMsg.content[1].file.file_id="file-123"; "First file ID should match")
+ASSERT:C1129($multiFileMsg.content[2].type="file"; "Second file should have correct type")
+ASSERT:C1129($multiFileMsg.content[2].file.file_id="file-456"; "Second file ID should match")
+ASSERT:C1129($multiFileMsg.content[3].type="file"; "Third file should have correct type")
+ASSERT:C1129($multiFileMsg.content[3].file.file_id="file-789"; "Third file ID should match")
+
+// MARK:- Test addFile with invalid file ID (TC-17245-04)
+var $invalidFileMsg : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({role: "user"; content: "Test invalid file"})
+$invalidFileMsg.addFileId("file-nonexistent-999")
+ASSERT:C1129(Value type:C1509($invalidFileMsg.content)=Is collection:K8:32; "addFileId should still add invalid ID to message")
+ASSERT:C1129($invalidFileMsg.content[1].type="file"; "Invalid file should still have file type")
+ASSERT:C1129($invalidFileMsg.content[1].file.file_id="file-nonexistent-999"; "Invalid file ID should be preserved")
+// Note: The actual validation happens when sending to OpenAI API, not in the message object
+
 // MARK:- Test _toObject
 var $toObjMsg1 : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({role: "user"; content: "Test"})
 var $obj1 : Object:=$toObjMsg1._toObject()

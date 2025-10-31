@@ -226,6 +226,11 @@ If (Length:C16($uploadedFileId)>0)
 	var $verifyDeleteResult:=$client.files.retrieve($uploadedFileId)
 	ASSERT:C1129(Not:C34(Bool:C1537($verifyDeleteResult.success)); "Should not be able to retrieve deleted file")
 	
+	// MARK:- Test deleting already deleted file (TC-17244-05)
+	var $deleteAgainResult:=$client.files.delete($uploadedFileId)
+	ASSERT:C1129(Not:C34(Bool:C1537($deleteAgainResult.success)); "Should not be able to delete already deleted file")
+	ASSERT:C1129($deleteAgainResult.request.response.status>=400; "Should return error status for already deleted file")
+	
 End if 
 
 // MARK:- Test parameter validation
@@ -315,6 +320,23 @@ If (Asserted:C1132(Bool:C1537($blobUploadResult.success); "Cannot upload blob fi
 	End if 
 	
 End if 
+
+
+// MARK:- Test uploading Blob without filename (TC-18143-04)
+// Create a PDF blob from base64 for testing
+var $testBlobNoFilename : Blob
+var $testBase64:="JVBERi0xLjQKMSAwIG9iago8PC9UeXBlIC9DYXRhbG9nCi9QYWdlcyAyIDAgUgo+PgplbmRvYmoK"
+BASE64 DECODE:C896($testBase64; $testBlobNoFilename)
+
+// Test that create with blob but no filename -> use default
+$uploadResult:=$client.files.create($testBlobNoFilename; "user_data")
+ASSERT:C1129(String:C10($uploadResult.file.filename)="file.pdf")
+ASSERT:C1129(String:C10($uploadResult.file.filename)="file.pdf"; "Not default file name when uploading "+String:C10($uploadResult.file.filename))
+
+// Test that create with blob and empty filename -> use default
+$uploadResult:=$client.files.create($testBlobNoFilename; "user_data"; {filename: ""})
+ASSERT:C1129(Bool:C1537($uploadResult.success); "Cannot upload file with name empty: "+JSON Stringify:C1217($uploadResult))
+ASSERT:C1129(String:C10($uploadResult.file.filename)="file.pdf"; "Not default file name when uploading "+String:C10($uploadResult.file.filename))
 
 // MARK:- Cleanup test files
 If ($testFile.exists)
