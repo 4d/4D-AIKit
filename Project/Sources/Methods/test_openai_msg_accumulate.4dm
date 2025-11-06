@@ -176,3 +176,97 @@ ASSERT:C1129($result.newProp="test"; "Direct accumulation should add new propert
 var $nullResult : Object:=cs:C1710.OpenAIMessage.new()._accumulateDeltaBetween(Null:C1517; $delta)
 ASSERT:C1129($nullResult.text=" World"; "Null accumulator should be replaced by delta, got: '"+String:C10($nullResult.text)+"'")
 ASSERT:C1129($nullResult.count=3; "Null accumulator should be replaced by delta, got: "+String:C10($nullResult.count))
+
+
+// MARK:- Test 13: Real-world streaming scenario with reasoning field and role in deltas
+// This test simulates the actual streaming behavior where role is included in every delta
+var $reasoningMessage : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({role: "assistant"; content: ""; reasoning: "Okay"})
+
+If ($testShared)
+	$reasoningMessage:=OB Copy:C1225($reasoningMessage; ck shared:K85:29)
+End if 
+
+// Simulate the delta chunks from your real data - INCLUDING role field in each delta
+var $deltas : Collection:=[]
+$deltas.push({role: "assistant"; reasoning: ","})
+$deltas.push({role: "assistant"; reasoning: " the"})
+$deltas.push({role: "assistant"; reasoning: " user"})
+$deltas.push({role: "assistant"; reasoning: " sent"})
+$deltas.push({role: "assistant"; reasoning: " \""})
+$deltas.push({role: "assistant"; reasoning: "test"})
+$deltas.push({role: "assistant"; reasoning: " /"})
+$deltas.push({role: "assistant"; reasoning: "think"})
+$deltas.push({role: "assistant"; reasoning: "\"."})
+$deltas.push({role: "assistant"; reasoning: " Let"})
+$deltas.push({role: "assistant"; reasoning: " me"})
+$deltas.push({role: "assistant"; reasoning: " see"})
+$deltas.push({role: "assistant"; reasoning: "."})
+
+// Apply each delta
+var $deltaChunk : Object
+For each ($deltaChunk; $deltas)
+	var $deltaMsg : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new($deltaChunk)
+	$reasoningMessage._accumulateDelta($deltaMsg)
+End for each 
+//%W-550.26
+var $expectedReasoning : Text:="Okay, the user sent \"test /think\". Let me see."
+ASSERT:C1129($reasoningMessage.reasoning=$expectedReasoning; "Reasoning field should accumulate correctly, got: '"+String:C10($reasoningMessage.reasoning)+"'")
+// Verify role was NOT concatenated (should stay "assistant", not "assistantassistantassistant...")
+ASSERT:C1129($reasoningMessage.role="assistant"; "Role should not be concatenated, got: '"+String:C10($reasoningMessage.role)+"'")
+
+
+// MARK:- Test 14: Full real-world streaming with reasoning AND content
+var $fullMessage : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({role: "assistant"; content: ""; reasoning: "Okay"})
+
+If ($testShared)
+	$fullMessage:=OB Copy:C1225($fullMessage; ck shared:K85:29)
+End if 
+
+// First accumulate reasoning chunks
+var $reasoningDeltas : Collection:=[]
+$reasoningDeltas.push({reasoning: ","})
+$reasoningDeltas.push({reasoning: " the"})
+$reasoningDeltas.push({reasoning: " user"})
+$reasoningDeltas.push({reasoning: " sent"})
+$reasoningDeltas.push({reasoning: " \"test\""})
+$reasoningDeltas.push({reasoning: ".\n"})
+
+For each ($deltaChunk; $reasoningDeltas)
+	$fullMessage._accumulateDelta(cs:C1710.OpenAIMessage.new($deltaChunk))
+End for each 
+
+// Then accumulate content chunks (simulating transition from reasoning to content)
+var $contentDeltas : Collection:=[]
+$contentDeltas.push({content: "It"})
+$contentDeltas.push({content: " seems"})
+$contentDeltas.push({content: " you"})
+$contentDeltas.push({content: " might"})
+$contentDeltas.push({content: " be"})
+$contentDeltas.push({content: " testing"})
+$contentDeltas.push({content: " the"})
+$contentDeltas.push({content: " system"})
+$contentDeltas.push({content: "."})
+
+For each ($deltaChunk; $contentDeltas)
+	$fullMessage._accumulateDelta(cs:C1710.OpenAIMessage.new($deltaChunk))
+End for each 
+
+ASSERT:C1129($fullMessage.reasoning="Okay, the user sent \"test\".\n"; "Reasoning should accumulate with newline, got: '"+String:C10($fullMessage.reasoning)+"'")
+ASSERT:C1129($fullMessage.content="It seems you might be testing the system."; "Content should accumulate separately, got: '"+String:C10($fullMessage.content)+"'")
+
+
+// MARK:- Test 15: Edge case - Empty string initial value
+var $emptyStrMessage : cs:C1710.OpenAIMessage:=cs:C1710.OpenAIMessage.new({role: "assistant"; content: ""; reasoning: ""})
+
+If ($testShared)
+	$emptyStrMessage:=OB Copy:C1225($emptyStrMessage; ck shared:K85:29)
+End if 
+
+$emptyStrMessage._accumulateDelta(cs:C1710.OpenAIMessage.new({reasoning: "First"}))
+$emptyStrMessage._accumulateDelta(cs:C1710.OpenAIMessage.new({reasoning: " chunk"}))
+$emptyStrMessage._accumulateDelta(cs:C1710.OpenAIMessage.new({content: "Hello"}))
+$emptyStrMessage._accumulateDelta(cs:C1710.OpenAIMessage.new({content: " world"}))
+
+ASSERT:C1129($emptyStrMessage.reasoning="First chunk"; "Empty string should accumulate correctly, got: '"+String:C10($emptyStrMessage.reasoning)+"'")
+ASSERT:C1129($emptyStrMessage.content="Hello world"; "Empty string should accumulate correctly, got: '"+String:C10($emptyStrMessage.content)+"'")
+//%W+550.26

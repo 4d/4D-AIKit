@@ -100,6 +100,11 @@ Function _extractJSONObject() : Object
 	
 	// delta accumulation
 Function _accumulateDeltaBetween($acc : Object; $delta : Object) : Object
+	
+	//var $h:=Folder(fk desktop folder).file("chunk.jsonl").open("append")
+	//$h.writeLine("accum:"+JSON Stringify($acc))
+	//$h.writeLine("delta:"+JSON Stringify($delta))
+	
 	If ($acc=Null:C1517)
 		$acc:={}
 	End if 
@@ -132,8 +137,8 @@ Function _accumulateDeltaBetween($acc : Object; $delta : Object) : Object
 		End if 
 		
 		
-		// Special handling for index and type properties
-		If (($key="index") || ($key="type"))
+		// Special handling for properties that should be replaced, not accumulated
+		If (($key="index") || ($key="type") || ($key="role"))
 			$acc[$key]:=$delta_value
 			continue
 		End if 
