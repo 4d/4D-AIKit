@@ -138,7 +138,14 @@ Class constructor( ...  : Variant)
 	// MARK:- headers
 	
 Function _authHeaders() : Object
-	return {Authorization: "Bearer "+String:C10(This:C1470.apiKey)}
+	If (Length:C16(String:C10(This:C1470.apiKey))=0)
+		return {}
+	End if 
+	var $headers:={Authorization: "Bearer "+String:C10(This:C1470.apiKey)}
+	If (String:C10(This:C1470.baseURL)="https://api.anthropic.com/v1")
+		$headers["x-api-key"]:=String:C10(This:C1470.apiKey)
+	End if 
+	return $headers
 	
 Function _headers() : Object
 	var $headers:=This:C1470._authHeaders()
