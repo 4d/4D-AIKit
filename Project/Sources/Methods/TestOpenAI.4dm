@@ -17,6 +17,7 @@ End if
 // $client.baseURL:="https://api.groq.com/openai/v1" 
 // $client.baseURL:="https://api.perplexity.ai" 
 // $client.baseURL:="https://api.anthropic.com/v1"
+// $client.customHeaders:=New object("anthropic-version"; "2023-06-01")
 // $client.baseURL:="https://YOUR_RESOURCE_NAME.openai.azure.com"
 // $client.baseURL:="https://generativelanguage.googleapis.com/v1beta/openai"
 

@@ -12,6 +12,16 @@ Class constructor($client : cs:C1710.OpenAI)
 			This:C1470.embeddings:="nomic-embed-text"
 			This:C1470.chats:="llama3"
 			
+		: (Position:C15("mistral"; $client.baseURL)>0)
+			
+			This:C1470.embeddings:="mistral-embed"
+			This:C1470.chats:="ministral-3b-2410"
+			
+		: (Position:C15("api.anthropic.com"; $client.baseURL)>0)
+			
+			This:C1470.embeddings:=""
+			This:C1470.chats:="claude-haiku-4-5"
+			
 	End case 
 	
 	// XXX: could check $client.models.list()
