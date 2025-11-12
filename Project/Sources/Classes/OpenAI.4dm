@@ -144,6 +144,7 @@ Function _authHeaders() : Object
 	var $headers:={Authorization: "Bearer "+String:C10(This:C1470.apiKey)}
 	If (String:C10(This:C1470.baseURL)="https://api.anthropic.com/v1")
 		$headers["x-api-key"]:=String:C10(This:C1470.apiKey)
+		$headers["anthropic-version"]:="2023-06-01"
 	End if 
 	return $headers
 	
