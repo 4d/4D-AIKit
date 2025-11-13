@@ -5,6 +5,9 @@ property parameters : cs:C1710.OpenAIChatCompletionsParameters
 
 property messages : Collection:=[]
 
+// Middleware pipeline for conversation management (summarization, token counting, etc.)
+property middleware : cs:C1710.OpenAIMiddlewarePipeline
+
 // user formula call save
 property _onData : 4D:C1709.Function
 property _onTerminate : 4D:C1709.Function
@@ -28,11 +31,14 @@ property autoHandleToolCalls : Boolean:=True:C214
 Class constructor($chat : cs:C1710.OpenAIChatAPI; $systemPrompt : Text; $parameters : cs:C1710.OpenAIChatCompletionsParameters)
 	This:C1470.chat:=$chat
 	This:C1470.systemPrompt:=cs:C1710.OpenAIMessage.new({role: "system"; content: $systemPrompt})
-	
+
+	// Initialize middleware pipeline
+	This:C1470.middleware:=cs:C1710.OpenAIMiddlewarePipeline.new()
+
 	This:C1470._formulaThis:=$parameters  // original object as this
 	If (Not:C34(OB Instance of:C1731($parameters; cs:C1710.OpenAIChatCompletionsParameters)))
 		$parameters:=cs:C1710.OpenAIChatCompletionsParameters.new($parameters)
-	End if 
+	End if
 	This:C1470.parameters:=$parameters
 	If (This:C1470.parameters.model=Null:C1517)
 		This:C1470.parameters.model:="gpt-4o-mini"
@@ -86,34 +92,55 @@ Function _pushMessage($message : cs:C1710.OpenAIMessage)
 	
 Function prompt($prompt : Variant) : cs:C1710.OpenAIChatCompletionsResult
 	var $type:=Value type:C1509($prompt)
-	Case of 
+	Case of
 		: ($type=Is text:K8:3)
 			var $message:=cs:C1710.OpenAIMessage.new({role: "user"; content: $prompt})
 		: ($type=Is object:K8:27)
-			Case of 
+			Case of
 				: (OB Instance of:C1731($prompt; cs:C1710.OpenAIMessage))
 					$message:=$prompt
 				: ($prompt.content#Null:C1517)
 					$message:=cs:C1710.OpenAIMessage.new($prompt)
 					If ($message.role=Null:C1517)
 						$message.role:="user"
-					End if 
-				Else 
+					End if
+				Else
 					$message:=cs:C1710.OpenAIMessage.new({role: "user"; content: $prompt})
-			End case 
-		Else 
+			End case
+		Else
 			throw:C1805(1; "Cannot prompt with parameter of type "+String:C10(Value type:C1509($type))+". Must a Text or OpenAIMessage")
-	End case 
-	
+	End case
+
 	This:C1470._pushMessage($message)
-	
+
+	// Create middleware context
+	var $context : Object:=New object:C1471(\
+		"helper"; This:C1470; \
+		"messages"; Null:C1517; \
+		"parameters"; This:C1470.parameters; \
+		"metadata"; New object:C1471\
+		)
+
+	// Prepare messages (system + conversation)
 	var $messages : Collection:=This:C1470.messages.copy()
 	$messages.unshift(This:C1470.systemPrompt)
-	
-	var $result:=This:C1470.chat.completions.create($messages; This:C1470.parameters)
+	$context.messages:=$messages
+
+	// Execute BEFORE middleware pipeline
+	$context:=This:C1470.middleware.executeBeforeRequest($context)
+
+	// If middleware aborted (returned Null), return without making API call
+	If ($context=Null:C1517)
+		return Null:C1517
+	End if
+
+	// Use potentially modified messages and parameters from middleware
+	var $result:=This:C1470.chat.completions.create($context.messages; $context.parameters)
 	If ($result#Null:C1517)
+		// Store context for after middleware
+		$result._middlewareContext:=$context
 		$result:=This:C1470._manageResponse($result)  // sync
-	End if 
+	End if
 	return $result
 	
 	// Reset chat context, ie. remove messages and tools
@@ -433,35 +460,67 @@ Function _manageResponse($result : Object) : Object
 		End if 
 		
 		// MARK: _manageResponse no stream
-	Else 
+	Else
 		If (Not:C34($result.terminated))
 			// must not occurs
 			return $result
-		End if 
-		
+		End if
+
 		If ($result.success)
-			
-			This:C1470._pushMessage($result.choice.message)
-			
+
+			// Execute AFTER middleware pipeline before adding message
+			var $shouldPushMessage : Boolean:=True:C214
+
+			If ($result._middlewareContext#Null:C1517)
+				// Prepare context for after middleware
+				$result._middlewareContext.result:=$result
+				$result._middlewareContext.newMessage:=$result.choice.message
+
+				// Execute after middleware
+				var $afterContext : Object:=$result._middlewareContext
+				$afterContext:=This:C1470.middleware.executeAfterResponse($afterContext)
+
+				If ($afterContext=Null:C1517)
+					// Middleware aborted - don't push message
+					$shouldPushMessage:=False:C215
+				Else
+					// Use potentially modified message from middleware
+					$result.choice.message:=$afterContext.newMessage
+
+					// Update helper's messages if middleware modified them
+					If ($afterContext.messages#Null:C1517)
+						// Remove system message if it was added
+						If (($afterContext.messages.length>0) && ($afterContext.messages[0].role="system"))
+							$afterContext.messages.remove(0)
+						End if
+						This:C1470.messages:=$afterContext.messages
+					End if
+				End if
+			End if
+
+			If ($shouldPushMessage)
+				This:C1470._pushMessage($result.choice.message)
+			End if
+
 			This:C1470._trim()
-			
+
 			// Check for tool calls and handle them automatically
 			If (This:C1470.autoHandleToolCalls) && ($result.choice.message.tool_calls#Null:C1517)
 				This:C1470._handleToolCalls($result)
 				If ($result._newResult#Null:C1517)
 					return $result._newResult  // we already manage _notifyOnTerminate
-				End if 
-			End if 
-			
-		Else 
-			
+				End if
+			End if
+
+		Else
+
 			This:C1470.lastErrors:=$result.error
-			
-		End if 
-		
+
+		End if
+
 		This:C1470._notifyOnTerminate($result)
-		
-	End if 
+
+	End if
 	return $result
 	
 Function _notifyOnTerminate($result)
