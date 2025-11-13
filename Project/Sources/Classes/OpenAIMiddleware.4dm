@@ -18,6 +18,10 @@
  *   End function
  */
 
+property config : Object
+property enabled : Boolean
+property _name : Text
+
 Class constructor($config : Object)
 	This:C1470.config:=($config#Null:C1517) ? $config : {}
 	This:C1470.enabled:=True:C214
@@ -87,5 +91,5 @@ Function isEnabled()->$enabled : Boolean
  */
 Function _log($message : Text)
 	If (This:C1470.config.debug)
-		TRACE:C157("["+This:C1470.getName()+"] "+$message)
+		LOG EVENT:C667(Into system standard outputs:K38:9; "["+This:C1470.getName()+"] "+$message; Information message:K38:1)
 	End if

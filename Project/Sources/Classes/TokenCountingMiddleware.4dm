@@ -23,9 +23,19 @@
  *   // {totalTokens, requestCount, avgTokensPerRequest, maxTokensSeen}
  */
 
-Class extends OpenAIMiddleware
+property maxTokens : Integer
+property abortOnExceed : Boolean
+property warnOnExceed : Boolean
+property trackStats : Boolean
+property onExceed : 4D:C1709.Function
+property counter : cs:C1710.OpenAITokenCounter
+property stats : Object
+
+Class extends cs:C1710.OpenAIMiddleware
 
 Class constructor($config : Object)
+	var $counterConfig : Object
+
 	Super:C1705($config)
 
 	// Default configuration
@@ -44,7 +54,7 @@ Class constructor($config : Object)
 		"tokensPerWord"; This:C1470.config.tokensPerWord; \
 		"customCounter"; This:C1470.config.customCounter\
 		)
-	This:C1470.counter:=OpenAITokenCounter.new($counterConfig)
+	This:C1470.counter:=cs:C1710.OpenAITokenCounter.new($counterConfig)
 
 	// Statistics tracking
 	If (This:C1470.trackStats)
@@ -90,7 +100,7 @@ Function processBeforeRequest($context : Object)->$result : Object
 
 		// Log warning
 		If (This:C1470.warnOnExceed)
-			TRACE:C157("[TokenCountingMiddleware] Token limit exceeded: "+String:C10($tokenCount)+" > "+String:C10(This:C1470.maxTokens))
+			LOG EVENT:C667(Into system standard outputs:K38:9; "[TokenCountingMiddleware] Token limit exceeded: "+String:C10($tokenCount)+" > "+String:C10(This:C1470.maxTokens); Warning message:K38:4)
 		End if
 
 		// Call callback if provided
@@ -100,7 +110,7 @@ Function processBeforeRequest($context : Object)->$result : Object
 
 		// Abort if configured
 		If (This:C1470.abortOnExceed)
-			TRACE:C157("[TokenCountingMiddleware] Aborting request due to token limit")
+			LOG EVENT:C667(Into system standard outputs:K38:9; "[TokenCountingMiddleware] Aborting request due to token limit"; Warning message:K38:4)
 			return Null:C1517  // Abort pipeline
 		End if
 	End if

@@ -17,6 +17,9 @@
  *   - Error handling and logging
  */
 
+property middleware : Collection
+property debug : Boolean
+
 Class constructor
 	This:C1470.middleware:=[]  // Collection of OpenAIMiddleware instances
 	This:C1470.debug:=False:C215
@@ -33,7 +36,7 @@ Function add($middleware : Object)->$result : Object
 	End if
 
 	// Validate it's a middleware instance
-	If (OB Instance of:C1731($middleware; OpenAIMiddleware))
+	If (OB Instance of:C1731($middleware; cs:C1710.OpenAIMiddleware))
 		This:C1470.middleware.push($middleware)
 		This:C1470._log("Added middleware: "+$middleware.getName())
 	Else
@@ -214,7 +217,7 @@ Function disableDebug()
  */
 Function _log($message : Text)
 	If (This:C1470.debug)
-		TRACE:C157("[Pipeline] "+$message)
+		LOG EVENT:C667(Into system standard outputs:K38:9; "[Pipeline] "+$message; Information message:K38:1)
 	End if
 
 /*
@@ -223,4 +226,4 @@ Function _log($message : Text)
  * @param $message Text - Error message
  */
 Function _error($message : Text)
-	TRACE:C157("[Pipeline ERROR] "+$message)
+	LOG EVENT:C667(Into system standard outputs:K38:9; "[Pipeline ERROR] "+$message; Error message:K38:2)

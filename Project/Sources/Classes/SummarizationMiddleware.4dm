@@ -26,7 +26,18 @@
  *   $helper.middleware.add($middleware)
  */
 
-Class extends OpenAIMiddleware
+property threshold : Integer
+property keepRecentCount : Integer
+property preserveSystemMessage : Boolean
+property minMessagesToSummarize : Integer
+property model : Text
+property summaryPrompt : Text
+property onSummarize : 4D:C1709.Function
+property counter : cs:C1710.OpenAITokenCounter
+property summarizationCount : Integer
+property lastSummarization : Object
+
+Class extends cs:C1710.OpenAIMiddleware
 
 Class constructor($config : Object)
 	Super:C1705($config)
@@ -45,7 +56,7 @@ Class constructor($config : Object)
 	This:C1470.onSummarize:=This:C1470.config.onSummarize  // Formula
 
 	// Token counter for checking threshold
-	This:C1470.counter:=OpenAITokenCounter.new(New object:C1471("strategy"; "chars"))
+	This:C1470.counter:=cs:C1710.OpenAITokenCounter.new(New object:C1471("strategy"; "chars"))
 
 	// Track summarizations
 	This:C1470.summarizationCount:=0
@@ -96,8 +107,8 @@ Function processBeforeRequest($context : Object)->$result : Object
  * Summarize conversation by keeping recent messages and compressing older ones
  */
 Function _summarizeConversation($context : Object)->$result : Object
-	var $systemMessage; $summaryMessage : Object
-	var $messagesToSummarize; $recentMessages : Collection
+	var $systemMessage; $summaryMessage; $msg : Object
+	var $messagesToSummarize; $recentMessages; $newMessages : Collection
 	var $summary : Text
 	var $splitIndex : Integer
 
@@ -155,7 +166,6 @@ Function _summarizeConversation($context : Object)->$result : Object
 		)
 
 	// 5. Reconstruct messages: [system?] + [summary] + [recent messages]
-	var $newMessages : Collection
 	$newMessages:=[]
 
 	If ($systemMessage#Null:C1517)
@@ -164,7 +174,7 @@ Function _summarizeConversation($context : Object)->$result : Object
 
 	$newMessages.push($summaryMessage)
 
-	For each (var $msg : Object; $recentMessages)
+	For each ($msg; $recentMessages)
 		$newMessages.push($msg)
 	End for each
 
@@ -224,7 +234,7 @@ Function _generateSummary($messages : Collection; $context : Object)->$summary :
 			$chatAPI:=$context.helper.chat
 		Else
 			// Should not happen, but fallback
-			TRACE:C157("[SummarizationMiddleware] ERROR: No helper in context")
+			LOG EVENT:C667(Into system standard outputs:K38:9; "[SummarizationMiddleware] ERROR: No helper in context"; Error message:K38:2)
 			return ""
 		End if
 
@@ -244,12 +254,12 @@ Function _generateSummary($messages : Collection; $context : Object)->$summary :
 			This:C1470._log("Summary generated: "+String:C10(Length:C16($summary))+" chars")
 			return $summary
 		Else
-			TRACE:C157("[SummarizationMiddleware] Failed to generate summary: "+JSON Stringify:C1217($result.error))
+			LOG EVENT:C667(Into system standard outputs:K38:9; "[SummarizationMiddleware] Failed to generate summary: "+JSON Stringify:C1217($result.error); Error message:K38:2)
 			return ""
 		End if
 
 	catch
-		TRACE:C157("[SummarizationMiddleware] Exception generating summary: "+Last errors:C1799[0].message)
+		LOG EVENT:C667(Into system standard outputs:K38:9; "[SummarizationMiddleware] Exception generating summary: "+Last errors:C1799[0].message; Error message:K38:2)
 		return ""
 	End try
 

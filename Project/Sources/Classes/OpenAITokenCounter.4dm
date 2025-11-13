@@ -15,6 +15,12 @@
  *   $tokens:=$counter.countMessages($messages)
  */
 
+property config : Object
+property strategy : Text
+property customCounter : 4D:C1709.Function
+property charsPerToken : Integer
+property tokensPerWord : Real
+
 Class constructor($config : Object)
 	This:C1470.config:=($config#Null:C1517) ? $config : {}
 
