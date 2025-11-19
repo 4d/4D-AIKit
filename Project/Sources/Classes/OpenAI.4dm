@@ -7,11 +7,11 @@
 property chat : cs:C1710.OpenAIChatAPI
 property embeddings : cs:C1710.OpenAIEmbeddingsAPI
 property files : cs:C1710.OpenAIFilesAPI
+property fineTuning : cs:C1710.OpenAIFineTuningAPI
 property images : cs:C1710.OpenAIImagesAPI
 // property audio : cs.OpenAIAudioAPI
 property moderations : cs:C1710.OpenAIModerationsAPI
 property models : cs:C1710.OpenAIModelsAPI
-// property fineTunings : cs.OpenAIFineTuningsAPI
 // property beta : cs.OpenAIBetaAPI
 // property batches : cs.OpenAIBatchesAPI
 // property uploads : cs.OpenAIUploadsAPI
@@ -94,6 +94,7 @@ Class constructor( ...  : Variant)
 	This:C1470.chat:=cs:C1710.OpenAIChatAPI.new(This:C1470)
 	This:C1470.embeddings:=cs:C1710.OpenAIEmbeddingsAPI.new(This:C1470)
 	This:C1470.files:=cs:C1710.OpenAIFilesAPI.new(This:C1470)
+	This:C1470.fineTuning:=cs:C1710.OpenAIFineTuningAPI.new(This:C1470)
 	This:C1470.images:=cs:C1710.OpenAIImagesAPI.new(This:C1470)
 	// This.audio:=cs.OpenAIAudioAPI.new(This)
 	This:C1470.moderations:=cs:C1710.OpenAIModerationsAPI.new(This:C1470)

@@ -50,6 +50,18 @@
 			"OpenAIFilesAPI"
 		]
 	},
+	"FineTuning": {
+		"classes": [
+			"OpenAIFineTuningAPI",
+			"OpenAIFineTuningEvent",
+			"OpenAIFineTuningEventListResult",
+			"OpenAIFineTuningJob",
+			"OpenAIFineTuningJobListParameters",
+			"OpenAIFineTuningJobListResult",
+			"OpenAIFineTuningJobParameters",
+			"OpenAIFineTuningJobResult"
+		]
+	},
 	"FormDemo": {
 		"forms": [
 			"_FormDemo"
