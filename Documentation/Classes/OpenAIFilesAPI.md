@@ -15,7 +15,7 @@ API Reference: <https://platform.openai.com/docs/api-reference/files>
 
 ### create()
 
-**create**(*file* : 4D.File | 4D.Blob; *purpose* : Text; *parameters* : cs.OpenAIFileParameters) : cs.OpenAIFileResult
+**create**(*file* : 4D.File | 4D.Blob; *purpose* : Text; *parameters* : cs.AIKit.OpenAIFileParameters) : cs.AIKit.OpenAIFileResult
 
 Upload a file that can be used across various endpoints.
 
@@ -99,7 +99,7 @@ End if
 
 ### retrieve()
 
-**retrieve**(*fileId* : Text; *parameters* : cs.OpenAIParameters) : cs.OpenAIFileResult
+**retrieve**(*fileId* : Text; *parameters* : cs.AIKit.OpenAIParameters) : cs.AIKit.OpenAIFileResult
 
 Returns information about a specific file.
 
@@ -128,7 +128,7 @@ End if
 
 ### list()
 
-**list**(*parameters* : cs.OpenAIFileListParameters) : cs.OpenAIFileListResult
+**list**(*parameters* : cs.AIKit.OpenAIFileListParameters) : cs.AIKit.OpenAIFileListResult
 
 Returns a list of files that belong to the user's organization.
 
@@ -161,7 +161,7 @@ End if
 
 ### delete()
 
-**delete**(*fileId* : Text; *parameters* : cs.OpenAIParameters) : cs.OpenAIFileDeletedResult
+**delete**(*fileId* : Text; *parameters* : cs.AIKit.OpenAIParameters) : cs.AIKit.OpenAIFileDeletedResult
 
 Delete a file.
 
