@@ -89,6 +89,13 @@
 			"OpenAIModerationsAPI"
 		]
 	},
+	"Responses": {
+		"classes": [
+			"OpenAIResponsesAPI",
+			"OpenAIResponsesParameters",
+			"OpenAIResponsesResult"
+		]
+	},
 	"Tests": {
 		"groups": [
 			"FormDemo"
@@ -116,6 +123,7 @@
 			"test_openai_moderations",
 			"test_openai_msg",
 			"test_openai_msg_accumulate",
+			"test_openai_responses",
 			"test_openai_vision",
 			"TestOpenAI"
 		],
