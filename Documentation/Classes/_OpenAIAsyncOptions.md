@@ -19,7 +19,7 @@ The `_OpenAIAsyncOptions` internal class provides function to handle asynchronou
 | Property    | Type    |
 |-------------|---------|
 | `client`      | [OpenAI](OpenAI.md) |
-| `parameters`  | [OpenAIChatCompletionsParameters](OpenAIChatCompletionsParameters.md) |
+| `parameters`  | [OpenAIParameters](OpenAIParameters.md) |
 | `result`      | [OpenAIResult](OpenAIResult.md) |
 
 ## Functions
@@ -30,4 +30,4 @@ On terminate send [OpenAIResult](OpenAIResult.md) to the callback "formula".
 
 ### onData()
 
-On data receive send [OpenAIChatCompletionsStreamResult](OpenAIChatCompletionsStreamResult.md) to the callback "formula".
+On data receive send [OpenAIChatCompletionsStreamResult](OpenAIChatCompletionsStreamResult.md) for chat completions or [OpenAIResponsesStreamResult](OpenAIResponsesStreamResult.md) for Responses API streams to the callback "formula".
