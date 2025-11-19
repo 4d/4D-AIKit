@@ -109,6 +109,7 @@
 			"_runTests",
 			"_runTestsCLI",
 			"_test_openai_chat_helper_trim",
+			"test_openai_assistants",
 			"test_openai_chat",
 			"test_openai_chat_async",
 			"test_openai_chat_helper",
