@@ -1,4 +1,16 @@
 {
+	"Assistants": {
+		"classes": [
+			"OpenAIAssistant",
+			"OpenAIAssistantDeleted",
+			"OpenAIAssistantDeletedResult",
+			"OpenAIAssistantListParameters",
+			"OpenAIAssistantListResult",
+			"OpenAIAssistantsAPI",
+			"OpenAIAssistantsParameters",
+			"OpenAIAssistantsResult"
+		]
+	},
 	"Async": {
 		"methods": [
 			"_openAICallbacks"

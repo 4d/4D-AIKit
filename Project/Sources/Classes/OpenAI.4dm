@@ -4,6 +4,7 @@
 
 // MARK: api resources
 // property completions : cs:C1710.OpenAICompletionsAPI // deprecated
+property assistants : cs:C1710.OpenAIAssistantsAPI
 property chat : cs:C1710.OpenAIChatAPI
 property embeddings : cs:C1710.OpenAIEmbeddingsAPI
 property files : cs:C1710.OpenAIFilesAPI
@@ -89,8 +90,9 @@ Function _configureParameters($object : Object)
  */
 Class constructor( ...  : Variant)
 	var $parameters:=Copy parameters:C1790()
-	
+
 	//  This:C1470.completions:=cs:C1710.OpenAICompletionsAPI.new(This:C1470)
+	This:C1470.assistants:=cs:C1710.OpenAIAssistantsAPI.new(This:C1470)
 	This:C1470.chat:=cs:C1710.OpenAIChatAPI.new(This:C1470)
 	This:C1470.embeddings:=cs:C1710.OpenAIEmbeddingsAPI.new(This:C1470)
 	This:C1470.files:=cs:C1710.OpenAIFilesAPI.new(This:C1470)
