@@ -73,6 +73,16 @@
 			"OpenAIImagesResult"
 		]
 	},
+	"Video": {
+		"classes": [
+			"OpenAIVideo",
+			"OpenAIVideoListParameters",
+			"OpenAIVideoListResult",
+			"OpenAIVideoParameters",
+			"OpenAIVideoResult",
+			"OpenAIVideosAPI"
+		]
+	},
 	"Model": {
 		"classes": [
 			"OpenAIModel",
@@ -115,6 +125,7 @@
 			"test_openai_models_async",
 			"test_openai_moderations",
 			"test_openai_msg",
+			"test_openai_videos",
 			"test_openai_msg_accumulate",
 			"test_openai_vision",
 			"TestOpenAI"
