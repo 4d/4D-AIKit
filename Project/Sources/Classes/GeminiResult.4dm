@@ -1,0 +1,165 @@
+// The HTTP request used
+property request : 4D:C1709.HTTPRequest
+
+// Cache if parsed response
+property _parsed : Object
+
+// to force terminated'
+property _terminated : Boolean
+
+// to force errors'
+property _errors : Collection
+
+// True if success ie. response receive and no API errors.
+Function get success : Boolean
+	If ((This:C1470.request=Null:C1517) || (This:C1470.request.response=Null:C1517))
+		return False:C215
+	End if
+	return (300>This:C1470.request.response.status) && (This:C1470.request.response.status>=200)
+
+	// True if the requested is terminated
+Function get terminated : Boolean
+	return This:C1470._terminated || This:C1470.request.terminated
+
+Function _objectBody() : Object
+	If (This:C1470._parsed#Null:C1517)
+		return This:C1470._parsed
+	End if
+	Case of
+		: (This:C1470.request.response.body=Null:C1517)
+			return Null:C1517
+		: (Value type:C1509(This:C1470.request.response.body)=Is object:K8:27)
+			return This:C1470.request.response.body
+		: (Value type:C1509(This:C1470.request.response.body)=Is text:K8:3)  // sometime not decoded, maybe some errors do not return content type
+			Case of
+				: (Length:C16(This:C1470.request.response.body)=0)
+					return Null:C1517
+					//%W-533.1
+				: (This:C1470.request.response.body[[1]]="<")  // html/xml
+					//%W+533.1
+					return Null:C1517
+				Else
+					Try
+						var $parsed:=(JSON Parse:C1218(This:C1470.request.response.body))
+						If (Value type:C1509($parsed)=Is object:K8:27)
+							This:C1470._parsed:=$parsed
+							return $parsed
+						End if
+					Catch
+						// ignore
+						Try(True:C214)  // reset errors stack
+					End try
+			End case
+
+	End case
+
+	// List of errors if any
+Function get errors : Collection
+
+	If (This:C1470._errors#Null:C1517)
+		return This:C1470._errors
+	End if
+
+	If ((This:C1470.request.errors#Null:C1517) && (This:C1470.request.errors.length>0))
+		return This:C1470.request.errors
+	End if
+
+	If (This:C1470.request.response=Null:C1517)
+		return []
+	End if
+
+	var $body:=This:C1470._objectBody()
+	If ((($body#Null:C1517) && ($body.error#Null:C1517)) || (This:C1470.request.response.status>=300))
+		return [cs:C1710.GeminiError.new(This:C1470.request.response; $body)]
+	End if
+
+	return []
+
+Function throw()
+	var $error : Object
+	For each ($error; This:C1470.errors || [])
+		throw:C1805($error)
+	End for each
+
+	// The response headers
+Function get headers : Object
+	If (This:C1470.request.response=Null:C1517)
+		return Null:C1517
+	End if
+	return This:C1470.request.response.headers
+
+	// RateLimit information from Gemini headers
+Function get rateLimit : Object
+	If (This:C1470.headers=Null:C1517)
+		return Null:C1517
+	End if
+	// Gemini uses different rate limit headers than OpenAI
+	return {limit: {request: (This:C1470.headers["x-goog-ratelimit-limit"]#Null:C1517) ? Num:C11(This:C1470.headers["x-goog-ratelimit-limit"]) : Null:C1517}; \
+		remaining: {request: (This:C1470.headers["x-goog-ratelimit-remaining"]#Null:C1517) ? Num:C11(This:C1470.headers["x-goog-ratelimit-remaining"]) : Null:C1517}; \
+		reset: {request: This:C1470.headers["x-goog-ratelimit-reset"]}}
+
+Function get usage : Object
+	var $body:=This:C1470._objectBody()
+	If ($body=Null:C1517)
+		return Null:C1517
+	End if
+	// Gemini uses usageMetadata instead of usage
+	return $body.usageMetadata
+
+Function _shouldRetry() : Boolean
+	If (This:C1470.request.response=Null:C1517)
+		return False:C215
+	End if
+
+	If ((This:C1470.headers#Null:C1517) && (This:C1470.headers["x-should-retry"]#Null:C1517))
+		return This:C1470.headers["x-should-retry"]="true"
+	End if
+
+	return ((This:C1470.request.response.status=408) || (This:C1470.request.response.status=409) || (This:C1470.request.response.status=429) || (This:C1470.request.response.status>=500))
+
+Function _retryAfterValue : Integer
+	If (This:C1470.headers=Null:C1517)
+		return 0
+	End if
+
+	If (This:C1470.headers["retry-after-ms"]#Null:C1517)
+		return Num:C11(This:C1470.headers["retry-after-ms"])/1000
+	End if
+
+	If (This:C1470.headers["retry-after"]=Null:C1517)
+		return 0
+	End if
+
+	If (Match regex:C1019("^[0-9]+$"; This:C1470.headers["retry-after"]))
+		return Num:C11(This:C1470.headers["retry-after"])
+	End if
+
+	var $date:=Date:C102(This:C1470.headers["retry-after"])
+	var $time:=Time:C179(This:C1470.headers["retry-after"])
+
+	return ($date-Current date:C33)*86400+($time-Current time:C178)
+
+Function _failWith($errors : Collection)
+	This:C1470._errors:=$errors
+	This:C1470._terminated:=True:C214
+
+	// MARK:- utils
+
+	// http request seems to not be sharable
+Function _requestSharable()
+	This:C1470.request:={agent: Null:C1517; \
+		dataType: This:C1470.request.dataType; \
+		encoding: This:C1470.request.encoding; \
+		errors: This:C1470.request.errors; \
+		headers: This:C1470.request.headers; \
+		method: This:C1470.request.method; \
+		protocol: This:C1470.request.protocol; \
+		response: This:C1470.request.response; \
+		returnResponseBody: This:C1470.request.returnResponseBody; \
+		terminated: This:C1470.request.terminated; \
+		timeout: This:C1470.request.timeout; \
+		url: This:C1470.request.url}
+
+Function parse($response : Object)
+	// override
+

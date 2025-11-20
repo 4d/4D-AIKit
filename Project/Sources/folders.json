@@ -97,6 +97,9 @@
 			"_runTests",
 			"_runTestsCLI",
 			"_test_openai_chat_helper_trim",
+			"test_gemini_content",
+			"test_gemini_embeddings",
+			"test_gemini_models",
 			"test_openai_chat",
 			"test_openai_chat_async",
 			"test_openai_chat_helper",
@@ -117,6 +120,7 @@
 			"test_openai_msg",
 			"test_openai_msg_accumulate",
 			"test_openai_vision",
+			"TestGemini",
 			"TestOpenAI"
 		],
 		"classes": [
@@ -134,5 +138,65 @@
 			"_MimeTypes"
 		]
 	},
-	"trash": {}
+	"trash": {},
+	"Gemini": {
+		"groups": [
+			"GeminiContent",
+			"GeminiEmbeddings",
+			"GeminiModels",
+			"GeminiFiles",
+			"GeminiAsync"
+		],
+		"classes": [
+			"Gemini",
+			"GeminiAPIResource",
+			"GeminiParameters",
+			"GeminiResult",
+			"GeminiError"
+		]
+	},
+	"GeminiContent": {
+		"classes": [
+			"GeminiContentAPI",
+			"GeminiContentParameters",
+			"GeminiContentResult",
+			"GeminiContent",
+			"GeminiCandidate",
+			"GeminiPart"
+		]
+	},
+	"GeminiEmbeddings": {
+		"classes": [
+			"GeminiEmbeddingsAPI",
+			"GeminiEmbeddingsParameters",
+			"GeminiEmbeddingsResult",
+			"GeminiEmbedding"
+		]
+	},
+	"GeminiModels": {
+		"classes": [
+			"GeminiModelsAPI",
+			"GeminiModelResult",
+			"GeminiModelListResult",
+			"GeminiModel"
+		]
+	},
+	"GeminiFiles": {
+		"classes": [
+			"GeminiFilesAPI",
+			"GeminiFileParameters",
+			"GeminiFileListParameters",
+			"GeminiFileResult",
+			"GeminiFileListResult",
+			"GeminiFile"
+		]
+	},
+	"GeminiAsync": {
+		"methods": [
+			"_geminiCallbacks"
+		],
+		"classes": [
+			"_GeminiAsyncOptions"
+		]
+	}
 }
