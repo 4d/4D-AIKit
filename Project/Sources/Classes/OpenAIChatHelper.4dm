@@ -6,11 +6,8 @@ property parameters : cs:C1710.OpenAIChatCompletionsParameters
 property messages : Collection:=[]
 
 // Summarization properties
-property autoSummarize : Object  // {enabled: Boolean, tokenThreshold: Integer, keepLastMessages: Integer}
-property summarizationPrompt : Text:="Progressively summarize the conversation so far, focusing on key points, decisions, user preferences, technical details, and any unresolved issues. Write a concise summary that preserves critical information."
-property summarizationTemperature : Real:=0.3
-property summarizationModel : Text:="gpt-4o-mini"
-property summarizationMaxTokens : Integer:=1000
+property autoSummarize : Object  // {enabled: Boolean, tokenThreshold: Integer, messageThreshold: Integer}
+property summarizationParameters : cs:C1710.SummarizationParameters  // Default parameters for summarization
 property _summaryMessage : cs:C1710.OpenAIMessage  // Current summary message
 property _lastSummarizedIndex : Integer:=-1  // Index up to which we've summarized
 property _onSummarize : 4D:C1709.Function  // Callback for auto-summarization
@@ -57,25 +54,37 @@ Class constructor($chat : cs:C1710.OpenAIChatAPI; $systemPrompt : Text; $paramet
 	If ($parameters.autoSummarize#Null:C1517)
 		This:C1470.autoSummarize:=$parameters.autoSummarize
 	Else
-		This:C1470.autoSummarize:={enabled: False:C215; tokenThreshold: 12000; keepLastMessages: 10}
+		This:C1470.autoSummarize:={enabled: False:C215; tokenThreshold: 12000; messageThreshold: 20}
 	End if
 
 	If ($parameters.onSummarize#Null:C1517)
 		This:C1470._onSummarize:=$parameters.onSummarize
 	End if
 
-	// Override default summarization parameters if provided
+	// Initialize summarization parameters
+	If ($parameters.summarizationParameters#Null:C1517)
+		If (OB Instance of:C1731($parameters.summarizationParameters; cs:C1710.SummarizationParameters))
+			This:C1470.summarizationParameters:=$parameters.summarizationParameters
+		Else
+			This:C1470.summarizationParameters:=cs:C1710.SummarizationParameters.new($parameters.summarizationParameters)
+		End if
+	Else
+		// Create default summarization parameters
+		This:C1470.summarizationParameters:=cs:C1710.SummarizationParameters.new(Null:C1517)
+	End if
+
+	// Support legacy individual parameters for backward compatibility
 	If ($parameters.summarizationPrompt#Null:C1517)
-		This:C1470.summarizationPrompt:=$parameters.summarizationPrompt
+		This:C1470.summarizationParameters.prompt:=$parameters.summarizationPrompt
 	End if
 	If ($parameters.summarizationTemperature#Null:C1517)
-		This:C1470.summarizationTemperature:=$parameters.summarizationTemperature
+		This:C1470.summarizationParameters.temperature:=$parameters.summarizationTemperature
 	End if
 	If ($parameters.summarizationModel#Null:C1517)
-		This:C1470.summarizationModel:=$parameters.summarizationModel
+		This:C1470.summarizationParameters.model:=$parameters.summarizationModel
 	End if
 	If ($parameters.summarizationMaxTokens#Null:C1517)
-		This:C1470.summarizationMaxTokens:=$parameters.summarizationMaxTokens
+		This:C1470.summarizationParameters.maxTokens:=$parameters.summarizationMaxTokens
 	End if
 
 	If (This:C1470.parameters._isAsync())
@@ -145,17 +154,37 @@ Function _buildMessagesForLLM() : Collection
 	return $messages
 
 	// Summarize the conversation with optional parameter overrides
+	// Accepts either a SummarizationParameters object or a plain object (will be converted)
 	// Returns: {success: Boolean, summary: Text, messagesSummarized: Integer, tokensUsed: Integer}
-Function summarize($options : Object) : Object
+Function summarize($options : Variant) : Object
 	var $result : Object:={}
 	$result.success:=False:C215
 
-	// Merge options with defaults
-	var $prompt : Text:=($options#Null:C1517) && ($options.prompt#Null:C1517) ? $options.prompt : This:C1470.summarizationPrompt
-	var $temperature : Real:=($options#Null:C1517) && ($options.temperature#Null:C1517) ? $options.temperature : This:C1470.summarizationTemperature
-	var $model : Text:=($options#Null:C1517) && ($options.model#Null:C1517) ? $options.model : This:C1470.summarizationModel
-	var $maxTokens : Integer:=($options#Null:C1517) && ($options.maxTokens#Null:C1517) ? $options.maxTokens : This:C1470.summarizationMaxTokens
-	var $keepLastMessages : Integer:=($options#Null:C1517) && ($options.keepLastMessages#Null:C1517) ? $options.keepLastMessages : This:C1470.autoSummarize.keepLastMessages
+	// Convert options to SummarizationParameters if needed
+	var $params : cs:C1710.SummarizationParameters
+	If ($options=Null:C1517)
+		// Use defaults
+		$params:=This:C1470.summarizationParameters
+	Else
+		If (OB Instance of:C1731($options; cs:C1710.SummarizationParameters))
+			$params:=$options
+		Else
+			// Create new parameters merging options with defaults
+			$params:=cs:C1710.SummarizationParameters.new(This:C1470.summarizationParameters)
+			// Override with provided options
+			var $key : Text
+			For each ($key; $options)
+				$params[$key]:=$options[$key]
+			End for each
+		End if
+	End if
+
+	// Extract parameters
+	var $prompt : Text:=$params.prompt
+	var $temperature : Real:=$params.temperature
+	var $model : Text:=$params.model
+	var $maxTokens : Integer:=$params.maxTokens
+	var $keepLastMessages : Integer:=$params.keepLastMessages
 
 	// Check if there are enough messages to summarize
 	If (This:C1470.messages.length<=$keepLastMessages)
@@ -329,7 +358,7 @@ Function reset()
 	This:C1470.unregisterTools()
 
 	// Get summary information for monitoring/debugging
-	// Returns: {hasSummary: Boolean, summary: Text, lastSummarizedIndex: Integer, unsummarizedCount: Integer}
+	// Returns: {hasSummary: Boolean, summary: Text, lastSummarizedIndex: Integer, unsummarizedCount: Integer, ...}
 Function getSummaryInfo() : Object
 	var $info : Object:={}
 	$info.hasSummary:=(This:C1470._summaryMessage#Null:C1517)
@@ -338,6 +367,7 @@ Function getSummaryInfo() : Object
 	$info.unsummarizedCount:=This:C1470.messages.length-This:C1470._lastSummarizedIndex-1
 	$info.totalMessageCount:=This:C1470.messages.length
 	$info.autoSummarizeEnabled:=This:C1470.autoSummarize.enabled
+	$info.summarizationParameters:=This:C1470.summarizationParameters
 	return $info
 
 	// Clear the current summary (keeping all messages intact)
