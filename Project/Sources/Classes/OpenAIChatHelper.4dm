@@ -5,6 +5,16 @@ property parameters : cs:C1710.OpenAIChatCompletionsParameters
 
 property messages : Collection:=[]
 
+// Summarization properties
+property autoSummarize : Object  // {enabled: Boolean, tokenThreshold: Integer, keepLastMessages: Integer}
+property summarizationPrompt : Text:="Progressively summarize the conversation so far, focusing on key points, decisions, user preferences, technical details, and any unresolved issues. Write a concise summary that preserves critical information."
+property summarizationTemperature : Real:=0.3
+property summarizationModel : Text:="gpt-4o-mini"
+property summarizationMaxTokens : Integer:=1000
+property _summaryMessage : cs:C1710.OpenAIMessage  // Current summary message
+property _lastSummarizedIndex : Integer:=-1  // Index up to which we've summarized
+property _onSummarize : 4D:C1709.Function  // Callback for auto-summarization
+
 // user formula call save
 property _onData : 4D:C1709.Function
 property _onTerminate : 4D:C1709.Function
@@ -41,8 +51,33 @@ Class constructor($chat : cs:C1710.OpenAIChatAPI; $systemPrompt : Text; $paramet
 	// Initialize tool-related properties if needed
 	If (This:C1470.parameters.tools#Null:C1517)
 		This:C1470.registerTools(This:C1470.parameters.tools)
-	End if 
-	
+	End if
+
+	// Initialize summarization settings
+	If ($parameters.autoSummarize#Null:C1517)
+		This:C1470.autoSummarize:=$parameters.autoSummarize
+	Else
+		This:C1470.autoSummarize:={enabled: False:C215; tokenThreshold: 12000; keepLastMessages: 10}
+	End if
+
+	If ($parameters.onSummarize#Null:C1517)
+		This:C1470._onSummarize:=$parameters.onSummarize
+	End if
+
+	// Override default summarization parameters if provided
+	If ($parameters.summarizationPrompt#Null:C1517)
+		This:C1470.summarizationPrompt:=$parameters.summarizationPrompt
+	End if
+	If ($parameters.summarizationTemperature#Null:C1517)
+		This:C1470.summarizationTemperature:=$parameters.summarizationTemperature
+	End if
+	If ($parameters.summarizationModel#Null:C1517)
+		This:C1470.summarizationModel:=$parameters.summarizationModel
+	End if
+	If ($parameters.summarizationMaxTokens#Null:C1517)
+		This:C1470.summarizationMaxTokens:=$parameters.summarizationMaxTokens
+	End if
+
 	If (This:C1470.parameters._isAsync())
 		
 		This:C1470.messages:=New shared collection:C1527
@@ -75,15 +110,177 @@ Class constructor($chat : cs:C1710.OpenAIChatAPI; $systemPrompt : Text; $paramet
 	End if 
 	
 Function _pushMessage($message : cs:C1710.OpenAIMessage)
-	
+
 	If (This:C1470.parameters._isAsync())  // or is shared?
 		Use (This:C1470.messages)
 			This:C1470.messages.push(OB Copy:C1225($message; ck shared:K85:29; This:C1470.messages))
-		End use 
-	Else 
+		End use
+	Else
 		This:C1470.messages.push($message)
-	End if 
-	
+	End if
+
+	// Build messages array to send to LLM, incorporating summary if available
+Function _buildMessagesForLLM() : Collection
+	var $messages : Collection:=[]
+
+	// If we have a summary, use it instead of original system prompt
+	If (This:C1470._summaryMessage#Null:C1517)
+		// Add system message with summary
+		$messages.push(This:C1470._summaryMessage)
+
+		// Add only unsummarized messages (after the last summarized index)
+		var $i : Integer
+		For ($i; This:C1470._lastSummarizedIndex+1; This:C1470.messages.length-1)
+			$messages.push(This:C1470.messages[$i])
+		End for
+	Else
+		// No summary yet, use original system prompt and all messages
+		$messages.push(This:C1470.systemPrompt)
+		var $msg : cs:C1710.OpenAIMessage
+		For each ($msg; This:C1470.messages)
+			$messages.push($msg)
+		End for each
+	End if
+
+	return $messages
+
+	// Summarize the conversation with optional parameter overrides
+	// Returns: {success: Boolean, summary: Text, messagesSummarized: Integer, tokensUsed: Integer}
+Function summarize($options : Object) : Object
+	var $result : Object:={}
+	$result.success:=False:C215
+
+	// Merge options with defaults
+	var $prompt : Text:=($options#Null:C1517) && ($options.prompt#Null:C1517) ? $options.prompt : This:C1470.summarizationPrompt
+	var $temperature : Real:=($options#Null:C1517) && ($options.temperature#Null:C1517) ? $options.temperature : This:C1470.summarizationTemperature
+	var $model : Text:=($options#Null:C1517) && ($options.model#Null:C1517) ? $options.model : This:C1470.summarizationModel
+	var $maxTokens : Integer:=($options#Null:C1517) && ($options.maxTokens#Null:C1517) ? $options.maxTokens : This:C1470.summarizationMaxTokens
+	var $keepLastMessages : Integer:=($options#Null:C1517) && ($options.keepLastMessages#Null:C1517) ? $options.keepLastMessages : This:C1470.autoSummarize.keepLastMessages
+
+	// Check if there are enough messages to summarize
+	If (This:C1470.messages.length<=$keepLastMessages)
+		$result.error:="Not enough messages to summarize. Need more than "+String:C10($keepLastMessages)+" messages."
+		return $result
+	End if
+
+	// Determine which messages to summarize
+	var $startIndex : Integer:=This:C1470._lastSummarizedIndex+1
+	var $endIndex : Integer:=This:C1470.messages.length-$keepLastMessages
+
+	If ($endIndex<=$startIndex)
+		$result.error:="No new messages to summarize"
+		return $result
+	End if
+
+	// Build messages for summarization
+	var $messagesToSummarize : Collection:=[]
+
+	// Include existing summary if we have one
+	If (This:C1470._summaryMessage#Null:C1517)
+		$messagesToSummarize.push(cs:C1710.OpenAIMessage.new({role: "system"; content: "Previous summary: "+This:C1470._summaryMessage.content}))
+	Else
+		// Include original system prompt context
+		$messagesToSummarize.push(cs:C1710.OpenAIMessage.new({role: "system"; content: "Original context: "+This:C1470.systemPrompt.content}))
+	End if
+
+	// Add the conversation to summarize
+	var $conversationText : Text:=""
+	var $i : Integer
+	For ($i; $startIndex; $endIndex-1)
+		var $msg : cs:C1710.OpenAIMessage:=This:C1470.messages[$i]
+		$conversationText:=$conversationText+$msg.role+": "+String:C10($msg.content)+"\n"
+	End for
+
+	$messagesToSummarize.push(cs:C1710.OpenAIMessage.new({role: "user"; content: $conversationText}))
+	$messagesToSummarize.push(cs:C1710.OpenAIMessage.new({role: "user"; content: $prompt}))
+
+	// Create parameters for summarization call
+	var $sumParams : cs:C1710.OpenAIChatCompletionsParameters:=cs:C1710.OpenAIChatCompletionsParameters.new()
+	$sumParams.model:=$model
+	$sumParams.temperature:=$temperature
+	$sumParams.max_tokens:=$maxTokens
+
+	// Call LLM to generate summary
+	Try
+		var $sumResult:=This:C1470.chat.completions.create($messagesToSummarize; $sumParams)
+
+		If ($sumResult#Null:C1517) && ($sumResult.success)
+			var $summaryText : Text:=String:C10($sumResult.choice.message.content)
+
+			// Update summary message
+			This:C1470._summaryMessage:=cs:C1710.OpenAIMessage.new({role: "system"; content: $summaryText})
+			This:C1470._summaryMessage._isSummary:=True:C214
+
+			// Update tracking
+			This:C1470._lastSummarizedIndex:=$endIndex-1
+
+			// Build result
+			$result.success:=True:C214
+			$result.summary:=$summaryText
+			$result.messagesSummarized:=$endIndex-$startIndex
+			$result.lastSummarizedIndex:=This:C1470._lastSummarizedIndex
+			$result.tokensUsed:=$sumResult.usage.total_tokens
+
+		Else
+			$result.error:="Summarization failed: "+JSON Stringify:C1217($sumResult)
+		End if
+
+	Catch
+		$result.error:="Summarization error: "+Last errors:C1799.last().message
+	End try
+
+	return $result
+
+	// Check if auto-summarization should be triggered and execute if needed
+Function _checkAutoSummarize($result : Object)
+	If (This:C1470.autoSummarize=Null:C1517) || (Not:C34(This:C1470.autoSummarize.enabled))
+		return
+	End if
+
+	// Check token threshold
+	var $shouldSummarize : Boolean:=False:C215
+	var $reason : Text:=""
+
+	// Try to get token usage from result
+	If ($result#Null:C1517) && ($result.usage#Null:C1517) && ($result.usage.total_tokens#Null:C1517)
+		If ($result.usage.total_tokens>=This:C1470.autoSummarize.tokenThreshold)
+			$shouldSummarize:=True:C214
+			$reason:="Token threshold exceeded: "+String:C10($result.usage.total_tokens)+" >= "+String:C10(This:C1470.autoSummarize.tokenThreshold)
+		End if
+	End if
+
+	// Also check message count as a fallback
+	If (Not:C34($shouldSummarize)) && (This:C1470.autoSummarize.messageThreshold#Null:C1517)
+		If (This:C1470.messages.length>=This:C1470.autoSummarize.messageThreshold)
+			$shouldSummarize:=True:C214
+			$reason:="Message threshold exceeded: "+String:C10(This:C1470.messages.length)+" >= "+String:C10(This:C1470.autoSummarize.messageThreshold)
+		End if
+	End if
+
+	If ($shouldSummarize)
+		// Call onSummarize callback BEFORE summarization (for notification)
+		If (This:C1470._onSummarize#Null:C1517)
+			var $beforeInfo : Object:={}
+			$beforeInfo.phase:="before"
+			$beforeInfo.reason:=$reason
+			$beforeInfo.messageCount:=This:C1470.messages.length
+			$beforeInfo.tokensUsed:=$result.usage.total_tokens
+			$beforeInfo.lastSummarizedIndex:=This:C1470._lastSummarizedIndex
+			This:C1470._onSummarize.call(This:C1470._formulaThis || This:C1470.chat._client; $beforeInfo)
+		End if
+
+		// Perform summarization
+		var $sumResult : Object:=This:C1470.summarize(Null:C1517)
+
+		// Call onSummarize callback AFTER summarization (with results)
+		If (This:C1470._onSummarize#Null:C1517)
+			var $afterInfo : Object:=$sumResult
+			$afterInfo.phase:="after"
+			$afterInfo.reason:=$reason
+			This:C1470._onSummarize.call(This:C1470._formulaThis || This:C1470.chat._client; $afterInfo)
+		End if
+	End if
+
 Function prompt($prompt : Variant) : cs:C1710.OpenAIChatCompletionsResult
 	var $type:=Value type:C1509($prompt)
 	Case of 
@@ -106,10 +303,10 @@ Function prompt($prompt : Variant) : cs:C1710.OpenAIChatCompletionsResult
 	End case 
 	
 	This:C1470._pushMessage($message)
-	
-	var $messages : Collection:=This:C1470.messages.copy()
-	$messages.unshift(This:C1470.systemPrompt)
-	
+
+	// Build messages to send to LLM
+	var $messages : Collection:=This:C1470._buildMessagesForLLM()
+
 	var $result:=This:C1470.chat.completions.create($messages; This:C1470.parameters)
 	If ($result#Null:C1517)
 		$result:=This:C1470._manageResponse($result)  // sync
@@ -118,15 +315,36 @@ Function prompt($prompt : Variant) : cs:C1710.OpenAIChatCompletionsResult
 	
 	// Reset chat context, ie. remove messages and tools
 Function reset()
-	
+
 	If (This:C1470.parameters._isAsync())
 		This:C1470.messages:=New shared collection:C1527
-	Else 
+	Else
 		This:C1470.messages:=[]
-	End if 
-	
+	End if
+
+	// Reset summarization state
+	This:C1470._summaryMessage:=Null:C1517
+	This:C1470._lastSummarizedIndex:=-1
+
 	This:C1470.unregisterTools()
-	
+
+	// Get summary information for monitoring/debugging
+	// Returns: {hasSummary: Boolean, summary: Text, lastSummarizedIndex: Integer, unsummarizedCount: Integer}
+Function getSummaryInfo() : Object
+	var $info : Object:={}
+	$info.hasSummary:=(This:C1470._summaryMessage#Null:C1517)
+	$info.summary:=This:C1470._summaryMessage#Null:C1517 ? This:C1470._summaryMessage.content : ""
+	$info.lastSummarizedIndex:=This:C1470._lastSummarizedIndex
+	$info.unsummarizedCount:=This:C1470.messages.length-This:C1470._lastSummarizedIndex-1
+	$info.totalMessageCount:=This:C1470.messages.length
+	$info.autoSummarizeEnabled:=This:C1470.autoSummarize.enabled
+	return $info
+
+	// Clear the current summary (keeping all messages intact)
+Function clearSummary()
+	This:C1470._summaryMessage:=Null:C1517
+	This:C1470._lastSummarizedIndex:=-1
+
 	// Register a tool with its handler function or a handler object where we call the function with the tool name
 	// If the handler function is not defined, we try to get one from $tool.handler property.
 	// Tool could be defined in a "tool" attribute too to be separated from handler code
@@ -392,21 +610,24 @@ Function _manageResponse($result : Object) : Object
 	If (This:C1470.parameters.stream)
 		
 		If ($result.terminated)
-			
+
 			If ($result.success)
 				This:C1470._trim()
-			End if 
-			
+
+				// Check if auto-summarization should be triggered
+				This:C1470._checkAutoSummarize($result)
+			End if
+
 			If (This:C1470.autoHandleToolCalls && ($result.success) && ($result.choice#Null:C1517) && (String:C10($result.choice.finish_reason)="tool_calls"))
-				
+
 				var $lastMessage:=This:C1470.messages.last()
 				This:C1470._handleAsyncToolCalls($result; $lastMessage)
 				If ($result._newResult#Null:C1517)
 					return $result._newResult  // we already manage _notifyOnTerminate
-				End if 
-				
-			End if 
-			
+				End if
+
+			End if
+
 			This:C1470._notifyOnTerminate($result)
 			
 		Else 
@@ -440,18 +661,21 @@ Function _manageResponse($result : Object) : Object
 		End if 
 		
 		If ($result.success)
-			
+
 			This:C1470._pushMessage($result.choice.message)
-			
+
 			This:C1470._trim()
-			
+
+			// Check if auto-summarization should be triggered
+			This:C1470._checkAutoSummarize($result)
+
 			// Check for tool calls and handle them automatically
 			If (This:C1470.autoHandleToolCalls) && ($result.choice.message.tool_calls#Null:C1517)
 				This:C1470._handleToolCalls($result)
 				If ($result._newResult#Null:C1517)
 					return $result._newResult  // we already manage _notifyOnTerminate
-				End if 
-			End if 
+				End if
+			End if
 			
 		Else 
 			
@@ -509,9 +733,8 @@ Function _handleToolCalls($result : cs:C1710.OpenAIChatCompletionsResult)
 	
 	// Continue conversation after tool calls
 Function _continueConversationAfterToolCalls($result : cs:C1710.OpenAIChatCompletionsResult)
-	var $messages : Collection:=This:C1470.messages.copy()
-	$messages.unshift(This:C1470.systemPrompt)
-	
+	var $messages : Collection:=This:C1470._buildMessagesForLLM()
+
 	// Create a copy of parameters without modifying the original
 	var $parameters : cs:C1710.OpenAIChatCompletionsParameters:=cs:C1710.OpenAIChatCompletionsParameters.new(This:C1470.parameters)
 	
@@ -543,9 +766,8 @@ Function _handleAsyncToolCalls($result : cs:C1710.OpenAIChatCompletionsStreamRes
 	
 	// Continue async conversation after tool calls
 Function _continueAsyncConversationAfterToolCalls($result : cs:C1710.OpenAIChatCompletionsStreamResult)
-	var $messages : Collection:=This:C1470.messages.copy()
-	$messages.unshift(This:C1470.systemPrompt)
-	
+	var $messages : Collection:=This:C1470._buildMessagesForLLM()
+
 	// Make another call to continue the conversation
 	var $newResult:=This:C1470.chat.completions.create($messages; This:C1470.parameters)
 	If ($newResult#Null:C1517)
