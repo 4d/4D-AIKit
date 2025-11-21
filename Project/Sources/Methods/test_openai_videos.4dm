@@ -4,6 +4,9 @@ If ($client=Null:C1517)
 	return   // skip test
 End if
 
+// Declare shared variables
+var $video : cs:C1710.OpenAIVideo
+
 // MARK:- Test video creation
 var $params:=cs:C1710.OpenAIVideoParameters.new({model: "sora-2"; seconds: 4; size: "720x1280"})
 var $result:=$client.videos.create("A cat playing piano in a cozy living room"; $params)
@@ -73,7 +76,6 @@ If (($result.success) && ($result.video#Null:C1517))
 
 	If (($listResult.success) && ($listResult.videos#Null:C1517))
 
-		var $video : cs:C1710.OpenAIVideo
 		For each ($video; $listResult.videos)
 			If ($video.status="completed")
 				$completedVideo:=$video
@@ -140,7 +142,6 @@ If (($listResult.success) && ($listResult.videos#Null:C1517))
 	// Find a completed video for content download test
 	$completedVideo:=Null:C1517
 
-	var $video : cs:C1710.OpenAIVideo
 	For each ($video; $listResult.videos)
 		If ($video.status="completed")
 			$completedVideo:=$video
