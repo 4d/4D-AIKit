@@ -76,6 +76,8 @@
 	"Video": {
 		"classes": [
 			"OpenAIVideo",
+			"OpenAIVideoDeleted",
+			"OpenAIVideoDeletedResult",
 			"OpenAIVideoListParameters",
 			"OpenAIVideoListResult",
 			"OpenAIVideoParameters",

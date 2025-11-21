@@ -132,3 +132,74 @@ If (Asserted:C1132(Bool:C1537($page1Result.success); "Cannot list videos for pag
 	End if
 
 End if
+
+// MARK:- Test video content download (only if we have a completed video)
+If ($listResult.success && $listResult.videos#Null:C1517)
+
+	// Find a completed video for content download test
+	$completedVideo:=Null:C1517
+
+	For each ($video; $listResult.videos)
+		If ($video.status="completed")
+			$completedVideo:=$video
+			break
+		End if
+	End for each
+
+	// If we found a completed video, test content download
+	If ($completedVideo#Null:C1517)
+
+		var $contentResult:=$client.videos.content($completedVideo.id; cs:C1710.OpenAIParameters.new(); "")
+
+		If (Asserted:C1132(Bool:C1537($contentResult.success); "Cannot download video content: "+JSON Stringify:C1217($contentResult)))
+
+			// Check that we received video data
+			If (Asserted:C1132($contentResult.request#Null:C1517; "request must not be null"))
+
+				var $videoBlob:=$contentResult.request.response.body
+
+				If (Asserted:C1132($videoBlob#Null:C1517; "video blob must not be null"))
+
+					ASSERT:C1129($videoBlob.size>0; "video blob must have content")
+
+				End if
+
+			End if
+
+		End if
+
+	End if
+
+End if
+
+// MARK:- Test video deletion (only delete test videos, be careful!)
+// Note: We'll create a test video specifically for deletion
+var $deleteTestParams:=cs:C1710.OpenAIVideoParameters.new({model: "sora-2"; seconds: 4})
+var $deleteTestResult:=$client.videos.create("Test video for deletion"; $deleteTestParams)
+
+If ($deleteTestResult.success && $deleteTestResult.video#Null:C1517)
+
+	var $videoToDelete:=$deleteTestResult.video.id
+
+	// Delete the video
+	var $deleteResult:=$client.videos.delete($videoToDelete)
+
+	If (Asserted:C1132(Bool:C1537($deleteResult.success); "Cannot delete video: "+JSON Stringify:C1217($deleteResult)))
+
+		If (Asserted:C1132($deleteResult.deleted#Null:C1517; "deleted status must not be null"))
+
+			ASSERT:C1129($deleteResult.deleted.id=$videoToDelete; "Deleted video ID must match")
+			ASSERT:C1129($deleteResult.deleted.deleted=True:C214; "deleted flag must be true")
+			ASSERT:C1129($deleteResult.deleted.object="video"; "object type must be video")
+
+		End if
+
+	End if
+
+	// Verify the video is actually deleted by trying to retrieve it
+	var $verifyResult:=$client.videos.retrieve($videoToDelete)
+
+	// Should fail with 404 or similar error
+	ASSERT:C1129(Not:C34($verifyResult.success); "Retrieving deleted video should fail")
+
+End if

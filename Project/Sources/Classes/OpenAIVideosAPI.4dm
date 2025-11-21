@@ -114,3 +114,67 @@ Function retrieve($videoId : Text; $parameters : cs:C1710.OpenAIParameters) : cs
 	End if
 
 	return This:C1470._client._get("/videos/"+$videoId; $parameters; cs:C1710.OpenAIVideoResult)
+
+/*
+Function: delete
+Delete a video.
+
+Parameters:
+  $videoId - The ID of the video to delete (required)
+  $parameters - OpenAIParameters object (optional)
+
+Returns:
+  OpenAIVideoDeletedResult - The result containing the deletion status
+
+Example:
+  var $result := $client.videos.delete("video_abc123")
+*/
+Function delete($videoId : Text; $parameters : cs:C1710.OpenAIParameters) : cs:C1710.OpenAIVideoDeletedResult
+
+	If (Length:C16($videoId)=0)
+		throw:C1805(1; "Expected a non-empty value for `videoId`")
+	End if
+
+	If (Not:C34(OB Instance of:C1731($parameters; cs:C1710.OpenAIParameters)))
+		$parameters:=cs:C1710.OpenAIParameters.new($parameters)
+	End if
+
+	return This:C1470._client._delete("/videos/"+$videoId; $parameters; cs:C1710.OpenAIVideoDeletedResult)
+
+/*
+Function: content
+Download video content by ID.
+
+Parameters:
+  $videoId - The ID of the video whose media to download (required)
+  $parameters - OpenAIParameters object (optional)
+  $variant - Which downloadable asset to return (optional, defaults to MP4)
+
+Returns:
+  OpenAIResult - The result containing the video content in the body
+
+Example:
+  var $result := $client.videos.content("video_abc123")
+  If ($result.success)
+    var $blob := $result.request.response.body
+    var $file := File("/VIDEOS/my-video.mp4")
+    $file.setContent($blob)
+  End if
+*/
+Function content($videoId : Text; $parameters : cs:C1710.OpenAIParameters; $variant : Text) : cs:C1710.OpenAIResult
+
+	If (Length:C16($videoId)=0)
+		throw:C1805(1; "Expected a non-empty value for `videoId`")
+	End if
+
+	If (Not:C34(OB Instance of:C1731($parameters; cs:C1710.OpenAIParameters)))
+		$parameters:=cs:C1710.OpenAIParameters.new($parameters)
+	End if
+
+	// Build query parameters if variant is specified
+	var $path : Text:="/videos/"+$videoId+"/content"
+	If (Length:C16($variant)>0)
+		$path:=$path+"?variant="+$variant
+	End if
+
+	return This:C1470._client._get($path; $parameters; cs:C1710.OpenAIResult)

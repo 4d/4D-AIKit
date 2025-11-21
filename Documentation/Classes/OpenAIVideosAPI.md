@@ -203,6 +203,95 @@ If ($result.success)
 End if
 ```
 
+### delete()
+
+**delete**(*videoId* : Text; *parameters* : cs.OpenAIParameters) : cs.OpenAIVideoDeletedResult
+
+Delete a video.
+
+**Endpoint:** `DELETE https://api.openai.com/v1/videos/{video_id}`
+
+| Parameter       | Type                           | Description                                               |
+|-----------------|--------------------------------|-----------------------------------------------------------|
+| *videoId*       | Text                           | **Required.** The ID of the video to delete.             |
+| *parameters*    | [OpenAIParameters](OpenAIParameters.md) | Optional parameters for the request.                     |
+| Function result | [OpenAIVideoDeletedResult](OpenAIVideoDeletedResult.md) | The deletion status result. |
+
+**Throws:** An error if `videoId` is empty.
+
+#### Response
+
+Returns the deleted video job metadata with:
+- `id`: The ID of the deleted video
+- `deleted`: Boolean indicating successful deletion (always `true`)
+- `object`: Object type (always `"video"`)
+
+#### Example
+
+```4d
+var $result:=$client.videos.delete("video-abc123")
+
+If ($result.success)
+    var $deleted:=$result.deleted
+    // $deleted.id -> "video-abc123"
+    // $deleted.deleted -> True
+    // $deleted.object -> "video"
+
+    ALERT("Video "+$deleted.id+" has been deleted")
+End if
+```
+
+### content()
+
+**content**(*videoId* : Text; *parameters* : cs.OpenAIParameters; *variant* : Text) : cs.OpenAIResult
+
+Download video content by ID.
+
+**Endpoint:** `GET https://api.openai.com/v1/videos/{video_id}/content`
+
+| Parameter       | Type                           | Description                                               |
+|-----------------|--------------------------------|-----------------------------------------------------------|
+| *videoId*       | Text                           | **Required.** The ID of the video whose media to download. |
+| *parameters*    | [OpenAIParameters](OpenAIParameters.md) | Optional parameters for the request.                     |
+| *variant*       | Text                           | Optional. Which downloadable asset to return (defaults to MP4 video). |
+| Function result | [OpenAIResult](OpenAIResult.md) | The result containing video content in the response body. |
+
+**Throws:** An error if `videoId` is empty.
+
+#### Response
+
+Streams the rendered video content for the specified video job. The video data is available in the response body as a blob.
+
+#### Example
+
+```4d
+var $result:=$client.videos.content("video-abc123")
+
+If ($result.success)
+    // Get the video blob from the response
+    var $videoBlob:=$result.request.response.body
+
+    // Save to disk
+    var $file:=File("/VIDEOS/my-video.mp4")
+    $file.setContent($videoBlob)
+
+    ALERT("Video downloaded: "+$file.platformPath)
+End if
+```
+
+#### Download with Variant
+
+```4d
+// Download a specific variant if available
+var $result:=$client.videos.content("video-abc123"; cs.OpenAIParameters.new(); "hd")
+
+If ($result.success)
+    var $videoBlob:=$result.request.response.body
+    var $file:=File("/VIDEOS/my-video-hd.mp4")
+    $file.setContent($videoBlob)
+End if
+```
+
 ## Video Duration Options
 
 Videos can be generated with the following durations (specified in seconds):
@@ -256,4 +345,6 @@ End while
 - [OpenAIVideoListParameters](OpenAIVideoListParameters.md) - List pagination parameters
 - [OpenAIVideoResult](OpenAIVideoResult.md) - Single video result
 - [OpenAIVideoListResult](OpenAIVideoListResult.md) - List result with pagination
+- [OpenAIVideoDeletedResult](OpenAIVideoDeletedResult.md) - Delete result
 - [OpenAIVideo](OpenAIVideo.md) - Video data model
+- [OpenAIVideoDeleted](OpenAIVideoDeleted.md) - Deleted video data model
