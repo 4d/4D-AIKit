@@ -54,7 +54,7 @@ If (Asserted:C1132(Bool:C1537($listResult.success); "Cannot list videos: "+JSON 
 		// If we have videos, check the first one
 		If ($listResult.videos.length>0)
 
-			var $firstVideo:=$listResult.videos[0]
+			var $firstVideo : cs:C1710.OpenAIVideo:=$listResult.videos[0]
 			ASSERT:C1129(Length:C16(String:C10($firstVideo.id))>0; "Video must have an id")
 			ASSERT:C1129(Length:C16(String:C10($firstVideo.status))>0; "Video must have a status")
 
@@ -69,10 +69,11 @@ End if
 If (($result.success) && ($result.video#Null:C1517))
 
 	// Try to find a completed video from the list
-	var $completedVideo:=Null:C1517
+	var $completedVideo : cs:C1710.OpenAIVideo:=Null:C1517
 
 	If (($listResult.success) && ($listResult.videos#Null:C1517))
 
+		var $video : cs:C1710.OpenAIVideo
 		For each ($video; $listResult.videos)
 			If ($video.status="completed")
 				$completedVideo:=$video
@@ -139,6 +140,7 @@ If (($listResult.success) && ($listResult.videos#Null:C1517))
 	// Find a completed video for content download test
 	$completedVideo:=Null:C1517
 
+	var $video : cs:C1710.OpenAIVideo
 	For each ($video; $listResult.videos)
 		If ($video.status="completed")
 			$completedVideo:=$video
