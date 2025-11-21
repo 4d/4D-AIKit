@@ -2410,6 +2410,9 @@
 			],
 			"Summary": ""
 		},
+		"service_tier": {
+			"Syntax": "service_tier : Text"
+		},
 		"onData": {
 			"Syntax": "onData : 4D.Function"
 		},
