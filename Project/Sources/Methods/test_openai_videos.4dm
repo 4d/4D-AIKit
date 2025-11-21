@@ -14,7 +14,7 @@ If (Asserted:C1132(Bool:C1537($result.success); "Cannot create video: "+JSON Str
 
 		ASSERT:C1129(Length:C16(String:C10($result.video.id))>0; "Must return a video id")
 		ASSERT:C1129(Length:C16(String:C10($result.video.status))>0; "Must have a status")
-		ASSERT:C1129($result.video.status="queued" || $result.video.status="processing" || $result.video.status="completed"; "Status must be queued, processing, or completed")
+		ASSERT:C1129(($result.video.status="queued") || ($result.video.status="processing") || ($result.video.status="completed"); "Status must be queued, processing, or completed")
 		ASSERT:C1129(Length:C16(String:C10($result.video.prompt))>0; "Must have a prompt")
 		ASSERT:C1129($result.video.created_at>0; "Must have a creation timestamp")
 
@@ -23,7 +23,7 @@ If (Asserted:C1132(Bool:C1537($result.success); "Cannot create video: "+JSON Str
 End if
 
 // MARK:- Test video retrieval
-If ($result.success && $result.video#Null:C1517)
+If (($result.success) && ($result.video#Null:C1517))
 
 	var $videoId:=$result.video.id
 	var $retrieveResult:=$client.videos.retrieve($videoId)
@@ -66,12 +66,12 @@ End if
 
 // MARK:- Test video remix (only if we have a completed video)
 // Note: This test might be skipped if no completed videos are available
-If ($result.success && $result.video#Null:C1517)
+If (($result.success) && ($result.video#Null:C1517))
 
 	// Try to find a completed video from the list
 	var $completedVideo:=Null:C1517
 
-	If ($listResult.success && $listResult.videos#Null:C1517)
+	If (($listResult.success) && ($listResult.videos#Null:C1517))
 
 		For each ($video; $listResult.videos)
 			If ($video.status="completed")
@@ -110,7 +110,7 @@ var $page1Result:=$client.videos.list($paginationParams)
 
 If (Asserted:C1132(Bool:C1537($page1Result.success); "Cannot list videos for pagination test: "+JSON Stringify:C1217($page1Result)))
 
-	If ($page1Result.has_more && Length:C16($page1Result.last_id)>0)
+	If (($page1Result.has_more) && (Length:C16($page1Result.last_id)>0))
 
 		// Get the next page
 		$paginationParams.after:=$page1Result.last_id
@@ -121,7 +121,7 @@ If (Asserted:C1132(Bool:C1537($page1Result.success); "Cannot list videos for pag
 			If (Asserted:C1132($page2Result.videos#Null:C1517; "second page videos must not be null"))
 
 				// Ensure page 2 has different videos than page 1
-				If ($page1Result.videos.length>0 && $page2Result.videos.length>0)
+				If (($page1Result.videos.length>0) && ($page2Result.videos.length>0))
 					ASSERT:C1129($page1Result.videos[0].id#$page2Result.videos[0].id; "Page 2 should have different videos than page 1")
 				End if
 
@@ -134,7 +134,7 @@ If (Asserted:C1132(Bool:C1537($page1Result.success); "Cannot list videos for pag
 End if
 
 // MARK:- Test video content download (only if we have a completed video)
-If ($listResult.success && $listResult.videos#Null:C1517)
+If (($listResult.success) && ($listResult.videos#Null:C1517))
 
 	// Find a completed video for content download test
 	$completedVideo:=Null:C1517
@@ -177,7 +177,7 @@ End if
 var $deleteTestParams:=cs:C1710.OpenAIVideoParameters.new({model: "sora-2"; seconds: 4})
 var $deleteTestResult:=$client.videos.create("Test video for deletion"; $deleteTestParams)
 
-If ($deleteTestResult.success && $deleteTestResult.video#Null:C1517)
+If (($deleteTestResult.success) && ($deleteTestResult.video#Null:C1517))
 
 	var $videoToDelete:=$deleteTestResult.video.id
 
