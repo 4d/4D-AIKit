@@ -38,7 +38,7 @@ Function body() : Object
 
 	// Seconds parameter (duration)
 	If (This:C1470.seconds>0)
-		$body.seconds:=This:C1470.seconds
+		$body.seconds:=String:C10(This:C1470.seconds)
 	End if
 
 	// Size parameter (resolution)
