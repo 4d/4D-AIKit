@@ -117,11 +117,17 @@
 			"test_openai_msg",
 			"test_openai_msg_accumulate",
 			"test_openai_vision",
+			"test_toon_encoder",
 			"TestOpenAI"
 		],
 		"classes": [
 			"_TestModels",
 			"_TestSignal"
+		]
+	},
+	"TOON": {
+		"classes": [
+			"TOONEncoder"
 		]
 	},
 	"Utils": {
