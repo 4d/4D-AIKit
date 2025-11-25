@@ -588,19 +588,20 @@ Function _encodeMixedArrayAsListItems($coll : Collection; $key : Text; $depth : 
 						// Nested complex value - recursively encode
 						$lines.push(This:C1470._indentLine($depth+2; $encodedKey+":"; $options.indent))
 						
-						If (Value type:C1509($objValue)=Is object:K8:27)
-							var $nestedLines : Collection
-							$nestedLines:=This:C1470._encodeObject($objValue; $depth+3; $options)
-							var $nestedLine : Text
-							For each ($nestedLine; $nestedLines)
-								$lines.push($nestedLine)
-							End for each 
-							Else if(Value type:C1509($objValue)=Is collection:K8:32)
-							$nestedLines:=This:C1470._encodeCollection($objValue; ""; $depth+3; $options)
-							For each ($nestedLine; $nestedLines)
-								$lines.push($nestedLine)
-							End for each 
-						End if 
+						Case of 
+							: (Value type:C1509($objValue)=Is object:K8:27)
+								var $nestedLines : Collection
+								$nestedLines:=This:C1470._encodeObject($objValue; $depth+3; $options)
+								var $nestedLine : Text
+								For each ($nestedLine; $nestedLines)
+									$lines.push($nestedLine)
+								End for each 
+							: (Value type:C1509($objValue)=Is collection:K8:32)
+								$nestedLines:=This:C1470._encodeCollection($objValue; ""; $depth+3; $options)
+								For each ($nestedLine; $nestedLines)
+									$lines.push($nestedLine)
+								End for each 
+						End case 
 					End if 
 				End for each 
 				
