@@ -7,7 +7,12 @@ End if
 // MARK:- as url
 var $result:=$client.images.generate("A futuristic city skyline at sunset"; {size: "512x512"})
 If (Asserted:C1132(Bool:C1537($result.success); "Cannot generate images : "+JSON Stringify:C1217($result)))
-	
+
+	// Test usage object (may not be available from all providers)
+	If ($result.usage#Null:C1517)
+		ASSERT:C1129($result.usage.total_tokens#Null:C1517; "usage must have total_tokens if present")
+	End if
+
 	If (Asserted:C1132($result.images#Null:C1517 && $result.image#Null:C1517; "images or image must not be null"))
 		
 		ASSERT:C1129(Length:C16(String:C10($result.image.url))>0; "Must return an image url")

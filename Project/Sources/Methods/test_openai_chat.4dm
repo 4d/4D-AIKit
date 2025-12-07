@@ -12,6 +12,11 @@ var $result:=$client.chat.completions.create($messages; {model: $modelName})
 
 If (Asserted:C1132(Bool:C1537($result.success); "Cannot complete chat : "+JSON Stringify:C1217($result)))
 	
+	// Test usage object exists
+	If (Asserted:C1132($result.usage#Null:C1517; "chat must return usage object"))
+		ASSERT:C1129($result.usage.total_tokens#Null:C1517; "usage must have total_tokens")
+	End if 
+	
 	If (Asserted:C1132($result.choice#Null:C1517; "chat do not return a choice"))
 		
 		If (Asserted:C1132($result.choice.message#Null:C1517; "chat do not return a message"))

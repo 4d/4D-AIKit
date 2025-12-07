@@ -11,7 +11,13 @@ var $result:=$client.embeddings.create("A futuristic city skyline at sunset"; $m
 If (Asserted:C1132(Bool:C1537($result.success); "Cannot create embedding : "+JSON Stringify:C1217($result)))
 	
 	ASSERT:C1129(Position:C15($model; $result.model)>0; $result.model)
-	
+
+	// Test usage object exists
+	If (Asserted:C1132($result.usage#Null:C1517; "embeddings must return usage object"))
+		ASSERT:C1129($result.usage.total_tokens#Null:C1517; "usage must have total_tokens")
+		ASSERT:C1129($result.usage.prompt_tokens#Null:C1517; "usage must have prompt_tokens")
+	End if
+
 	If (Asserted:C1132($result.embeddings#Null:C1517; "no embedding"))
 		
 		If (Asserted:C1132($result.embeddings.length>0; "must have one embedding"))
