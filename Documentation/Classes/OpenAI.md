@@ -72,3 +72,39 @@ $client.images.generate(...)
 $client.files.create(...)
 $client.model.lists(...)
 ```
+
+## Model Aliases
+
+The OpenAI client supports model aliases, allowing you to define provider configurations in a centralized file and reference them using a simple `provider:model` syntax.
+
+### Configuration
+
+Create a `Resources/ai-providers.json` file (see `Resources/ai-providers.template.json` for an example).
+
+### Usage with Model Aliases
+
+```4d
+var $client := cs.AIKit.OpenAI.new()
+
+// Use OpenAI
+var $result := $client.chat.completions.create($messages; {model: "openai:gpt-4o"})
+
+// Use Anthropic
+var $result := $client.chat.completions.create($messages; {model: "anthropic:claude-3-opus"})
+
+// Use local Ollama
+var $result := $client.chat.completions.create($messages; {model: "local:llama3"})
+
+// Use custom alias
+var $result := $client.chat.completions.create($messages; {model: "4d:mychatmodel"})
+```
+
+### Model Alias Methods
+
+| Method | Description |
+|--------|-------------|
+| `setProvidersFile($path : Text)` | Set a custom path for the providers configuration file |
+| `resolveModel($modelString : Text) : Object` | Resolve a model string to its configuration (baseURL, apiKey, model) |
+
+For more details, see [Model Aliases](../model-aliases.md).
+

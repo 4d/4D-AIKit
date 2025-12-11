@@ -34,6 +34,9 @@ property httpAgent : 4D:C1709.HTTPAgent:=Null:C1517
 property customHeaders : Object
 // property customQuery : Object
 
+// MARK: Model aliases
+property _modelAliasResolver : cs:C1710._ModelAliasResolver
+
 // List of configurable attributes
 property _configurable : Collection:=["apiKey"; "baseURL"; "organization"; "project"; "maxRetries"; "timeout"; "httpAgent"; "customHeaders"]
 
@@ -99,6 +102,9 @@ Class constructor( ...  : Variant)
 	This:C1470.moderations:=cs:C1710.OpenAIModerationsAPI.new(This:C1470)
 	This:C1470.models:=cs:C1710.OpenAIModelsAPI.new(This:C1470)
 	
+	// Initialize model alias resolver
+	This:C1470._modelAliasResolver:=cs:C1710._ModelAliasResolver.new()
+	
 	If (Count parameters:C259=0)
 		This:C1470._fillDefaultParameters()
 		return 
@@ -135,21 +141,61 @@ Class constructor( ...  : Variant)
 	
 	This:C1470._fillDefaultParameters()
 	
+	// MARK:- Model Alias Resolution
+	
+Function _resolveModelFromBody($body : Variant) : Object
+	// Returns resolved config object with baseURL, apiKey, model
+	// If no resolution needed, returns object with empty values (use instance defaults)
+	var $config:={baseURL: ""; apiKey: ""; model: ""}
+	
+	// Check if body is an object with a model property
+	If ($body=Null:C1517 || Value type:C1509($body)#Is object:K8:27 || OB Instance of:C1731($body; 4D:C1709.Blob))
+		return $config
+	End if 
+	
+	var $modelString : Text:=$body.model || ""
+	If (Length:C16($modelString)=0)
+		return $config
+	End if 
+	
+	// Check if model string contains provider prefix
+	If (Position:C15(":"; $modelString)=0)
+		// No prefix - use instance defaults
+		return $config
+	End if 
+	
+	// Try to resolve the model alias
+	var $resolved:=This:C1470._modelAliasResolver.resolveModel($modelString)
+	
+	If ($resolved.success)
+		$config.baseURL:=$resolved.baseURL
+		$config.apiKey:=$resolved.apiKey
+		$config.model:=$resolved.model
+	End if 
+	
+	return $config
+	
 	// MARK:- headers
 	
-Function _authHeaders() : Object
-	If (Length:C16(String:C10(This:C1470.apiKey))=0)
+Function _authHeaders($resolvedConfig : Object) : Object
+	// Use resolved API key if available, otherwise use instance apiKey
+	var $apiKey : Text:=(Length:C16($resolvedConfig.apiKey)>0) ? $resolvedConfig.apiKey : This:C1470.apiKey
+	
+	If (Length:C16(String:C10($apiKey))=0)
 		return {}
 	End if 
-	var $headers:={Authorization: "Bearer "+String:C10(This:C1470.apiKey)}
-	If (String:C10(This:C1470.baseURL)="https://api.anthropic.com/v1")
-		$headers["x-api-key"]:=String:C10(This:C1470.apiKey)
+	var $headers:={Authorization: "Bearer "+String:C10($apiKey)}
+	
+	// Detect provider from baseURL to set appropriate headers
+	var $baseURL : Text:=(Length:C16($resolvedConfig.baseURL)>0) ? $resolvedConfig.baseURL : This:C1470.baseURL
+	If (String:C10($baseURL)="https://api.anthropic.com/v1")
+		$headers["x-api-key"]:=String:C10($apiKey)
 		$headers["anthropic-version"]:="2023-06-01"
 	End if 
 	return $headers
 	
-Function _headers() : Object
-	var $headers:=This:C1470._authHeaders()
+Function _headers($resolvedConfig : Object) : Object
+	var $headers:=This:C1470._authHeaders($resolvedConfig)
 	
 	If (Length:C16(This:C1470.organization)>0)
 		$headers["OpenAI-Organization"]:=This:C1470.organization
@@ -167,14 +213,25 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 	End if 
 	var $result : cs:C1710.OpenAIResult:=$resultType.new()
 	
-	var $url:=This:C1470.baseURL+$path
-	var $headers:=This:C1470._headers()
-	
-	var $options:={method: $httpMethod; headers: $headers; dataType: "auto"}
-	
 	If (Not:C34(OB Instance of:C1731($parameters; cs:C1710.OpenAIParameters)))
 		$parameters:=cs:C1710.OpenAIParameters.new($parameters)
 	End if 
+	
+	// Resolve model alias from body.model if applicable
+	var $resolvedConfig:=This:C1470._resolveModelFromBody($body)
+	
+	// Update body.model if resolution was applied
+	If (Length:C16($resolvedConfig.model)>0 && (Value type:C1509($body)=Is object:K8:27) && (Not:C34(OB Instance of:C1731($body; 4D:C1709.Blob))))
+		$body.model:=$resolvedConfig.model
+	End if 
+	
+	// Determine baseURL (use resolved if available, otherwise use instance baseURL)
+	var $baseURL : Text:=(Length:C16($resolvedConfig.baseURL)>0) ? $resolvedConfig.baseURL : This:C1470.baseURL
+	var $url:=$baseURL+$path
+	var $headers:=This:C1470._headers($resolvedConfig)
+	
+	var $options:={method: $httpMethod; headers: $headers; dataType: "auto"}
+	
 	var $async:=$parameters._isAsync()
 	If ($async)
 		var $processType : Integer:=Process info:C1843(Current process:C322).type
@@ -320,6 +377,12 @@ Function _delayProcessAfterRetry($options : Object; $result : cs:C1710.OpenAIRes
 	DELAY PROCESS:C323(Current process:C322; $duration)
 	
 	// MARK:- http utils
+	
+Function setProvidersFile($file : 4D:C1709.File)
+	This:C1470._modelAliasResolver.setProvidersFile($file)
+	
+Function resolveModel($modelString : Text) : Object
+	return This:C1470._modelAliasResolver.resolveModel($modelString)
 	
 Function _encodeQueryParameter($value : Variant)->$encoded : Text
 	// TODO: more stuff? quotes if needed, etc...

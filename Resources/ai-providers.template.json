@@ -1,0 +1,32 @@
+{
+  "providers": {
+    "openai": {
+      "baseURL": "https://api.openai.com/v1",
+      "apiKeyEnv": "OPENAI_API_KEY"
+    },
+    "anthropic": {
+      "baseURL": "https://api.anthropic.com/v1",
+      "apiKeyEnv": "ANTHROPIC_API_KEY"
+    },
+    "mistral": {
+      "baseURL": "https://api.mistral.ai/v1",
+      "apiKeyEnv": "MISTRAL_API_KEY"
+    },
+    "local": {
+      "baseURL": "http://localhost:11434/v1"
+    },
+    "4d": {
+      "models": {
+        "mychatmodel": {
+          "baseURL": "https://api.mistral.ai/v1",
+          "modelName": "mistral-small-latest"
+        },
+        "embedder": {
+          "baseURL": "https://api.openai.com/v1",
+          "apiKeyEnv": "OPENAI_API_KEY",
+          "modelName": "text-embedding-3-small"
+        }
+      }
+    }
+  }
+}

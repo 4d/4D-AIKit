@@ -75,6 +75,7 @@
 	},
 	"Model": {
 		"classes": [
+			"_ModelAliasResolver",
 			"OpenAIModel",
 			"OpenAIModelListResult",
 			"OpenAIModelResult",
@@ -96,6 +97,7 @@
 		"methods": [
 			"_runTests",
 			"_runTestsCLI",
+			"_test_model_aliases_multi_pro",
 			"_test_openai_chat_helper_trim",
 			"test_openai_chat",
 			"test_openai_chat_async",
@@ -111,6 +113,7 @@
 			"test_openai_files",
 			"test_openai_files_async",
 			"test_openai_images",
+			"test_openai_model_aliases",
 			"test_openai_models",
 			"test_openai_models_async",
 			"test_openai_moderations",
