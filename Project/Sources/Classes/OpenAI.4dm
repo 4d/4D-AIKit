@@ -34,8 +34,8 @@ property httpAgent : 4D:C1709.HTTPAgent:=Null:C1517
 property customHeaders : Object
 // property customQuery : Object
 
-// MARK: Model aliases
-property _modelAliasResolver : cs:C1710._ModelAliasResolver
+// MARK: provider
+property providers : cs:C1710.OpenAIProviders
 
 // List of configurable attributes
 property _configurable : Collection:=["apiKey"; "baseURL"; "organization"; "project"; "maxRetries"; "timeout"; "httpAgent"; "customHeaders"]
@@ -103,7 +103,7 @@ Class constructor( ...  : Variant)
 	This:C1470.models:=cs:C1710.OpenAIModelsAPI.new(This:C1470)
 	
 	// Initialize model alias resolver
-	This:C1470._modelAliasResolver:=cs:C1710._ModelAliasResolver.new()
+	This:C1470.providers:=cs:C1710.OpenAIProviders.me
 	
 	If (Count parameters:C259=0)
 		This:C1470._fillDefaultParameters()
@@ -165,7 +165,7 @@ Function _resolveModelFromBody($body : Variant) : Object
 	End if 
 	
 	// Try to resolve the model alias
-	var $resolved:=This:C1470._modelAliasResolver.resolveModel($modelString)
+	var $resolved:=This:C1470.providers.resolveModel($modelString)
 	
 	If ($resolved.success)
 		$config.baseURL:=$resolved.baseURL

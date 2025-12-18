@@ -58,6 +58,22 @@
 			"_FormDemo"
 		]
 	},
+	"GUI": {
+		"methods": [
+			"_AIPROVIDERS_WIZARD"
+		],
+		"forms": [
+			"AIPROVIDER",
+			"AIPROVIDERS"
+		],
+		"classes": [
+			"_AIPROVIDERS",
+			"_COMMON",
+			"_menu",
+			"Model",
+			"Provider"
+		]
+	},
 	"Helper": {
 		"classes": [
 			"OpenAIChatHelper",
@@ -75,7 +91,6 @@
 	},
 	"Model": {
 		"classes": [
-			"_ModelAliasResolver",
 			"OpenAIModel",
 			"OpenAIModelListResult",
 			"OpenAIModelResult",
@@ -88,6 +103,11 @@
 			"OpenAIModerationItem",
 			"OpenAIModerationResult",
 			"OpenAIModerationsAPI"
+		]
+	},
+	"Providers": {
+		"classes": [
+			"OpenAIProviders"
 		]
 	},
 	"Tests": {

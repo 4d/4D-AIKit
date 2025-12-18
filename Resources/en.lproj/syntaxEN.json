@@ -572,17 +572,6 @@
 			],
 			"Summary": ""
 		},
-		"hasConfiguration()": {
-			"Syntax": "**.hasConfiguration**() : Boolean",
-			"Params": [
-				[
-					"",
-					"Boolean",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
 		"setProvidersFile()": {
 			"Syntax": "**.setProvidersFile**( *file* : 4D.File )",
 			"Params": [

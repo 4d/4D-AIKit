@@ -1,0 +1,57 @@
+[
+  {
+    "name": "OpenAI",
+    "base_url": "https://api.openai.com/v1/",
+    "needToken": true
+  },
+  {
+    "name": "Azure OpenAI",
+    "base_url": "https://<your-resource-name>.openai.azure.com/openai/deployments/<deployment-id>/",
+    "needToken": true
+  },
+  {
+    "name": "Google Gemini",
+    "base_url": "https://generativelanguage.googleapis.com/v1beta/",
+    "needToken": true
+  },
+  {
+    "name": "Mistral AI",
+    "base_url": "https://api.mistral.ai/v1/",
+    "needToken": true
+  },
+  {
+    "name": "Cohere",
+    "base_url": "https://api.cohere.ai/v1/",
+    "needToken": true
+  },
+  {
+    "name": "Ollama",
+    "base_url": "http://localhost:11434/v1/",
+    "needToken": false
+  },
+  {
+    "name": "Replicate",
+    "base_url": "https://api.replicate.com/v1/",
+    "needToken": true
+  },
+  {
+    "name": "Hugging Face",
+    "base_url": "https://api-inference.huggingface.co/models/",
+    "needToken": true
+  },
+  {
+    "name": "Amazon Bedrock",
+    "base_url": "https://bedrock-runtime.<region>.amazonaws.com/",
+    "needToken": true
+  },
+  {
+    "name": "DeepInfra",
+    "base_url": "https://api.deepinfra.com/v1/openai/",
+    "needToken": true
+  },
+  {
+    "name": "LM Studio",
+    "base_url": "http://localhost:1234/v1/",
+    "needToken": false
+  }
+]

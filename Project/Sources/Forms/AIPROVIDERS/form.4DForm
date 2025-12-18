@@ -1,0 +1,390 @@
+{
+	"$4d": {
+		"version": "1",
+		"kind": "form"
+	},
+	"events": [
+		"onLoad",
+		"onClick",
+		"onActivate",
+		"onDataChange",
+		"onUnload",
+		"onTimer",
+		"onResize",
+		"onSelectionChange"
+	],
+	"destination": "detailScreen",
+	"pages": [
+		{
+			"objects": {
+				"noModel": {
+					"type": "text",
+					"text": ":xliff:anEmbeddingModelIsRequired",
+					"top": 185,
+					"left": 268,
+					"width": 363,
+					"height": 31,
+					"fontTheme": "main",
+					"visibility": "hidden"
+				}
+			}
+		},
+		{
+			"objects": {
+				"Line3": {
+					"type": "line",
+					"top": -27,
+					"left": 667,
+					"width": 0,
+					"height": 400,
+					"startPoint": "bottomLeft",
+					"stroke": "#1e90ff",
+					"strokeDashArray": [
+						1,
+						3
+					],
+					"visibility": "hidden"
+				},
+				"Line2": {
+					"type": "line",
+					"top": 0,
+					"left": 20,
+					"width": 0,
+					"height": 400,
+					"startPoint": "bottomLeft",
+					"stroke": "#1e90ff",
+					"strokeDashArray": [
+						1,
+						3
+					],
+					"visibility": "hidden"
+				},
+				"list": {
+					"type": "listbox",
+					"left": 20,
+					"top": 12,
+					"width": 192,
+					"height": 359,
+					"events": [
+						"onLoad",
+						"onSelectionChange",
+						"onMouseEnter",
+						"onMouseLeave",
+						"onMouseMove"
+					],
+					"dataSource": "Form:C1466.models",
+					"selectionMode": "single",
+					"right": 212,
+					"bottom": 371,
+					"sizingY": "grow",
+					"metaSource": "Form:C1466.listMetaInfo(This:C1470)",
+					"columns": [
+						{
+							"header": {
+								"text": ":xliff:models",
+								"name": "Header1",
+								"class": "title"
+							},
+							"name": "dataclass",
+							"footer": {
+								"name": "Footer1"
+							},
+							"dataSource": "This:C1470.name",
+							"width": 141,
+							"enterable": false
+						}
+					]
+				},
+				"Line": {
+					"type": "line",
+					"top": 33,
+					"left": 0,
+					"width": 680,
+					"height": 0,
+					"stroke": "#1e90ff",
+					"strokeDashArray": [
+						1,
+						3
+					],
+					"visibility": "hidden",
+					"startPoint": "topLeft"
+				},
+				"Line1": {
+					"type": "line",
+					"top": 400,
+					"left": 0,
+					"width": 680,
+					"height": 0,
+					"stroke": "#1e90ff",
+					"strokeDashArray": [
+						1,
+						3
+					],
+					"visibility": "hidden",
+					"startPoint": "topLeft"
+				},
+				"add": {
+					"type": "button",
+					"top": 378,
+					"left": 20,
+					"width": 22,
+					"height": 22,
+					"events": [
+						"onClick"
+					],
+					"style": "bevel",
+					"sizingY": "move",
+					"icon": "/.PRODUCT_RESOURCES/Internal Components/runtime.4dbase/Contents/Resources/images/common/plus.png",
+					"iconFrames": 4
+				},
+				"delete": {
+					"type": "button",
+					"top": 378,
+					"left": 49,
+					"width": 22,
+					"height": 22,
+					"events": [
+						"onClick"
+					],
+					"style": "bevel",
+					"sizingY": "move",
+					"icon": "/.PRODUCT_RESOURCES/Internal Components/runtime.4dbase/Contents/Resources/images/common/minus.png",
+					"iconFrames": 4
+				},
+				"help": {
+					"type": "button",
+					"text": "Button",
+					"top": 374,
+					"left": 654,
+					"width": 26,
+					"height": 26,
+					"events": [
+						"onClick"
+					],
+					"style": "help",
+					"sizingX": "move",
+					"sizingY": "move"
+				},
+				"name.label": {
+					"type": "text",
+					"text": ":xliff:name",
+					"top": 19,
+					"left": 239,
+					"width": 82,
+					"height": 17,
+					"class": "label",
+					"fontWeight": "bold",
+					"visibility": "hidden"
+				},
+				"model.label": {
+					"type": "text",
+					"text": ":xliff:model",
+					"top": 160,
+					"left": 236,
+					"width": 85,
+					"height": 17,
+					"class": "label",
+					"fontWeight": "bold",
+					"visibility": "hidden"
+				},
+				"apiKey.label": {
+					"type": "text",
+					"text": ":xliff:apiKey",
+					"top": 90,
+					"left": 228,
+					"width": 93,
+					"height": 17,
+					"class": "label",
+					"visibility": "hidden"
+				},
+				"baseURL.label": {
+					"type": "text",
+					"text": ":xliff:baseURL",
+					"top": 55,
+					"left": 226,
+					"width": 95,
+					"height": 16,
+					"class": "label",
+					"visibility": "hidden"
+				},
+				"organization.label": {
+					"type": "text",
+					"text": ":xliff:organization",
+					"top": 198,
+					"left": 215,
+					"width": 106,
+					"height": 16,
+					"class": "label",
+					"visibility": "hidden"
+				},
+				"project.label": {
+					"type": "text",
+					"text": ":xliff:project",
+					"top": 235,
+					"left": 239,
+					"width": 82,
+					"height": 16,
+					"class": "label",
+					"visibility": "hidden"
+				},
+				"name": {
+					"type": "input",
+					"left": 339,
+					"top": 19,
+					"width": 328,
+					"height": 17,
+					"sizingX": "grow",
+					"right": 667,
+					"dataSource": "Form:C1466.currentItem.name",
+					"events": [
+						"onDataChange"
+					],
+					"placeholder": ":xliff:idDisplayedInTheDropdownList",
+					"tooltip": ":xliff:idDisplayedInTheDropdownList",
+					"visibility": "hidden"
+				},
+				"model": {
+					"type": "input",
+					"left": 339,
+					"top": 160,
+					"width": 304,
+					"height": 17,
+					"sizingX": "grow",
+					"right": 643,
+					"dataSource": "Form:C1466.currentItem.model",
+					"events": [
+						"onDataChange"
+					],
+					"placeholder": "e.g., “text-embedding-3-large”",
+					"visibility": "hidden"
+				},
+				"apiKey": {
+					"type": "input",
+					"left": 339,
+					"top": 90,
+					"width": 328,
+					"height": 49,
+					"sizingX": "grow",
+					"right": 667,
+					"dataSource": "Form:C1466.currentItem.apiKey",
+					"events": [
+						"onDataChange"
+					],
+					"placeholder": ":xliff:yourOpenaiApiKey",
+					"visibility": "hidden"
+				},
+				"baseURL": {
+					"type": "input",
+					"left": 339,
+					"top": 55,
+					"width": 304,
+					"height": 17,
+					"sizingX": "grow",
+					"right": 643,
+					"dataSource": "Form:C1466.currentItem.baseURL",
+					"events": [
+						"onDataChange"
+					],
+					"placeholder": ":xliff:baseUrlForOpenaiApiRequests",
+					"visibility": "hidden"
+				},
+				"organization": {
+					"type": "input",
+					"left": 339,
+					"top": 198,
+					"width": 328,
+					"height": 17,
+					"sizingX": "grow",
+					"right": 667,
+					"dataSource": "Form:C1466.currentItem.organization",
+					"events": [
+						"onDataChange"
+					],
+					"placeholder": ":xliff:yourOpenaiOrganizationId",
+					"visibility": "hidden"
+				},
+				"project": {
+					"type": "input",
+					"left": 339,
+					"top": 235,
+					"width": 328,
+					"height": 17,
+					"sizingX": "grow",
+					"right": 667,
+					"dataSource": "Form:C1466.currentItem.project",
+					"events": [
+						"onDataChange"
+					],
+					"placeholder": ":xliff:yourOpenaiProjectId",
+					"visibility": "hidden"
+				},
+				"modelMenu": {
+					"type": "button",
+					"top": 159,
+					"left": 649,
+					"width": 19,
+					"height": 19,
+					"events": [
+						"onClick"
+					],
+					"style": "custom",
+					"iconFrames": 4,
+					"icon": "/.PRODUCT_RESOURCES/Internal Components/runtime.4dbase/Contents/Resources/images/common/miniDrop.png",
+					"sizingX": "move",
+					"visibility": "hidden"
+				},
+				"baseURLMenu": {
+					"type": "button",
+					"top": 54,
+					"left": 649,
+					"width": 19,
+					"height": 19,
+					"events": [
+						"onClick"
+					],
+					"style": "custom",
+					"iconFrames": 4,
+					"icon": "/.PRODUCT_RESOURCES/Internal Components/runtime.4dbase/Contents/Resources/images/common/miniDrop.png",
+					"sizingX": "move",
+					"visibility": "hidden"
+				}
+			},
+			"entryOrder": [
+				"list",
+				"name",
+				"baseURL",
+				"apiKey",
+				"model",
+				"organization",
+				"project",
+				"baseURLMenu",
+				"modelMenu",
+				"help",
+				"add",
+				"delete"
+			]
+		}
+	],
+	"editor": {
+		"activeView": "View 1",
+		"defaultView": "View 1",
+		"views": {
+			"View 1": {},
+			"Guides": {},
+			"noModel": {
+				"visible": false,
+				"objects": [
+					"noModel"
+				]
+			}
+		}
+	},
+	"geometryStamp": 635,
+	"rightMargin": 20,
+	"bottomMargin": 20,
+	"method": "FORM_MANAGER",
+	"windowTitle": ":xliff:modelManagement",
+	"windowMinWidth": 700,
+	"windowMinHeight": 420,
+	"formClass": "_MODELS"
+}

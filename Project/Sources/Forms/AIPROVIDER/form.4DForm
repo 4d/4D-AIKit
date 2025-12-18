@@ -1,0 +1,240 @@
+{
+	"$4d": {
+		"version": "1",
+		"kind": "form"
+	},
+	"windowSizingX": "variable",
+	"windowSizingY": "variable",
+	"windowMinWidth": 0,
+	"windowMinHeight": 0,
+	"windowMaxWidth": 32767,
+	"windowMaxHeight": 32767,
+	"rightMargin": 20,
+	"bottomMargin": 20,
+	"events": [
+		"onLoad",
+		"onClick",
+		"onDataChange",
+		"onUnload",
+		"onTimer",
+		"onBoundVariableChange"
+	],
+	"windowTitle": "window title",
+	"destination": "detailScreen",
+	"pages": [
+		{
+			"objects": {}
+		},
+		{
+			"objects": {
+				"name.label": {
+					"type": "text",
+					"text": ":xliff:name",
+					"top": 16,
+					"left": 35,
+					"width": 82,
+					"height": 17,
+					"class": "label",
+					"fontWeight": "bold"
+				},
+				"apiKey.label": {
+					"type": "text",
+					"text": ":xliff:apiKey",
+					"top": 87,
+					"left": 24,
+					"width": 93,
+					"height": 17,
+					"class": "label"
+				},
+				"baseURL.label": {
+					"type": "text",
+					"text": ":xliff:baseURL",
+					"top": 52,
+					"left": 22,
+					"width": 95,
+					"height": 16,
+					"class": "label"
+				},
+				"organization.label": {
+					"type": "text",
+					"text": ":xliff:organization",
+					"top": 184,
+					"left": 12,
+					"width": 106,
+					"height": 16,
+					"class": "label"
+				},
+				"project.label": {
+					"type": "text",
+					"text": ":xliff:project",
+					"top": 221,
+					"left": 36,
+					"width": 82,
+					"height": 16,
+					"class": "label"
+				},
+				"name": {
+					"type": "input",
+					"left": 135,
+					"top": 16,
+					"width": 324,
+					"height": 17,
+					"sizingX": "grow",
+					"right": 459,
+					"dataSource": "Form:C1466.model.name",
+					"events": [
+						"onDataChange"
+					],
+					"placeholder": ":xliff:idDisplayedInTheDropdownList",
+					"tooltip": ":xliff:idDisplayedInTheDropdownList"
+				},
+				"apiKey": {
+					"type": "input",
+					"left": 135,
+					"top": 87,
+					"width": 324,
+					"height": 49,
+					"sizingX": "grow",
+					"right": 459,
+					"dataSource": "Form:C1466.model.apiKey",
+					"events": [
+						"onDataChange"
+					],
+					"placeholder": ":xliff:yourOpenaiApiKey"
+				},
+				"baseURL": {
+					"type": "input",
+					"left": 135,
+					"top": 52,
+					"width": 300,
+					"height": 17,
+					"sizingX": "grow",
+					"right": 435,
+					"dataSource": "Form:C1466.model.baseURL",
+					"events": [
+						"onDataChange"
+					],
+					"placeholder": ":xliff:baseUrlForOpenaiApiRequests"
+				},
+				"organization": {
+					"type": "input",
+					"left": 136,
+					"top": 184,
+					"width": 324,
+					"height": 17,
+					"sizingX": "grow",
+					"right": 460,
+					"dataSource": "Form:C1466.model.organization",
+					"events": [
+						"onDataChange"
+					],
+					"placeholder": ":xliff:yourOpenaiOrganizationId"
+				},
+				"project": {
+					"type": "input",
+					"left": 136,
+					"top": 221,
+					"width": 324,
+					"height": 17,
+					"sizingX": "grow",
+					"right": 460,
+					"dataSource": "Form:C1466.model.project",
+					"events": [
+						"onDataChange"
+					],
+					"placeholder": ":xliff:yourOpenaiProjectId"
+				},
+				"done": {
+					"type": "button",
+					"text": ":xliff:done",
+					"top": 286,
+					"left": 367,
+					"width": 93,
+					"height": 22,
+					"events": [
+						"onClick"
+					],
+					"sizingX": "move",
+					"sizingY": "move",
+					"right": 460,
+					"defaultButton": true,
+					"action": ""
+				},
+				"cancel": {
+					"type": "button",
+					"text": ":xliff:cancel",
+					"top": 286,
+					"left": 254,
+					"width": 93,
+					"height": 22,
+					"events": [
+						"onClick"
+					],
+					"sizingX": "move",
+					"sizingY": "move",
+					"right": 347
+				},
+				"baseURLMenu": {
+					"type": "button",
+					"top": 51,
+					"left": 441,
+					"width": 19,
+					"height": 19,
+					"events": [
+						"onClick"
+					],
+					"style": "custom",
+					"iconFrames": 4,
+					"icon": "/.PRODUCT_RESOURCES/Internal Components/runtime.4dbase/Contents/Resources/images/common/miniDrop.png",
+					"sizingX": "move"
+				},
+				"dataSourceStatus": {
+					"type": "button",
+					"top": 147,
+					"left": 135,
+					"width": 247,
+					"height": 22,
+					"visibility": "hidden",
+					"text": ":xliff:Connected (15 models)",
+					"icon": "/RESOURCES/images/light_on.png",
+					"textPlacement": "right",
+					"style": "custom",
+					"events": [
+						"onClick"
+					],
+					"focusable": false
+				},
+				"serverInTestLabel": {
+					"type": "text",
+					"top": 150,
+					"left": 24,
+					"width": 83,
+					"height": 16,
+					"visibility": "hidden",
+					"text": ":xliff:status",
+					"class": "label"
+				}
+			},
+			"entryOrder": [
+				"name",
+				"baseURL",
+				"apiKey",
+				"organization",
+				"project",
+				"done",
+				"cancel",
+				"baseURLMenu",
+				"dataSourceStatus"
+			]
+		}
+	],
+	"geometryStamp": 185,
+	"editor": {
+		"activeView": "View 1",
+		"defaultView": "View 1",
+		"views": {
+			"View 1": {}
+		}
+	},
+	"method": "method.4dm"
+}
