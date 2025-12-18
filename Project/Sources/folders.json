@@ -38,6 +38,18 @@
 			"OpenAIEmbeddingsResult"
 		]
 	},
+	"Audio": {
+		"classes": [
+			"OpenAIAudioAPI",
+			"OpenAIAudioSpeechParameters",
+			"OpenAIAudioSpeechResult",
+			"OpenAIAudioTranscription",
+			"OpenAIAudioTranscriptionParameters",
+			"OpenAIAudioTranscriptionResult",
+			"OpenAIAudioTranslationParameters",
+			"OpenAIAudioTranslationResult"
+		]
+	},
 	"Files": {
 		"classes": [
 			"OpenAIFile",
@@ -108,6 +120,8 @@
 			"test_openai_embeddings",
 			"test_openai_embeddings_async",
 			"test_openai_errors",
+			"test_openai_audio",
+			"test_openai_audio_async",
 			"test_openai_files",
 			"test_openai_files_async",
 			"test_openai_images",

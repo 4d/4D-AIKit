@@ -37,7 +37,19 @@ singleton Class constructor()
 		tar: "application/x-tar"; \
 		xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"; \
 		xml: "application/xml"; \
-		zip: "application/zip"}
+		zip: "application/zip"; \
+		mp3: "audio/mpeg"; \
+		mp4: "audio/mp4"; \
+		mpeg: "audio/mpeg"; \
+		mpga: "audio/mpeg"; \
+		m4a: "audio/mp4"; \
+		wav: "audio/wav"; \
+		webm: "audio/webm"; \
+		opus: "audio/opus"; \
+		aac: "audio/aac"; \
+		flac: "audio/flac"; \
+		pcm: "audio/pcm"; \
+		ogg: "audio/ogg"}
 	
 	
 	// Get MIME type for a given extension (without dot)
