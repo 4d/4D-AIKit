@@ -3323,6 +3323,11 @@
 		}
 	},
 	"_AIPROVIDERS": {
+		"testConnection()": {
+			"Syntax": "**.testConnection**()",
+			"Params": [],
+			"Summary": ""
+		},
 		"deleteModel()": {
 			"Syntax": "**.deleteModel**( *name* : Text )",
 			"Params": [
@@ -3398,6 +3403,15 @@
 				]
 			],
 			"Summary": ""
+		},
+		"isTestingConnection": {
+			"Syntax": "isTestingConnection : Boolean"
+		},
+		"connectionModelsCount": {
+			"Syntax": "connectionModelsCount : Integer"
+		},
+		"connectionStatus": {
+			"Syntax": "connectionStatus : Text"
 		},
 		"listeners": {
 			"Syntax": "listeners : Collection"

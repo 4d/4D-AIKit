@@ -96,6 +96,18 @@ Cliquez sur + pour ajouter votre premier fournisseur.</target>
           <source>Done</source>
           <target>Fermer</target>
         </trans-unit>
+        <trans-unit id="60" resname="testConnection">
+          <source>Test Connection</source>
+          <target>Tester la connexion</target>
+        </trans-unit>
+        <trans-unit id="61" resname="testingConnection">
+          <source>Testing connection...</source>
+          <target>Test de connexion...</target>
+        </trans-unit>
+        <trans-unit id="62" resname="connected">
+          <source>Connected</source>
+          <target>Connecté</target>
+        </trans-unit>
       </group>
     </body>
   </file>
