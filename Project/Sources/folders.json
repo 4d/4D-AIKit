@@ -140,6 +140,7 @@
 			"test_openai_msg",
 			"test_openai_msg_accumulate",
 			"test_openai_vision",
+			"test_provider_management",
 			"TestOpenAI"
 		],
 		"classes": [

@@ -20,8 +20,8 @@ Function get providersFile : 4D:C1709.File
 	return This:C1470._providersFile
 	
 Function _getDefaultProvidersFile() : 4D:C1709.File
-	// Look for ai-providers.json in Resources folder
-	return Folder:C1567(fk resources folder:K87:11; *).file("AIProviders.json")  // TODO: in settings?
+	// Look for AIProviders.json in Settings folder
+	return Folder:C1567(fk database folder:K87:14; *).file("Settings/AIProviders.json")
 	
 Function load() : Boolean
 	This:C1470.errors:=Null:C1517

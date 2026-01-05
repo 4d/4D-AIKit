@@ -118,8 +118,8 @@ Function updateUI() : Boolean
 	// <== <== <== <== <== <== <== <== <== <== <== <== <== <== <== <== <== <== <== <== <== <== <== <== <== <== <==
 Function get settingsFile() : 4D:C1709.File
 	
-	// Models are saved in a JSON file named "AIProvider.json" in the "settings" folder
-	return Folder:C1567(fk database folder:K87:14; *).file("Settings/AIProvider.json")
+	// Models are saved in a JSON file named "AIProviders.json" in the "Settings" folder
+	return Folder:C1567(fk database folder:K87:14; *).file("Settings/AIProviders.json")
 	
 	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
 Function readSettings()
