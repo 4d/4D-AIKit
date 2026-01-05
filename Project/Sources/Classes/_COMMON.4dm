@@ -144,7 +144,7 @@ Function writeSettings()
 Function readModels()
 	
 	// Delegate to OpenAIProviders singleton (single source of truth)
-	var $providers:=OpenAIProviders:C1710.me.toCollection()
+	var $providers:=cs:C1710.OpenAIProviders.me.toCollection()
 	var $models:=[]
 	
 	var $provider : Object
@@ -160,7 +160,7 @@ Function readModels()
 Function saveModels($models : Collection)
 	
 	// Delegate to OpenAIProviders singleton (single source of truth)
-	var $toSave:=$models ?? This:C1470.models
+	var $toSave:=($models=Null:C1517) ? This:C1470.models : $models
 	var $rawModels:=[]
 	
 	//%W-550.26
@@ -178,7 +178,7 @@ Function saveModels($models : Collection)
 	End for each 
 	//%W+550.26
 	
-	OpenAIProviders:C1710.me.fromCollection($rawModels)
+	cs:C1710.OpenAIProviders.me.fromCollection($rawModels)
 	
 	// MARK:- [PRIVATE]
 	// *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***

@@ -237,8 +237,8 @@ Function _canProceed($eventName : Text; $eventData : Object) : Object
 	var $listener : Object
 	For each ($listener; This:C1470._listeners)
 		If ($listener[$eventName]#Null:C1517)
-			var $result:=$listener[$eventName]($eventData)
-			If (OB Instance of:C1731($result; Object:C1216))
+			var $result : Variant:=$listener[$eventName]($eventData)
+			If (Value type:C1509($result)=Is object:K8:27)
 				If (Not:C34(Bool:C1537($result.success)))
 					// Listener vetoed the operation - stop immediately
 					return {success: False:C215; message: String:C10($result.message)}
@@ -376,7 +376,7 @@ Function toCollection() : Collection
 	
 	var $key : Text
 	For each ($key; This:C1470._providersConfig.providers)
-		var $provider:=This:C1470._providersConfig.providers[$key]
+		var $provider : Object:=This:C1470._providersConfig.providers[$key]
 		$result.push({\
 			name: $key; \
 			apiKey: $provider.apiKey ?? ""; \

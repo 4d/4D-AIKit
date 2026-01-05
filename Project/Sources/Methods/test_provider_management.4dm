@@ -3,257 +3,248 @@
 // Tests: Name uniqueness, Delete protection, Rename propagation
 
 // MARK:- Test Setup
-var $testResults:=[]
+var $testResults : Collection:=[]
+var $providers : cs.OpenAIProviders:=cs.OpenAIProviders.me
+var $tempFolder : 4D.Folder:=Folder(Temporary folder; fk platform path)
+var $configFile : 4D.File
+var $config : Object
+var $listener : cs._TestProviderListener
 
 // MARK:- TC-19243-01: Name Uniqueness Test
 // The Provider name shall be unique
 
-var $providers:=cs:C1710.OpenAIProviders.me
-
-// Create temp config for testing
-var $tempFolder:=Folder:C1567(Temporary folder:C486; fk platform path:K87:2)
-var $configFile:=$tempFolder.file("test-providers-uniqueness.json")
-
-var $config:={\
-providers: {\
-provider1: {\
-baseURL: "https://api.example1.com/v1"; \
-apiKey: "key1"\
-}; \
-provider2: {\
-baseURL: "https://api.example2.com/v1"; \
-apiKey: "key2"\
-}\
-}\
+$configFile:=$tempFolder.file("test-providers-uniqueness.json")
+$config:={\
+	providers: {\
+		provider1: {\
+			baseURL: "https://api.example1.com/v1"; \
+			apiKey: "key1"\
+		}; \
+		provider2: {\
+			baseURL: "https://api.example2.com/v1"; \
+			apiKey: "key2"\
+		}\
+	}\
 }
-$configFile.setText(JSON Stringify:C1217($config))
+$configFile.setText(JSON Stringify($config))
 $providers.providersFile:=$configFile
 
 // Test: Two providers with different names should work
-var $keys:=$providers.getProviderKeys()
-If (Asserted:C1132($keys.length=2; "Should have 2 providers"))
-	ASSERT:C1129($keys.includes("provider1"); "Should contain provider1")
-	ASSERT:C1129($keys.includes("provider2"); "Should contain provider2")
+var $keys : Collection:=$providers.getProviderKeys()
+If (Asserted($keys.length=2; "Should have 2 providers"))
+	ASSERT($keys.includes("provider1"); "Should contain provider1")
+	ASSERT($keys.includes("provider2"); "Should contain provider2")
 End if 
 
 // Test: Adding provider with existing key should replace it (key-based uniqueness)
 $providers.addProvider("provider1"; {baseURL: "https://api.new.com/v1"; apiKey: "newkey"})
-var $p1:=$providers.getProvider("provider1")
-ASSERT:C1129($p1.baseURL="https://api.new.com/v1"; "Provider1 should be updated, not duplicated")
-ASSERT:C1129($providers.getProviderKeys().length=2; "Should still have 2 providers after update")
+var $p1 : Object:=$providers.getProvider("provider1")
+ASSERT($p1.baseURL="https://api.new.com/v1"; "Provider1 should be updated, not duplicated")
+ASSERT($providers.getProviderKeys().length=2; "Should still have 2 providers after update")
 
 $testResults.push({test: "TC-19243-01"; name: "Name Uniqueness"; status: "PASS"})
-
-// Cleanup
 $configFile.delete()
 
-// MARK:- TC-19244-01 & TC-19244-02: Delete Protection Test
-// If the user tries to delete a provider used by a vector, 4D shall not delete it
+// MARK:- TC-19244-01: Delete Unused Provider
+// Deleting an unused provider should succeed
 
 $configFile:=$tempFolder.file("test-providers-delete.json")
 $config:={\
-providers: {\
-usedProvider: {\
-baseURL: "https://api.used.com/v1"; \
-apiKey: "usedkey"\
-}; \
-unusedProvider: {\
-baseURL: "https://api.unused.com/v1"; \
-apiKey: "unusedkey"\
-}\
-}\
+	providers: {\
+		usedProvider: {\
+			baseURL: "https://api.used.com/v1"; \
+			apiKey: "usedkey"\
+		}; \
+		unusedProvider: {\
+			baseURL: "https://api.unused.com/v1"; \
+			apiKey: "unusedkey"\
+		}\
+	}\
 }
-$configFile.setText(JSON Stringify:C1217($config))
+$configFile.setText(JSON Stringify($config))
 $providers.providersFile:=$configFile
 
-// Create a custom listener that blocks deletion for "usedProvider"
-var $deleteBlocker : Object:={\
-blockedProvider: "usedProvider"; \
-wasBlocked: False:C215; \
-onProviderRemoved: Formula:C1597(\
-If ($1.key=This:C1470.blockedProvider)\
-This:C1470.wasBlocked:=True:C214
-End if \
-)\
-}
-
-
-// Note: The current OpenAIProviders class notifies AFTER removal
-// For true delete protection, we need to check BEFORE - this tests the notification pattern
-$providers.addListener($deleteBlocker)
+// Create listener with usedProvider blocked
+$listener:=cs._TestProviderListener.new()
+$listener.blockProvider("usedProvider")
+$providers.addListener($listener)
 
 // Test: Remove unused provider should work
-var $resultUnused:=$providers.removeProvider("unusedProvider")
-ASSERT:C1129($resultUnused=True:C214; "Should be able to remove unused provider")
-ASSERT:C1129($providers.getProvider("unusedProvider")=Null:C1517; "Unused provider should be gone")
+var $resultUnused : Object:=$providers.removeProvider("unusedProvider")
+ASSERT($resultUnused.success=True; "Should be able to remove unused provider")
+ASSERT($providers.getProvider("unusedProvider")=Null; "Unused provider should be gone")
+ASSERT($providers.getProviderKeys().length=1; "Should have 1 provider left")
+ASSERT($listener.removedProviders.includes("unusedProvider"); "Listener should be notified")
 
-// Test: Provider keys updated
-ASSERT:C1129($providers.getProviderKeys().length=1; "Should have 1 provider left")
-ASSERT:C1129($providers.getProviderKeys()[0]="usedProvider"; "usedProvider should remain")
-
-$providers.removeListener($deleteBlocker)
+$providers.removeListener($listener)
 $testResults.push({test: "TC-19244-01"; name: "Delete Unused Provider"; status: "PASS"})
-
-// Cleanup
 $configFile.delete()
 
-// MARK:- TC-19244-03: Delete Protection with Custom Handler
-// Test the listener pattern for blocking deletions
+// MARK:- TC-19244-02: Delete Protected Provider (Blocked)
+// Deleting a provider that is blocked should fail
 
-$configFile:=$tempFolder.file("test-providers-delete-block.json")
+$configFile:=$tempFolder.file("test-providers-delete-blocked.json")
 $config:={\
-providers: {\
-protectedProvider: {\
-baseURL: "https://api.protected.com/v1"; \
-apiKey: "protectedkey"\
-}\
-}\
+	providers: {\
+		protectedProvider: {\
+			baseURL: "https://api.protected.com/v1"; \
+			apiKey: "protectedkey"\
+		}\
+	}\
 }
-$configFile.setText(JSON Stringify:C1217($config))
+$configFile.setText(JSON Stringify($config))
 $providers.providersFile:=$configFile
 
-// Custom handler that tracks removal attempts
-var $removalTracker:={\
-removedProviders: []; \
-onProviderRemoved: Formula:C1597(\
-This:C1470.removedProviders.push($1.key)\
-)\
-}
+// Create listener that blocks protectedProvider
+$listener:=cs._TestProviderListener.new()
+$listener.blockProvider("protectedProvider")
+$providers.addListener($listener)
 
-$providers.addListener($removalTracker)
+// Test: Remove protected provider should fail
+var $resultProtected : Object:=$providers.removeProvider("protectedProvider")
+ASSERT($resultProtected.success=False; "Should NOT be able to remove protected provider")
+ASSERT(Length($resultProtected.message)>0; "Should have error message")
+ASSERT($providers.getProvider("protectedProvider")#Null; "Protected provider should still exist")
+ASSERT($listener.removedProviders.length=0; "Listener should NOT be notified of removal")
 
-// Remove the provider
-$providers.removeProvider("protectedProvider")
-
-// Verify the listener was notified
-ASSERT:C1129($removalTracker.removedProviders.includes("protectedProvider"); "Listener should be notified of removal")
-
-$providers.removeListener($removalTracker)
-$testResults.push({test: "TC-19244-03"; name: "Delete Notification Handler"; status: "PASS"})
-
-// Cleanup
+$providers.removeListener($listener)
+$testResults.push({test: "TC-19244-02"; name: "Delete Protected Provider Blocked"; status: "PASS"})
 $configFile.delete()
 
-// MARK:- TC-19408-01: Rename Propagation Test
-// When developer renames a provider, listeners should be notified
+// MARK:- TC-19244-03: Delete Provider Used by Vector
+// Deleting a provider used by a vector should fail
+
+$configFile:=$tempFolder.file("test-providers-delete-vector.json")
+$config:={\
+	providers: {\
+		vectorProvider: {\
+			baseURL: "https://api.vector.com/v1"; \
+			apiKey: "vectorkey"\
+		}\
+	}\
+}
+$configFile.setText(JSON Stringify($config))
+$providers.providersFile:=$configFile
+
+// Simulate a vector that uses this provider
+var $simulatedVector : Object:={name: "MyVector"; providerName: "vectorProvider"}
+
+// Create listener that checks vector usage
+$listener:=cs._TestProviderListener.new()
+$listener.registerVector($simulatedVector)
+$providers.addListener($listener)
+
+// Test: Remove provider used by vector should fail
+var $resultVector : Object:=$providers.removeProvider("vectorProvider")
+ASSERT($resultVector.success=False; "Should NOT be able to remove provider used by vector")
+ASSERT($resultVector.message="Provider 'vectorProvider' is used by vector 'MyVector'"; "Should have correct error message")
+ASSERT($providers.getProvider("vectorProvider")#Null; "Provider should still exist")
+
+$providers.removeListener($listener)
+$testResults.push({test: "TC-19244-03"; name: "Delete Provider Used by Vector Blocked"; status: "PASS"})
+$configFile.delete()
+
+// MARK:- TC-19408-01: Rename Provider
+// Renaming a provider should work and notify listeners
 
 $configFile:=$tempFolder.file("test-providers-rename.json")
 $config:={\
-providers: {\
-oldName: {\
-baseURL: "https://api.example.com/v1"; \
-apiKey: "testkey"\
-}\
-}\
+	providers: {\
+		oldName: {\
+			baseURL: "https://api.example.com/v1"; \
+			apiKey: "testkey"\
+		}\
+	}\
 }
-$configFile.setText(JSON Stringify:C1217($config))
+$configFile.setText(JSON Stringify($config))
 $providers.providersFile:=$configFile
 
-// Custom handler that tracks modifications for rename propagation
-var $renameTracker:={\
-renamedFrom: ""; \
-renamedTo: ""; \
-modificationReceived: False:C215; \
-onProviderAdded: Formula:C1597(\
-This:C1470.renamedTo:=$1.key\
-); \
-onProviderRemoved: Formula:C1597(\
-This:C1470.renamedFrom:=$1.key\
-); \
-onProviderModified: Formula:C1597(\
-This:C1470.modificationReceived:=True:C214\
-)\
-}
+$listener:=cs._TestProviderListener.new()
+$providers.addListener($listener)
 
-$providers.addListener($renameTracker)
+// Test: Rename provider
+var $renameResult : Object:=$providers.renameProvider("oldName"; "newName")
+ASSERT($renameResult.success=True; "Rename should succeed")
+ASSERT($providers.getProvider("oldName")=Null; "Old name should not exist")
+ASSERT($providers.getProvider("newName")#Null; "New name should exist")
+ASSERT($providers.getProvider("newName").baseURL="https://api.example.com/v1"; "Config should be preserved")
+ASSERT($listener.renamedProviders.length=1; "Listener should be notified of rename")
+ASSERT($listener.renamedProviders[0].oldKey="oldName"; "Should track old key")
+ASSERT($listener.renamedProviders[0].newKey="newName"; "Should track new key")
 
-// Simulate rename: get old config, add with new name, remove old
-var $oldConfig:=$providers.getProvider("oldName")
-$providers.addProvider("newName"; $oldConfig)
-$providers.removeProvider("oldName")
-
-// Verify rename was tracked
-ASSERT:C1129($renameTracker.renamedFrom="oldName"; "Should track old name removal")
-ASSERT:C1129($renameTracker.renamedTo="newName"; "Should track new name addition")
-ASSERT:C1129($providers.getProvider("oldName")=Null:C1517; "Old name should not exist")
-ASSERT:C1129($providers.getProvider("newName")#Null:C1517; "New name should exist")
-ASSERT:C1129($providers.getProvider("newName").baseURL="https://api.example.com/v1"; "Config should be preserved")
-
-$providers.removeListener($renameTracker)
-$testResults.push({test: "TC-19408-01"; name: "Rename Propagation"; status: "PASS"})
-
-// Cleanup
+$providers.removeListener($listener)
+$testResults.push({test: "TC-19408-01"; name: "Rename Provider"; status: "PASS"})
 $configFile.delete()
 
-// MARK:- TC-19408-02: Rename with Vector Simulation
-// Simulate a vector that updates its provider reference on rename
+// MARK:- TC-19408-02: Rename Blocked Provider
+// Renaming a blocked provider should fail
+
+$configFile:=$tempFolder.file("test-providers-rename-blocked.json")
+$config:={\
+	providers: {\
+		blockedName: {\
+			baseURL: "https://api.blocked.com/v1"; \
+			apiKey: "blockedkey"\
+		}\
+	}\
+}
+$configFile.setText(JSON Stringify($config))
+$providers.providersFile:=$configFile
+
+$listener:=cs._TestProviderListener.new()
+$listener.blockRename("blockedName")
+$providers.addListener($listener)
+
+// Test: Rename blocked provider should fail
+var $renameBlocked : Object:=$providers.renameProvider("blockedName"; "newName")
+ASSERT($renameBlocked.success=False; "Rename should be blocked")
+ASSERT(Length($renameBlocked.message)>0; "Should have error message")
+ASSERT($providers.getProvider("blockedName")#Null; "Original provider should still exist")
+ASSERT($providers.getProvider("newName")=Null; "New name should not exist")
+
+$providers.removeListener($listener)
+$testResults.push({test: "TC-19408-02"; name: "Rename Blocked Provider"; status: "PASS"})
+$configFile.delete()
+
+// MARK:- TC-19408-03: Rename Updates Vector References
+// When a provider is renamed, vectors should be updated automatically
 
 $configFile:=$tempFolder.file("test-providers-rename-vector.json")
 $config:={\
-providers: {\
-myProvider: {\
-baseURL: "https://api.myai.com/v1"; \
-apiKey: "mykey"\
-}\
-}\
+	providers: {\
+		myProvider: {\
+			baseURL: "https://api.myai.com/v1"; \
+			apiKey: "mykey"\
+		}\
+	}\
 }
-$configFile.setText(JSON Stringify:C1217($config))
+$configFile.setText(JSON Stringify($config))
 $providers.providersFile:=$configFile
 
-// Simulate a vector object that references a provider
-var $simulatedVector:={\
-name: "MyVector"; \
-providerName: "myProvider"; \
-updateProvider: Formula:C1597(\
-This:C1470.providerName:=$1\
-)\
-}
+// Simulate a vector that references this provider
+var $vector : Object:={name: "TestVector"; providerName: "myProvider"}
 
-// Custom handler that updates vector references on rename
-var $vectorUpdater:={\
-vectors: [$simulatedVector]; \
-oldProviderName: ""; \
-newProviderName: ""; \
-onProviderRemoved: Formula:C1597(\
-This:C1470.oldProviderName:=$1.key\
-); \
-onProviderAdded: Formula:C1597(\
-  // When a new provider is added, check if it's a rename\
-If (Length:C16(This:C1470.oldProviderName)>0)\
-// Update all vectors that referenced the old name\
-var $vector : Object\
-For each ($vector; This:C1470.vectors)\
-If ($vector.providerName=This:C1470.oldProviderName)\
-$vector.updateProvider($1.key)\
-End if \
-End for each \
-This:C1470.oldProviderName:=""\
-End if \
-)\
-}
-
-$providers.addListener($vectorUpdater)
+$listener:=cs._TestProviderListener.new()
+$listener.registerVector($vector)
+$providers.addListener($listener)
 
 // Verify initial state
-ASSERT:C1129($simulatedVector.providerName="myProvider"; "Vector should reference myProvider initially")
+ASSERT($vector.providerName="myProvider"; "Vector should reference myProvider initially")
 
 // Perform rename
-var $config2:=$providers.getProvider("myProvider")
-$providers.addProvider("renamedProvider"; $config2)
-$providers.removeProvider("myProvider")
+var $renameVector : Object:=$providers.renameProvider("myProvider"; "renamedProvider")
+ASSERT($renameVector.success=True; "Rename should succeed")
 
-// Verify vector was updated
-ASSERT:C1129($simulatedVector.providerName="renamedProvider"; "Vector should be updated to renamedProvider")
+// Verify vector was updated by the listener
+ASSERT($vector.providerName="renamedProvider"; "Vector should be updated to renamedProvider")
 
-$providers.removeListener($vectorUpdater)
-$testResults.push({test: "TC-19408-02"; name: "Rename Updates Vector Reference"; status: "PASS"})
-
-// Cleanup
+$providers.removeListener($listener)
+$testResults.push({test: "TC-19408-03"; name: "Rename Updates Vector Reference"; status: "PASS"})
 $configFile.delete()
 
 // MARK:- Test Summary
-var $passed:=$testResults.query("status = :1"; "PASS").length
-var $total:=$testResults.length
+var $passed : Integer:=$testResults.query("status = :1"; "PASS").length
+var $total : Integer:=$testResults.length
 
-ALERT:C41("Provider Management Tests\n\nPassed: "+String:C10($passed)+"/"+String:C10($total)+"\n\n"+\
-$testResults.map(Formula:C1597($1.value.test+": "+$1.value.status)).join("\n"))
+ALERT("Provider Management Tests\n\nPassed: "+String($passed)+"/"+String($total)+"\n\n"+\
+	$testResults.map(Formula($1.value.test+": "+$1.value.status)).join("\n"))

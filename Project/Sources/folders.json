@@ -145,6 +145,7 @@
 		],
 		"classes": [
 			"_TestModels",
+			"_TestProviderListener",
 			"_TestSignal"
 		]
 	},
