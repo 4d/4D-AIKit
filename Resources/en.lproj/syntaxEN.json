@@ -14,14 +14,7 @@
 				"Summary": ""
 			}
 		},
-		"_ModelAliasResolver": {
-			"new()": {
-				"Syntax": "**.new**()",
-				"Params": [],
-				"Summary": ""
-			}
-		},
-		"OpenAIMessage": {
+		"OpenAIImageParameters": {
 			"new()": {
 				"Syntax": "**.new**( *object* : Object )",
 				"Params": [
@@ -34,7 +27,7 @@
 				"Summary": ""
 			}
 		},
-		"OpenAIImageParameters": {
+		"OpenAIMessage": {
 			"new()": {
 				"Syntax": "**.new**( *object* : Object )",
 				"Params": [
@@ -60,6 +53,13 @@
 				"Summary": ""
 			}
 		},
+		"_TestSignal": {
+			"new()": {
+				"Syntax": "**.new**()",
+				"Params": [],
+				"Summary": ""
+			}
+		},
 		"_MimeTypes": {
 			"new()": {
 				"Syntax": "**.new**()",
@@ -80,7 +80,7 @@
 				"Summary": ""
 			}
 		},
-		"_TestSignal": {
+		"_COMMON": {
 			"new()": {
 				"Syntax": "**.new**()",
 				"Params": [],
@@ -156,45 +156,6 @@
 				"Summary": ""
 			}
 		},
-		"OpenAIFileListParameters": {
-			"new()": {
-				"Syntax": "**.new**( *object* : Object )",
-				"Params": [
-					[
-						"object",
-						"Object",
-						"->"
-					]
-				],
-				"Summary": ""
-			}
-		},
-		"OpenAIChatCompletionsListParameters": {
-			"new()": {
-				"Syntax": "**.new**( *object* : Object )",
-				"Params": [
-					[
-						"object",
-						"Object",
-						"->"
-					]
-				],
-				"Summary": ""
-			}
-		},
-		"OpenAIFileParameters": {
-			"new()": {
-				"Syntax": "**.new**( *object* : Object )",
-				"Params": [
-					[
-						"object",
-						"Object",
-						"->"
-					]
-				],
-				"Summary": ""
-			}
-		},
 		"OpenAIVision": {
 			"new()": {
 				"Syntax": "**.new**( *chat* : cs.AIKit.OpenAIChatAPI )",
@@ -260,6 +221,164 @@
 				"Summary": ""
 			}
 		},
+		"OpenAIFileParameters": {
+			"new()": {
+				"Syntax": "**.new**( *object* : Object )",
+				"Params": [
+					[
+						"object",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"OpenAIChatAPI": {
+			"new()": {
+				"Syntax": "**.new**( *client* : cs.AIKit.OpenAI )",
+				"Params": [
+					[
+						"client",
+						"cs.AIKit.OpenAI",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"OpenAIError": {
+			"new()": {
+				"Syntax": "**.new**( *response* : Object; *body* : Object )",
+				"Params": [
+					[
+						"response",
+						"Object",
+						"->"
+					],
+					[
+						"body",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"OpenAIEmbeddingsParameters": {
+			"new()": {
+				"Syntax": "**.new**( *object* : Object )",
+				"Params": [
+					[
+						"object",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"OpenAI": {
+			"new()": {
+				"Syntax": "**.new**( *...* : Variant )",
+				"Params": [
+					[
+						"",
+						"Variant",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"OpenAIEmbeddingsAPI": {
+			"new()": {
+				"Syntax": "**.new**( *client* : cs.AIKit.OpenAI )",
+				"Params": [
+					[
+						"client",
+						"cs.AIKit.OpenAI",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"OpenAIFileDeleted": {
+			"new()": {
+				"Syntax": "**.new**( *object* : Object )",
+				"Params": [
+					[
+						"object",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"OpenAIChatCompletionsMessagesAPI": {
+			"new()": {
+				"Syntax": "**.new**( *client* : cs.AIKit.OpenAI )",
+				"Params": [
+					[
+						"client",
+						"cs.AIKit.OpenAI",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"OpenAIParameters": {
+			"new()": {
+				"Syntax": "**.new**( *object* : Object )",
+				"Params": [
+					[
+						"object",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"OpenAIChatHelper": {
+			"new()": {
+				"Syntax": "**.new**( *chat* : cs.AIKit.OpenAIChatAPI; *systemPrompt* : Text; *parameters* : cs.AIKit.OpenAIChatCompletionsParameters )",
+				"Params": [
+					[
+						"chat",
+						"cs.AIKit.OpenAIChatAPI",
+						"->"
+					],
+					[
+						"systemPrompt",
+						"Text",
+						"->"
+					],
+					[
+						"parameters",
+						"cs.AIKit.OpenAIChatCompletionsParameters",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"Provider": {
+			"new()": {
+				"Syntax": "**.new**( *config* : Variant )",
+				"Params": [
+					[
+						"config",
+						"Variant",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
 		"OpenAIEmbedding": {
 			"new()": {
 				"Syntax": "**.new**( *object* : Object )",
@@ -304,79 +423,27 @@
 				"Summary": ""
 			}
 		},
-		"OpenAIError": {
+		"Model": {
 			"new()": {
-				"Syntax": "**.new**( *response* : Object; *body* : Object )",
+				"Syntax": "**.new**( *name* : Variant; *model* : Text; *apiKey* : Text; *optionals* : Object )",
 				"Params": [
 					[
-						"response",
-						"Object",
-						"->"
-					],
-					[
-						"body",
-						"Object",
-						"->"
-					]
-				],
-				"Summary": ""
-			}
-		},
-		"OpenAI": {
-			"new()": {
-				"Syntax": "**.new**( *...* : Variant )",
-				"Params": [
-					[
-						"",
+						"name",
 						"Variant",
 						"->"
-					]
-				],
-				"Summary": ""
-			}
-		},
-		"OpenAIEmbeddingsParameters": {
-			"new()": {
-				"Syntax": "**.new**( *object* : Object )",
-				"Params": [
-					[
-						"object",
-						"Object",
-						"->"
-					]
-				],
-				"Summary": ""
-			}
-		},
-		"OpenAIChatHelper": {
-			"new()": {
-				"Syntax": "**.new**( *chat* : cs.AIKit.OpenAIChatAPI; *systemPrompt* : Text; *parameters* : cs.AIKit.OpenAIChatCompletionsParameters )",
-				"Params": [
-					[
-						"chat",
-						"cs.AIKit.OpenAIChatAPI",
-						"->"
 					],
 					[
-						"systemPrompt",
+						"model",
 						"Text",
 						"->"
 					],
 					[
-						"parameters",
-						"cs.AIKit.OpenAIChatCompletionsParameters",
+						"apiKey",
+						"Text",
 						"->"
-					]
-				],
-				"Summary": ""
-			}
-		},
-		"OpenAIParameters": {
-			"new()": {
-				"Syntax": "**.new**( *object* : Object )",
-				"Params": [
+					],
 					[
-						"object",
+						"optionals",
 						"Object",
 						"->"
 					]
@@ -384,74 +451,13 @@
 				"Summary": ""
 			}
 		},
-		"OpenAIFileDeleted": {
+		"_menu": {
 			"new()": {
-				"Syntax": "**.new**( *object* : Object )",
+				"Syntax": "**.new**( *data* : Variant )",
 				"Params": [
 					[
-						"object",
-						"Object",
-						"->"
-					]
-				],
-				"Summary": ""
-			}
-		},
-		"OpenAIEmbeddingsAPI": {
-			"new()": {
-				"Syntax": "**.new**( *client* : cs.AIKit.OpenAI )",
-				"Params": [
-					[
-						"client",
-						"cs.AIKit.OpenAI",
-						"->"
-					]
-				],
-				"Summary": ""
-			}
-		},
-		"_OpenAIAsyncOptions": {
-			"new()": {
-				"Syntax": "**.new**( *options* : Object; *client* : cs.AIKit.OpenAI; *parameters* : cs.AIKit.OpenAIChatCompletionsParameters; *result* : cs.AIKit.OpenAIResult )",
-				"Params": [
-					[
-						"options",
-						"Object",
-						"->"
-					],
-					[
-						"client",
-						"cs.AIKit.OpenAI",
-						"->"
-					],
-					[
-						"parameters",
-						"cs.AIKit.OpenAIChatCompletionsParameters",
-						"->"
-					],
-					[
-						"result",
-						"cs.AIKit.OpenAIResult",
-						"->"
-					]
-				],
-				"Summary": ""
-			}
-		},
-		"_FormDemo": {
-			"new()": {
-				"Syntax": "**.new**()",
-				"Params": [],
-				"Summary": ""
-			}
-		},
-		"OpenAIModerationsAPI": {
-			"new()": {
-				"Syntax": "**.new**( *client* : cs.AIKit.OpenAI )",
-				"Params": [
-					[
-						"client",
-						"cs.AIKit.OpenAI",
+						"data",
+						"Variant",
 						"->"
 					]
 				],
@@ -484,6 +490,55 @@
 				"Summary": ""
 			}
 		},
+		"_FormDemo": {
+			"new()": {
+				"Syntax": "**.new**()",
+				"Params": [],
+				"Summary": ""
+			}
+		},
+		"_AIPROVIDERS": {
+			"new()": {
+				"Syntax": "**.new**()",
+				"Params": [],
+				"Summary": ""
+			}
+		},
+		"OpenAIProviders": {
+			"new()": {
+				"Syntax": "**.new**()",
+				"Params": [],
+				"Summary": ""
+			}
+		},
+		"_OpenAIAsyncOptions": {
+			"new()": {
+				"Syntax": "**.new**( *options* : Object; *client* : cs.AIKit.OpenAI; *parameters* : cs.AIKit.OpenAIChatCompletionsParameters; *result* : cs.AIKit.OpenAIResult )",
+				"Params": [
+					[
+						"options",
+						"Object",
+						"->"
+					],
+					[
+						"client",
+						"cs.AIKit.OpenAI",
+						"->"
+					],
+					[
+						"parameters",
+						"cs.AIKit.OpenAIChatCompletionsParameters",
+						"->"
+					],
+					[
+						"result",
+						"cs.AIKit.OpenAIResult",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
 		"OpenAIChoice": {
 			"new()": {
 				"Syntax": "**.new**( *object* : Object )",
@@ -497,7 +552,7 @@
 				"Summary": ""
 			}
 		},
-		"OpenAIChatAPI": {
+		"OpenAIModerationsAPI": {
 			"new()": {
 				"Syntax": "**.new**( *client* : cs.AIKit.OpenAI )",
 				"Params": [
@@ -510,16 +565,43 @@
 				"Summary": ""
 			}
 		},
-		"OpenAIChatCompletionsMessagesAPI": {
+		"OpenAIFileListParameters": {
 			"new()": {
-				"Syntax": "**.new**( *client* : cs.AIKit.OpenAI )",
+				"Syntax": "**.new**( *object* : Object )",
 				"Params": [
 					[
-						"client",
-						"cs.AIKit.OpenAI",
+						"object",
+						"Object",
 						"->"
 					]
 				],
+				"Summary": ""
+			}
+		},
+		"OpenAIChatCompletionsListParameters": {
+			"new()": {
+				"Syntax": "**.new**( *object* : Object )",
+				"Params": [
+					[
+						"object",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"_ImageUtils": {
+			"new()": {
+				"Syntax": "**.new**()",
+				"Params": [],
+				"Summary": ""
+			}
+		},
+		"_TestProviderListener": {
+			"new()": {
+				"Syntax": "**.new**()",
+				"Params": [],
 				"Summary": ""
 			}
 		},
@@ -535,13 +617,6 @@
 				],
 				"Summary": ""
 			}
-		},
-		"_ImageUtils": {
-			"new()": {
-				"Syntax": "**.new**()",
-				"Params": [],
-				"Summary": ""
-			}
 		}
 	},
 	"OpenAIModerationItem": {
@@ -555,15 +630,10 @@
 			"Syntax": "categories : Object"
 		}
 	},
-	"_ModelAliasResolver": {
-		"resolveModel()": {
-			"Syntax": "**.resolveModel**( *modelString* : Text ) : Object",
+	"OpenAIImageParameters": {
+		"body()": {
+			"Syntax": "**.body**() : Object",
 			"Params": [
-				[
-					"modelString",
-					"Text",
-					"->"
-				],
 				[
 					"",
 					"Object",
@@ -572,17 +642,22 @@
 			],
 			"Summary": ""
 		},
-		"setProvidersFile()": {
-			"Syntax": "**.setProvidersFile**( *file* : 4D.File )",
-			"Params": [
-				[
-					"file",
-					"4D.File",
-					"->"
-				]
-			],
-			"Summary": ""
-		}
+		"style": {
+			"Syntax": "style : Text"
+		},
+		"size": {
+			"Syntax": "size : Text"
+		},
+		"n": {
+			"Syntax": "n : Integer"
+		},
+		"response_format": {
+			"Syntax": "response_format : Text"
+		},
+		"model": {
+			"Syntax": "model : Text"
+		},
+		"_inheritedFrom_": "OpenAIParameters"
 	},
 	"OpenAIMessage": {
 		"addImageURL()": {
@@ -650,35 +725,6 @@
 			"Syntax": "role : Text"
 		}
 	},
-	"OpenAIImageParameters": {
-		"body()": {
-			"Syntax": "**.body**() : Object",
-			"Params": [
-				[
-					"",
-					"Object",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"style": {
-			"Syntax": "style : Text"
-		},
-		"size": {
-			"Syntax": "size : Text"
-		},
-		"n": {
-			"Syntax": "n : Integer"
-		},
-		"response_format": {
-			"Syntax": "response_format : Text"
-		},
-		"model": {
-			"Syntax": "model : Text"
-		},
-		"_inheritedFrom_": "OpenAIParameters"
-	},
 	"OpenAIImagesAPI": {
 		"generate()": {
 			"Syntax": "**.generate**( *prompt* : Text; *parameters* : cs.AIKit.OpenAIImageParameters ) : cs.AIKit.OpenAIImagesResult",
@@ -716,6 +762,60 @@
 			"Summary": ""
 		},
 		"_inheritedFrom_": "OpenAIResult"
+	},
+	"_TestSignal": {
+		"pushChunk()": {
+			"Syntax": "**.pushChunk**( *result* : cs.AIKit.OpenAIResult )",
+			"Params": [
+				[
+					"result",
+					"cs.AIKit.OpenAIResult",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"trigger()": {
+			"Syntax": "**.trigger**( *result* : cs.AIKit.OpenAIResult )",
+			"Params": [
+				[
+					"result",
+					"cs.AIKit.OpenAIResult",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"wait()": {
+			"Syntax": "**.wait**( *time* : Integer )",
+			"Params": [
+				[
+					"time",
+					"Integer",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"reset()": {
+			"Syntax": "**.reset**()",
+			"Params": [],
+			"Summary": ""
+		},
+		"init()": {
+			"Syntax": "**.init**()",
+			"Params": [],
+			"Summary": ""
+		},
+		"chunks": {
+			"Syntax": "chunks : Collection"
+		},
+		"signal": {
+			"Syntax": "signal : 4D.Signal"
+		},
+		"result": {
+			"Syntax": "result : cs.AIKit.OpenAIResult"
+		}
 	},
 	"_MimeTypes": {
 		"hasMimeType()": {
@@ -793,58 +893,105 @@
 		},
 		"_inheritedFrom_": "OpenAIParameters"
 	},
-	"_TestSignal": {
-		"pushChunk()": {
-			"Syntax": "**.pushChunk**( *result* : cs.AIKit.OpenAIResult )",
+	"_COMMON": {
+		"saveModels()": {
+			"Syntax": "**.saveModels**( *models* : Collection )",
 			"Params": [
 				[
-					"result",
-					"cs.AIKit.OpenAIResult",
+					"models",
+					"Collection",
 					"->"
 				]
 			],
 			"Summary": ""
 		},
-		"trigger()": {
-			"Syntax": "**.trigger**( *result* : cs.AIKit.OpenAIResult )",
-			"Params": [
-				[
-					"result",
-					"cs.AIKit.OpenAIResult",
-					"->"
-				]
-			],
-			"Summary": ""
-		},
-		"wait()": {
-			"Syntax": "**.wait**( *time* : Integer )",
-			"Params": [
-				[
-					"time",
-					"Integer",
-					"->"
-				]
-			],
-			"Summary": ""
-		},
-		"reset()": {
-			"Syntax": "**.reset**()",
+		"readModels()": {
+			"Syntax": "**.readModels**()",
 			"Params": [],
 			"Summary": ""
 		},
-		"init()": {
-			"Syntax": "**.init**()",
+		"readSettings()": {
+			"Syntax": "**.readSettings**()",
 			"Params": [],
 			"Summary": ""
 		},
-		"chunks": {
-			"Syntax": "chunks : Collection"
+		"get settingsFile()": {
+			"Syntax": "**.get settingsFile**() : 4D.File",
+			"Params": [
+				[
+					"",
+					"4D.File",
+					"<-"
+				]
+			],
+			"Summary": ""
 		},
-		"signal": {
-			"Syntax": "signal : 4D.Signal"
+		"manager()": {
+			"Syntax": "**.manager**( *e* : Object; *from* : Text )",
+			"Params": [
+				[
+					"e",
+					"Object",
+					"->"
+				],
+				[
+					"from",
+					"Text",
+					"->"
+				]
+			],
+			"Summary": ""
 		},
-		"result": {
-			"Syntax": "result : cs.AIKit.OpenAIResult"
+		"writeSettings()": {
+			"Syntax": "**.writeSettings**()",
+			"Params": [],
+			"Summary": ""
+		},
+		"updateUI()": {
+			"Syntax": "**.updateUI**() : Boolean",
+			"Params": [
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"read()": {
+			"Syntax": "**.read**()",
+			"Params": [],
+			"Summary": ""
+		},
+		"DEBUG": {
+			"Syntax": "DEBUG : Boolean"
+		},
+		"selectedItems": {
+			"Syntax": "selectedItems : Collection"
+		},
+		"itemPosition": {
+			"Syntax": "itemPosition : Integer"
+		},
+		"settings": {
+			"Syntax": "settings : Object"
+		},
+		"PROVIDERS": {
+			"Syntax": "PROVIDERS : Collection"
+		},
+		"list": {
+			"Syntax": "list : Text"
+		},
+		"models": {
+			"Syntax": "models : Collection"
+		},
+		"currentItem": {
+			"Syntax": "currentItem : Object"
+		},
+		"OPENAI": {
+			"Syntax": "OPENAI : Text"
+		},
+		"providers": {
+			"Syntax": "providers : Object"
 		}
 	},
 	"OpenAIImage": {
@@ -1039,81 +1186,6 @@
 		"_inheritedFrom_": "OpenAIResult"
 	},
 	"_Env": {},
-	"OpenAIFileListParameters": {
-		"body()": {
-			"Syntax": "**.body**() : Object",
-			"Params": [
-				[
-					"",
-					"Object",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"order": {
-			"Syntax": "order : Text"
-		},
-		"purpose": {
-			"Syntax": "purpose : Text"
-		},
-		"limit": {
-			"Syntax": "limit : Integer"
-		},
-		"after": {
-			"Syntax": "after : Text"
-		},
-		"_inheritedFrom_": "OpenAIParameters"
-	},
-	"OpenAIChatCompletionsListParameters": {
-		"body()": {
-			"Syntax": "**.body**() : Object",
-			"Params": [
-				[
-					"",
-					"Object",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"model": {
-			"Syntax": "model : Text"
-		},
-		"order": {
-			"Syntax": "order : Text"
-		},
-		"limit": {
-			"Syntax": "limit : Integer"
-		},
-		"metadata": {
-			"Syntax": "metadata : Text"
-		},
-		"after": {
-			"Syntax": "after : Text"
-		},
-		"_inheritedFrom_": "OpenAIParameters"
-	},
-	"OpenAIFileParameters": {
-		"body()": {
-			"Syntax": "**.body**() : Object",
-			"Params": [
-				[
-					"",
-					"Object",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"filename": {
-			"Syntax": "filename : Text"
-		},
-		"expires_after": {
-			"Syntax": "expires_after : Object"
-		},
-		"_inheritedFrom_": "OpenAIParameters"
-	},
 	"OpenAIVision": {
 		"fromPicture()": {
 			"Syntax": "**.fromPicture**( *image* : Picture ) : cs.AIKit.OpenAIVisionHelper",
@@ -1413,51 +1485,32 @@
 		},
 		"_inheritedFrom_": "OpenAIResult"
 	},
-	"OpenAIEmbedding": {
-		"object": {
-			"Syntax": "object : Text"
-		},
-		"embedding": {
-			"Syntax": "embedding : 4D.Vector"
-		},
-		"index": {
-			"Syntax": "index : Integer"
-		}
-	},
-	"OpenAIModerationResult": {
-		"get moderation()": {
-			"Syntax": "**.get moderation**() : cs.AIKit.OpenAIModeration",
+	"OpenAIFileParameters": {
+		"body()": {
+			"Syntax": "**.body**() : Object",
 			"Params": [
 				[
 					"",
-					"cs.AIKit.OpenAIModeration",
+					"Object",
 					"<-"
 				]
 			],
 			"Summary": ""
 		},
-		"_inheritedFrom_": "OpenAIResult"
+		"filename": {
+			"Syntax": "filename : Text"
+		},
+		"expires_after": {
+			"Syntax": "expires_after : Object"
+		},
+		"_inheritedFrom_": "OpenAIParameters"
 	},
-	"_TestModels": {
-		"moderation": {
-			"Syntax": "moderation : Text"
-		},
-		"images": {
-			"Syntax": "images : Text"
-		},
-		"chats": {
-			"Syntax": "chats : Text"
-		},
-		"embeddings": {
-			"Syntax": "embeddings : Text"
-		}
-	},
-	"OpenAIVisionHelper": {
-		"prompt()": {
-			"Syntax": "**.prompt**( *prompt* : Text; *parameters* : cs.AIKit.OpenAIChatCompletionsParameters ) : cs.AIKit.OpenAIChatCompletionsResult",
+	"OpenAIChatAPI": {
+		"create()": {
+			"Syntax": "**.create**( *systemPrompt* : Text; *parameters* : cs.AIKit.OpenAIChatCompletionsParameters ) : cs.AIKit.OpenAIChatHelper",
 			"Params": [
 				[
-					"prompt",
+					"systemPrompt",
 					"Text",
 					"->"
 				],
@@ -1468,18 +1521,19 @@
 				],
 				[
 					"",
-					"cs.AIKit.OpenAIChatCompletionsResult",
+					"cs.AIKit.OpenAIChatHelper",
 					"<-"
 				]
 			],
 			"Summary": ""
 		},
-		"imageURL": {
-			"Syntax": "imageURL : Text"
+		"vision": {
+			"Syntax": "vision : cs.AIKit.OpenAIVision"
 		},
-		"chat": {
-			"Syntax": "chat : cs.AIKit.OpenAIChatAPI"
-		}
+		"completions": {
+			"Syntax": "completions : cs.AIKit.OpenAIChatCompletionsAPI"
+		},
+		"_inheritedFrom_": "OpenAIAPIResource"
 	},
 	"OpenAIError": {
 		"get isInternalServerError()": {
@@ -1649,6 +1703,26 @@
 			"Syntax": "errCode : Integer"
 		}
 	},
+	"OpenAIEmbeddingsParameters": {
+		"body()": {
+			"Syntax": "**.body**() : Object",
+			"Params": [
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"dimensions": {
+			"Syntax": "dimensions : Integer"
+		},
+		"encoding_format": {
+			"Syntax": "encoding_format : Text"
+		},
+		"_inheritedFrom_": "OpenAIParameters"
+	},
 	"OpenAI": {
 		"resolveModel()": {
 			"Syntax": "**.resolveModel**( *modelString* : Text ) : Object",
@@ -1676,6 +1750,9 @@
 				]
 			],
 			"Summary": ""
+		},
+		"providers": {
+			"Syntax": "providers : cs.AIKit.OpenAIProviders"
 		},
 		"customHeaders": {
 			"Syntax": "customHeaders : Object"
@@ -1720,7 +1797,147 @@
 			"Syntax": "files : cs.AIKit.OpenAIFilesAPI"
 		}
 	},
-	"OpenAIEmbeddingsParameters": {
+	"OpenAIEmbeddingsAPI": {
+		"create()": {
+			"Syntax": "**.create**( *input* : Variant; *model* : Text; *parameters* : cs.AIKit.OpenAIEmbeddingsParameters ) : cs.AIKit.OpenAIEmbeddingsResult",
+			"Params": [
+				[
+					"input",
+					"Variant",
+					"->"
+				],
+				[
+					"model",
+					"Text",
+					"->"
+				],
+				[
+					"parameters",
+					"cs.AIKit.OpenAIEmbeddingsParameters",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit.OpenAIEmbeddingsResult",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIAPIResource"
+	},
+	"OpenAIFileDeleted": {
+		"object": {
+			"Syntax": "object : Text"
+		},
+		"deleted": {
+			"Syntax": "deleted : Boolean"
+		},
+		"id": {
+			"Syntax": "id : Text"
+		}
+	},
+	"OpenAIChatCompletionsMessagesAPI": {
+		"list()": {
+			"Syntax": "**.list**( *completionID* : Text; *parameters* : cs.AIKit.OpenAIChatCompletionsMessagesParameters ) : cs.AIKit.OpenAIResult",
+			"Params": [
+				[
+					"completionID",
+					"Text",
+					"->"
+				],
+				[
+					"parameters",
+					"cs.AIKit.OpenAIChatCompletionsMessagesParameters",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit.OpenAIResult",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIAPIResource"
+	},
+	"OpenAIResult": {
+		"get usage()": {
+			"Syntax": "**.get usage**() : Object",
+			"Params": [
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get headers()": {
+			"Syntax": "**.get headers**() : Object",
+			"Params": [
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"throw()": {
+			"Syntax": "**.throw**()",
+			"Params": [],
+			"Summary": ""
+		},
+		"get rateLimit()": {
+			"Syntax": "**.get rateLimit**() : Object",
+			"Params": [
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get terminated()": {
+			"Syntax": "**.get terminated**() : Boolean",
+			"Params": [
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get errors()": {
+			"Syntax": "**.get errors**() : Collection",
+			"Params": [
+				[
+					"",
+					"Collection",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get success()": {
+			"Syntax": "**.get success**() : Boolean",
+			"Params": [
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"request": {
+			"Syntax": "request : 4D.HTTPRequest"
+		}
+	},
+	"OpenAIParameters": {
 		"body()": {
 			"Syntax": "**.body**() : Object",
 			"Params": [
@@ -1732,13 +1949,36 @@
 			],
 			"Summary": ""
 		},
-		"dimensions": {
-			"Syntax": "dimensions : Integer"
+		"user": {
+			"Syntax": "user : Text"
 		},
-		"encoding_format": {
-			"Syntax": "encoding_format : Text"
+		"extraHeaders": {
+			"Syntax": "extraHeaders : Object"
 		},
-		"_inheritedFrom_": "OpenAIParameters"
+		"maxRetries": {
+			"Syntax": "maxRetries : Real"
+		},
+		"onError": {
+			"Syntax": "onError : 4D.Function"
+		},
+		"timeout": {
+			"Syntax": "timeout : Real"
+		},
+		"throw": {
+			"Syntax": "throw : Boolean"
+		},
+		"formula": {
+			"Syntax": "formula : 4D.Function"
+		},
+		"onResponse": {
+			"Syntax": "onResponse : 4D.Function"
+		},
+		"httpAgent": {
+			"Syntax": "httpAgent : 4D.HTTPAgent"
+		},
+		"onTerminate": {
+			"Syntax": "onTerminate : 4D.Function"
+		}
 	},
 	"OpenAIChatHelper": {
 		"unregisterTool()": {
@@ -1830,103 +2070,181 @@
 			"Syntax": "systemPrompt : cs.AIKit.OpenAIMessage"
 		}
 	},
-	"OpenAIParameters": {
-		"body()": {
-			"Syntax": "**.body**() : Object",
+	"Provider": {
+		"set apiKey()": {
+			"Syntax": "**.set apiKey**( *apikey* : Text )",
+			"Params": [
+				[
+					"apikey",
+					"Text",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"get apiKey()": {
+			"Syntax": "**.get apiKey**() : Text",
 			"Params": [
 				[
 					"",
-					"Object",
+					"Text",
 					"<-"
 				]
 			],
 			"Summary": ""
 		},
-		"user": {
-			"Syntax": "user : Text"
-		},
-		"extraHeaders": {
-			"Syntax": "extraHeaders : Object"
-		},
-		"maxRetries": {
-			"Syntax": "maxRetries : Real"
-		},
-		"onError": {
-			"Syntax": "onError : 4D.Function"
-		},
-		"timeout": {
-			"Syntax": "timeout : Real"
-		},
-		"throw": {
-			"Syntax": "throw : Boolean"
-		},
-		"formula": {
-			"Syntax": "formula : 4D.Function"
-		},
-		"onResponse": {
-			"Syntax": "onResponse : 4D.Function"
-		},
-		"httpAgent": {
-			"Syntax": "httpAgent : 4D.HTTPAgent"
-		},
-		"onTerminate": {
-			"Syntax": "onTerminate : 4D.Function"
-		}
-	},
-	"OpenAIFileDeleted": {
-		"object": {
-			"Syntax": "object : Text"
-		},
-		"deleted": {
-			"Syntax": "deleted : Boolean"
-		},
-		"id": {
-			"Syntax": "id : Text"
-		}
-	},
-	"OpenAIEmbeddingsAPI": {
-		"create()": {
-			"Syntax": "**.create**( *input* : Variant; *model* : Text; *parameters* : cs.AIKit.OpenAIEmbeddingsParameters ) : cs.AIKit.OpenAIEmbeddingsResult",
+		"menuModels()": {
+			"Syntax": "**.menuModels**( *default* : Text ) : cs.AIKit._menu",
 			"Params": [
 				[
-					"input",
-					"Variant",
+					"default",
+					"Text",
 					"->"
 				],
 				[
-					"model",
+					"",
+					"cs.AIKit._menu",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"normalizedName()": {
+			"Syntax": "**.normalizedName**( *url* : Text ) : Text",
+			"Params": [
+				[
+					"url",
+					"Text",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"loadModels()": {
+			"Syntax": "**.loadModels**()",
+			"Params": [],
+			"Summary": ""
+		},
+		"OPENAI": {
+			"Syntax": "OPENAI : Text"
+		},
+		"success": {
+			"Syntax": "success : Boolean"
+		},
+		"endpoint": {
+			"Syntax": "endpoint : cs.AIKit.OpenAI"
+		},
+		"needToken": {
+			"Syntax": "needToken : Boolean"
+		},
+		"baseURL": {
+			"Syntax": "baseURL : Text"
+		},
+		"models": {
+			"Syntax": "models : Collection"
+		},
+		"name": {
+			"Syntax": "name : Text"
+		}
+	},
+	"OpenAIModerationResult": {
+		"get moderation()": {
+			"Syntax": "**.get moderation**() : cs.AIKit.OpenAIModeration",
+			"Params": [
+				[
+					"",
+					"cs.AIKit.OpenAIModeration",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIResult"
+	},
+	"OpenAIEmbedding": {
+		"object": {
+			"Syntax": "object : Text"
+		},
+		"embedding": {
+			"Syntax": "embedding : 4D.Vector"
+		},
+		"index": {
+			"Syntax": "index : Integer"
+		}
+	},
+	"_TestModels": {
+		"moderation": {
+			"Syntax": "moderation : Text"
+		},
+		"images": {
+			"Syntax": "images : Text"
+		},
+		"chats": {
+			"Syntax": "chats : Text"
+		},
+		"embeddings": {
+			"Syntax": "embeddings : Text"
+		}
+	},
+	"OpenAIVisionHelper": {
+		"prompt()": {
+			"Syntax": "**.prompt**( *prompt* : Text; *parameters* : cs.AIKit.OpenAIChatCompletionsParameters ) : cs.AIKit.OpenAIChatCompletionsResult",
+			"Params": [
+				[
+					"prompt",
 					"Text",
 					"->"
 				],
 				[
 					"parameters",
-					"cs.AIKit.OpenAIEmbeddingsParameters",
+					"cs.AIKit.OpenAIChatCompletionsParameters",
 					"->"
 				],
 				[
 					"",
-					"cs.AIKit.OpenAIEmbeddingsResult",
+					"cs.AIKit.OpenAIChatCompletionsResult",
 					"<-"
 				]
 			],
 			"Summary": ""
 		},
-		"_inheritedFrom_": "OpenAIAPIResource"
+		"imageURL": {
+			"Syntax": "imageURL : Text"
+		},
+		"chat": {
+			"Syntax": "chat : cs.AIKit.OpenAIChatAPI"
+		}
 	},
-	"OpenAIFileListResult": {
-		"get has_more()": {
-			"Syntax": "**.get has_more**() : Boolean",
+	"OpenAIEmbeddingsResult": {
+		"get vector()": {
+			"Syntax": "**.get vector**() : 4D.Vector",
 			"Params": [
 				[
 					"",
-					"Boolean",
+					"4D.Vector",
 					"<-"
 				]
 			],
 			"Summary": ""
 		},
-		"get last_id()": {
-			"Syntax": "**.get last_id**() : Text",
+		"get vectors()": {
+			"Syntax": "**.get vectors**() : Collection",
+			"Params": [
+				[
+					"",
+					"Collection",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get model()": {
+			"Syntax": "**.get model**() : Text",
 			"Params": [
 				[
 					"",
@@ -1936,19 +2254,36 @@
 			],
 			"Summary": ""
 		},
-		"get first_id()": {
-			"Syntax": "**.get first_id**() : Text",
+		"get embedding()": {
+			"Syntax": "**.get embedding**() : cs.AIKit.OpenAIEmbedding",
 			"Params": [
 				[
 					"",
-					"Text",
+					"cs.AIKit.OpenAIEmbedding",
 					"<-"
 				]
 			],
 			"Summary": ""
 		},
-		"get files()": {
-			"Syntax": "**.get files**() : Collection",
+		"get embeddings()": {
+			"Syntax": "**.get embeddings**() : Collection",
+			"Params": [
+				[
+					"",
+					"Collection",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"model": {
+			"Syntax": "model : Text"
+		},
+		"_inheritedFrom_": "OpenAIResult"
+	},
+	"OpenAIModelListResult": {
+		"get models()": {
+			"Syntax": "**.get models**() : Collection",
 			"Params": [
 				[
 					"",
@@ -1960,54 +2295,727 @@
 		},
 		"_inheritedFrom_": "OpenAIResult"
 	},
-	"_OpenAIAsyncOptions": {
-		"onData()": {
-			"Syntax": "**.onData**( *request* : 4D.HTTPRequest; *event* : Object )",
+	"Model": {
+		"validate()": {
+			"Syntax": "**.validate**() : Boolean",
 			"Params": [
 				[
-					"request",
-					"4D.HTTPRequest",
-					"->"
-				],
-				[
-					"event",
-					"Object",
-					"->"
+					"",
+					"Boolean",
+					"<-"
 				]
 			],
 			"Summary": ""
 		},
-		"onTerminate()": {
-			"Syntax": "**.onTerminate**( *request* : 4D.HTTPRequest; *event* : Object )",
-			"Params": [
-				[
-					"request",
-					"4D.HTTPRequest",
-					"->"
-				],
-				[
-					"event",
-					"Object",
-					"->"
-				]
-			],
-			"Summary": ""
+		"errors": {
+			"Syntax": "errors : Collection"
 		},
-		"body": {
-			"Syntax": "body : Variant"
+		"valid": {
+			"Syntax": "valid : Boolean"
 		},
-		"headers": {
-			"Syntax": "headers : Object"
+		"needAPIKey": {
+			"Syntax": "needAPIKey : Boolean"
 		},
-		"timeout": {
-			"Syntax": "timeout : Integer"
+		"apiKey": {
+			"Syntax": "apiKey : Text"
 		},
-		"dataType": {
-			"Syntax": "dataType : Text"
+		"organization": {
+			"Syntax": "organization : Text"
 		},
-		"method": {
-			"Syntax": "method : Text"
+		"project": {
+			"Syntax": "project : Text"
+		},
+		"baseURL": {
+			"Syntax": "baseURL : Text"
+		},
+		"model": {
+			"Syntax": "model : Text"
+		},
+		"name": {
+			"Syntax": "name : Text"
 		}
+	},
+	"_menu": {
+		"fonts()": {
+			"Syntax": "**.fonts**( *withStyle* : Variant; *callback* : Text ) : cs.AIKit._menu",
+			"Params": [
+				[
+					"withStyle",
+					"Variant",
+					"->"
+				],
+				[
+					"callback",
+					"Text",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit._menu",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"edit()": {
+			"Syntax": "**.edit**( *contextual* : Boolean ) : cs.AIKit._menu",
+			"Params": [
+				[
+					"contextual",
+					"Boolean",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit._menu",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"windows()": {
+			"Syntax": "**.windows**( *callback* : Text ) : cs.AIKit._menu",
+			"Params": [
+				[
+					"callback",
+					"Text",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit._menu",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"popup()": {
+			"Syntax": "**.popup**( *where* : Variant; *x* : Variant; *y* : Integer ) : cs.AIKit._menu",
+			"Params": [
+				[
+					"where",
+					"Variant",
+					"->"
+				],
+				[
+					"x",
+					"Variant",
+					"->"
+				],
+				[
+					"y",
+					"Integer",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit._menu",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"getProperty()": {
+			"Syntax": "**.getProperty**( *property* : Text; *index* : Integer ) : Variant",
+			"Params": [
+				[
+					"property",
+					"Text",
+					"->"
+				],
+				[
+					"index",
+					"Integer",
+					"->"
+				],
+				[
+					"",
+					"Variant",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"icon()": {
+			"Syntax": "**.icon**( *proxy* : Text; *index* : Integer ) : cs.AIKit._menu",
+			"Params": [
+				[
+					"proxy",
+					"Text",
+					"->"
+				],
+				[
+					"index",
+					"Integer",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit._menu",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"disable()": {
+			"Syntax": "**.disable**( *index* : Integer ) : cs.AIKit._menu",
+			"Params": [
+				[
+					"index",
+					"Integer",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit._menu",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"itemSubMenuRef()": {
+			"Syntax": "**.itemSubMenuRef**( *withTitle* : Text ) : Text",
+			"Params": [
+				[
+					"withTitle",
+					"Text",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"item()": {
+			"Syntax": "**.item**( *item* : Variant; *ref* : Text ) : Object",
+			"Params": [
+				[
+					"item",
+					"Variant",
+					"->"
+				],
+				[
+					"ref",
+					"Text",
+					"->"
+				],
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"itemCount()": {
+			"Syntax": "**.itemCount**() : Integer",
+			"Params": [
+				[
+					"",
+					"Integer",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"setData()": {
+			"Syntax": "**.setData**( *name* : Text; *value* : Variant; *index* : Integer ) : cs.AIKit._menu",
+			"Params": [
+				[
+					"name",
+					"Text",
+					"->"
+				],
+				[
+					"value",
+					"Variant",
+					"->"
+				],
+				[
+					"index",
+					"Integer",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit._menu",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"enable()": {
+			"Syntax": "**.enable**( *enabled* : Boolean; *index* : Integer ) : cs.AIKit._menu",
+			"Params": [
+				[
+					"enabled",
+					"Boolean",
+					"->"
+				],
+				[
+					"index",
+					"Integer",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit._menu",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"getData()": {
+			"Syntax": "**.getData**( *name* : Text; *ref* : Text ) : Variant",
+			"Params": [
+				[
+					"name",
+					"Text",
+					"->"
+				],
+				[
+					"ref",
+					"Text",
+					"->"
+				],
+				[
+					"",
+					"Variant",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"property()": {
+			"Syntax": "**.property**( *property* : Text; *value* : Variant; *index* : Integer ) : cs.AIKit._menu",
+			"Params": [
+				[
+					"property",
+					"Text",
+					"->"
+				],
+				[
+					"value",
+					"Variant",
+					"->"
+				],
+				[
+					"index",
+					"Integer",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit._menu",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"indent()": {
+			"Syntax": "**.indent**( *index* : Integer; *number* : Integer ) : cs.AIKit._menu",
+			"Params": [
+				[
+					"index",
+					"Integer",
+					"->"
+				],
+				[
+					"number",
+					"Integer",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit._menu",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"parameter()": {
+			"Syntax": "**.parameter**( *param* : Text; *index* : Integer ) : cs.AIKit._menu",
+			"Params": [
+				[
+					"param",
+					"Text",
+					"->"
+				],
+				[
+					"index",
+					"Integer",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit._menu",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"mark()": {
+			"Syntax": "**.mark**( *checked* : Boolean; *index* : Integer ) : cs.AIKit._menu",
+			"Params": [
+				[
+					"checked",
+					"Boolean",
+					"->"
+				],
+				[
+					"index",
+					"Integer",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit._menu",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"method()": {
+			"Syntax": "**.method**( *method* : Text; *index* : Integer ) : cs.AIKit._menu",
+			"Params": [
+				[
+					"method",
+					"Text",
+					"->"
+				],
+				[
+					"index",
+					"Integer",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit._menu",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"isSeparatorItem()": {
+			"Syntax": "**.isSeparatorItem**( *item* : Integer; *ref* : Text ) : Boolean",
+			"Params": [
+				[
+					"item",
+					"Integer",
+					"->"
+				],
+				[
+					"ref",
+					"Text",
+					"->"
+				],
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"items()": {
+			"Syntax": "**.items**() : Collection",
+			"Params": [
+				[
+					"",
+					"Collection",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"setStyle()": {
+			"Syntax": "**.setStyle**( *tyle* : Integer; *index* : Integer ) : cs.AIKit._menu",
+			"Params": [
+				[
+					"tyle",
+					"Integer",
+					"->"
+				],
+				[
+					"index",
+					"Integer",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit._menu",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"delete()": {
+			"Syntax": "**.delete**( *index* : Integer ) : cs.AIKit._menu",
+			"Params": [
+				[
+					"index",
+					"Integer",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit._menu",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"file()": {
+			"Syntax": "**.file**() : cs.AIKit._menu",
+			"Params": [
+				[
+					"",
+					"cs.AIKit._menu",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"shortcut()": {
+			"Syntax": "**.shortcut**( *key* : Variant; *modifier* : Integer; *index* : Integer ) : cs.AIKit._menu",
+			"Params": [
+				[
+					"key",
+					"Variant",
+					"->"
+				],
+				[
+					"modifier",
+					"Integer",
+					"->"
+				],
+				[
+					"index",
+					"Integer",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit._menu",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"add()": {
+			"Syntax": "**.add**( *ref* : Text; *text* : Text; *param* : Variant; *mark* : Boolean )",
+			"Params": [
+				[
+					"ref",
+					"Text",
+					"->"
+				],
+				[
+					"text",
+					"Text",
+					"->"
+				],
+				[
+					"param",
+					"Variant",
+					"->"
+				],
+				[
+					"mark",
+					"Boolean",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"release()": {
+			"Syntax": "**.release**()",
+			"Params": [],
+			"Summary": ""
+		},
+		"action()": {
+			"Syntax": "**.action**( *action* : Variant; *index* : Integer ) : cs.AIKit._menu",
+			"Params": [
+				[
+					"action",
+					"Variant",
+					"->"
+				],
+				[
+					"index",
+					"Integer",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit._menu",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"line()": {
+			"Syntax": "**.line**( *afterItem* : Integer ) : cs.AIKit._menu",
+			"Params": [
+				[
+					"afterItem",
+					"Integer",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit._menu",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"append()": {
+			"Syntax": "**.append**( *item* : Variant; *param* : Variant; *mark* : Variant; *afterItem* : Integer ) : cs.AIKit._menu",
+			"Params": [
+				[
+					"item",
+					"Variant",
+					"->"
+				],
+				[
+					"param",
+					"Variant",
+					"->"
+				],
+				[
+					"mark",
+					"Variant",
+					"->"
+				],
+				[
+					"afterItem",
+					"Integer",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit._menu",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"selected": {
+			"Syntax": "selected : Boolean"
+		},
+		"localize": {
+			"Syntax": "localize : Boolean"
+		},
+		"metacharacters": {
+			"Syntax": "metacharacters : Boolean"
+		},
+		"released": {
+			"Syntax": "released : Boolean"
+		},
+		"autoRelease": {
+			"Syntax": "autoRelease : Boolean"
+		},
+		"submenus": {
+			"Syntax": "submenus : Collection"
+		},
+		"ref": {
+			"Syntax": "ref : Text"
+		},
+		"choice": {
+			"Syntax": "choice : Text"
+		},
+		"data": {
+			"Syntax": "data : Collection"
+		}
+	},
+	"OpenAIFile": {
+		"status_details": {
+			"Syntax": "status_details : Text"
+		},
+		"expires_at": {
+			"Syntax": "expires_at : Integer"
+		},
+		"object": {
+			"Syntax": "object : Text"
+		},
+		"purpose": {
+			"Syntax": "purpose : Text"
+		},
+		"bytes": {
+			"Syntax": "bytes : Integer"
+		},
+		"filename": {
+			"Syntax": "filename : Text"
+		},
+		"status": {
+			"Syntax": "status : Text"
+		},
+		"created_at": {
+			"Syntax": "created_at : Integer"
+		},
+		"id": {
+			"Syntax": "id : Text"
+		}
+	},
+	"OpenAIChatCompletionsParameters": {
+		"body()": {
+			"Syntax": "**.body**() : Object",
+			"Params": [
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"service_tier": {
+			"Syntax": "service_tier : Text"
+		},
+		"onData": {
+			"Syntax": "onData : 4D.Function"
+		},
+		"prediction": {
+			"Syntax": "prediction : Object"
+		},
+		"tools": {
+			"Syntax": "tools : Collection"
+		},
+		"response_format": {
+			"Syntax": "response_format : Object"
+		},
+		"reasoning_effort": {
+			"Syntax": "reasoning_effort : Text"
+		},
+		"store": {
+			"Syntax": "store : Boolean"
+		},
+		"tool_choice": {
+			"Syntax": "tool_choice : Variant"
+		},
+		"temperature": {
+			"Syntax": "temperature : Real"
+		},
+		"max_completion_tokens": {
+			"Syntax": "max_completion_tokens : Integer"
+		},
+		"n": {
+			"Syntax": "n : Integer"
+		},
+		"stream": {
+			"Syntax": "stream : Boolean"
+		},
+		"stream_options": {
+			"Syntax": "stream_options : Object"
+		},
+		"model": {
+			"Syntax": "model : Text"
+		},
+		"_inheritedFrom_": "OpenAIParameters"
 	},
 	"_FormDemo": {
 		"onFileChatReceive()": {
@@ -2314,6 +3322,420 @@
 			"Summary": ""
 		}
 	},
+	"_AIPROVIDERS": {
+		"deleteModel()": {
+			"Syntax": "**.deleteModel**( *name* : Text )",
+			"Params": [
+				[
+					"name",
+					"Text",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"newModel()": {
+			"Syntax": "**.newModel**()",
+			"Params": [],
+			"Summary": ""
+		},
+		"nameManager()": {
+			"Syntax": "**.nameManager**( *e* : Object )",
+			"Params": [
+				[
+					"e",
+					"Object",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"selectModel()": {
+			"Syntax": "**.selectModel**( *name* : Text )",
+			"Params": [
+				[
+					"name",
+					"Text",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"listMetaInfo()": {
+			"Syntax": "**.listMetaInfo**( *me* : cs.AIKit.Model ) : Object",
+			"Params": [
+				[
+					"me",
+					"cs.AIKit.Model",
+					"->"
+				],
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"listManager()": {
+			"Syntax": "**.listManager**( *e* : Object )",
+			"Params": [
+				[
+					"e",
+					"Object",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"manager()": {
+			"Syntax": "**.manager**( *e* : Object )",
+			"Params": [
+				[
+					"e",
+					"Object",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"listeners": {
+			"Syntax": "listeners : Collection"
+		},
+		"previousItem": {
+			"Syntax": "previousItem : Object"
+		},
+		"_inheritedFrom_": "_COMMON"
+	},
+	"OpenAIFileListResult": {
+		"get has_more()": {
+			"Syntax": "**.get has_more**() : Boolean",
+			"Params": [
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get last_id()": {
+			"Syntax": "**.get last_id**() : Text",
+			"Params": [
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get first_id()": {
+			"Syntax": "**.get first_id**() : Text",
+			"Params": [
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get files()": {
+			"Syntax": "**.get files**() : Collection",
+			"Params": [
+				[
+					"",
+					"Collection",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIResult"
+	},
+	"OpenAIProviders": {
+		"toCollection()": {
+			"Syntax": "**.toCollection**() : Collection",
+			"Params": [
+				[
+					"",
+					"Collection",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"fromCollection()": {
+			"Syntax": "**.fromCollection**( *models* : Collection )",
+			"Params": [
+				[
+					"models",
+					"Collection",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"removeListener()": {
+			"Syntax": "**.removeListener**( *listener* : Object ) : Boolean",
+			"Params": [
+				[
+					"listener",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"addListener()": {
+			"Syntax": "**.addListener**( *listener* : Object ) : cs.AIKit.OpenAIProviders",
+			"Params": [
+				[
+					"listener",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit.OpenAIProviders",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"getProviderKeys()": {
+			"Syntax": "**.getProviderKeys**() : Collection",
+			"Params": [
+				[
+					"",
+					"Collection",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"getProvider()": {
+			"Syntax": "**.getProvider**( *key* : Text ) : Object",
+			"Params": [
+				[
+					"key",
+					"Text",
+					"->"
+				],
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"resolveModel()": {
+			"Syntax": "**.resolveModel**( *modelString* : Text ) : Object",
+			"Params": [
+				[
+					"modelString",
+					"Text",
+					"->"
+				],
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"removeProvider()": {
+			"Syntax": "**.removeProvider**( *key* : Text ) : Object",
+			"Params": [
+				[
+					"key",
+					"Text",
+					"->"
+				],
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"addProvider()": {
+			"Syntax": "**.addProvider**( *key* : Text; *config* : Object ) : cs.AIKit.OpenAIProviders",
+			"Params": [
+				[
+					"key",
+					"Text",
+					"->"
+				],
+				[
+					"config",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit.OpenAIProviders",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"load()": {
+			"Syntax": "**.load**() : Boolean",
+			"Params": [
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"save()": {
+			"Syntax": "**.save**()",
+			"Params": [],
+			"Summary": ""
+		},
+		"renameProvider()": {
+			"Syntax": "**.renameProvider**( *oldKey* : Text; *newKey* : Text ) : Object",
+			"Params": [
+				[
+					"oldKey",
+					"Text",
+					"->"
+				],
+				[
+					"newKey",
+					"Text",
+					"->"
+				],
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"modifyProvider()": {
+			"Syntax": "**.modifyProvider**( *key* : Text; *updates* : Object ) : Boolean",
+			"Params": [
+				[
+					"key",
+					"Text",
+					"->"
+				],
+				[
+					"updates",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get providersFile()": {
+			"Syntax": "**.get providersFile**() : 4D.File",
+			"Params": [
+				[
+					"",
+					"4D.File",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"set providersFile()": {
+			"Syntax": "**.set providersFile**( *file* : 4D.File )",
+			"Params": [
+				[
+					"file",
+					"4D.File",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"errors": {
+			"Syntax": "errors : Collection"
+		}
+	},
+	"_OpenAIAsyncOptions": {
+		"onData()": {
+			"Syntax": "**.onData**( *request* : 4D.HTTPRequest; *event* : Object )",
+			"Params": [
+				[
+					"request",
+					"4D.HTTPRequest",
+					"->"
+				],
+				[
+					"event",
+					"Object",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"onTerminate()": {
+			"Syntax": "**.onTerminate**( *request* : 4D.HTTPRequest; *event* : Object )",
+			"Params": [
+				[
+					"request",
+					"4D.HTTPRequest",
+					"->"
+				],
+				[
+					"event",
+					"Object",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"body": {
+			"Syntax": "body : Variant"
+		},
+		"headers": {
+			"Syntax": "headers : Object"
+		},
+		"timeout": {
+			"Syntax": "timeout : Integer"
+		},
+		"dataType": {
+			"Syntax": "dataType : Text"
+		},
+		"method": {
+			"Syntax": "method : Text"
+		}
+	},
+	"OpenAIChoice": {
+		"delta": {
+			"Syntax": "delta : cs.AIKit.OpenAIMessage"
+		},
+		"message": {
+			"Syntax": "message : cs.AIKit.OpenAIMessage"
+		},
+		"index": {
+			"Syntax": "index : Integer"
+		},
+		"finish_reason": {
+			"Syntax": "finish_reason : Text"
+		}
+	},
 	"OpenAIModerationsAPI": {
 		"create()": {
 			"Syntax": "**.create**( *input* : Variant; *model* : Text; *parameters* : cs.AIKit.OpenAIParameters ) : cs.AIKit.OpenAIModerationResult",
@@ -2343,111 +3765,7 @@
 		},
 		"_inheritedFrom_": "OpenAIAPIResource"
 	},
-	"OpenAIEmbeddingsResult": {
-		"get vector()": {
-			"Syntax": "**.get vector**() : 4D.Vector",
-			"Params": [
-				[
-					"",
-					"4D.Vector",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"get vectors()": {
-			"Syntax": "**.get vectors**() : Collection",
-			"Params": [
-				[
-					"",
-					"Collection",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"get model()": {
-			"Syntax": "**.get model**() : Text",
-			"Params": [
-				[
-					"",
-					"Text",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"get embedding()": {
-			"Syntax": "**.get embedding**() : cs.AIKit.OpenAIEmbedding",
-			"Params": [
-				[
-					"",
-					"cs.AIKit.OpenAIEmbedding",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"get embeddings()": {
-			"Syntax": "**.get embeddings**() : Collection",
-			"Params": [
-				[
-					"",
-					"Collection",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"model": {
-			"Syntax": "model : Text"
-		},
-		"_inheritedFrom_": "OpenAIResult"
-	},
-	"OpenAIModelListResult": {
-		"get models()": {
-			"Syntax": "**.get models**() : Collection",
-			"Params": [
-				[
-					"",
-					"Collection",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"_inheritedFrom_": "OpenAIResult"
-	},
-	"OpenAIFile": {
-		"status_details": {
-			"Syntax": "status_details : Text"
-		},
-		"expires_at": {
-			"Syntax": "expires_at : Integer"
-		},
-		"object": {
-			"Syntax": "object : Text"
-		},
-		"purpose": {
-			"Syntax": "purpose : Text"
-		},
-		"bytes": {
-			"Syntax": "bytes : Integer"
-		},
-		"filename": {
-			"Syntax": "filename : Text"
-		},
-		"status": {
-			"Syntax": "status : Text"
-		},
-		"created_at": {
-			"Syntax": "created_at : Integer"
-		},
-		"id": {
-			"Syntax": "id : Text"
-		}
-	},
-	"OpenAIChatCompletionsParameters": {
+	"OpenAIFileListParameters": {
 		"body()": {
 			"Syntax": "**.body**() : Object",
 			"Params": [
@@ -2459,279 +3777,48 @@
 			],
 			"Summary": ""
 		},
-		"service_tier": {
-			"Syntax": "service_tier : Text"
+		"order": {
+			"Syntax": "order : Text"
 		},
-		"onData": {
-			"Syntax": "onData : 4D.Function"
+		"purpose": {
+			"Syntax": "purpose : Text"
 		},
-		"prediction": {
-			"Syntax": "prediction : Object"
+		"limit": {
+			"Syntax": "limit : Integer"
 		},
-		"tools": {
-			"Syntax": "tools : Collection"
+		"after": {
+			"Syntax": "after : Text"
 		},
-		"response_format": {
-			"Syntax": "response_format : Object"
-		},
-		"reasoning_effort": {
-			"Syntax": "reasoning_effort : Text"
-		},
-		"store": {
-			"Syntax": "store : Boolean"
-		},
-		"tool_choice": {
-			"Syntax": "tool_choice : Variant"
-		},
-		"temperature": {
-			"Syntax": "temperature : Real"
-		},
-		"max_completion_tokens": {
-			"Syntax": "max_completion_tokens : Integer"
-		},
-		"n": {
-			"Syntax": "n : Integer"
-		},
-		"stream": {
-			"Syntax": "stream : Boolean"
-		},
-		"stream_options": {
-			"Syntax": "stream_options : Object"
+		"_inheritedFrom_": "OpenAIParameters"
+	},
+	"OpenAIChatCompletionsListParameters": {
+		"body()": {
+			"Syntax": "**.body**() : Object",
+			"Params": [
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
 		},
 		"model": {
 			"Syntax": "model : Text"
 		},
+		"order": {
+			"Syntax": "order : Text"
+		},
+		"limit": {
+			"Syntax": "limit : Integer"
+		},
+		"metadata": {
+			"Syntax": "metadata : Text"
+		},
+		"after": {
+			"Syntax": "after : Text"
+		},
 		"_inheritedFrom_": "OpenAIParameters"
-	},
-	"OpenAIChoice": {
-		"delta": {
-			"Syntax": "delta : cs.AIKit.OpenAIMessage"
-		},
-		"message": {
-			"Syntax": "message : cs.AIKit.OpenAIMessage"
-		},
-		"index": {
-			"Syntax": "index : Integer"
-		},
-		"finish_reason": {
-			"Syntax": "finish_reason : Text"
-		}
-	},
-	"OpenAIChatAPI": {
-		"create()": {
-			"Syntax": "**.create**( *systemPrompt* : Text; *parameters* : cs.AIKit.OpenAIChatCompletionsParameters ) : cs.AIKit.OpenAIChatHelper",
-			"Params": [
-				[
-					"systemPrompt",
-					"Text",
-					"->"
-				],
-				[
-					"parameters",
-					"cs.AIKit.OpenAIChatCompletionsParameters",
-					"->"
-				],
-				[
-					"",
-					"cs.AIKit.OpenAIChatHelper",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"vision": {
-			"Syntax": "vision : cs.AIKit.OpenAIVision"
-		},
-		"completions": {
-			"Syntax": "completions : cs.AIKit.OpenAIChatCompletionsAPI"
-		},
-		"_inheritedFrom_": "OpenAIAPIResource"
-	},
-	"OpenAIChatCompletionsMessagesAPI": {
-		"list()": {
-			"Syntax": "**.list**( *completionID* : Text; *parameters* : cs.AIKit.OpenAIChatCompletionsMessagesParameters ) : cs.AIKit.OpenAIResult",
-			"Params": [
-				[
-					"completionID",
-					"Text",
-					"->"
-				],
-				[
-					"parameters",
-					"cs.AIKit.OpenAIChatCompletionsMessagesParameters",
-					"->"
-				],
-				[
-					"",
-					"cs.AIKit.OpenAIResult",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"_inheritedFrom_": "OpenAIAPIResource"
-	},
-	"OpenAIResult": {
-		"get usage()": {
-			"Syntax": "**.get usage**() : Object",
-			"Params": [
-				[
-					"",
-					"Object",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"get headers()": {
-			"Syntax": "**.get headers**() : Object",
-			"Params": [
-				[
-					"",
-					"Object",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"throw()": {
-			"Syntax": "**.throw**()",
-			"Params": [],
-			"Summary": ""
-		},
-		"get rateLimit()": {
-			"Syntax": "**.get rateLimit**() : Object",
-			"Params": [
-				[
-					"",
-					"Object",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"get terminated()": {
-			"Syntax": "**.get terminated**() : Boolean",
-			"Params": [
-				[
-					"",
-					"Boolean",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"get errors()": {
-			"Syntax": "**.get errors**() : Collection",
-			"Params": [
-				[
-					"",
-					"Collection",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"get success()": {
-			"Syntax": "**.get success**() : Boolean",
-			"Params": [
-				[
-					"",
-					"Boolean",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"request": {
-			"Syntax": "request : 4D.HTTPRequest"
-		}
-	},
-	"OpenAIModelsAPI": {
-		"list()": {
-			"Syntax": "**.list**( *parameters* : cs.AIKit.OpenAIParameters ) : cs.AIKit.OpenAIModelListResult",
-			"Params": [
-				[
-					"parameters",
-					"cs.AIKit.OpenAIParameters",
-					"->"
-				],
-				[
-					"",
-					"cs.AIKit.OpenAIModelListResult",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"retrieve()": {
-			"Syntax": "**.retrieve**( *model* : Text; *parameters* : cs.AIKit.OpenAIParameters ) : cs.AIKit.OpenAIModelResult",
-			"Params": [
-				[
-					"model",
-					"Text",
-					"->"
-				],
-				[
-					"parameters",
-					"cs.AIKit.OpenAIParameters",
-					"->"
-				],
-				[
-					"",
-					"cs.AIKit.OpenAIModelResult",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"_inheritedFrom_": "OpenAIAPIResource"
-	},
-	"OpenAIImagesResult": {
-		"saveImagesToDisk()": {
-			"Syntax": "**.saveImagesToDisk**( *folder* : 4D.Folder; *prefix* : Text ) : Boolean",
-			"Params": [
-				[
-					"folder",
-					"4D.Folder",
-					"->"
-				],
-				[
-					"prefix",
-					"Text",
-					"->"
-				],
-				[
-					"",
-					"Boolean",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"get image()": {
-			"Syntax": "**.get image**() : cs.AIKit.OpenAIImage",
-			"Params": [
-				[
-					"",
-					"cs.AIKit.OpenAIImage",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"get images()": {
-			"Syntax": "**.get images**() : Collection",
-			"Params": [
-				[
-					"",
-					"Collection",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"_inheritedFrom_": "OpenAIResult"
 	},
 	"_ImageUtils": {
 		"toFormData()": {
@@ -2830,5 +3917,243 @@
 			],
 			"Summary": ""
 		}
+	},
+	"_TestProviderListener": {
+		"onProviderRenamed()": {
+			"Syntax": "**.onProviderRenamed**( *event* : Object )",
+			"Params": [
+				[
+					"event",
+					"Object",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"onProviderModified()": {
+			"Syntax": "**.onProviderModified**( *event* : Object )",
+			"Params": [
+				[
+					"event",
+					"Object",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"canRenameProvider()": {
+			"Syntax": "**.canRenameProvider**( *event* : Object ) : Object",
+			"Params": [
+				[
+					"event",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"reset()": {
+			"Syntax": "**.reset**()",
+			"Params": [],
+			"Summary": ""
+		},
+		"registerVector()": {
+			"Syntax": "**.registerVector**( *vector* : Object ) : cs.AIKit._TestProviderListener",
+			"Params": [
+				[
+					"vector",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit._TestProviderListener",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"onProviderAdded()": {
+			"Syntax": "**.onProviderAdded**( *event* : Object )",
+			"Params": [
+				[
+					"event",
+					"Object",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"onProviderRemoved()": {
+			"Syntax": "**.onProviderRemoved**( *event* : Object )",
+			"Params": [
+				[
+					"event",
+					"Object",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"blockRename()": {
+			"Syntax": "**.blockRename**( *key* : Text ) : cs.AIKit._TestProviderListener",
+			"Params": [
+				[
+					"key",
+					"Text",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit._TestProviderListener",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"canRemoveProvider()": {
+			"Syntax": "**.canRemoveProvider**( *event* : Object ) : Object",
+			"Params": [
+				[
+					"event",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"blockProvider()": {
+			"Syntax": "**.blockProvider**( *key* : Text ) : cs.AIKit._TestProviderListener",
+			"Params": [
+				[
+					"key",
+					"Text",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit._TestProviderListener",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"vectors": {
+			"Syntax": "vectors : Collection"
+		},
+		"modifiedProviders": {
+			"Syntax": "modifiedProviders : Collection"
+		},
+		"addedProviders": {
+			"Syntax": "addedProviders : Collection"
+		},
+		"renamedProviders": {
+			"Syntax": "renamedProviders : Collection"
+		},
+		"removedProviders": {
+			"Syntax": "removedProviders : Collection"
+		},
+		"blockedRenames": {
+			"Syntax": "blockedRenames : Collection"
+		},
+		"blockedProviders": {
+			"Syntax": "blockedProviders : Collection"
+		}
+	},
+	"OpenAIModelsAPI": {
+		"list()": {
+			"Syntax": "**.list**( *parameters* : cs.AIKit.OpenAIParameters ) : cs.AIKit.OpenAIModelListResult",
+			"Params": [
+				[
+					"parameters",
+					"cs.AIKit.OpenAIParameters",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit.OpenAIModelListResult",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"retrieve()": {
+			"Syntax": "**.retrieve**( *model* : Text; *parameters* : cs.AIKit.OpenAIParameters ) : cs.AIKit.OpenAIModelResult",
+			"Params": [
+				[
+					"model",
+					"Text",
+					"->"
+				],
+				[
+					"parameters",
+					"cs.AIKit.OpenAIParameters",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit.OpenAIModelResult",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIAPIResource"
+	},
+	"OpenAIImagesResult": {
+		"saveImagesToDisk()": {
+			"Syntax": "**.saveImagesToDisk**( *folder* : 4D.Folder; *prefix* : Text ) : Boolean",
+			"Params": [
+				[
+					"folder",
+					"4D.Folder",
+					"->"
+				],
+				[
+					"prefix",
+					"Text",
+					"->"
+				],
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get image()": {
+			"Syntax": "**.get image**() : cs.AIKit.OpenAIImage",
+			"Params": [
+				[
+					"",
+					"cs.AIKit.OpenAIImage",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get images()": {
+			"Syntax": "**.get images**() : Collection",
+			"Params": [
+				[
+					"",
+					"Collection",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIResult"
 	}
 }

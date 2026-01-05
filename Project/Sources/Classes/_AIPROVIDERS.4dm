@@ -211,13 +211,19 @@ The model name shall be unique.
 			
 		Else 
 			
-			// Rename: add with new name, remove old name
-			var $config:=$providers.getProvider($oldName)
-			$providers.addProvider($newName; $config)
-			$providers.removeProvider($oldName)
-			$providers.save()
-			
-			This:C1470.previousItem.name:=$newName
+			// Rename provider using atomic renameProvider method
+			var $result : Object:=$providers.renameProvider($oldName; $newName)
+			If ($result.success)
+				$providers.save()
+				This:C1470.previousItem.name:=$newName
+			Else 
+				// Rename was blocked (e.g., by vector protection)
+				Form:C1466._popError($result.message)
+				$cur.name:=$oldName
+/* TOUCH */This:C1470.models:=This:C1470.models
+				GOTO OBJECT:C206(*; "name")
+				return 
+			End if 
 			
 		End if 
 	End if 
@@ -292,7 +298,7 @@ Function deleteModel($name : Text)
 	End if 
 	
 	// Check local listeners first (UI-level protection)
-	var $couldDelete:=True:C214
+	var $couldDelete : Boolean:=True
 	var $listener : Object
 	For each ($listener; This:C1470.listeners) Until (Not:C34($couldDelete))
 		
@@ -304,10 +310,15 @@ Function deleteModel($name : Text)
 		
 		// Delegate to OpenAIProviders singleton
 		var $providers:=cs:C1710.OpenAIProviders.me
-		$providers.removeProvider($name)
+		var $result : Object:=$providers.removeProvider($name)
 		
-		// Refresh models from singleton
-		This:C1470.readModels()
+		If ($result.success)
+			// Refresh models from singleton
+			This:C1470.readModels()
+		Else 
+			// Deletion was blocked (e.g., by vector protection)
+			Form:C1466._popError($result.message)
+		End if 
 		
 	End if 
 	
