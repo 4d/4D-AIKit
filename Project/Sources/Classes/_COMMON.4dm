@@ -143,31 +143,32 @@ Function writeSettings()
 	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
 Function readModels()
 	
-	This:C1470.readSettings()
-	
+	// Delegate to OpenAIProviders singleton (single source of truth)
+	var $providers:=OpenAIProviders:C1710.me.toCollection()
 	var $models:=[]
 	
-	var $model : cs:C1710.Model
-	For each ($model; This:C1470.settings.models)
+	var $provider : Object
+	For each ($provider; $providers)
 		
-		$models.push(cs:C1710.Model.new($model))
+		$models.push(cs:C1710.Model.new($provider))
 		
 	End for each 
 	
-	This:C1470.models:=$models.orderBy("name asc")
+	This:C1470.models:=$models
 	
 	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
 Function saveModels($models : Collection)
 	
-	This:C1470.settings.models:=[]
+	// Delegate to OpenAIProviders singleton (single source of truth)
+	var $toSave:=$models ?? This:C1470.models
+	var $rawModels:=[]
 	
 	//%W-550.26
 	var $model : cs:C1710.Model
-	For each ($model; $models || This:C1470.models)
+	For each ($model; $toSave)
 		
-		This:C1470.settings.models.push({\
+		$rawModels.push({\
 			name: $model.name; \
-			model: $model.model; \
 			apiKey: $model.apiKey; \
 			baseURL: $model.baseURL; \
 			organization: $model.organization; \
@@ -177,12 +178,7 @@ Function saveModels($models : Collection)
 	End for each 
 	//%W+550.26
 	
-	This:C1470.writeModels()
-	
-	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
-Function writeModels()
-	
-	This:C1470.writeSettings()
+	OpenAIProviders:C1710.me.fromCollection($rawModels)
 	
 	// MARK:- [PRIVATE]
 	// *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***

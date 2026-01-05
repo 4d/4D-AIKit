@@ -100,7 +100,7 @@ Function modifyProvider($key : Text; $updates : Object) : Boolean
 	This:C1470._notify("onProviderModified"; {key: $key; updates: $updates})
 	return True:C214
 	
-	// MARK:- Model Alias Management
+/* MARK:- Model Alias Management (COMMENTED - Feature disabled)
 	
 	// Add or update a model alias under a provider
 Function addModelAlias($providerKey : Text; $aliasKey : Text; $config : Object) : cs:C1710.OpenAIProviders
@@ -181,6 +181,7 @@ Function modifyModelAlias($providerKey : Text; $aliasKey : Text; $updates : Obje
 	End for each 
 	This:C1470._notify("onModelAliasModified"; {providerKey: $providerKey; aliasKey: $aliasKey; updates: $updates})
 	return True:C214
+*/
 	
 	// MARK:- Listeners
 	
@@ -315,4 +316,48 @@ Function _findApiKeyByBaseURL($baseURL : Text) : Text
 	End for each 
 	
 	return ""
+	
+	// MARK:- Collection Conversion (for UI compatibility)
+	
+	// Convert providers object to collection format for UI consumption
+Function toCollection() : Collection
+	var $result:=[]
+	If (This:C1470._providersConfig.providers=Null:C1517)
+		return $result
+	End if 
+	
+	var $key : Text
+	For each ($key; This:C1470._providersConfig.providers)
+		var $provider:=This:C1470._providersConfig.providers[$key]
+		$result.push({\
+			name: $key; \
+			apiKey: $provider.apiKey ?? ""; \
+			baseURL: $provider.baseURL ?? ""; \
+			organization: $provider.organization ?? ""; \
+			project: $provider.project ?? ""\
+			})
+	End for each 
+	
+	return $result.orderBy("name asc")
+	
+	// Convert collection format back to providers object and save
+Function fromCollection($models : Collection)
+	If (This:C1470._providersConfig.providers=Null:C1517)
+		This:C1470._providersConfig.providers:={}
+	End if 
+	
+	// Clear and rebuild
+	This:C1470._providersConfig.providers:={}
+	
+	var $model : Object
+	For each ($model; $models)
+		This:C1470._providersConfig.providers[$model.name]:={\
+			apiKey: $model.apiKey; \
+			baseURL: $model.baseURL; \
+			organization: $model.organization; \
+			project: $model.project\
+			}
+	End for each 
+	
+	This:C1470.save()
 	

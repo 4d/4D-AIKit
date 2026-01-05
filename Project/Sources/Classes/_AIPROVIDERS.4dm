@@ -191,13 +191,17 @@ Function nameManager($e : Object)
 /* #17323
 The model name shall be unique.
 */
+		var $oldName:=This:C1470.previousItem.name
+		var $newName:=$cur.name
 		
-		If (This:C1470.models.query("name = :1 & _uid != :2"; $cur.name; $cur._uid).length>0)
+		// Check uniqueness via singleton
+		var $existingKeys:=OpenAIProviders:C1710.me.getProviderKeys()
+		If ($existingKeys.includes($newName) && ($newName#$oldName))
 			
 			Form:C1466._popError(\
-				Replace string:C233(Localized string:C991("theModelNameMustBeUnique"); "{name}"; $cur.name))
+				Replace string:C233(Localized string:C991("theModelNameMustBeUnique"); "{name}"; $newName))
 			
-			$cur.name:=This:C1470.previousItem.name
+			$cur.name:=$oldName
 /* TOUCH */This:C1470.models:=This:C1470.models
 			
 			GOTO OBJECT:C206(*; "name")
@@ -206,8 +210,13 @@ The model name shall be unique.
 			
 		Else 
 			
-			This:C1470.saveModels()
-			This:C1470.previousItem.name:=$cur.name
+			// Rename: add with new name, remove old name
+			var $config:=OpenAIProviders:C1710.me.getProvider($oldName)
+			OpenAIProviders:C1710.me.addProvider($newName; $config)
+			OpenAIProviders:C1710.me.removeProvider($oldName)
+			OpenAIProviders:C1710.me.save()
+			
+			This:C1470.previousItem.name:=$newName
 			
 		End if 
 	End if 
@@ -241,11 +250,12 @@ The model name shall be unique.
 	var $name:=Localized string:C991("newModel")
 	var $i : Integer
 	
-	var $c : Collection:=Form:C1466.models.extract("name")
+	// Check against singleton for uniqueness
+	var $existingKeys:=OpenAIProviders:C1710.me.getProviderKeys()
 	
 	Repeat 
 		
-		If ($c.includes($name))
+		If ($existingKeys.includes($name))
 			
 			$i+=1
 			$name:=Localized string:C991("newModel")+String:C10($i; " ##")
@@ -257,9 +267,17 @@ The model name shall be unique.
 		End if 
 	Until (False:C215)
 	
+	// Add to singleton
 	var $model:=cs:C1710.Model.new($name)
-	Form:C1466.models.push($model)
-	This:C1470.models:=This:C1470.models.orderBy("name asc")
+	OpenAIProviders:C1710.me.addProvider($name; {\
+		apiKey: $model.apiKey; \
+		baseURL: $model.baseURL; \
+		organization: $model.organization; \
+		project: $model.project\
+		})
+	
+	// Refresh models from singleton
+	This:C1470.readModels()
 	This:C1470.selectModel($name)
 	
 	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
@@ -268,9 +286,10 @@ Function deleteModel($name : Text)
 	var $c:=This:C1470.models.indices("name = :1"; $name)
 	
 	If ($c.length<=0)
-		return   // not fou
+		return   // not found
 	End if 
 	
+	// Check local listeners first (UI-level protection)
 	var $couldDelete:=True:C214
 	var $listener : Object
 	For each ($listener; This:C1470.listeners) Until (Not:C34($couldDelete))
@@ -281,12 +300,10 @@ Function deleteModel($name : Text)
 	
 	If ($couldDelete)
 		
-		This:C1470.models.remove($c[0])
+		// Delegate to OpenAIProviders singleton
+		OpenAIProviders:C1710.me.removeProvider($name)
 		
-		This:C1470.saveModels()
-		
-	Else 
-		
-		// TODO: why?, get it from onBeforeDelete?
+		// Refresh models from singleton
+		This:C1470.readModels()
 		
 	End if 
