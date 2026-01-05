@@ -149,7 +149,7 @@ Function _resolveModelFromBody($body : Variant) : Object
 	var $config:={baseURL: ""; apiKey: ""; model: ""}
 	
 	// Check if body is an object with a model property
-	If ($body=Null:C1517 || Value type:C1509($body)#Is object:K8:27 || OB Instance of:C1731($body; 4D:C1709.Blob))
+	If (($body=Null:C1517) || (Value type:C1509($body)#Is object:K8:27) || (OB Instance of:C1731($body; 4D:C1709.Blob)))
 		return $config
 	End if 
 	

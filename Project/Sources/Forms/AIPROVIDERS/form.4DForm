@@ -49,7 +49,7 @@
 					"type": "listbox",
 					"left": 20,
 					"top": 12,
-					"width": 192,
+					"width": 158,
 					"height": 359,
 					"events": [
 						"onLoad",
@@ -60,10 +60,12 @@
 					],
 					"dataSource": "Form:C1466.providers",
 					"selectionMode": "single",
-					"right": 212,
+					"right": 178,
 					"bottom": 371,
 					"sizingY": "grow",
 					"metaSource": "Form:C1466.listMetaInfo(This:C1470)",
+					"listboxType": "collection",
+					"currentItemSource": "Form:C1466.currentItem",
 					"columns": [
 						{
 							"header": {
@@ -75,9 +77,9 @@
 							"footer": {
 								"name": "Footer1"
 							},
-							"dataSource": "This:C1470.name",
 							"width": 141,
-							"enterable": false
+							"enterable": false,
+							"dataSource": "This:C1470.name"
 						}
 					]
 				},
@@ -348,7 +350,7 @@
 			}
 		}
 	},
-	"geometryStamp": 636,
+	"geometryStamp": 637,
 	"rightMargin": 20,
 	"bottomMargin": 20,
 	"method": "FORM_MANAGER",

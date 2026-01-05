@@ -91,7 +91,7 @@ Function manager($e : Object)
 				
 				Use (Storage:C1525.studio)
 					
-					Storage:C1525.studio["PROVIDERS"]:=0
+					Storage:C1525.studio["AIPROVIDERS"]:=0
 					
 				End use 
 				
@@ -178,23 +178,23 @@ Function listManager($e : Object)
 	
 	If ($e.code=On Selection Change:K2:29)  // ⚠️ This event must be enabled for both the list box AND the form.
 		
-		var $previous : Object:=This:C1470.previousItem
+/*var $previous : Object:=This.previousItem
 		
-		If ($previous#Null:C1517)
-			
-			If (Not:C34($previous.validate()))
-				
-				ALERT:C41($previous.errors.join("\r"))
-				
-				var $index:=This:C1470.providers.indexOf($previous)
-				LISTBOX SELECT ROW:C912(*; This:C1470.list; $index+1; lk replace selection:K53:1)
-				
-				return 
-				
-			End if 
-		End if 
+If ($previous#Null)
 		
-		This:C1470.previousItem:=OB Copy:C1225($cur)
+If (Not($previous.validate()))
+		
+ALERT($previous.errors.join("\r"))
+		
+var $index:=This.providers.indexOf($previous)
+LISTBOX SELECT ROW(*; This.list; $index+1; lk replace selection)
+		
+return 
+		
+End if 
+End if 
+		
+This.previousItem:=($cur=Null) ? Null : OB Copy($cur)*/
 		This:C1470.updateUI()
 	End if 
 	
@@ -334,7 +334,7 @@ Function deleteProvider($name : Text)
 			// Refresh providers from singleton
 			This:C1470.readProviders()
 		Else 
-			// Deletion was blocked (e.g., by vector protection)
+			// Deletion was blocked (e.g., by vector protection?)
 			Form:C1466._popError($result.message)
 		End if 
 		
