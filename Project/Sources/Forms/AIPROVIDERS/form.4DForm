@@ -386,5 +386,5 @@
 	"windowTitle": ":xliff:modelManagement",
 	"windowMinWidth": 700,
 	"windowMinHeight": 420,
-	"formClass": "_MODELS"
+	"formClass": "_AIPROVIDERS"
 }

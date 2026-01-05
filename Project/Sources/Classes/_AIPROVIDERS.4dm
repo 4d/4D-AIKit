@@ -191,11 +191,12 @@ Function nameManager($e : Object)
 /* #17323
 The model name shall be unique.
 */
-		var $oldName:=This:C1470.previousItem.name
-		var $newName:=$cur.name
+		var $oldName : Text:=This:C1470.previousItem.name
+		var $newName : Text:=$cur.name
 		
 		// Check uniqueness via singleton
-		var $existingKeys:=OpenAIProviders:C1710.me.getProviderKeys()
+		var $providers:=cs:C1710.OpenAIProviders.me
+		var $existingKeys:=$providers.getProviderKeys()
 		If ($existingKeys.includes($newName) && ($newName#$oldName))
 			
 			Form:C1466._popError(\
@@ -211,10 +212,10 @@ The model name shall be unique.
 		Else 
 			
 			// Rename: add with new name, remove old name
-			var $config:=OpenAIProviders:C1710.me.getProvider($oldName)
-			OpenAIProviders:C1710.me.addProvider($newName; $config)
-			OpenAIProviders:C1710.me.removeProvider($oldName)
-			OpenAIProviders:C1710.me.save()
+			var $config:=$providers.getProvider($oldName)
+			$providers.addProvider($newName; $config)
+			$providers.removeProvider($oldName)
+			$providers.save()
 			
 			This:C1470.previousItem.name:=$newName
 			
@@ -251,7 +252,8 @@ The model name shall be unique.
 	var $i : Integer
 	
 	// Check against singleton for uniqueness
-	var $existingKeys:=OpenAIProviders:C1710.me.getProviderKeys()
+	var $providers:=cs:C1710.OpenAIProviders.me
+	var $existingKeys:=$providers.getProviderKeys()
 	
 	Repeat 
 		
@@ -269,7 +271,7 @@ The model name shall be unique.
 	
 	// Add to singleton
 	var $model:=cs:C1710.Model.new($name)
-	OpenAIProviders:C1710.me.addProvider($name; {\
+	$providers.addProvider($name; {\
 		apiKey: $model.apiKey; \
 		baseURL: $model.baseURL; \
 		organization: $model.organization; \
@@ -301,9 +303,11 @@ Function deleteModel($name : Text)
 	If ($couldDelete)
 		
 		// Delegate to OpenAIProviders singleton
-		OpenAIProviders:C1710.me.removeProvider($name)
+		var $providers:=cs:C1710.OpenAIProviders.me
+		$providers.removeProvider($name)
 		
 		// Refresh models from singleton
 		This:C1470.readModels()
 		
 	End if 
+	

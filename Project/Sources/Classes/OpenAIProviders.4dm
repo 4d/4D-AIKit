@@ -59,17 +59,22 @@ Function addProvider($key : Text; $config : Object) : cs:C1710.OpenAIProviders
 	This:C1470._notify("onProviderAdded"; {key: $key; config: $config})
 	return This:C1470
 	
-	// Remove a provider by key
-Function removeProvider($key : Text) : Boolean
+	// Remove a provider by key (checks listeners before proceeding)
+Function removeProvider($key : Text) : Object
 	If (This:C1470._providersConfig.providers=Null:C1517)
-		return False:C215
+		return {success: False:C215; message: "No providers configured"}
 	End if 
 	If (This:C1470._providersConfig.providers[$key]=Null:C1517)
-		return False:C215
+		return {success: False:C215; message: "Provider '"+$key+"' not found"}
+	End if 
+	// Ask listeners if we can proceed
+	var $check:=This:C1470._canProceed("canRemoveProvider"; {key: $key})
+	If (Not:C34($check.success))
+		return $check
 	End if 
 	OB REMOVE:C1226(This:C1470._providersConfig.providers; $key)
 	This:C1470._notify("onProviderRemoved"; {key: $key})
-	return True:C214
+	return {success: True:C214; message: ""}
 	
 	// Get a provider by key
 Function getProvider($key : Text) : Object
@@ -99,6 +104,32 @@ Function modifyProvider($key : Text; $updates : Object) : Boolean
 	End for each 
 	This:C1470._notify("onProviderModified"; {key: $key; updates: $updates})
 	return True:C214
+	
+	// Rename a provider (atomic operation with dedicated notification)
+Function renameProvider($oldKey : Text; $newKey : Text) : Object
+	If (This:C1470._providersConfig.providers=Null:C1517)
+		return {success: False:C215; message: "No providers configured"}
+	End if 
+	If (This:C1470._providersConfig.providers[$oldKey]=Null:C1517)
+		return {success: False:C215; message: "Provider '"+$oldKey+"' not found"}
+	End if 
+	// Don't allow rename if new key already exists
+	If (This:C1470._providersConfig.providers[$newKey]#Null:C1517)
+		return {success: False:C215; message: "Provider '"+$newKey+"' already exists"}
+	End if 
+	// Ask listeners if we can proceed
+	var $check:=This:C1470._canProceed("canRenameProvider"; {oldKey: $oldKey; newKey: $newKey})
+	If (Not:C34($check.success))
+		return $check
+	End if 
+	// Copy config to new key
+	var $config : Variant:=This:C1470._providersConfig.providers[$oldKey]
+	This:C1470._providersConfig.providers[$newKey]:=$config
+	// Remove old key
+	OB REMOVE:C1226(This:C1470._providersConfig.providers; $oldKey)
+	// Notify with specific rename event (for vector propagation)
+	This:C1470._notify("onProviderRenamed"; {oldKey: $oldKey; newKey: $newKey; config: $config})
+	return {success: True:C214; message: ""}
 	
 /* MARK:- Model Alias Management (COMMENTED - Feature disabled)
 	
@@ -200,6 +231,23 @@ Function removeListener($listener : Object) : Boolean
 		return True:C214
 	End if 
 	return False:C215
+	
+	// Ask listeners if an operation can proceed (returns on first veto)
+Function _canProceed($eventName : Text; $eventData : Object) : Object
+	var $listener : Object
+	For each ($listener; This:C1470._listeners)
+		If ($listener[$eventName]#Null:C1517)
+			var $result:=$listener[$eventName]($eventData)
+			If (OB Instance of:C1731($result; Object:C1216))
+				If (Not:C34(Bool:C1537($result.success)))
+					// Listener vetoed the operation - stop immediately
+					return {success: False:C215; message: String:C10($result.message)}
+				End if 
+			End if 
+		End if 
+	End for each 
+	// All listeners approved (or none registered)
+	return {success: True:C214; message: ""}
 	
 	// Notify all listeners of an event
 Function _notify($eventName : Text; $eventData : Object)

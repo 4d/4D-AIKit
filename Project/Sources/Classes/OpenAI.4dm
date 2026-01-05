@@ -379,10 +379,10 @@ Function _delayProcessAfterRetry($options : Object; $result : cs:C1710.OpenAIRes
 	// MARK:- http utils
 	
 Function setProvidersFile($file : 4D:C1709.File)
-	This:C1470._modelAliasResolver.setProvidersFile($file)
+	This:C1470.providers.providersFile:=$file
 	
 Function resolveModel($modelString : Text) : Object
-	return This:C1470._modelAliasResolver.resolveModel($modelString)
+	return This:C1470.providers.resolveModel($modelString)
 	
 Function _encodeQueryParameter($value : Variant)->$encoded : Text
 	// TODO: more stuff? quotes if needed, etc...

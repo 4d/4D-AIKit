@@ -15,16 +15,16 @@ var $tempFolder:=Folder:C1567(Temporary folder:C486; fk platform path:K87:2)
 var $configFile:=$tempFolder.file("test-providers-uniqueness.json")
 
 var $config:={\
-	providers: {\
-		provider1: {\
-			baseURL: "https://api.example1.com/v1"; \
-			apiKey: "key1"\
-		}; \
-		provider2: {\
-			baseURL: "https://api.example2.com/v1"; \
-			apiKey: "key2"\
-		}\
-	}\
+providers: {\
+provider1: {\
+baseURL: "https://api.example1.com/v1"; \
+apiKey: "key1"\
+}; \
+provider2: {\
+baseURL: "https://api.example2.com/v1"; \
+apiKey: "key2"\
+}\
+}\
 }
 $configFile.setText(JSON Stringify:C1217($config))
 $providers.providersFile:=$configFile
@@ -52,31 +52,31 @@ $configFile.delete()
 
 $configFile:=$tempFolder.file("test-providers-delete.json")
 $config:={\
-	providers: {\
-		usedProvider: {\
-			baseURL: "https://api.used.com/v1"; \
-			apiKey: "usedkey"\
-		}; \
-		unusedProvider: {\
-			baseURL: "https://api.unused.com/v1"; \
-			apiKey: "unusedkey"\
-		}\
-	}\
+providers: {\
+usedProvider: {\
+baseURL: "https://api.used.com/v1"; \
+apiKey: "usedkey"\
+}; \
+unusedProvider: {\
+baseURL: "https://api.unused.com/v1"; \
+apiKey: "unusedkey"\
+}\
+}\
 }
 $configFile.setText(JSON Stringify:C1217($config))
 $providers.providersFile:=$configFile
 
 // Create a custom listener that blocks deletion for "usedProvider"
-var $deleteBlocker:={\
-	blockedProvider: "usedProvider"; \
-	wasBlocked: False:C215; \
-	onProviderRemoved: Formula:C1597(\
-		// This should NOT be called for usedProvider\
-		If ($1.key=This:C1470.blockedProvider)\
-			This:C1470.wasBlocked:=True:C214\
-		End if \
-	)\
+var $deleteBlocker : Object:={\
+blockedProvider: "usedProvider"; \
+wasBlocked: False:C215; \
+onProviderRemoved: Formula:C1597(\
+If ($1.key=This:C1470.blockedProvider)\
+This:C1470.wasBlocked:=True:C214
+End if \
+)\
 }
+
 
 // Note: The current OpenAIProviders class notifies AFTER removal
 // For true delete protection, we need to check BEFORE - this tests the notification pattern
@@ -102,22 +102,22 @@ $configFile.delete()
 
 $configFile:=$tempFolder.file("test-providers-delete-block.json")
 $config:={\
-	providers: {\
-		protectedProvider: {\
-			baseURL: "https://api.protected.com/v1"; \
-			apiKey: "protectedkey"\
-		}\
-	}\
+providers: {\
+protectedProvider: {\
+baseURL: "https://api.protected.com/v1"; \
+apiKey: "protectedkey"\
+}\
+}\
 }
 $configFile.setText(JSON Stringify:C1217($config))
 $providers.providersFile:=$configFile
 
 // Custom handler that tracks removal attempts
 var $removalTracker:={\
-	removedProviders: []; \
-	onProviderRemoved: Formula:C1597(\
-		This:C1470.removedProviders.push($1.key)\
-	)\
+removedProviders: []; \
+onProviderRemoved: Formula:C1597(\
+This:C1470.removedProviders.push($1.key)\
+)\
 }
 
 $providers.addListener($removalTracker)
@@ -139,30 +139,30 @@ $configFile.delete()
 
 $configFile:=$tempFolder.file("test-providers-rename.json")
 $config:={\
-	providers: {\
-		oldName: {\
-			baseURL: "https://api.example.com/v1"; \
-			apiKey: "testkey"\
-		}\
-	}\
+providers: {\
+oldName: {\
+baseURL: "https://api.example.com/v1"; \
+apiKey: "testkey"\
+}\
+}\
 }
 $configFile.setText(JSON Stringify:C1217($config))
 $providers.providersFile:=$configFile
 
 // Custom handler that tracks modifications for rename propagation
 var $renameTracker:={\
-	renamedFrom: ""; \
-	renamedTo: ""; \
-	modificationReceived: False:C215; \
-	onProviderAdded: Formula:C1597(\
-		This:C1470.renamedTo:=$1.key\
-	); \
-	onProviderRemoved: Formula:C1597(\
-		This:C1470.renamedFrom:=$1.key\
-	); \
-	onProviderModified: Formula:C1597(\
-		This:C1470.modificationReceived:=True:C214\
-	)\
+renamedFrom: ""; \
+renamedTo: ""; \
+modificationReceived: False:C215; \
+onProviderAdded: Formula:C1597(\
+This:C1470.renamedTo:=$1.key\
+); \
+onProviderRemoved: Formula:C1597(\
+This:C1470.renamedFrom:=$1.key\
+); \
+onProviderModified: Formula:C1597(\
+This:C1470.modificationReceived:=True:C214\
+)\
 }
 
 $providers.addListener($renameTracker)
@@ -190,46 +190,46 @@ $configFile.delete()
 
 $configFile:=$tempFolder.file("test-providers-rename-vector.json")
 $config:={\
-	providers: {\
-		myProvider: {\
-			baseURL: "https://api.myai.com/v1"; \
-			apiKey: "mykey"\
-		}\
-	}\
+providers: {\
+myProvider: {\
+baseURL: "https://api.myai.com/v1"; \
+apiKey: "mykey"\
+}\
+}\
 }
 $configFile.setText(JSON Stringify:C1217($config))
 $providers.providersFile:=$configFile
 
 // Simulate a vector object that references a provider
 var $simulatedVector:={\
-	name: "MyVector"; \
-	providerName: "myProvider"; \
-	updateProvider: Formula:C1597(\
-		This:C1470.providerName:=$1\
-	)\
+name: "MyVector"; \
+providerName: "myProvider"; \
+updateProvider: Formula:C1597(\
+This:C1470.providerName:=$1\
+)\
 }
 
 // Custom handler that updates vector references on rename
 var $vectorUpdater:={\
-	vectors: [$simulatedVector]; \
-	oldProviderName: ""; \
-	newProviderName: ""; \
-	onProviderRemoved: Formula:C1597(\
-		This:C1470.oldProviderName:=$1.key\
-	); \
-	onProviderAdded: Formula:C1597(\
-		// When a new provider is added, check if it's a rename\
-		If (Length:C16(This:C1470.oldProviderName)>0)\
-			// Update all vectors that referenced the old name\
-			var $vector : Object\
-			For each ($vector; This:C1470.vectors)\
-				If ($vector.providerName=This:C1470.oldProviderName)\
-					$vector.updateProvider($1.key)\
-				End if \
-			End for each \
-			This:C1470.oldProviderName:=""\
-		End if \
-	)\
+vectors: [$simulatedVector]; \
+oldProviderName: ""; \
+newProviderName: ""; \
+onProviderRemoved: Formula:C1597(\
+This:C1470.oldProviderName:=$1.key\
+); \
+onProviderAdded: Formula:C1597(\
+  // When a new provider is added, check if it's a rename\
+If (Length:C16(This:C1470.oldProviderName)>0)\
+// Update all vectors that referenced the old name\
+var $vector : Object\
+For each ($vector; This:C1470.vectors)\
+If ($vector.providerName=This:C1470.oldProviderName)\
+$vector.updateProvider($1.key)\
+End if \
+End for each \
+This:C1470.oldProviderName:=""\
+End if \
+)\
 }
 
 $providers.addListener($vectorUpdater)
@@ -256,4 +256,4 @@ var $passed:=$testResults.query("status = :1"; "PASS").length
 var $total:=$testResults.length
 
 ALERT:C41("Provider Management Tests\n\nPassed: "+String:C10($passed)+"/"+String:C10($total)+"\n\n"+\
-	$testResults.map(Formula:C1597($1.value.test+": "+$1.value.status)).join("\n"))
+$testResults.map(Formula:C1597($1.value.test+": "+$1.value.status)).join("\n"))
