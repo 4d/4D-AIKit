@@ -8,11 +8,18 @@ property _detailFields:=[\
 "model"; \
 "modelMenu"; \
 "organization"; \
-"project"]
+"project"; \
+"testConnection"; \
+"connectionStatus"]
 
 property previousItem : Object
 
 property listeners : Collection:=[]
+
+// Connection test status
+property connectionStatus : Text:=""
+property connectionModelsCount : Integer:=0
+property isTestingConnection : Boolean:=False
 
 Class constructor
 	
@@ -132,6 +139,11 @@ Function manager($e : Object)
 					
 				End if 
 			End if 
+			
+			// ______________________________________________________
+		: ($e.objectName="testConnection")
+			
+			This:C1470.testConnection()
 			
 			// ______________________________________________________
 	End case 
@@ -320,5 +332,60 @@ Function deleteModel($name : Text)
 			Form:C1466._popError($result.message)
 		End if 
 		
+	End if 
+	
+	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
+	// Test connection to verify provider credentials
+Function testConnection()
+	
+	var $cur:=This:C1470.currentItem
+	If ($cur=Null:C1517)
+		return 
+	End if 
+	
+	// Update UI to show testing state
+	This:C1470.isTestingConnection:=True
+	This:C1470.connectionStatus:=Localized string:C991("testingConnection") || "Testing connection..."
+	This:C1470.connectionModelsCount:=0
+	This:C1470._updateConnectionStatusUI()
+	
+	// Create OpenAI client with current provider settings
+	var $client:=cs:C1710.OpenAI.new({\
+		baseURL: $cur.baseURL; \
+		apiKey: $cur.apiKey; \
+		organization: $cur.organization; \
+		project: $cur.project; \
+		timeout: 30\
+		})
+	
+	// Try to list models to verify connection
+	var $result:=$client.models.list()
+	
+	This:C1470.isTestingConnection:=False
+	
+	If ($result.success)
+		var $modelCount : Integer:=$result.models.length
+		This:C1470.connectionModelsCount:=$modelCount
+		This:C1470.connectionStatus:="✓ "+(Localized string:C991("connected") || "Connected")+" ("+String:C10($modelCount)+" "+(Localized string:C991("models") || "models")+")"
+	Else 
+		This:C1470.connectionModelsCount:=0
+		var $errorMsg : Text:=$result.errors.length>0 ? $result.errors[0].message : "Connection failed"
+		This:C1470.connectionStatus:="✗ "+$errorMsg
+	End if 
+	
+	This:C1470._updateConnectionStatusUI()
+	
+	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
+Function _updateConnectionStatusUI()
+	
+	// Update the status text color based on result
+	If (This:C1470.isTestingConnection)
+		OBJECT SET RGB COLORS:C628(*; "connectionStatus"; 0x666666; -1)  // Gray during testing
+	Else 
+		If (This:C1470.connectionModelsCount>0)
+			OBJECT SET RGB COLORS:C628(*; "connectionStatus"; 0x228B22; -1)  // Green for success
+		Else 
+			OBJECT SET RGB COLORS:C628(*; "connectionStatus"; 0xCC0000; -1)  // Red for error
+		End if 
 	End if 
 	

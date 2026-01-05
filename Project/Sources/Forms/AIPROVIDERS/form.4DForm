@@ -347,6 +347,31 @@
 					"icon": "/.PRODUCT_RESOURCES/Internal Components/runtime.4dbase/Contents/Resources/images/common/miniDrop.png",
 					"sizingX": "move",
 					"visibility": "hidden"
+				},
+				"testConnection": {
+					"type": "button",
+					"text": ":xliff:testConnection",
+					"top": 278,
+					"left": 339,
+					"width": 140,
+					"height": 24,
+					"events": [
+						"onClick"
+					],
+					"style": "regular",
+					"visibility": "hidden"
+				},
+				"connectionStatus": {
+					"type": "text",
+					"text": "",
+					"top": 282,
+					"left": 490,
+					"width": 177,
+					"height": 16,
+					"right": 667,
+					"sizingX": "grow",
+					"dataSource": "Form:C1466.connectionStatus",
+					"visibility": "hidden"
 				}
 			},
 			"entryOrder": [
@@ -359,6 +384,7 @@
 				"project",
 				"baseURLMenu",
 				"modelMenu",
+				"testConnection",
 				"help",
 				"add",
 				"delete"
