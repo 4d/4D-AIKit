@@ -426,43 +426,11 @@ Function updateUI() : Boolean
 	// MARK:- [PROVIDERS]
 	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
 Function readProviders()
-	
-	// Delegate to OpenAIProviders singleton (single source of truth)
-	var $providerList:=cs:C1710.OpenAIProviders.me.toCollection()
-	var $items:=[]
-	
-	var $provider : Object
-	For each ($provider; $providerList)
-		
-		$items.push($provider)
-		
-	End for each 
-	
-	This:C1470.providers:=$items
+	This:C1470.providers:=cs:C1710.OpenAIProviders.me.toCollection()
 	
 	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
-Function saveProviders($providersToSave : Collection)
-	
-	// Delegate to OpenAIProviders singleton (single source of truth)
-	var $toSave:=($providersToSave=Null:C1517) ? This:C1470.providers : $providersToSave
-	var $rawProviders:=[]
-	
-	//%W-550.26
-	var $item : Object
-	For each ($item; $toSave)
-		
-		$rawProviders.push({\
-			name: $item.name; \
-			apiKey: $item.apiKey; \
-			baseURL: $item.baseURL; \
-			organization: $item.organization; \
-			project: $item.project\
-			})
-		
-	End for each 
-	//%W+550.26
-	
-	cs:C1710.OpenAIProviders.me.fromCollection($rawProviders)
+Function saveProviders()
+	cs:C1710.OpenAIProviders.me.fromCollection(This:C1470.providers)
 	
 	// MARK:- [PRIVATE]
 	// *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***

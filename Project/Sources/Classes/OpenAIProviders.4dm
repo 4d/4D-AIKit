@@ -379,10 +379,10 @@ Function toCollection() : Collection
 		var $provider : Object:=This:C1470._providersConfig.providers[$key]
 		$result.push({\
 			name: $key; \
-			apiKey: $provider.apiKey ?? ""; \
-			baseURL: $provider.baseURL ?? ""; \
-			organization: $provider.organization ?? ""; \
-			project: $provider.project ?? ""\
+			apiKey: $provider.apiKey || ""; \
+			baseURL: $provider.baseURL || ""; \
+			organization: $provider.organization || ""; \
+			project: $provider.project || ""\
 			})
 	End for each 
 	
