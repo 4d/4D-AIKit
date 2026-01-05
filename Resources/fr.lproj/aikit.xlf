@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<xliff version="1.0">
+  <file datatype="x-STR#" original="Undefined" source-language="en" target-language="fr">
+    <header>
+      <prop-group name="4DPop XLIFF Pro">
+        <prop prop-type="version">3.1</prop>
+      </prop-group>
+    </header>
+    <body>
+      <group resname="AIKit">
+        <trans-unit id="52" resname="model">
+          <source>Model</source>
+          <target>Modèle</target>
+        </trans-unit>
+        <trans-unit id="53" resname="providerManagement">
+          <source>AI Provider Management</source>
+          <target>Gestion des fournisseurs IA</target>
+        </trans-unit>
+        </group>
+      <group resname="Errors">
+        <trans-unit id="13" resname="theModelNameMustBeUnique">
+          <source>The model name "{name}" is already in use and must be unique.</source>
+          <target>Le nom du modèle "{name}" est déjà utilisé et doit être unique.</target>
+        </trans-unit>
+        <trans-unit id="15" resname="theValueIsRequired.">
+          <source>A value for “{value}” is required.</source>
+          <target>Une valeur pour « {value} » est requise.</target>
+        </trans-unit>
+        </group>
+      <group resname="Models">
+        <trans-unit id="29" resname="name">
+          <source>Name</source>
+          <target>Nom</target>
+        </trans-unit>
+        <trans-unit id="28" resname="models">
+          <source>Models</source>
+          <target>Modèles</target>
+        </trans-unit>
+        <trans-unit id="18" resname="apiKey">
+          <source>API Key</source>
+          <target>Clé API</target>
+        </trans-unit>
+        <trans-unit id="21" resname="baseURL">
+          <source>Base URL</source>
+          <target>URL de base</target>
+        </trans-unit>
+        <trans-unit id="34" resname="organization">
+          <source>Organization</source>
+          <target>Organisation</target>
+        </trans-unit>
+        <trans-unit id="36" resname="project">
+          <source>Project</source>
+          <target>Projet</target>
+        </trans-unit>
+        <trans-unit id="31" resname="newModel">
+          <source>Model</source>
+          <target>Modèle</target>
+        </trans-unit>
+        <trans-unit id="39" resname="yourOpenaiApiKey">
+          <source>Your API Key.</source>
+          <target>Votre clé API OpenAI.</target>
+        </trans-unit>
+        <trans-unit id="22" resname="baseUrlForOpenaiApiRequests">
+          <source>The openAI endpoint will be used by default</source>
+          <target>L’interface OpenAI sera utilisée par défaut</target>
+        </trans-unit>
+        <trans-unit id="40" resname="yourOpenaiOrganizationId">
+          <source>Your Organization ID.</source>
+          <target>Votre identifiant d'organisation OpenAI.</target>
+        </trans-unit>
+        <trans-unit id="42" resname="yourOpenaiProjectId">
+          <source>Your Project ID.</source>
+          <target>Votre identifiant de projet OpenAI.</target>
+        </trans-unit>
+        <trans-unit id="24" resname="idDisplayedInTheDropdownList">
+          <source>ID displayed in the drop-down list</source>
+          <target>ID affiché dans la liste déroulante</target>
+        </trans-unit>
+        <trans-unit id="19" resname="confirmDeleteProvider">
+          <source>Are you sure you want to delete this provider?</source>
+          <target>Voulez-vous vraiment supprimer ce fournisseur ?</target>
+        </trans-unit>
+        <trans-unit id="43" resname="noProviderConfigured">
+          <source>No AI provider configured.
+Click + to add your first provider.</source>
+          <target>Aucun fournisseur IA configuré.
+Cliquez sur + pour ajouter votre premier fournisseur.</target>
+        </trans-unit>
+        </group>
+      <group resname="Common">
+        <trans-unit id="2" resname="cancel">
+          <source>Cancel</source>
+          <target>Annuler</target>
+        </trans-unit>
+        <trans-unit id="4" resname="done">
+          <source>Done</source>
+          <target>Fermer</target>
+        </trans-unit>
+      </group>
+    </body>
+  </file>
+</xliff>

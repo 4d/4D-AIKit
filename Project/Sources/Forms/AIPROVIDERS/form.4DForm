@@ -19,7 +19,7 @@
 			"objects": {
 				"noModel": {
 					"type": "text",
-					"text": ":xliff:anEmbeddingModelIsRequired",
+					"text": ":xliff:noProviderConfigured",
 					"top": 185,
 					"left": 268,
 					"width": 363,
@@ -409,7 +409,7 @@
 	"rightMargin": 20,
 	"bottomMargin": 20,
 	"method": "FORM_MANAGER",
-	"windowTitle": ":xliff:modelManagement",
+	"windowTitle": ":xliff:providerManagement",
 	"windowMinWidth": 700,
 	"windowMinHeight": 420,
 	"formClass": "_AIPROVIDERS"

@@ -83,7 +83,7 @@ Function manager($e : Object)
 			// ______________________________________________________
 		: ($e.objectName="delete")
 			
-			CONFIRM:C162(Localized string:C991("areYouSureYouWantToDeleteThisModel"))
+			CONFIRM:C162(Localized string:C991("confirmDeleteProvider"))
 			
 			If (Bool:C1537(OK))
 				

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<xliff version="1.0">
+  <file datatype="x-STR#" original="Undefined" source-language="en" target-language="en">
+    <header>
+      <prop-group name="4DPop XLIFF Pro">
+        <prop prop-type="version">3.1</prop>
+      </prop-group>
+    </header>
+    <body>
+      <group resname="AIKit">
+        <trans-unit id="52" resname="model">
+          <source>Model</source>
+          <target>Model</target>
+        </trans-unit>
+        <trans-unit id="53" resname="providerManagement">
+          <source>AI Provider Management</source>
+          <target>AI Provider Management</target>
+        </trans-unit>
+        </group>
+      <group resname="Errors">
+        <trans-unit id="13" resname="theModelNameMustBeUnique">
+          <source>The model name "{name}" is already in use and must be unique.</source>
+          <target>The model name "{name}" is already in use and must be unique.</target>
+        </trans-unit>
+        <trans-unit id="15" resname="theValueIsRequired.">
+          <source>A value for “{value}” is required.</source>
+          <target>A value for “{value}” is required.</target>
+        </trans-unit>
+        </group>
+      <group resname="Models">
+        <trans-unit id="29" resname="name">
+          <source>Name</source>
+          <target>Name</target>
+        </trans-unit>
+        <trans-unit id="28" resname="models">
+          <source>Models</source>
+          <target>Models</target>
+        </trans-unit>
+        <trans-unit id="18" resname="apiKey">
+          <source>API Key</source>
+          <target>API Key</target>
+        </trans-unit>
+        <trans-unit id="21" resname="baseURL">
+          <source>Base URL</source>
+          <target>Base URL</target>
+        </trans-unit>
+        <trans-unit id="34" resname="organization">
+          <source>Organization</source>
+          <target>Organization</target>
+        </trans-unit>
+        <trans-unit id="36" resname="project">
+          <source>Project</source>
+          <target>Project</target>
+        </trans-unit>
+        <trans-unit id="31" resname="newModel">
+          <source>Model</source>
+          <target>Model</target>
+        </trans-unit>
+        <trans-unit id="39" resname="yourOpenaiApiKey">
+          <source>Your API Key.</source>
+          <target>Your API Key.</target>
+        </trans-unit>
+        <trans-unit id="22" resname="baseUrlForOpenaiApiRequests">
+          <source>The openAI endpoint will be used by default</source>
+          <target>The openAI endpoint will be used by default</target>
+        </trans-unit>
+        <trans-unit id="40" resname="yourOpenaiOrganizationId">
+          <source>Your Organization ID.</source>
+          <target>Your Organization ID.</target>
+        </trans-unit>
+        <trans-unit id="42" resname="yourOpenaiProjectId">
+          <source>Your Project ID.</source>
+          <target>Your Project ID.</target>
+        </trans-unit>
+        <trans-unit id="24" resname="idDisplayedInTheDropdownList">
+          <source>ID displayed in the drop-down list</source>
+          <target>ID displayed in the drop-down list</target>
+        </trans-unit>
+        <trans-unit id="19" resname="confirmDeleteProvider">
+          <source>Are you sure you want to delete this provider?</source>
+          <target>Are you sure you want to delete this provider?</target>
+        </trans-unit>
+        <trans-unit id="43" resname="noProviderConfigured">
+          <source>No AI provider configured.
+Click + to add your first provider.</source>
+          <target>No AI provider configured.
+Click + to add your first provider.</target>
+        </trans-unit>
+        </group>
+      <group resname="Common">
+        <trans-unit id="2" resname="cancel">
+          <source>Cancel</source>
+          <target>Cancel</target>
+        </trans-unit>
+        <trans-unit id="4" resname="done">
+          <source>Done</source>
+          <target>Done</target>
+        </trans-unit>
+      </group>
+    </body>
+  </file>
+</xliff>
