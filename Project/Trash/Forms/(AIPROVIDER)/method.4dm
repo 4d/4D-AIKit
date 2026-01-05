@@ -112,25 +112,13 @@ CALL SUBFORM CONTAINER(-1)
 			//______________________________________________________
 		: ($e.objectName="baseURL")
 			
-			var $provider:=cs:C1710.Provider.new($model.baseURL ? {baseURL: $model.baseURL} : Null:C1517)
-			Form:C1466._provider:=$provider
-			
-			If (Form:C1466.providers[$provider.name]=Null:C1517)
-				
-				Form:C1466.providers[$provider.name]:=$provider
-				
-			End if 
-			
-			SET TIMER:C645(-1)  // To update mandtory or not fields labels
+			// Base URL changed - no special handling needed
+			SET TIMER:C645(-1)  // To update UI
 			
 			//______________________________________________________
 		: ($e.objectName="apiKey")
 			
-			If (Form:C1466._provider#Null:C1517)
-				
-				Form:C1466._provider.apiKey:=$model.apiKey
-				
-			End if 
+			// API Key changed - handled by form data binding
 			
 			//______________________________________________________
 	End case 
@@ -174,26 +162,8 @@ Case of
 		// ______________________________________________________
 	: ($e.objectName="modelMenu")  // Menu of available models
 		
-		GOTO OBJECT:C206(*; "model")
+		// Model menu functionality removed - model list comes from test connection
 		
-		var $curModel:=String:C10($model.model)
-		$provider:=Form:C1466._provider || cs:C1710.Provider.new(Form:C1466.model)
-		
-		var $menu:=$provider.menuModels($curModel)
-		
-		If ($menu=Null:C1517)
-			
-			return 
-			
-		End if 
-		
-		If ($menu.popup($curModel).selected)\
-			 && ($menu.choice#$curModel)
-			
-			$model.model:=$menu.choice
-			Form:C1466.saveModels()
-			
-		End if 
 		
 		//// ______________________________________________________
 		//: ($e.objectName="done")  // New model

@@ -30,12 +30,12 @@ Case of
 		// ______________________________________________________
 	: ($action="new")
 		
-		CALL FORM:C1391($winref; Formula:C1597(Form:C1466.newModel()))
+		CALL FORM:C1391($winref; Formula:C1597(Form:C1466.newProvider()))
 		
 		// ______________________________________________________
 	Else   // the name od a model to select
 		
-		CALL FORM:C1391($winref; Formula:C1597(Form:C1466.selectModel($action)))
+		CALL FORM:C1391($winref; Formula:C1597(Form:C1466.selectProvider($action)))
 		
 		// ______________________________________________________
 End case 
@@ -43,7 +43,7 @@ End case
 If ($openDial)
 	
 	If (Structure file:C489=Structure file:C489(*))\
-		 && (Num:C11(Storage:C1525.studio.EMBEDDINGS)=0)  // DEV TESTS
+		 && (Num:C11(Storage:C1525.studio[$form])=0)  // DEV TESTS
 		
 		DIALOG:C40($form)
 		CLOSE WINDOW:C154($winRef)

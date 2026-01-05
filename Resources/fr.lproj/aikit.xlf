@@ -27,14 +27,14 @@
           <target>Une valeur pour « {value} » est requise.</target>
         </trans-unit>
         </group>
-      <group resname="Models">
+      <group resname="Providers">
         <trans-unit id="29" resname="name">
           <source>Name</source>
           <target>Nom</target>
         </trans-unit>
-        <trans-unit id="28" resname="models">
-          <source>Models</source>
-          <target>Modèles</target>
+        <trans-unit id="28" resname="providers">
+          <source>Providers</source>
+          <target>Fournisseurs</target>
         </trans-unit>
         <trans-unit id="18" resname="apiKey">
           <source>API Key</source>
@@ -52,9 +52,9 @@
           <source>Project</source>
           <target>Projet</target>
         </trans-unit>
-        <trans-unit id="31" resname="newModel">
-          <source>Model</source>
-          <target>Modèle</target>
+        <trans-unit id="31" resname="newProvider">
+          <source>Provider</source>
+          <target>Fournisseur</target>
         </trans-unit>
         <trans-unit id="39" resname="yourOpenaiApiKey">
           <source>Your API Key.</source>

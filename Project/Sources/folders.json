@@ -60,18 +60,15 @@
 	},
 	"GUI": {
 		"methods": [
-			"_AIPROVIDERS_WIZARD"
+			"_AIPROVIDERS",
+			"FORM_MANAGER"
 		],
 		"forms": [
-			"AIPROVIDER",
 			"AIPROVIDERS"
 		],
 		"classes": [
 			"_AIPROVIDERS",
-			"_COMMON",
-			"_menu",
-			"Model",
-			"Provider"
+			"_menu"
 		]
 	},
 	"Helper": {
