@@ -68,6 +68,9 @@
 					"currentItemSource": "Form:C1466.currentItem",
 					"verticalLineStroke": "transparent",
 					"sizingX": "grow",
+					"scrollbarHorizontal": "automatic",
+					"scrollbarVertical": "automatic",
+					"hideFocusRing": true,
 					"columns": [
 						{
 							"header": {
@@ -341,7 +344,7 @@
 			}
 		}
 	},
-	"geometryStamp": 676,
+	"geometryStamp": 683,
 	"rightMargin": 20,
 	"bottomMargin": 20,
 	"method": "FORM_MANAGER",
