@@ -9,7 +9,7 @@ Class constructor($response : Object; $body : Object)
 	This:C1470.response:=$response
 	This:C1470.body:=$body
 	
-	If (Value type:C1509($body.error.code)=Is integer:K8:5)  // text mainly
+	If ((Value type:C1509($body.error)=Is object:K8:27) && (Value type:C1509($body.error.code)=Is integer:K8:5))  // text mainly
 		This:C1470.errCode:=$body.error.code
 	Else 
 		This:C1470.errCode:=This:C1470.response.status
@@ -20,6 +20,8 @@ Function _makeMessage() : Text
 	Case of 
 		: ((This:C1470.body=Null:C1517) || (This:C1470.body.error=Null:C1517))
 			return This:C1470.response.statusText
+		: (Value type:C1509(This:C1470.body.error)=Is text:K8:3)
+			return This:C1470.body.error
 		: (Value type:C1509(This:C1470.body.error.message)=Is text:K8:3)
 			return This:C1470.body.error.message
 		Else 
