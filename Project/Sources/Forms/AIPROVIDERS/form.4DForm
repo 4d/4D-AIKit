@@ -235,7 +235,9 @@
 					"placeholder": ":xliff:yourOpenaiApiKey",
 					"visibility": "hidden",
 					"fontFamily": "%password",
-					"fontSize": 13
+					"fontSize": 13,
+					"multiline": "yes",
+					"wordwrap": "normal"
 				},
 				"baseURL": {
 					"type": "input",

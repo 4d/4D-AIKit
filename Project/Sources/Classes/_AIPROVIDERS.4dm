@@ -24,6 +24,15 @@ property connectionStatusToolTip : Text:=""
 property connectionModelsCount : Integer:=0  // Count of models from API
 property isTestingConnection : Boolean:=False:C215
 
+// Per-provider status cache and auto-test tracking
+property _providerStatusCache : Object  // Dictionary keyed by provider name
+property _lastTestedProviderName : Text  // Track which provider is being tested
+property _autoTestTimerTicks : Integer  // Timer for debouncing auto-test
+property _pendingAutoTestProviderName : Text  // Provider awaiting auto-test
+
+// Provider editing state
+property _isNewlyCreatedProvider : Boolean:=False:C215  // Track if current provider was just created
+
 // ___ --- ___ --- ___ --- ___ --- ___ --- ___ --- ___ --- ___ --- ___ --- ___ --- ___ --- ___ --- ___ --- ___
 Class constructor
 	
@@ -32,6 +41,9 @@ Class constructor
 	This:C1470.WELLKNOWN_PROVIDERS:=JSON Parse:C1218($file.getText()).map(Formula:C1597(cs:C1710._OpenAIProvider.new($1.value)))
 	
 	This:C1470.readProviders()
+	
+	// Initialize provider status cache
+	This:C1470._providerStatusCache:={}
 	
 	If (Storage:C1525.studio=Null:C1517)
 		
@@ -70,6 +82,9 @@ Function manager($e : Object)
 				
 				cs:C1710.OpenAIProviders.me.addListener(This:C1470)
 				
+				// Initialize connection status to empty state
+				This:C1470._initializeConnectionStatus()
+				
 				// ________________________________________________________________________________
 			: ($e.code=On Unload:K2:2)
 				
@@ -78,6 +93,13 @@ Function manager($e : Object)
 				// ______________________________________________________
 			: ($e.code=On Timer:K2:25)
 				
+				// Check if this is for auto-test debouncing
+				If (This:C1470._autoTestTimerTicks>0)
+					This:C1470._handleAutoTestTimer()
+					return 
+				End if 
+				
+				// Original timer logic for selection change
 				SET TIMER:C645(0)
 				This:C1470.listManager({code: On Selection Change:K2:29})
 				
@@ -162,6 +184,12 @@ Function fieldsManager($e : Object)
 	If ($e.code=On Data Change:K2:15)
 		
 		cs:C1710.OpenAIProviders.me.modifyProvider($cur.name; $cur)
+		
+		// Trigger debounced auto-test when API key changes
+		If ($e.objectName="apiKey")
+			This:C1470._scheduleAutoTest($cur.name)
+		End if 
+		
 	End if 
 	
 	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
@@ -172,11 +200,33 @@ Function listManager($e : Object)
 	
 	If ($e.code=On Selection Change:K2:29)  // ⚠️ This event must be enabled for both the list box AND the form.
 		
+		// Save current provider's status before switching
+		If (This:C1470.previousItem#Null:C1517)
+			This:C1470._saveCurrentProviderStatus()
+		End if 
+		
 		If ($cur#Null:C1517)
 			This:C1470.previousItem:=OB Copy:C1225($cur)
 		End if 
 		
+		// Clear the newly-created flag when selecting from list
+		// (unless it's the same provider - could be from selectProvider after newProvider)
+		If (This:C1470._isNewlyCreatedProvider)
+			// Keep the flag if we're selecting the same provider (e.g., from newProvider -> selectProvider)
+			// Otherwise clear it (user clicked on a different provider in the list)
+			If (This:C1470.previousItem#Null:C1517)
+				If ($cur#Null:C1517)
+					If ($cur.name#This:C1470.previousItem.name)
+						This:C1470._isNewlyCreatedProvider:=False:C215
+					End if 
+				End if 
+			End if 
+		End if 
+		
 		This:C1470.updateUI()
+		
+		// Restore new provider's status after switching
+		This:C1470._restoreCurrentProviderStatus()
 		
 	End if 
 	
@@ -213,9 +263,19 @@ The model name shall be unique.
 			// Rename provider using atomic renameProvider method
 			var $result : Object:=$providers.renameProvider($oldName; $newName)
 			If ($result.success)
+				
+				// Rename status cache entry
+				If (This:C1470._providerStatusCache[$oldName]#Null:C1517)
+					This:C1470._providerStatusCache[$newName]:=This:C1470._providerStatusCache[$oldName]
+					OB REMOVE:C1226(This:C1470._providerStatusCache; $oldName)
+				End if 
+				
 				$providers.save()
 				This:C1470.previousItem.name:=$newName
 				This:C1470.readProviders()
+				
+				// Clear newly-created flag after successful rename
+				This:C1470._isNewlyCreatedProvider:=False:C215
 			Else 
 				// Rename was blocked (e.g., by vector protection)
 				Form:C1466._popError($result.message)
@@ -250,7 +310,7 @@ Function newProvider()
 	var $menu:=cs:C1710._menu.new()
 	
 	var $custom:=Localized string:C991("customProvider")
-	$menu.append($custom; "")
+	$menu.append($custom; $custom)
 	$menu.line()
 	
 	var $wellKnown; $provider : cs:C1710._OpenAIProvider
@@ -267,14 +327,15 @@ Function newProvider()
 		
 	End for each 
 	
-	If ($menu.popup().selected)
+	var $popup:=$menu.popup()
+	If ($popup.selected)
 		
 		// Set the provider baseURL from selected well-known provider
 		$wellKnown:=Form:C1466.WELLKNOWN_PROVIDERS.query("baseURL = :1"; $menu.choice).first()
 		
-		var $name : Text:=$wellKnown.name
-		If ($name=$custom)
-			$name:=Localized string:C991("newProvider")
+		var $name:=Localized string:C991("newProvider")
+		If ($wellKnown#Null:C1517)
+			$name:=$wellKnown.name
 		End if 
 		var $wantedName:=$name
 		
@@ -302,7 +363,7 @@ The model name shall be unique.
 		
 		// Add to singleton with empty provider config
 		$providers.addProvider($name; {\
-			baseURL: $wellKnown.baseURL; \
+			baseURL: ($wellKnown=Null:C1517) ? "" : $wellKnown.baseURL; \
 			apiKey: ""; \
 			organization: ""; \
 			project: ""\
@@ -311,6 +372,10 @@ The model name shall be unique.
 		
 		// Refresh models from singleton
 		This:C1470.readProviders()
+		
+		// Mark as newly created to allow renaming
+		This:C1470._isNewlyCreatedProvider:=True:C214
+		
 		This:C1470.selectProvider($name)
 		
 		Form:C1466.saveProviders()
@@ -332,6 +397,12 @@ Function deleteProvider($name : Text)
 	$providers.save()
 	
 	If ($result.success)
+		
+		// Remove status from cache
+		If (This:C1470._providerStatusCache[$name]#Null:C1517)
+			OB REMOVE:C1226(This:C1470._providerStatusCache; $name)
+		End if 
+		
 		// Refresh providers from singleton
 		This:C1470.readProviders()
 		
@@ -356,6 +427,9 @@ Function testConnection()
 		return 
 	End if 
 	
+	// Remember which provider we're testing
+	This:C1470._lastTestedProviderName:=$cur.name
+	
 	// Update UI to show testing state
 	This:C1470.isTestingConnection:=True:C214
 	This:C1470.connectionStatus:=Localized string:C991("testingConnection") || "Testing connection..."
@@ -375,19 +449,50 @@ Function onTerminateTestConnection($result : cs:C1710.OpenAIModelListResult)
 	
 	This:C1470.isTestingConnection:=False:C215
 	
-	If ($result.success)
-		var $modelCount : Integer:=$result.models.length
-		This:C1470.connectionModelsCount:=$modelCount
-		This:C1470.connectionStatus:="🟢 "+(Localized string:C991("connected") || "Connected")+" ("+String:C10($modelCount)+" "+(Localized string:C991("models") || "models")+")"
-		This:C1470.connectionStatusToolTip:=$result.models.map(Formula:C1597($1.value.id)).join("\n")
-	Else 
-		This:C1470.connectionModelsCount:=0
-		var $errorMsg : Text:="❌ "+(($result.errors.length>0) ? $result.errors[0].message : "Connection failed")
-		This:C1470.connectionStatus:=$errorMsg
-		This:C1470.connectionStatusToolTip:=$result.errors.map(Formula:C1597($1.value.message)).join("\n")
+	// Capture which provider this test was for
+	var $testedProviderName : Text:=This:C1470._lastTestedProviderName
+	If (Length:C16($testedProviderName)=0)
+		// Edge case: callback fired but we don't know which provider
+		// Fall back to current provider (may be wrong if user switched)
+		If (This:C1470.currentItem#Null:C1517)
+			$testedProviderName:=This:C1470.currentItem.name
+		Else 
+			return   // No current item, nothing to update
+		End if 
 	End if 
 	
-	This:C1470._updateConnectionStatusUI()
+	// Build status strings
+	var $status : Text
+	var $tooltip : Text
+	var $modelCount : Integer:=0
+	
+	If ($result.success)
+		$modelCount:=$result.models.length
+		$status:="🟢 "+(Localized string:C991("connected") || "Connected")+" ("+String:C10($modelCount)+" "+(Localized string:C991("models") || "models")+")"
+		$tooltip:=$result.models.map(Formula:C1597($1.value.id)).join("\n")
+	Else 
+		$modelCount:=0
+		$status:="❌ "+(($result.errors.length>0) ? $result.errors[0].message : "Connection failed")
+		$tooltip:=$result.errors.map(Formula:C1597($1.value.message)).join("\n")
+	End if 
+	
+	// Store result in per-provider cache
+	This:C1470._providerStatusCache[$testedProviderName]:={\
+		connectionStatus: $status; \
+		connectionStatusToolTip: $tooltip; \
+		connectionModelsCount: $modelCount; \
+		hasBeenTested: True:C214\
+		}
+	
+	// Only update form-level properties if this is still the current provider
+	If ((This:C1470.currentItem#Null:C1517) && (This:C1470.currentItem.name=$testedProviderName))
+		This:C1470.connectionStatus:=$status
+		This:C1470.connectionStatusToolTip:=$tooltip
+		This:C1470.connectionModelsCount:=$modelCount
+		This:C1470._updateConnectionStatusUI()
+	End if 
+	// Otherwise: user switched to different provider, so we don't update UI
+	// The status is safely cached and will be restored when they select this provider again
 	
 	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
 Function _updateConnectionStatusUI()
@@ -397,6 +502,142 @@ Function _updateConnectionStatusUI()
 		OBJECT SET HELP TIP:C1181(*; "connectionStatus"; "")
 	Else 
 		OBJECT SET HELP TIP:C1181(*; "connectionStatus"; This:C1470.connectionStatusToolTip)
+	End if 
+	
+	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
+	// Initialize connection status to empty state (fresh start for session)
+Function _initializeConnectionStatus()
+	
+	// Reset all form-level connection status properties to empty state
+	This:C1470.connectionStatus:=""
+	This:C1470.connectionStatusToolTip:=""
+	This:C1470.connectionModelsCount:=0
+	This:C1470.isTestingConnection:=False:C215
+	
+	// Clear the provider status cache (fresh start for this session)
+	This:C1470._providerStatusCache:={}
+	
+	// Update UI to show empty status
+	This:C1470._updateConnectionStatusUI()
+	
+	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
+	// Save the current provider's connection status to the cache
+Function _saveCurrentProviderStatus()
+	
+	var $prev:=This:C1470.previousItem
+	If ($prev=Null:C1517)
+		return 
+	End if 
+	
+	var $providerName : Text:=$prev.name
+	
+	// Store current form-level status in cache
+	This:C1470._providerStatusCache[$providerName]:={\
+		connectionStatus: This:C1470.connectionStatus; \
+		connectionStatusToolTip: This:C1470.connectionStatusToolTip; \
+		connectionModelsCount: This:C1470.connectionModelsCount; \
+		hasBeenTested: (Length:C16(This:C1470.connectionStatus)>0)\
+		}
+	
+	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
+	// Restore the selected provider's connection status from cache, or show empty state
+Function _restoreCurrentProviderStatus()
+	
+	var $cur:=This:C1470.currentItem
+	If ($cur=Null:C1517)
+		// No selection - reset to empty
+		This:C1470.connectionStatus:=""
+		This:C1470.connectionStatusToolTip:=""
+		This:C1470.connectionModelsCount:=0
+		This:C1470.isTestingConnection:=False:C215
+		This:C1470._updateConnectionStatusUI()
+		return 
+	End if 
+	
+	var $providerName : Text:=$cur.name
+	
+	// Check if we're currently testing this specific provider
+	var $isTestingThisProvider : Boolean:=False:C215
+	If (This:C1470.isTestingConnection && (This:C1470._lastTestedProviderName=$providerName))
+		$isTestingThisProvider:=True:C214
+	Else 
+		This:C1470.isTestingConnection:=False:C215  // Clear if not testing this provider
+	End if 
+	
+	// Check if we have cached status for this provider
+	If (This:C1470._providerStatusCache[$providerName]#Null:C1517)
+		
+		// Restore from cache (unless actively testing)
+		If (Not:C34($isTestingThisProvider))
+			var $cached : Object:=This:C1470._providerStatusCache[$providerName]
+			This:C1470.connectionStatus:=$cached.connectionStatus
+			This:C1470.connectionStatusToolTip:=$cached.connectionStatusToolTip
+			This:C1470.connectionModelsCount:=$cached.connectionModelsCount
+		End if 
+		
+	Else 
+		
+		// No cached status - show empty state (not tested yet)
+		If (Not:C34($isTestingThisProvider))
+			This:C1470.connectionStatus:=""
+			This:C1470.connectionStatusToolTip:=""
+			This:C1470.connectionModelsCount:=0
+		End if 
+		
+	End if 
+	
+	// Update UI with restored or empty status
+	This:C1470._updateConnectionStatusUI()
+	
+	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
+	// Schedule an auto-test with debouncing (cancels previous pending tests)
+Function _scheduleAutoTest($providerName : Text)
+	
+	// Store which provider needs testing
+	This:C1470._pendingAutoTestProviderName:=$providerName
+	
+	// Set timer for 1.5 seconds (90 ticks at 60 ticks/second)
+	// If another change happens before timer fires, this will be reset
+	This:C1470._autoTestTimerTicks:=90
+	SET TIMER:C645(90)
+	
+	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
+	// Handle auto-test timer expiration
+Function _handleAutoTestTimer()
+	
+	// Stop timer
+	SET TIMER:C645(0)
+	This:C1470._autoTestTimerTicks:=0
+	
+	var $providerToTest : Text:=This:C1470._pendingAutoTestProviderName
+	This:C1470._pendingAutoTestProviderName:=""
+	
+	// Validate that we have a provider to test
+	If (Length:C16($providerToTest)=0)
+		return 
+	End if 
+	
+	// Only test if the provider still exists and has an API key
+	var $provider:=This:C1470.providers.query("name = :1"; $providerToTest).first()
+	If ($provider=Null:C1517)
+		return   // Provider was deleted
+	End if 
+	
+	If (Length:C16($provider.apiKey)=0)
+		return   // No API key, don't test
+	End if 
+	
+	// If this provider is currently selected, trigger the test
+	If ((This:C1470.currentItem#Null:C1517) && (This:C1470.currentItem.name=$providerToTest))
+		This:C1470.testConnection()
+	Else 
+		// Provider is not currently selected
+		// We could either:
+		// Option A: Test it anyway in background (requires more complex handling)
+		// Option B: Skip the test (simpler, but less proactive)
+		// RECOMMENDATION: Option B - only auto-test the currently selected provider
+		// User can manually test when they select it
+		return 
 	End if 
 	
 	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
@@ -418,6 +659,11 @@ Function updateUI()
 	End for each 
 	
 	OBJECT SET ENABLED:C1123(*; "delete"; $detailVisible)
+	
+	// Enable name field only for newly created providers
+	If ($detailVisible)
+		OBJECT SET ENTERABLE:C238(*; "name"; This:C1470._isNewlyCreatedProvider)
+	End if 
 	
 	
 	// MARK:- [PROVIDERS]
