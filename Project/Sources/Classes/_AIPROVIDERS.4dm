@@ -317,8 +317,16 @@ Function newProvider()
 	var $wellKnowns:=This:C1470.WELLKNOWN_PROVIDERS
 	// TODO: filter on ones that are already in provider list, so do not propose them
 	
+	var $isLocal:=False:C215
 	
 	For each ($wellKnown; $wellKnowns)
+		
+		If (Not:C34($isLocal))
+			If (Position:C15("localhost"; $wellKnown.baseURL)>0)
+				$menu.line()
+				$isLocal:=True:C214
+			End if 
+		End if 
 		
 		$menu.append($wellKnown.name; $wellKnown.baseURL)
 		If (Folder:C1567(fk resources folder:K87:11).file(Replace string:C233($wellKnown.name; " "; "")+".png").exists)
@@ -335,7 +343,7 @@ Function newProvider()
 		
 		var $name:=Localized string:C991("newProvider")
 		If ($wellKnown#Null:C1517)
-			$name:=$wellKnown.name
+			$name:=Lowercase:C14(Replace string:C233($wellKnown.name; " "; ""))
 		End if 
 		var $wantedName:=$name
 		

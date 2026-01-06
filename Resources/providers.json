@@ -30,18 +30,13 @@
     "needToken": true
   },
   {
-    "name": "Ollama",
-    "baseURL": "http://localhost:11434/v1/",
-    "needToken": false
-  },
-  {
     "name": "Replicate",
     "baseURL": "https://api.replicate.com/v1/",
     "needToken": true
   },
   {
     "name": "Hugging Face",
-    "baseURL": "https://api-inference.huggingface.co/models/",
+    "baseURL": "https://router.huggingface.co/v1/",
     "needToken": true
   },
   {
@@ -53,6 +48,11 @@
     "name": "DeepInfra",
     "baseURL": "https://api.deepinfra.com/v1/openai/",
     "needToken": true
+  },
+  {
+    "name": "Ollama",
+    "baseURL": "http://localhost:11434/v1/",
+    "needToken": false
   },
   {
     "name": "LM Studio",
