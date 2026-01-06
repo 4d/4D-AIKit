@@ -83,6 +83,13 @@ Function getProvider($key : Text) : Object
 	End if 
 	return This:C1470._providersConfig.providers[$key]
 	
+	// Check if there is a provider with this key
+Function hasProvider($key : Text) : Boolean
+	If (This:C1470._providersConfig.providers=Null:C1517)
+		return False:C215
+	End if 
+	return This:C1470._providersConfig.providers[$key]#Null:C1517
+	
 	// Get all provider keys
 Function getProviderKeys() : Collection
 	If (This:C1470._providersConfig.providers=Null:C1517)
@@ -377,23 +384,19 @@ Function toCollection() : Collection
 	var $key : Text
 	For each ($key; This:C1470._providersConfig.providers)
 		var $provider : Object:=This:C1470._providersConfig.providers[$key]
-		$result.push({\
+		$result.push(cs:C1710._OpenAIProvider.new({\
 			name: $key; \
 			apiKey: $provider.apiKey || ""; \
 			baseURL: $provider.baseURL || ""; \
 			organization: $provider.organization || ""; \
 			project: $provider.project || ""\
-			})
+			}))
 	End for each 
 	
 	return $result.orderBy("name asc")
 	
 	// Convert collection format back to providers object and save
 Function fromCollection($models : Collection)
-	If (This:C1470._providersConfig.providers=Null:C1517)
-		This:C1470._providersConfig.providers:={}
-	End if 
-	
 	// Clear and rebuild
 	This:C1470._providersConfig.providers:={}
 	
@@ -406,6 +409,4 @@ Function fromCollection($models : Collection)
 			project: $model.project\
 			}
 	End for each 
-	
-	This:C1470.save()
 	

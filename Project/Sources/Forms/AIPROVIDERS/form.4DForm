@@ -187,7 +187,7 @@
 				"organization.label": {
 					"type": "text",
 					"text": ":xliff:organization",
-					"top": 198,
+					"top": 279,
 					"left": 215,
 					"width": 106,
 					"height": 16,
@@ -197,7 +197,7 @@
 				"project.label": {
 					"type": "text",
 					"text": ":xliff:project",
-					"top": 235,
+					"top": 315,
 					"left": 239,
 					"width": 82,
 					"height": 16,
@@ -233,16 +233,18 @@
 						"onDataChange"
 					],
 					"placeholder": ":xliff:yourOpenaiApiKey",
-					"visibility": "hidden"
+					"visibility": "hidden",
+					"fontFamily": "%password",
+					"fontSize": 13
 				},
 				"baseURL": {
 					"type": "input",
 					"left": 339,
 					"top": 55,
-					"width": 304,
+					"width": 328,
 					"height": 17,
 					"sizingX": "grow",
-					"right": 643,
+					"right": 667,
 					"dataSource": "Form:C1466.currentItem.baseURL",
 					"events": [
 						"onDataChange"
@@ -253,7 +255,7 @@
 				"organization": {
 					"type": "input",
 					"left": 339,
-					"top": 198,
+					"top": 279,
 					"width": 328,
 					"height": 17,
 					"sizingX": "grow",
@@ -268,7 +270,7 @@
 				"project": {
 					"type": "input",
 					"left": 339,
-					"top": 235,
+					"top": 316,
 					"width": 328,
 					"height": 17,
 					"sizingX": "grow",
@@ -280,28 +282,13 @@
 					"placeholder": ":xliff:yourOpenaiProjectId",
 					"visibility": "hidden"
 				},
-				"baseURLMenu": {
-					"type": "button",
-					"top": 54,
-					"left": 649,
-					"width": 19,
-					"height": 19,
-					"events": [
-						"onClick"
-					],
-					"style": "custom",
-					"iconFrames": 4,
-					"icon": "/.PRODUCT_RESOURCES/Internal Components/runtime.4dbase/Contents/Resources/images/common/miniDrop.png",
-					"sizingX": "move",
-					"visibility": "hidden"
-				},
 				"testConnection": {
 					"type": "button",
 					"text": ":xliff:testConnection",
-					"top": 278,
+					"top": 157,
 					"left": 339,
-					"width": 140,
-					"height": 24,
+					"width": 126,
+					"height": 28,
 					"events": [
 						"onClick"
 					],
@@ -309,16 +296,16 @@
 					"visibility": "hidden"
 				},
 				"connectionStatus": {
-					"type": "text",
-					"text": "",
-					"top": 282,
-					"left": 490,
-					"width": 177,
-					"height": 16,
-					"right": 667,
-					"sizingX": "grow",
-					"dataSource": "Form:C1466.connectionStatus",
-					"visibility": "hidden"
+					"type": "input",
+					"left": 339,
+					"top": 199,
+					"width": 328,
+					"height": 65,
+					"enterable": false,
+					"focusable": false,
+					"borderStyle": "none",
+					"fill": "transparent",
+					"dataSource": "Form:C1466.connectionStatus"
 				}
 			},
 			"entryOrder": [
@@ -328,11 +315,11 @@
 				"apiKey",
 				"organization",
 				"project",
-				"baseURLMenu",
 				"testConnection",
 				"help",
 				"add",
-				"delete"
+				"delete",
+				"connectionStatus"
 			]
 		}
 	],
@@ -350,7 +337,7 @@
 			}
 		}
 	},
-	"geometryStamp": 637,
+	"geometryStamp": 668,
 	"rightMargin": 20,
 	"bottomMargin": 20,
 	"method": "FORM_MANAGER",

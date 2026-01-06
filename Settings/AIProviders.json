@@ -1,0 +1,22 @@
+{
+	"providers": {
+		"Anthropic": {
+			"baseURL": "https://api.anthropic.com/v1",
+			"apiKey": "",
+			"organization": "",
+			"project": ""
+		},
+		"Anthropic 1": {
+			"baseURL": "https://api.anthropic.com/v1",
+			"apiKey": "",
+			"organization": "",
+			"project": ""
+		},
+		"OpenAI": {
+			"baseURL": "https://api.openai.com/v1/",
+			"apiKey": "",
+			"organization": "",
+			"project": ""
+		}
+	}
+}

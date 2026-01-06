@@ -382,11 +382,6 @@ Function append($item; $param; $mark; $afterItem : Integer) : cs:C1710._menu
 	return This:C1470
 	
 	// === === === === === === === === === === === === === === === === === === === === === === === === === ===
-Function add($ref : Text; $text : Text; $param : Variant; $mark : Boolean)
-	
-	// TODO: wip - But I don't remember what the purpose was :-(
-	
-	// === === === === === === === === === === === === === === === === === === === === === === === === === ===
 	// Adds/insert a line
 	// If afterItem < 0, it is considered as the offset from the item count of the menu
 Function line($afterItem : Integer) : cs:C1710._menu

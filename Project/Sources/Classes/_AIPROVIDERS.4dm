@@ -1,17 +1,15 @@
 property providers : Collection
 
 property WELLKNOWN_PROVIDERS:=[]
-property OPENAI:="https://api.openai.com/@"
 
 // Main list
 property list:="list"
-property currentItem : Object
+property currentItem : cs:C1710._OpenAIProvider
 
 // Details panel
 property _detailFields:=[\
 "name"; \
 "baseURL"; \
-"baseURLMenu"; \
 "apiKey"; \
 "organization"; \
 "project"; \
@@ -20,10 +18,9 @@ property _detailFields:=[\
 
 property previousItem : Object
 
-property listeners : Collection:=[]
-
 // Connection test status
 property connectionStatus : Text:=""
+property connectionStatusToolTip : Text:=""
 property connectionModelsCount : Integer:=0  // Count of models from API
 property isTestingConnection : Boolean:=False:C215
 
@@ -32,7 +29,7 @@ Class constructor
 	
 	// Mark: Load predefined providers from providers.json as plain objects
 	var $file:=File:C1566("/RESOURCES/providers.json")
-	This:C1470.WELLKNOWN_PROVIDERS:=JSON Parse:C1218($file.getText())
+	This:C1470.WELLKNOWN_PROVIDERS:=JSON Parse:C1218($file.getText()).map(Formula:C1597(cs:C1710._OpenAIProvider.new($1.value)))
 	
 	This:C1470.readProviders()
 	
@@ -70,6 +67,13 @@ Function manager($e : Object)
 				
 				OBJECT SET FORMAT:C236(*; "Header1"; "path:/.PRODUCT_RESOURCES/Images/WatchIcons/Watch_693.png")
 				OBJECT SET VISIBLE:C603(*; "noModel"; This:C1470.providers.length=0)
+				
+				cs:C1710.OpenAIProviders.me.addListener(This:C1470)
+				
+				// ________________________________________________________________________________
+			: ($e.code=On Unload:K2:2)
+				
+				cs:C1710.OpenAIProviders.me.removeListener(This:C1470)
 				
 				// ______________________________________________________
 			: ($e.code=On Timer:K2:25)
@@ -117,16 +121,14 @@ Function manager($e : Object)
 			
 			// ______________________________________________________
 		: ($e.objectName="delete")
-			
+			If ($cur=Null:C1517)
+				return 
+			End if 
 			CONFIRM:C162(Localized string:C991("confirmDeleteProvider"))
 			
 			If (Bool:C1537(OK))
 				
 				This:C1470.deleteProvider($cur.name)
-				
-				// Update UI
-				LISTBOX SELECT ROW:C912(*; This:C1470.list; 0; lk remove from selection:K53:3)  // Unselect all
-				SET TIMER:C645(-1)
 				
 			End if 
 			
@@ -135,40 +137,32 @@ Function manager($e : Object)
 			
 			This:C1470.nameManager($e)
 			
-			// ______________________________________________________
-		: ($e.objectName="baseURLMenu")  // Menu of preconfigured providers
-			
-			GOTO OBJECT:C206(*; "baseURL")
-			
-			var $curbBase:=String:C10($cur.baseURL)
-			var $menu:=cs:C1710._menu.new()
-			
-			var $wellKnown : Object
-			For each ($wellKnown; This:C1470.WELLKNOWN_PROVIDERS)
-				
-				$menu.append($wellKnown.name; $wellKnown.baseURL).mark($curbBase=$wellKnown.baseURL)
-				
-			End for each 
-			
-			If ($menu.popup($curbBase).selected)\
-				 && ($menu.choice#$curbBase)
-				
-				// Set the provider baseURL from selected well-known provider
-				$wellKnown:=Form:C1466.WELLKNOWN_PROVIDERS.query("baseURL = :1"; $menu.choice).first()
-				
-				$cur.baseURL:=$menu.choice
-				
-				Form:C1466.saveProviders()
-				This:C1470.updateUI()
-			End if 
-			
+			// ______
 			// ______________________________________________________
 		: ($e.objectName="testConnection")
 			
 			This:C1470.testConnection()
 			
 			// ______________________________________________________
+		: ($e.objectName="baseURL")\
+			 || ($e.objectName="apiKey")\
+			 || ($e.objectName="organization")\
+			 || ($e.objectName="project")
+			
+			This:C1470.fieldsManager($e)
+			
+			// ______________________________________________________
 	End case 
+	
+Function fieldsManager($e : Object)
+	
+	$e:=$e || FORM Event:C1606
+	var $cur:=This:C1470.currentItem
+	
+	If ($e.code=On Data Change:K2:15)
+		
+		cs:C1710.OpenAIProviders.me.modifyProvider($cur.name; $cur)
+	End if 
 	
 	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
 Function listManager($e : Object)
@@ -178,30 +172,13 @@ Function listManager($e : Object)
 	
 	If ($e.code=On Selection Change:K2:29)  // ⚠️ This event must be enabled for both the list box AND the form.
 		
-/*var $previous : Object:=This.previousItem
+		If ($cur#Null:C1517)
+			This:C1470.previousItem:=OB Copy:C1225($cur)
+		End if 
 		
-If ($previous#Null)
-		
-If (Not($previous.validate()))
-		
-ALERT($previous.errors.join("\r"))
-		
-var $index:=This.providers.indexOf($previous)
-LISTBOX SELECT ROW(*; This.list; $index+1; lk replace selection)
-		
-return 
-		
-End if 
-End if 
-		
-This.previousItem:=($cur=Null) ? Null : OB Copy($cur)*/
 		This:C1470.updateUI()
+		
 	End if 
-	
-	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
-Function listMetaInfo($me : Object) : Object
-	
-	return {}
 	
 	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
 Function nameManager($e : Object)
@@ -219,8 +196,7 @@ The model name shall be unique.
 		
 		// Check uniqueness via singleton
 		var $providers:=cs:C1710.OpenAIProviders.me
-		var $existingKeys:=$providers.getProviderKeys()
-		If ($existingKeys.includes($newName) && ($newName#$oldName))
+		If ($providers.hasProvider($newName) && ($newName#$oldName))
 			
 			Form:C1466._popError(\
 				Replace string:C233(Localized string:C991("theModelNameMustBeUnique"); "{name}"; $newName))
@@ -239,6 +215,7 @@ The model name shall be unique.
 			If ($result.success)
 				$providers.save()
 				This:C1470.previousItem.name:=$newName
+				This:C1470.readProviders()
 			Else 
 				// Rename was blocked (e.g., by vector protection)
 				Form:C1466._popError($result.message)
@@ -264,47 +241,81 @@ Function selectProvider($name : Text)
 		
 	End if 
 	
-	//SET TIMER(-1)
-	This:C1470.updateUI()
+	SET TIMER:C645(-1)
+	////This.updateUI()
 	
 	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
 Function newProvider()
 	
-/* #17323
+	var $menu:=cs:C1710._menu.new()
+	
+	var $custom:=Localized string:C991("customProvider")
+	$menu.append($custom; "")
+	$menu.line()
+	
+	var $wellKnown; $provider : cs:C1710._OpenAIProvider
+	var $wellKnowns:=This:C1470.WELLKNOWN_PROVIDERS
+	// TODO: filter on ones that are already in provider list, so do not propose them
+	
+	
+	For each ($wellKnown; $wellKnowns)
+		
+		$menu.append($wellKnown.name; $wellKnown.baseURL)
+		If (Folder:C1567(fk resources folder:K87:11).file(Replace string:C233($wellKnown.name; " "; "")+".png").exists)
+			$menu.icon("Path:/RESOURCES/"+Replace string:C233($wellKnown.name; " "; "")+".png")
+		End if 
+		
+	End for each 
+	
+	If ($menu.popup().selected)
+		
+		// Set the provider baseURL from selected well-known provider
+		$wellKnown:=Form:C1466.WELLKNOWN_PROVIDERS.query("baseURL = :1"; $menu.choice).first()
+		
+		var $name : Text:=$wellKnown.name
+		If ($name=$custom)
+			$name:=Localized string:C991("newProvider")
+		End if 
+		var $wantedName:=$name
+		
+/*
 The model name shall be unique.
 */
-	var $name:=Localized string:C991("newProvider")
-	var $i : Integer
-	
-	// Check against singleton for uniqueness
-	var $providers:=cs:C1710.OpenAIProviders.me
-	var $existingKeys:=$providers.getProviderKeys()
-	
-	Repeat 
+		// Check against singleton for uniqueness
+		var $providers:=cs:C1710.OpenAIProviders.me
+		var $existingKeys:=$providers.getProviderKeys()
 		
-		If ($existingKeys.includes($name))
+		var $i:=0
+		Repeat 
 			
-			$i+=1
-			$name:=Localized string:C991("newProvider")+String:C10($i; " ##")
-			
-		Else 
-			
-			break
-			
-		End if 
-	Until (False:C215)
-	
-	// Add to singleton with empty provider config
-	$providers.addProvider($name; {\
-		apiKey: ""; \
-		baseURL: ""; \
-		organization: ""; \
-		project: ""\
-		})
-	
-	// Refresh models from singleton
-	This:C1470.readProviders()
-	This:C1470.selectProvider($name)
+			If ($existingKeys.includes($name))
+				
+				$i+=1
+				$name:=$wantedName+String:C10($i; " ##")
+				
+			Else 
+				
+				break
+				
+			End if 
+		Until (False:C215)
+		
+		// Add to singleton with empty provider config
+		$providers.addProvider($name; {\
+			baseURL: $wellKnown.baseURL; \
+			apiKey: ""; \
+			organization: ""; \
+			project: ""\
+			})
+		$providers.save()
+		
+		// Refresh models from singleton
+		This:C1470.readProviders()
+		This:C1470.selectProvider($name)
+		
+		Form:C1466.saveProviders()
+		This:C1470.updateUI()
+	End if 
 	
 	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
 Function deleteProvider($name : Text)
@@ -315,29 +326,25 @@ Function deleteProvider($name : Text)
 		return   // not found
 	End if 
 	
-	// Check local listeners first (UI-level protection)
-	var $couldDelete : Boolean:=True:C214
-	var $listener : Object
-	For each ($listener; This:C1470.listeners) Until (Not:C34($couldDelete))
-		
-		$couldDelete:=$listener.onBeforeDelete($name) || $couldDelete
-		
-	End for each 
+	// Delegate to OpenAIProviders singleton
+	var $providers:=cs:C1710.OpenAIProviders.me
+	var $result : Object:=$providers.removeProvider($name)
+	$providers.save()
 	
-	If ($couldDelete)
+	If ($result.success)
+		// Refresh providers from singleton
+		This:C1470.readProviders()
 		
-		// Delegate to OpenAIProviders singleton
-		var $providers:=cs:C1710.OpenAIProviders.me
-		var $result : Object:=$providers.removeProvider($name)
-		
-		If ($result.success)
-			// Refresh providers from singleton
-			This:C1470.readProviders()
-		Else 
-			// Deletion was blocked (e.g., by vector protection?)
-			Form:C1466._popError($result.message)
+		If (This:C1470.providers.length>0)
+			This:C1470.currentItem:=This:C1470.providers.first()
+			This:C1470.selectProvider(This:C1470.currentItem.name)
 		End if 
 		
+		This:C1470.updateUI()
+		
+	Else 
+		// Deletion was blocked (e.g., by vector protection?)
+		Form:C1466._popError($result.message)
 	End if 
 	
 	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
@@ -353,30 +360,31 @@ Function testConnection()
 	This:C1470.isTestingConnection:=True:C214
 	This:C1470.connectionStatus:=Localized string:C991("testingConnection") || "Testing connection..."
 	This:C1470.connectionModelsCount:=0
+	This:C1470.connectionStatusToolTip:=""
 	This:C1470._updateConnectionStatusUI()
 	
 	// Create OpenAI client with current provider settings
-	var $client:=cs:C1710.OpenAI.new({\
-		baseURL: $cur.baseURL; \
-		apiKey: $cur.apiKey; \
-		organization: $cur.organization; \
-		project: $cur.project; \
-		timeout: 30\
-		})
+	var $client:=cs:C1710.OpenAI.new($cur)
+	$client.timeout:=10
 	
 	// Try to list models to verify connection
-	var $result:=$client.models.list()
+	var $this : Object:=This:C1470
+	var $resultIgnore:=$client.models.list($this)
+	
+Function onTerminateTestConnection($result : cs:C1710.OpenAIModelListResult)
 	
 	This:C1470.isTestingConnection:=False:C215
 	
 	If ($result.success)
 		var $modelCount : Integer:=$result.models.length
 		This:C1470.connectionModelsCount:=$modelCount
-		This:C1470.connectionStatus:="✓ "+(Localized string:C991("connected") || "Connected")+" ("+String:C10($modelCount)+" "+(Localized string:C991("models") || "models")+")"
+		This:C1470.connectionStatus:="🟢 "+(Localized string:C991("connected") || "Connected")+" ("+String:C10($modelCount)+" "+(Localized string:C991("models") || "models")+")"
+		This:C1470.connectionStatusToolTip:=$result.models.map(Formula:C1597($1.value.id)).join("\n")
 	Else 
 		This:C1470.connectionModelsCount:=0
-		var $errorMsg : Text:=$result.errors.length>0 ? $result.errors[0].message : "Connection failed"
-		This:C1470.connectionStatus:="✗ "+$errorMsg
+		var $errorMsg : Text:="❌ "+(($result.errors.length>0) ? $result.errors[0].message : "Connection failed")
+		This:C1470.connectionStatus:=$errorMsg
+		This:C1470.connectionStatusToolTip:=$result.errors.map(Formula:C1597($1.value.message)).join("\n")
 	End if 
 	
 	This:C1470._updateConnectionStatusUI()
@@ -386,42 +394,31 @@ Function _updateConnectionStatusUI()
 	
 	// Update the status text color based on result
 	If (This:C1470.isTestingConnection)
-		OBJECT SET RGB COLORS:C628(*; "connectionStatus"; 0x00666666; -1)  // Gray during testing
+		OBJECT SET HELP TIP:C1181(*; "connectionStatus"; "")
 	Else 
-		If (This:C1470.connectionModelsCount>0)
-			OBJECT SET RGB COLORS:C628(*; "connectionStatus"; 0x00228B22; -1)  // Green for success
-		Else 
-			OBJECT SET RGB COLORS:C628(*; "connectionStatus"; 0x00CC0000; -1)  // Red for error
-		End if 
+		OBJECT SET HELP TIP:C1181(*; "connectionStatus"; This:C1470.connectionStatusToolTip)
 	End if 
 	
 	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
 	// Hide/show details based on selection
-Function updateUI() : Boolean
+Function updateUI()
+	
+	var $detailVisible:=This:C1470.currentItem#Null:C1517
+	If (This:C1470.providers.length=0)
+		$detailVisible:=False:C215
+	End if 
+	OBJECT SET VISIBLE:C603(*; "noModel"; This:C1470.providers.length=0)
 	
 	var $t : Text
-	
-	If (This:C1470.currentItem=Null:C1517)
-		
-		For each ($t; This:C1470._detailFields)
-			
-			OBJECT SET VISIBLE:C603(*; $t; False:C215)
-			OBJECT SET VISIBLE:C603(*; $t+".label"; False:C215)
-			
-		End for each 
-		
-		return 
-		
-	End if 
-	
 	For each ($t; This:C1470._detailFields)
 		
-		OBJECT SET VISIBLE:C603(*; $t; True:C214)
-		OBJECT SET VISIBLE:C603(*; $t+".label"; True:C214)
+		OBJECT SET VISIBLE:C603(*; $t; $detailVisible)
+		OBJECT SET VISIBLE:C603(*; $t+".label"; $detailVisible)
 		
 	End for each 
 	
-	return True:C214
+	OBJECT SET ENABLED:C1123(*; "delete"; $detailVisible)
+	
 	
 	// MARK:- [PROVIDERS]
 	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
@@ -430,7 +427,8 @@ Function readProviders()
 	
 	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
 Function saveProviders()
-	cs:C1710.OpenAIProviders.me.fromCollection(This:C1470.providers)
+	//cs.OpenAIProviders.me.fromCollection(This.providers)
+	cs:C1710.OpenAIProviders.me.save()  // only trust singleton
 	
 	// MARK:- [PRIVATE]
 	// *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
@@ -447,3 +445,33 @@ Function _popError($message : Text; $widget : Text; $target : Text)
 		
 	End if 
 	
+	// MARK:- [OpenAI Asynchrone]
+	
+Function get onTerminate : 4D:C1709.Function
+	return This:C1470.onTerminateTestConnection
+	
+	// MARK:- [OpenAIProvider Listener]
+	
+Function onLoad
+	This:C1470.readProviders()
+	
+Function onSave
+	
+Function onProviderAdded
+	This:C1470.readProviders()
+	
+Function onProviderRemoved
+	This:C1470.readProviders()
+	
+Function onProviderModified
+	
+Function onProviderRenamed
+	This:C1470.readProviders()
+	
+	//Function onModelResolved
+	
+Function canRenameProvider($param : Object) : Object
+	return {success: True:C214}
+	
+Function canRemoveProvider($param : Object) : Object
+	return {success: True:C214}

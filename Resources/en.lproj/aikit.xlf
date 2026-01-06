@@ -32,6 +32,10 @@
           <source>Name</source>
           <target>Name</target>
         </trans-unit>
+        <trans-unit id="63" resname="customProvider">
+          <source>Custom</source>
+          <target>Custom</target>
+        </trans-unit>
         <trans-unit id="28" resname="providers">
           <source>Providers</source>
           <target>Providers</target>

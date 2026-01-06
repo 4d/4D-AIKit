@@ -103,7 +103,11 @@
 		]
 	},
 	"Providers": {
+		"groups": [
+			"GUI"
+		],
 		"classes": [
+			"_OpenAIProvider",
 			"OpenAIProviders"
 		]
 	},
