@@ -51,13 +51,13 @@ Function save()
 	// MARK:- Provider Management
 	
 	// Add or update a provider by key
-Function addProvider($key : Text; $config : Object) : cs:C1710.OpenAIProviders
+Function addProvider($key : Text; $config : Object)
 	If (This:C1470._providersConfig.providers=Null:C1517)
 		This:C1470._providersConfig.providers:={}
 	End if 
 	This:C1470._providersConfig.providers[$key]:=$config
 	This:C1470._notify("onProviderAdded"; {key: $key; config: $config})
-	return This:C1470
+	
 	
 	// Remove a provider by key (checks listeners before proceeding)
 Function removeProvider($key : Text) : Object
@@ -224,11 +224,10 @@ Function modifyModelAlias($providerKey : Text; $aliasKey : Text; $updates : Obje
 	// MARK:- Listeners
 	
 	// Add a listener object (delegate)
-Function addListener($listener : Object) : cs:C1710.OpenAIProviders
+Function addListener($listener : Object)
 	If (This:C1470._listeners.indexOf($listener)<0)
 		This:C1470._listeners.push($listener)
 	End if 
-	return This:C1470
 	
 	// Remove a listener object
 Function removeListener($listener : Object) : Boolean
@@ -285,7 +284,7 @@ Function resolveModel($modelString : Text) : Object
 	$config.success:=False:C215
 	
 	var $providerName : Text:=$parts[0]
-	var $modelName : Text:=$parts[1]
+	var $modelName : Text:=$parts[1]  // FIXME: could have more part
 	
 	// Validate provider exists
 	If (This:C1470._providersConfig.providers=Null:C1517 || This:C1470._providersConfig.providers[$providerName]=Null:C1517)
@@ -402,6 +401,9 @@ Function fromCollection($models : Collection)
 	
 	var $model : Object
 	For each ($model; $models)
+		If (Value type:C1509($model)#Is object:K8:27)
+			continue
+		End if 
 		This:C1470._providersConfig.providers[$model.name]:={\
 			apiKey: $model.apiKey; \
 			baseURL: $model.baseURL; \

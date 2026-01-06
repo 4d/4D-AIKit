@@ -272,7 +272,18 @@ The model name shall be unique.
 				
 				$providers.save()
 				This:C1470.previousItem.name:=$newName
+				
+				// Refresh providers from singleton
 				This:C1470.readProviders()
+				
+				// Update currentItem to point to the renamed provider
+				This:C1470.currentItem:=This:C1470.providers.query("name = :1"; $newName).first()
+				
+				// Update listbox selection to match the renamed provider
+				var $index : Integer:=This:C1470.providers.indexOf(This:C1470.currentItem)
+				If ($index>=0)
+					LISTBOX SELECT ROW:C912(*; This:C1470.list; $index+1; lk replace selection:K53:1)
+				End if 
 				
 				// Clear newly-created flag after successful rename
 				This:C1470._isNewlyCreatedProvider:=False:C215
@@ -671,6 +682,20 @@ Function updateUI()
 	// Enable name field only for newly created providers
 	If ($detailVisible)
 		OBJECT SET ENTERABLE:C238(*; "name"; This:C1470._isNewlyCreatedProvider)
+	End if 
+	
+	// Show organization and project fields only for OpenAI (default baseURL or empty)
+	If ($detailVisible)
+		var $baseURL : Text:=This:C1470.currentItem.baseURL
+		
+		// Check if baseURL is empty or matches OpenAI's default
+		var $isOpenAI:=(Length:C16($baseURL)=0) || ($baseURL="https://api.openai.com/v1/")
+		
+		OBJECT SET VISIBLE:C603(*; "organization"; $isOpenAI)
+		OBJECT SET VISIBLE:C603(*; "organization.label"; $isOpenAI)
+		OBJECT SET VISIBLE:C603(*; "project"; $isOpenAI)
+		OBJECT SET VISIBLE:C603(*; "project.label"; $isOpenAI)
+		
 	End if 
 	
 	
