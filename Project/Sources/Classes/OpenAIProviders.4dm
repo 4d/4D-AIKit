@@ -284,7 +284,9 @@ Function resolveModel($modelString : Text) : Object
 	$config.success:=False:C215
 	
 	var $providerName : Text:=$parts[0]
-	var $modelName : Text:=$parts[1]  // FIXME: could have more part
+	// Join remaining parts to handle model names with colons (e.g., "provider:model:version")
+	$parts.shift()
+	var $modelName : Text:=$parts.join(":")
 	
 	// Validate provider exists
 	If (This:C1470._providersConfig.providers=Null:C1517 || This:C1470._providersConfig.providers[$providerName]=Null:C1517)
