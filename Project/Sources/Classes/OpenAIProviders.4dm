@@ -51,7 +51,7 @@ Function save()
 	// MARK:- Provider Management
 	
 	// Add or update a provider by key
-Function addProvider($key : Text; $config : Object)
+Function add($key : Text; $config : Object)
 	If (This:C1470._providersConfig.providers=Null:C1517)
 		This:C1470._providersConfig.providers:={}
 	End if 
@@ -60,7 +60,7 @@ Function addProvider($key : Text; $config : Object)
 	
 	
 	// Remove a provider by key (checks listeners before proceeding)
-Function removeProvider($key : Text) : Object
+Function remove($key : Text) : Object
 	If (This:C1470._providersConfig.providers=Null:C1517)
 		return {success: False:C215; message: "No providers configured"}
 	End if 
@@ -77,28 +77,28 @@ Function removeProvider($key : Text) : Object
 	return {success: True:C214; message: ""}
 	
 	// Get a provider by key
-Function getProvider($key : Text) : Object
+Function get($key : Text) : Object
 	If (This:C1470._providersConfig.providers=Null:C1517)
 		return Null:C1517
 	End if 
 	return This:C1470._providersConfig.providers[$key]
 	
 	// Check if there is a provider with this key
-Function hasProvider($key : Text) : Boolean
+Function includes($key : Text) : Boolean
 	If (This:C1470._providersConfig.providers=Null:C1517)
 		return False:C215
 	End if 
 	return This:C1470._providersConfig.providers[$key]#Null:C1517
 	
 	// Get all provider keys
-Function getProviderKeys() : Collection
+Function keys() : Collection
 	If (This:C1470._providersConfig.providers=Null:C1517)
 		return []
 	End if 
 	return OB Keys:C1719(This:C1470._providersConfig.providers)
 	
 	// Modify an existing provider (merge updates)
-Function modifyProvider($key : Text; $updates : Object) : Boolean
+Function modify($key : Text; $updates : Object) : Boolean
 	If (This:C1470._providersConfig.providers=Null:C1517)
 		return False:C215
 	End if 
@@ -113,7 +113,7 @@ Function modifyProvider($key : Text; $updates : Object) : Boolean
 	return True:C214
 	
 	// Rename a provider (atomic operation with dedicated notification)
-Function renameProvider($oldKey : Text; $newKey : Text) : Object
+Function rename($oldKey : Text; $newKey : Text) : Object
 	If (This:C1470._providersConfig.providers=Null:C1517)
 		return {success: False:C215; message: "No providers configured"}
 	End if 

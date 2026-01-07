@@ -182,8 +182,8 @@ Function fieldsManager($e : Object)
 	var $cur:=This:C1470.currentItem
 	
 	If ($e.code=On Data Change:K2:15)
-		
-		cs:C1710.OpenAIProviders.me.modifyProvider($cur.name; $cur)
+
+		cs:C1710.OpenAIProviders.me.modify($cur.name; $cur)
 		
 		// Trigger debounced auto-test when API key changes
 		If ($e.objectName="apiKey")
@@ -246,7 +246,7 @@ The model name shall be unique.
 		
 		// Check uniqueness via singleton
 		var $providers:=cs:C1710.OpenAIProviders.me
-		If ($providers.hasProvider($newName) && ($newName#$oldName))
+		If ($providers.includes($newName) && ($newName#$oldName))
 			
 			Form:C1466._popError(\
 				Replace string:C233(Localized string:C991("theModelNameMustBeUnique"); "{name}"; $newName))
@@ -258,10 +258,10 @@ The model name shall be unique.
 			
 			return 
 			
-		Else 
-			
-			// Rename provider using atomic renameProvider method
-			var $result : Object:=$providers.renameProvider($oldName; $newName)
+		Else
+
+			// Rename provider using atomic rename method
+			var $result : Object:=$providers.rename($oldName; $newName)
 			If ($result.success)
 				
 				// Rename status cache entry
@@ -363,7 +363,7 @@ The model name shall be unique.
 */
 		// Check against singleton for uniqueness
 		var $providers:=cs:C1710.OpenAIProviders.me
-		var $existingKeys:=$providers.getProviderKeys()
+		var $existingKeys:=$providers.keys()
 		
 		var $i:=0
 		Repeat 
@@ -381,7 +381,7 @@ The model name shall be unique.
 		Until (False:C215)
 		
 		// Add to singleton with empty provider config
-		$providers.addProvider($name; {\
+		$providers.add($name; {\
 			baseURL: ($wellKnown=Null:C1517) ? "" : $wellKnown.baseURL; \
 			apiKey: ""; \
 			organization: ""; \
@@ -412,7 +412,7 @@ Function deleteProvider($name : Text)
 	
 	// Delegate to OpenAIProviders singleton
 	var $providers:=cs:C1710.OpenAIProviders.me
-	var $result : Object:=$providers.removeProvider($name)
+	var $result : Object:=$providers.remove($name)
 	$providers.save()
 	
 	If ($result.success)
