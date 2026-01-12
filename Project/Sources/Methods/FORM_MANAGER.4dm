@@ -1,4 +1,4 @@
-//%attributes = {}
+//%attributes = {"invisible":true}
 //%attributes = {"invisible":true,"preemptive":"incapable"}
 If (Structure file:C489=Structure file:C489(*))  // Don't hide errors
 	

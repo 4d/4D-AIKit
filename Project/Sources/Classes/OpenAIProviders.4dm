@@ -6,10 +6,31 @@ property _providersConfig : Object
 property _listeners : Collection
 property errors : Collection
 
-singleton Class constructor()
+Class constructor($input : Variant)
 	This:C1470._listeners:=[]
-	This:C1470.providersFile:=This:C1470._getDefaultProvidersFile()
 	
+	Case of 
+		: ((Value type:C1509($input)=Is object:K8:27) && (OB Instance of:C1731($input; 4D:C1709.File)))
+			
+			This:C1470.providersFile:=$input
+			
+		: ((Value type:C1509($input)=Is text:K8:3) && ($input="structure"))
+			
+			This:C1470.providersFile:=Folder:C1567("/SOURCES"; *).file("AIProviders.json")
+			
+		: ((Value type:C1509($input)=Is text:K8:3) && ($input="user"))
+			
+			This:C1470.providersFile:=Folder:C1567(fk database folder:K87:14; *).file("Settings/AIProviders.json")
+			
+		: ((Value type:C1509($input)=Is text:K8:3) && ($input="userData"))
+			
+			This:C1470.providersFile:=Folder:C1567(fk data folder:K87:12; *).file("Settings/AIProviders.json")
+			
+		Else 
+			
+			This:C1470.providersFile:=Folder:C1567(fk database folder:K87:14; *).file("Settings/AIProviders.json")
+			
+	End case 
 	// MARK:- Configuration Management
 	
 Function set providersFile($file : 4D:C1709.File)
@@ -18,10 +39,6 @@ Function set providersFile($file : 4D:C1709.File)
 	
 Function get providersFile : 4D:C1709.File
 	return This:C1470._providersFile
-	
-Function _getDefaultProvidersFile() : 4D:C1709.File
-	// Look for AIProviders.json in Settings folder
-	return Folder:C1567(fk database folder:K87:14; *).file("Settings/AIProviders.json")
 	
 Function load() : Boolean
 	This:C1470.errors:=Null:C1517
@@ -268,7 +285,7 @@ Function _notify($eventName : Text; $eventData : Object)
 	
 	// Return all information extracted from a model name
 Function resolveModel($modelString : Text) : Object
-	var $config:={success: True:C214; baseURL: ""; apiKey: ""; model: $modelString; error: Null:C1517}
+	var $config:={success: False:C215; baseURL: ""; apiKey: ""; model: $modelString; error: Null:C1517}
 	
 	// Check if model string contains provider prefix
 	If (Position:C15(":"; $modelString)=0)

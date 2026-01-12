@@ -51,23 +51,16 @@
 		]
 	},
 	"FormDemo": {
-		"forms": [
-			"_FormDemo"
-		],
-		"classes": [
-			"_FormDemo"
-		]
-	},
-	"GUI": {
 		"methods": [
-			"_AIPROVIDERS",
 			"FORM_MANAGER"
 		],
 		"forms": [
+			"_FormDemo",
 			"AIPROVIDERS"
 		],
 		"classes": [
 			"_AIPROVIDERS",
+			"_FormDemo",
 			"_menu"
 		]
 	},
@@ -103,9 +96,6 @@
 		]
 	},
 	"Providers": {
-		"groups": [
-			"GUI"
-		],
 		"classes": [
 			"_OpenAIProvider",
 			"OpenAIProviders"

@@ -1,4 +1,5 @@
 property providers : Collection
+property providersInstance : cs:C1710.OpenAIProviders
 
 property WELLKNOWN_PROVIDERS:=[]
 
@@ -40,8 +41,6 @@ Class constructor
 	var $file:=File:C1566("/RESOURCES/providers.json")
 	This:C1470.WELLKNOWN_PROVIDERS:=JSON Parse:C1218($file.getText()).map(Formula:C1597(cs:C1710._OpenAIProvider.new($1.value)))
 	
-	This:C1470.readProviders()
-	
 	// Initialize provider status cache
 	This:C1470._providerStatusCache:={}
 	
@@ -80,7 +79,11 @@ Function manager($e : Object)
 				OBJECT SET FORMAT:C236(*; "Header1"; "path:/.PRODUCT_RESOURCES/Images/WatchIcons/Watch_693.png")
 				OBJECT SET VISIBLE:C603(*; "noModel"; This:C1470.providers.length=0)
 				
-				cs:C1710.OpenAIProviders.me.addListener(This:C1470)
+				
+				This:C1470.providersInstance:=cs:C1710.OpenAIProviders.new("structure")
+				This:C1470.readProviders()
+				
+				This:C1470.providersInstance.addListener(This:C1470)
 				
 				// Initialize connection status to empty state
 				This:C1470._initializeConnectionStatus()
@@ -88,7 +91,7 @@ Function manager($e : Object)
 				// ________________________________________________________________________________
 			: ($e.code=On Unload:K2:2)
 				
-				cs:C1710.OpenAIProviders.me.removeListener(This:C1470)
+				This:C1470.providersInstance.removeListener(This:C1470)
 				
 				// ______________________________________________________
 			: ($e.code=On Timer:K2:25)
@@ -182,8 +185,8 @@ Function fieldsManager($e : Object)
 	var $cur:=This:C1470.currentItem
 	
 	If ($e.code=On Data Change:K2:15)
-
-		cs:C1710.OpenAIProviders.me.modify($cur.name; $cur)
+		
+		This:C1470.providersInstance.modify($cur.name; $cur)
 		
 		// Trigger debounced auto-test when API key changes
 		If ($e.objectName="apiKey")
@@ -245,7 +248,7 @@ The model name shall be unique.
 		var $newName : Text:=$cur.name
 		
 		// Check uniqueness via singleton
-		var $providers:=cs:C1710.OpenAIProviders.me
+		var $providers:=This:C1470.providersInstance
 		If ($providers.includes($newName) && ($newName#$oldName))
 			
 			Form:C1466._popError(\
@@ -258,8 +261,8 @@ The model name shall be unique.
 			
 			return 
 			
-		Else
-
+		Else 
+			
 			// Rename provider using atomic rename method
 			var $result : Object:=$providers.rename($oldName; $newName)
 			If ($result.success)
@@ -362,7 +365,7 @@ Function newProvider()
 The model name shall be unique.
 */
 		// Check against singleton for uniqueness
-		var $providers:=cs:C1710.OpenAIProviders.me
+		var $providers:=This:C1470.providersInstance
 		var $existingKeys:=$providers.keys()
 		
 		var $i:=0
@@ -411,7 +414,7 @@ Function deleteProvider($name : Text)
 	End if 
 	
 	// Delegate to OpenAIProviders singleton
-	var $providers:=cs:C1710.OpenAIProviders.me
+	var $providers:=This:C1470.providersInstance
 	var $result : Object:=$providers.remove($name)
 	$providers.save()
 	
@@ -702,12 +705,12 @@ Function updateUI()
 	// MARK:- [PROVIDERS]
 	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
 Function readProviders()
-	This:C1470.providers:=cs:C1710.OpenAIProviders.me.toCollection()
+	This:C1470.providers:=This:C1470.providersInstance.toCollection()
 	
 	// === === === === === === === === === === === === === === === === === === === === === === === === === === ===
 Function saveProviders()
 	//cs.OpenAIProviders.me.fromCollection(This.providers)
-	cs:C1710.OpenAIProviders.me.save()  // only trust singleton
+	This:C1470.providersInstance.save()  // only trust singleton
 	
 	// MARK:- [PRIVATE]
 	// *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***

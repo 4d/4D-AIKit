@@ -39,7 +39,7 @@ $configFile.setText(JSON Stringify:C1217($config))
 
 // Test the resolver
 var $client:=cs:C1710.OpenAI.new()
-$client.setProvidersFile($configFile)
+$client.providersList:=[cs:C1710.OpenAIProviders.new($configFile)]
 
 // MARK:- Test simple provider resolution
 var $resolved:=$client.resolveModel("test_openai:gpt-4o")
@@ -70,9 +70,9 @@ If (Asserted:C1132($resolved.success; "Failed to resolve test_custom:embeddings"
 	ASSERT:C1129($resolved.model="text-embedding-3-small"; "Embeddings model should be mapped")
 End if 
 
-// MARK:- Test model without prefix (should succeed with empty config)
+// MARK:- Test model without prefix (should failed with empty config)
 $resolved:=$client.resolveModel("gpt-4o")
-If (Asserted:C1132($resolved.success; "Model without prefix should succeed"))
+If (Asserted:C1132(Not:C34($resolved.success); "Model without prefix should failed"))
 	ASSERT:C1129($resolved.model="gpt-4o"; "Model name should remain unchanged")
 	ASSERT:C1129(Length:C16($resolved.baseURL)=0; "No baseURL for unprefixed model")
 End if 

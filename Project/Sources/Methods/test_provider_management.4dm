@@ -4,7 +4,7 @@
 
 // MARK:- Test Setup
 var $testResults : Collection:=[]
-var $providers : cs:C1710.OpenAIProviders:=cs:C1710.OpenAIProviders.me
+var $providers : cs:C1710.OpenAIProviders:=cs:C1710.OpenAIProviders.new()
 var $tempFolder : 4D:C1709.Folder:=Folder:C1567(Temporary folder:C486; fk platform path:K87:2)
 var $configFile : 4D:C1709.File
 var $config : Object

@@ -471,8 +471,14 @@
 		},
 		"OpenAIProviders": {
 			"new()": {
-				"Syntax": "**.new**()",
-				"Params": [],
+				"Syntax": "**.new**( *input* : Variant )",
+				"Params": [
+					[
+						"input",
+						"Variant",
+						"->"
+					]
+				],
 				"Summary": ""
 			}
 		},
@@ -1659,19 +1665,8 @@
 			],
 			"Summary": ""
 		},
-		"setProvidersFile()": {
-			"Syntax": "**.setProvidersFile**( *file* : 4D.File )",
-			"Params": [
-				[
-					"file",
-					"4D.File",
-					"->"
-				]
-			],
-			"Summary": ""
-		},
-		"providers": {
-			"Syntax": "providers : cs.AIKit.OpenAIProviders"
+		"providersList": {
+			"Syntax": "providersList : Collection"
 		},
 		"customHeaders": {
 			"Syntax": "customHeaders : Object"
@@ -3231,12 +3226,6 @@
 			],
 			"Summary": ""
 		},
-		"list": {
-			"Syntax": "list : Text"
-		},
-		"isTestingConnection": {
-			"Syntax": "isTestingConnection : Boolean"
-		},
 		"currentItem": {
 			"Syntax": "currentItem : cs.AIKit._OpenAIProvider"
 		},
@@ -3251,6 +3240,15 @@
 		},
 		"WELLKNOWN_PROVIDERS": {
 			"Syntax": "WELLKNOWN_PROVIDERS : Collection"
+		},
+		"list": {
+			"Syntax": "list : Text"
+		},
+		"isTestingConnection": {
+			"Syntax": "isTestingConnection : Boolean"
+		},
+		"providersInstance": {
+			"Syntax": "providersInstance : cs.AIKit.OpenAIProviders"
 		},
 		"previousItem": {
 			"Syntax": "previousItem : Object"
@@ -3409,6 +3407,22 @@
 			],
 			"Summary": ""
 		},
+		"remove()": {
+			"Syntax": "**.remove**( *key* : Text ) : Object",
+			"Params": [
+				[
+					"key",
+					"Text",
+					"->"
+				],
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
 		"modify()": {
 			"Syntax": "**.modify**( *key* : Text; *updates* : Object ) : Boolean",
 			"Params": [
@@ -3430,8 +3444,8 @@
 			],
 			"Summary": ""
 		},
-		"remove()": {
-			"Syntax": "**.remove**( *key* : Text ) : Object",
+		"add()": {
+			"Syntax": "**.add**( *key* : Text; *config* : Object )",
 			"Params": [
 				[
 					"key",
@@ -3439,11 +3453,16 @@
 					"->"
 				],
 				[
-					"",
+					"config",
 					"Object",
-					"<-"
+					"->"
 				]
 			],
+			"Summary": ""
+		},
+		"save()": {
+			"Syntax": "**.save**()",
+			"Params": [],
 			"Summary": ""
 		},
 		"keys()": {
@@ -3464,27 +3483,6 @@
 					"",
 					"Boolean",
 					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"save()": {
-			"Syntax": "**.save**()",
-			"Params": [],
-			"Summary": ""
-		},
-		"add()": {
-			"Syntax": "**.add**( *key* : Text; *config* : Object )",
-			"Params": [
-				[
-					"key",
-					"Text",
-					"->"
-				],
-				[
-					"config",
-					"Object",
-					"->"
 				]
 			],
 			"Summary": ""

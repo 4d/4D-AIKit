@@ -26,7 +26,7 @@ apiKeyEnv: "ANTHROPIC_API_KEY"\
 $configFile.setText(JSON Stringify:C1217($config))
 
 var $client:=cs:C1710.OpenAI.new()
-$client.setProvidersFile($configFile)
+$client.providersList:=[cs:C1710.OpenAIProviders.new($configFile)]
 
 var $messages:=[]
 $messages.push({role: "system"; content: "You are a helpful assistant. Keep your response to one sentence."})

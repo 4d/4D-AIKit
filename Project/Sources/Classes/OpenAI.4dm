@@ -34,8 +34,8 @@ property httpAgent : 4D:C1709.HTTPAgent:=Null:C1517
 property customHeaders : Object
 // property customQuery : Object
 
-// MARK: provider
-property providers : cs:C1710.OpenAIProviders
+// MARK: providers
+property providersList : Collection  // of cs.OpenAIProviders
 
 // List of configurable attributes
 property _configurable : Collection:=["apiKey"; "baseURL"; "organization"; "project"; "maxRetries"; "timeout"; "httpAgent"; "customHeaders"]
@@ -103,7 +103,13 @@ Class constructor( ...  : Variant)
 	This:C1470.models:=cs:C1710.OpenAIModelsAPI.new(This:C1470)
 	
 	// Initialize model alias resolver
-	This:C1470.providers:=cs:C1710.OpenAIProviders.me
+	This:C1470.providersList:=[cs:C1710.OpenAIProviders.new("structure"); cs:C1710.OpenAIProviders.new("user")]
+	var $userData:=cs:C1710.OpenAIProviders.new("userData")
+	If (This:C1470.providersList.last().providersFile.platformPath#$userData.providersFile.platformPath)
+		This:C1470.providersList.push($userData)
+	End if 
+	
+	This:C1470.providersList:=This:C1470.providersList.filter(Formula:C1597($0.value.providersFile.exists))
 	
 	If (Count parameters:C259=0)
 		This:C1470._fillDefaultParameters()
@@ -165,10 +171,12 @@ Function _resolveModelFromBody($body : Variant) : Object
 	End if 
 	
 	// Try to resolve the model alias
-	var $resolved:=This:C1470.providers.resolveModel($modelString)
+	var $resolved:=This:C1470.resolveModel($modelString)
 	
 	If ($resolved.success)
-		$config.baseURL:=$resolved.baseURL
+		If (Length:C16($resolved.baseURL)>0)
+			$config.baseURL:=$resolved.baseURL
+		End if 
 		$config.apiKey:=$resolved.apiKey
 		$config.model:=$resolved.model
 	End if 
@@ -376,14 +384,24 @@ Function _delayProcessAfterRetry($options : Object; $result : cs:C1710.OpenAIRes
 	var $duration:=This:C1470._calculateRetryTimeout($options; $result)
 	DELAY PROCESS:C323(Current process:C322; $duration)
 	
-	// MARK:- http utils
+	// MARK:-  providers
 	
-Function setProvidersFile($file : 4D:C1709.File)
-	This:C1470.providers.providersFile:=$file
-	
+	// Given a model string with ":", try to discovert it's parameters (baseURL, apiKey, ...)
 Function resolveModel($modelString : Text) : Object
-	return This:C1470.providers.resolveModel($modelString)
+	If ((This:C1470.providersList=Null:C1517) || (This:C1470.providersList.length=0))
+		return {success: False:C215; baseURL: ""; apiKey: ""; model: $modelString; error: Null:C1517}
+	End if 
 	
+	var $provider : cs:C1710.OpenAIProviders
+	For each ($provider; This:C1470.providersList)
+		var $value:=$provider.resolveModel($modelString)
+		If (Bool:C1537($value.success))
+			return $value
+		End if 
+	End for each 
+	return $value  // so return last error
+	
+	// MARK:- http utils
 Function _encodeQueryParameter($value : Variant)->$encoded : Text
 	// TODO: more stuff? quotes if needed, etc...
 	
