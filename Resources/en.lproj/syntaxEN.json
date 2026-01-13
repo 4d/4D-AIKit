@@ -535,6 +535,13 @@
 				"Params": [],
 				"Summary": ""
 			}
+		},
+		"OpenAIProviders": {
+			"new()": {
+				"Syntax": "**.new**()",
+				"Params": [],
+				"Summary": ""
+			}
 		}
 	},
 	"OpenAIModerationItem": {
@@ -2762,6 +2769,35 @@
 				[
 					"",
 					"4D.Blob",
+					"<-"
+				]
+			],
+			"Summary": ""
+		}
+	},
+	"OpenAIProviders": {
+		"list()": {
+			"Syntax": "**.list**() : Collection",
+			"Params": [
+				[
+					"",
+					"Collection",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get()": {
+			"Syntax": "**.get**( *name* : Text ) : Object",
+			"Params": [
+				[
+					"name",
+					"Text",
+					"->"
+				],
+				[
+					"",
+					"Object",
 					"<-"
 				]
 			],
