@@ -3,6 +3,9 @@
 // Cache for providers object
 property _providers : Object
 
+// Parsing errors
+property errors : Collection
+
 // MARK:- Constructor
 
 Class constructor()
@@ -11,28 +14,33 @@ Class constructor()
 	// MARK:- Utility
 	
 Function _load()
-	This:C1470._providers:=_AIProvidersObject()  // executed on server if remote
-	// if private, maybe must reload each call?
+	Try
+		This:C1470._providers:=_AIProvidersObject()  // executed on server if remote
+		// if private, maybe must reload each call?
+		
+	Catch
+		This:C1470.errors:=Last errors:C1799
+	End try
 	
 	// MARK:- Provider Access
 	
 	// Get a provider by name
 	// Use it with OpenAI client constructor.
 Function get($name : Text) : Object
-	If (This:C1470._providers=Null:C1517)
+	If ((This:C1470._providers=Null:C1517) || (This:C1470._providers.providers=Null:C1517))
 		return Null:C1517
 	End if 
-	If (Value type:C1509(This:C1470._providers[$name])=Is object:K8:27)
-		return OB Copy:C1225(This:C1470._providers[$name])
+	If (Value type:C1509(This:C1470._providers.providers[$name])=Is object:K8:27)
+		return OB Copy:C1225(This:C1470._providers.providers[$name])
 	End if 
 	return Null:C1517
 	
 	// Get all provider names
 Function list() : Collection
-	If (This:C1470._providers=Null:C1517)
+	If ((This:C1470._providers=Null:C1517) || (This:C1470._providers.providers=Null:C1517))
 		return []
 	End if 
-	return OB Keys:C1719(This:C1470._providers)
+	return OB Keys:C1719(This:C1470._providers.providers)
 	
 	// MARK:- Model Resolution
 	
@@ -93,13 +101,13 @@ Function _resolveModel($modelString : Text) : Object
 	// Convert merged providers to collection format for UI consumption
 Function _toCollection() : Collection
 	var $result:=[]
-	If (This:C1470._providers=Null:C1517)
+	If ((This:C1470._providers=Null:C1517) || (This:C1470._providers.providers=Null:C1517))
 		return $result
 	End if 
 	
 	var $key : Text
-	For each ($key; This:C1470._providers)
-		var $provider : Variant:=This:C1470._providers[$key]
+	For each ($key; This:C1470._providers.providers)
+		var $provider : Variant:=This:C1470._providers.providers[$key]
 		If (Value type:C1509($provider)=Is object:K8:27)
 			$result.push({\
 				name: $key; \
