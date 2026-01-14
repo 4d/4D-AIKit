@@ -164,7 +164,7 @@ Function _resolveModelFromBody($body : Variant) : Object
 			$config.baseURL:=$resolved.baseURL
 		End if 
 		If (Length:C16($resolved.apiKey)>0)
-			$config.baseURL:=$resolved.apiKey
+			$config.apiKey:=$resolved.apiKey
 		End if 
 		
 	End if 
