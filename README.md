@@ -1,4 +1,4 @@
-# 4D AIKit
+# AIKit
 
 
 ## Overview
