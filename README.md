@@ -6,6 +6,8 @@
 
 This repo was forked for experimentation and testing purposes.
 
+Normally you should use the offical releases.
+
 ## Install
 
 Add `https://github.com/miyako/AIKit/` (without the official `4D-` prefix) to `dependencies.json`
