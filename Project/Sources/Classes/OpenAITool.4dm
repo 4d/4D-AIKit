@@ -45,11 +45,12 @@ Class constructor($object : Object)
 	
 Function body() : Object
 	
+	var $body : Object
+	
 	Case of 
 			
 		: (This:C1470.type="function")
 			
-			var $body : Object
 			$body:={type: "function"; \
 				function: {\
 				name: This:C1470.name; \
@@ -76,7 +77,7 @@ Function body() : Object
 	End case 
 	
 	// build-in? for response endpoint
-	var $body:={type: This:C1470.type}
+	$body:={type: This:C1470.type}
 	
 	// type: "web_search" 
 	// type: "file_search",    vector_store_idsvector_store_ids
