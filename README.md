@@ -1,4 +1,4 @@
-# 4D-AIKit
+# AIKit
 
 [![language][code-shield]][code-url]
 
