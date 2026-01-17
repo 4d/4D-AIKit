@@ -6,7 +6,7 @@
     "Keisuke Miyako <keisuke.miyako@4D.com>"
   ],
   "repository": "https://github.com/miyako/4D-AIKit",
-  "version": "21.0.1",
+  "version": "21.0.2",
   "tool": {
     "platform": "macos",
     "branch": "20.x",
