@@ -18,7 +18,7 @@ on:
           required: true
 
 env: 
-  project_path: Project/4D-AIKit.4DProject
+  project_path: Project/AIKit.4DProject
   
 jobs:
 
