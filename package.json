@@ -9,8 +9,8 @@
   "version": "21.0.0",
   "tool": {
     "platform": "macos",
-    "branch": "21.x",
-    "version": "21.0",
+    "branch": "20.x",
+    "version": "20.7",
     "build": "latest",
     "arch": "arm"
   }
