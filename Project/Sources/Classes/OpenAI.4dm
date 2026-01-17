@@ -172,6 +172,13 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 	
 	var $options:={method: $httpMethod; headers: $headers; dataType: "auto"}
 	
+	If (OB Instance of:C1731($parameters; cs:C1710.OpenAIChatCompletionsParameters))
+		var $chatCompletionsParameters : cs:C1710.OpenAIChatCompletionsParameters:=$parameters
+		If ($chatCompletionsParameters.stream)
+			$options.decodeData:=True:C214  //Gemini returns encoded data
+		End if 
+	End if 
+	
 	If (Not:C34(OB Instance of:C1731($parameters; cs:C1710.OpenAIParameters)))
 		$parameters:=cs:C1710.OpenAIParameters.new($parameters)
 	End if 
