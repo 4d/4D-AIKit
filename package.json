@@ -1,0 +1,17 @@
+{
+  "name": "4D-AIKit",
+  "description": "4D AIKit is a built-in 4D component that enables interaction with third-party AI APIs",
+  "author": [
+    "Developers of 4D/4D-AIKit",
+    "Keisuke Miyako <keisuke.miyako@4D.com>"
+  ],
+  "repository": "https://github.com/miyako/4D-AIKit",
+  "version": "21.0.0",
+  "tool": {
+    "platform": "macos",
+    "branch": "20.x",
+    "version": "20.7",
+    "build": "latest",
+    "arch": "arm"
+  }
+}
