@@ -9,3 +9,7 @@ This repo was forked for experimentation and testing purposes.
 ## Install
 
 Add `https://github.com/miyako/AIKit/` (without the official `4D-` prefix) to `dependencies.json`
+
+## History
+
+* [feature-google-stream](https://github.com/miyako/AIKit/tree/feature-google-stream): Gemini chat completion stream support and tool calling support
