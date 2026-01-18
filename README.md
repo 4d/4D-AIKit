@@ -35,9 +35,7 @@ Add `https://github.com/miyako/AIKit/` (without the official `4D-` prefix) to `d
 
 For function calling you would want to use a **reasoning** (thinking, chain of thought) model. The first reasoning model from OpenAI is **4o** which was released between 4 and 4.1. 4.1 is the last non-reasoning model. After 4.1 came o1, o3, and o4 which are all reasoning models. GPT 5 series are all reasoninig models. As of today, 3.5, 4o, 4.1, o1, o3, o4 are legacy models.
 
-#### TL; DR
-
-Use 4o, 4-turbo, 4.1, 5.1, or 5.2.
+> Use 4o, 4-turbo, 4.1, 5.1, or 5.2.
 
 #### Google Compatibility with AIKit function calling
 
@@ -47,9 +45,7 @@ Use 4o, 4-turbo, 4.1, 5.1, or 5.2.
 ||2.5|✅|
 | |3||
 
-#### TL; DR
-
-Use 2.5. Gemini 3 (preview) on OpenAI compatibility seems to have a regression.
+> Use 2.5. Gemini 3 (preview) on OpenAI compatibility seems to have a regression.
 
 #### Claude Compatibility with AIKit function calling
 
@@ -58,3 +54,5 @@ Use 2.5. Gemini 3 (preview) on OpenAI compatibility seems to have a regression.
 |Haiku|4.5|✅|
 |Opus|4.5|✅|
 |Sonnet|4.5|✅|Request might exceed the rate limit of 10,000 input tokens per minute.
+
+> Use Haiku or Opus if you have a low quota.
