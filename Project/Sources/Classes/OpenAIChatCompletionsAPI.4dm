@@ -22,7 +22,8 @@ Function create($messages : Collection; $parameters : cs:C1710.OpenAIChatComplet
 	var $body:=$parameters.body()
 	
 	Case of 
-		: (This:C1470._client.baseURL="@.openai.azure.com/openai/v1")
+		: (This:C1470._client.baseURL="@.openai.azure.com/openai/v1") && \
+			["@Llama-3.1@"; "Phi-4@"].some(Formula:C1597($2=$1.value); String:C10($parameters.model))
 			If (OB Is defined:C1231($body; "response_format"))
 				If ($body.response_format.type="json_schema")
 					If (OB Is defined:C1231($body.response_format; "json_schema"))
