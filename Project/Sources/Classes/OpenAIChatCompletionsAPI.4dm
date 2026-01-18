@@ -32,10 +32,10 @@ Function create($messages : Collection; $parameters : cs:C1710.OpenAIChatComplet
 						If ($message#Null:C1517)
 							If (Value type:C1509($message.text)=Is text:K8:3)
 								$message.text+=["You must output valid JSON only."; \
-									"You must not add extra properties not defined in the schema."; \
-									"You must not change the property name defined in the schema."; \
-									"You must strictly adhere exactly to this schema"; \
-									"you must output all required properties defined in the schema."; \
+									"You must not add any extra properties not defined in the schema."; \
+									"You must not change any property name defined in the schema."; \
+									"you must not omit any required property defined in the schema."; \
+									"You must strictly adhere to this JSON schema: "; \
 									JSON Stringify:C1217($body.response_format.json_schema.schema)].join("\n")
 							End if 
 						End if 
