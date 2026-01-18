@@ -16,7 +16,7 @@ Add `https://github.com/miyako/AIKit/` (without the official `4D-` prefix) to `d
 
 * [feature-google-stream](https://github.com/miyako/AIKit/tree/feature-google-stream): Gemini chat completion stream support and tool calling support
 
-#### Compatibility with AIKit function calling
+#### OpenAI Compatibility with AIKit function calling
 
 |Model&nbsp;Family|Version|Function&nbsp;Calling|Remarks
 |-|-|:-:|-|
@@ -38,3 +38,11 @@ For function calling you would want to use a **reasoning** (thinking, chain of t
 #### TL; DR
 
 Use 4o, 4-turbo, 4.1, 5.1, or 5.2.
+
+#### Claude Compatibility with AIKit function calling
+
+|Model&nbsp;Family|Version|Function&nbsp;Calling|Remarks
+|-|-|:-:|-|
+|Haiku|4.5|✅|
+|Opus|4.5|✅|
+|Sonnet|4.5|✅|Request might exceed the rate limit of 10,000 input tokens per minute.
