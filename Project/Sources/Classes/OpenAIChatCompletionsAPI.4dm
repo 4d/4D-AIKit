@@ -24,8 +24,8 @@ Function create($messages : Collection; $parameters : cs:C1710.OpenAIChatComplet
 	Case of 
 		: (This:C1470._client.baseURL="@.openai.azure.com/openai/v1")
 			If (OB Is defined:C1231($body; "response_format"))
-				If ($body.response_format="json_schema")
-					$body.response_format:="json_object"
+				If ($body.response_format.type="json_schema")
+					$body.response_format:={type: "json_object"}
 				End if 
 			End if 
 	End case 
