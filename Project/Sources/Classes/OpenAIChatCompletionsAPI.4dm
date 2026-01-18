@@ -26,17 +26,17 @@ Function create($messages : Collection; $parameters : cs:C1710.OpenAIChatComplet
 		For each ($message; $messages)
 			If (Not:C34(OB Instance of:C1731($message; cs:C1710.OpenAIMessage)))
 				$message:=cs:C1710.OpenAIMessage.new($message)
-				$body.messages.push($message._toBody())
 			End if 
-		End for each
+			$body.messages.push($message._toBody())
+		End for each 
 	End if 
+	
 	Case of 
 		: (This:C1470._client.baseURL="@.openai.azure.com/openai/v1") && \
 			["@Llama-3.1@"; "Phi-4@"].some(Formula:C1597($2=$1.value); String:C10($parameters.model))
 			If (OB Is defined:C1231($body; "response_format"))
 				If ($body.response_format.type="json_schema")
 					If (OB Is defined:C1231($body.response_format; "json_schema"))
-						var $message : Object
 						$message:=$messages.query("role == :1"; "system").first()
 						If ($message#Null:C1517)
 							If (Value type:C1509($message.text)=Is text:K8:3)
@@ -52,7 +52,7 @@ Function create($messages : Collection; $parameters : cs:C1710.OpenAIChatComplet
 					$body.response_format:={type: "json_object"}
 				End if 
 			End if 
-	End case
+	End case 
 	
 	return This:C1470._client._post("/chat/completions"; $body; $parameters; cs:C1710.OpenAIChatCompletionsResult)
 	
