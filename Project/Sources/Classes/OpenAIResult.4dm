@@ -113,7 +113,7 @@ Function _shouldRetry() : Boolean
 		return False:C215
 	End if 
 	
-	If ((This:C1470.headers#Null:C1517) && This:C1470.headers["x-should-retry"])
+	If ((This:C1470.headers#Null:C1517) && (This:C1470.headers["x-should-retry"]#Null:C1517))
 		return This:C1470.headers["x-should-retry"]="true"  // XXX could check if false
 	End if 
 	

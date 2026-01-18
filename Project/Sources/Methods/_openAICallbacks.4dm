@@ -14,3 +14,6 @@ End if
 If (($parameters.onTerminate#Null:C1517) && (OB Instance of:C1731($parameters.onTerminate; 4D:C1709.Function)))
 	$parameters.onTerminate.call($parameters._formulaThis || $client; $result)
 End if 
+If (($parameters.formula#Null:C1517) && (OB Instance of:C1731($parameters.formula; 4D:C1709.Function)))
+	$parameters.formula.call($parameters._formulaThis || $client; $result)
+End if 

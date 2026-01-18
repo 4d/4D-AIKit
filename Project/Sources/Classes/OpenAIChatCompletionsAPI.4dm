@@ -20,7 +20,33 @@ Function create($messages : Collection; $parameters : cs:C1710.OpenAIChatComplet
 	End if 
 	
 	var $body:=$parameters.body()
+	
+	Case of 
+		: (This:C1470._client.baseURL="@.openai.azure.com/openai/v1") && \
+			["@Llama-3.1@"; "Phi-4@"].some(Formula:C1597($2=$1.value); String:C10($parameters.model))
+			If (OB Is defined:C1231($body; "response_format"))
+				If ($body.response_format.type="json_schema")
+					If (OB Is defined:C1231($body.response_format; "json_schema"))
+						var $message : Object
+						$message:=$messages.query("role == :1"; "system").first()
+						If ($message#Null:C1517)
+							If (Value type:C1509($message.text)=Is text:K8:3)
+								$message.text+=["You must output valid JSON only."; \
+									"You must not add any extra properties not defined in the schema."; \
+									"You must not change any property name defined in the schema."; \
+									"you must not omit any required property defined in the schema."; \
+									"You must strictly adhere to this JSON schema: "; \
+									JSON Stringify:C1217($body.response_format.json_schema.schema)].join("\n")
+							End if 
+						End if 
+					End if 
+					$body.response_format:={type: "json_object"}
+				End if 
+			End if 
+	End case 
+	
 	$body.messages:=$messages
+	
 	return This:C1470._client._post("/chat/completions"; $body; $parameters; cs:C1710.OpenAIChatCompletionsResult)
 	
 /*

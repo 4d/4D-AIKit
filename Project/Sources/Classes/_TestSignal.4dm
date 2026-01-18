@@ -7,6 +7,7 @@ shared singleton Class constructor
 	
 Function init()
 	Use (This:C1470)
+		This:C1470.result:=Null:C1517
 		This:C1470.signal:=New signal:C1641(Current method name:C684())
 		This:C1470.chunks:=New shared collection:C1527()
 	End use 

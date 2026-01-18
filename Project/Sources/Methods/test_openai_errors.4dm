@@ -69,7 +69,7 @@ cs:C1710._TestSignal.me.init()
 
 $messages:=[cs:C1710.OpenAIMessage.new({role: "system"; content: "You are a helpful assistant."})]
 $messages.push({role: "user"; content: "Could you explain me why 42 is a special number"})
-CALL WORKER:C1389(Current method name:C684; Formula:C1597($client.chat.completions.create($messages; {stream: True:C214; formula: Formula:C1597(cs:C1710._TestSignal.me.trigger($1))})))
+CALL WORKER:C1389(Current method name:C684; Formula:C1597($client.chat.completions.create($messages; {stream: True:C214; onData: Formula:C1597(""); onTerminate: Formula:C1597(cs:C1710._TestSignal.me.trigger($1))})))
 
 cs:C1710._TestSignal.me.wait(10*1000)
 
@@ -86,7 +86,7 @@ cs:C1710._TestSignal.me.init()
 
 $messages:=[cs:C1710.OpenAIMessage.new({role: "system"; content: "You are a helpful assistant."})]
 $messages.push({role: "user"; content: "Could you explain me why 42 is a special number"})
-CALL WORKER:C1389(Current method name:C684; Formula:C1597($client.chat.completions.create($messages; {stream: True:C214; formula: Formula:C1597(cs:C1710._TestSignal.me.trigger($1))})))
+CALL WORKER:C1389(Current method name:C684; Formula:C1597($client.chat.completions.create($messages; {stream: True:C214; onData: Formula:C1597(""); onTerminate: Formula:C1597(cs:C1710._TestSignal.me.trigger($1))})))
 
 cs:C1710._TestSignal.me.wait(10*1000)
 

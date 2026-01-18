@@ -26,7 +26,8 @@
 			"OpenAIChatCompletionsResult",
 			"OpenAIChatCompletionsStreamResult",
 			"OpenAIChoice",
-			"OpenAIMessage"
+			"OpenAIMessage",
+			"OpenAITool"
 		]
 	},
 	"Embeddings": {
@@ -83,8 +84,15 @@
 		"methods": [
 			"_runTests",
 			"_runTestsCLI",
+			"_test_openai_chat_helper_trim",
 			"test_openai_chat",
 			"test_openai_chat_async",
+			"test_openai_chat_helper",
+			"test_openai_chat_helper_as_tool",
+			"test_openai_chat_helper_async",
+			"test_openai_chat_helper_m_tools",
+			"test_openai_chat_helper_tools",
+			"test_openai_chat_tools",
 			"test_openai_embeddings",
 			"test_openai_embeddings_async",
 			"test_openai_errors",
@@ -92,10 +100,12 @@
 			"test_openai_models",
 			"test_openai_models_async",
 			"test_openai_moderations",
+			"test_openai_msg_accumulate",
 			"test_openai_vision",
 			"TestOpenAI"
 		],
 		"classes": [
+			"_TestModels",
 			"_TestSignal"
 		]
 	},

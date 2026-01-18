@@ -4,7 +4,9 @@ If ($client=Null:C1517)
 	return   // skip test
 End if 
 
-var $result:=$client.moderations.create("test input"; "omni-moderation-latest")
+var $model : Text:=cs:C1710._TestModels.new($client).moderation
+
+var $result:=$client.moderations.create("test input"; $model)
 If (Asserted:C1132(Bool:C1537($result.success); "Cannot get moderations result: "+JSON Stringify:C1217($result)))
 	
 	If (Asserted:C1132($result.moderation#Null:C1517; "moderation must not be null"))

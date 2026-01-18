@@ -34,6 +34,9 @@ property tool_choice : Variant
 // Static predicted output content, such as the content of a text file that is being regenerated.
 property prediction : Object
 
+// Specifies the processing type used for serving the request.
+property service_tier : Text
+
 // seed, metadata, modalities, etc...
 
 // Function to call asynchronously when receiving data. /!\ Be sure your current process not die.
@@ -43,6 +46,38 @@ Class extends OpenAIParameters
 
 Class constructor($object : Object)
 	Super:C1705($object)
+	
+	If ((This:C1470.onData=Null:C1517) && ($object.onData#Null:C1517))
+		This:C1470.onData:=$object.onData
+	End if 
+	
+	This:C1470._mapTools()
+	
+	
+Function _mapTools
+	If (This:C1470.tools=Null:C1517)
+		return 
+	End if 
+	If (This:C1470.tools.length=0)
+		return 
+	End if 
+	
+	var $tools:=[]
+	var $tool : Variant
+	For each ($tool; This:C1470.tools)
+		If (Value type:C1509($tool)#Is object:K8:27)
+			continue  // ignore
+		End if 
+		
+		If (OB Instance of:C1731($tool; cs:C1710.OpenAITool))
+			$tools.push($tool)
+		Else 
+			$tools.push(cs:C1710.OpenAITool.new($tool))
+		End if 
+		
+	End for each 
+	
+	This:C1470.tools:=$tools
 	
 Function body() : Object
 	var $body : Object:=Super:C1706.body()
@@ -74,14 +109,19 @@ Function body() : Object
 	If (This:C1470.response_format#Null:C1517)
 		$body.response_format:=This:C1470.response_format
 	End if 
+	
+	This:C1470._mapTools()  // in case of post modification
 	If (This:C1470.tools#Null:C1517)
-		$body.tools:=This:C1470.tools
+		$body.tools:=This:C1470.tools.map(Formula:C1597($1.value.body()))
 	End if 
 	If (This:C1470.tool_choice#Null:C1517)
 		$body.tool_choice:=This:C1470.tool_choice
 	End if 
 	If (This:C1470.prediction#Null:C1517)
 		$body.prediction:=This:C1470.prediction
+	End if 
+	If (Length:C16(String:C10(This:C1470.service_tier))>0)
+		$body.service_tier:=This:C1470.service_tier
 	End if 
 	return $body
 	

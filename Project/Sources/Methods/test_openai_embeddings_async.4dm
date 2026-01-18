@@ -4,9 +4,10 @@ If ($client=Null:C1517)
 	return   // skip test
 End if 
 
+var $model : Text:=cs:C1710._TestModels.new($client).embeddings
 cs:C1710._TestSignal.me.init()
 
-CALL WORKER:C1389(Current method name:C684; Formula:C1597($client.embeddings.create("A futuristic city skyline at sunset"; "text-embedding-ada-002"; {formula: Formula:C1597(cs:C1710._TestSignal.me.trigger($1))})))
+CALL WORKER:C1389(Current method name:C684; Formula:C1597($client.embeddings.create("A futuristic city skyline at sunset"; $model; {formula: Formula:C1597(cs:C1710._TestSignal.me.trigger($1))})))
 
 cs:C1710._TestSignal.me.wait(10*1000)
 
@@ -14,7 +15,7 @@ var $result : cs:C1710.OpenAIEmbeddingsResult:=cs:C1710._TestSignal.me.result
 
 If (Asserted:C1132(Bool:C1537($result.success); "Cannot complete embedding : "+JSON Stringify:C1217($result)))
 	
-	ASSERT:C1129(Position:C15("text-embedding-ada-002"; $result.model)>0; $result.model)
+	ASSERT:C1129(Position:C15($model; String:C10($result.model))>0; "receive model :'"+String:C10($result.model)+"', maybe wrong class "+String:C10(OB Class:C1730($result).name))
 	
 	If (Asserted:C1132($result.embeddings#Null:C1517; "no embedding"))
 		
@@ -28,3 +29,5 @@ If (Asserted:C1132(Bool:C1537($result.success); "Cannot complete embedding : "+J
 		End if 
 	End if 
 End if 
+
+KILL WORKER:C1390(Current method name:C684)

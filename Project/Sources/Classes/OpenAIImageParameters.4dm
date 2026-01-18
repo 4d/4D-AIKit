@@ -1,6 +1,6 @@
 
 // The model to use for image generation.
-property model : Text:="dall-e-2"
+property model : Text:="dall-e-2"  // gpt-image-1
 
 // The number of images to generate. Must be between 1 and 10. For `dall-e-3`, only `n=1` is supported.
 property n : Integer:=1
