@@ -45,7 +45,7 @@ For function calling you would want to use a **reasoning** (thinking, chain of t
 ||2.5|✅|
 | |3||
 
-> Use 2.5. Gemini 3 (preview) on OpenAI compatibility seems to have a regression.
+> Use Gemini 2.5. Gemini 3 (preview) on OpenAI compatibility seems to have a regression.
 
 #### Claude Compatibility with AIKit function calling
 
