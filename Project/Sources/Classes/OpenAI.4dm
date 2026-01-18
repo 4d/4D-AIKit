@@ -238,7 +238,7 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 	var $url:=$baseURL+$path
 	var $headers:=This:C1470._headers($resolvedConfig)
 	
-	var $options:={method: $httpMethod; headers: $headers; dataType: "auto"}
+	var $options:={method: $httpMethod; headers: $headers; dataType: "auto"; decodeData: True:C214}
 	
 	var $async:=$parameters._isAsync()
 	If ($async)
