@@ -39,6 +39,18 @@ For function calling you would want to use a **reasoning** (thinking, chain of t
 
 Use 4o, 4-turbo, 4.1, 5.1, or 5.2.
 
+#### Google Compatibility with AIKit function calling
+
+|Model&nbsp;Family|Version|Function&nbsp;Calling|Remarks
+|-|-|:-:|-|
+|Gemini|2.0|
+||2.5|✅|
+| |3||
+
+#### TL; DR
+
+Use 2.5. Gemini 3 (preview) on OpenAI compatibility seems to have a regression.
+
 #### Claude Compatibility with AIKit function calling
 
 |Model&nbsp;Family|Version|Function&nbsp;Calling|Remarks
