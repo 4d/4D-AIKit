@@ -20,16 +20,15 @@ Function create($messages : Collection; $parameters : cs:C1710.OpenAIChatComplet
 	End if 
 	
 	var $body:=$parameters.body()
-	$body.messages:=[]
-	If ($messages#Null:C1517)
-		var $message : Object
-		For each ($message; $messages)
-			If (Not:C34(OB Instance of:C1731($message; cs:C1710.OpenAIMessage)))
-				$message:=cs:C1710.OpenAIMessage.new($message)
-			End if 
-			$body.messages.push($message._toBody())
-		End for each 
+	
+	If (String:C10(This:C1470._client.baseURL)="https://api.anthropic.com/v1")
+		If (OB Is defined:C1231($body; "response_format"))
+			$body.output_format:=$body.response_format
+			OB REMOVE:C1226($body; "response_format")
+		End if 
 	End if 
+	
+	$body.messages:=$messages
 	return This:C1470._client._post("/chat/completions"; $body; $parameters; cs:C1710.OpenAIChatCompletionsResult)
 	
 /*
