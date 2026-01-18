@@ -26,10 +26,19 @@ Function create($messages : Collection; $parameters : cs:C1710.OpenAIChatComplet
 		For each ($message; $messages)
 			If (Not:C34(OB Instance of:C1731($message; cs:C1710.OpenAIMessage)))
 				$message:=cs:C1710.OpenAIMessage.new($message)
+				$body.messages.push($message._toBody())
 			End if 
-			$body.messages.push($message._toBody())
-		End for each 
+		End for each
 	End if 
+	Case of 
+		: (This:C1470._client.baseURL="@.openai.azure.com/openai/v1")
+			If (OB Is defined:C1231($body; "response_format"))
+				If ($body.response_format.type="json_schema")
+					$body.response_format:={type: "json_object"}
+				End if 
+			End if 
+	End case
+	
 	return This:C1470._client._post("/chat/completions"; $body; $parameters; cs:C1710.OpenAIChatCompletionsResult)
 	
 /*
