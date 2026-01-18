@@ -187,6 +187,8 @@ Function _authHeaders($resolvedConfig : Object) : Object
 	If (String:C10($baseURL)="https://api.anthropic.com/v1")
 		$headers["x-api-key"]:=String:C10($apiKey)
 		$headers["anthropic-version"]:="2023-06-01"
+		$headers["anthropic-beta"]:="structured-outputs-2025-11-13"
+		//https://platform.claude.com/docs/en/build-with-claude/structured-outputs
 	End if 
 	return $headers
 	
