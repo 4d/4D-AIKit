@@ -34,6 +34,20 @@ Function create($messages : Collection; $parameters : cs:C1710.OpenAIChatComplet
 		: (This:C1470._client.baseURL="@.openai.azure.com/openai/v1")
 			If (OB Is defined:C1231($body; "response_format"))
 				If ($body.response_format.type="json_schema")
+					If (OB Is defined:C1231($body.response_format; "json_schema"))
+						var $message : Object
+						$message:=$messages.query("role == :1"; "system").first()
+						If ($message#Null:C1517)
+							If (Value type:C1509($message.text)=Is text:K8:3)
+								$message.text+=["You must output valid JSON only."; \
+									"You must not add extra properties not defined in the schema."; \
+									"You must not change the property name defined in the schema."; \
+									"You must strictly adhere exactly to this schema"; \
+									"you must output all required properties defined in the schema."; \
+									JSON Stringify:C1217($body.response_format.json_schema.schema)].join("\n")
+							End if 
+						End if 
+					End if 
 					$body.response_format:={type: "json_object"}
 				End if 
 			End if 
