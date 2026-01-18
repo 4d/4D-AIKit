@@ -24,6 +24,12 @@ Function create($messages : Collection; $parameters : cs:C1710.OpenAIChatComplet
 	If (String:C10(This:C1470._client.baseURL)="https://api.anthropic.com/v1")
 		If (OB Is defined:C1231($body; "response_format"))
 			$body.output_format:=$body.response_format
+			If (OB Is defined:C1231($body.output_format; "json_schema"))
+				If (OB Is defined:C1231($body.output_format.json_schema; "schema"))
+					$body.output_format.schema:=$body.output_format.json_schema.schema
+					OB REMOVE:C1226($body.output_format; "json_schema")
+				End if 
+			End if 
 			OB REMOVE:C1226($body; "response_format")
 		End if 
 	End if 
