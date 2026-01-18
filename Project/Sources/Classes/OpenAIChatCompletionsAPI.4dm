@@ -45,8 +45,6 @@ Function create($messages : Collection; $parameters : cs:C1710.OpenAIChatComplet
 			End if 
 	End case 
 	
-	$body.messages:=$messages
-	
 	return This:C1470._client._post("/chat/completions"; $body; $parameters; cs:C1710.OpenAIChatCompletionsResult)
 	
 /*
