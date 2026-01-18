@@ -30,7 +30,9 @@ Class constructor($object : Object)
 	// allow to provide OpenAI format
 	If ((String:C10($object.type)="function") && (Value type:C1509($object.function)=Is object:K8:27))
 		
-		This:C1470.strict:=Bool:C1537($object.strict)
+		If (OB Is defined:C1231($object; "strict"))
+			This:C1470.strict:=Bool:C1537($object.strict)
+		End if 
 		
 		$object:=$object.function
 		
@@ -43,17 +45,25 @@ Class constructor($object : Object)
 	
 Function body() : Object
 	
+	var $body : Object
+	
 	Case of 
 			
 		: (This:C1470.type="function")
 			
-			return {type: "function"; \
+			$body:={type: "function"; \
 				function: {\
 				name: This:C1470.name; \
 				description: This:C1470.description; \
 				parameters: This:C1470.parameters\
 				}; \
 				strict: Bool:C1537(This:C1470.strict)}
+			
+			If (This:C1470.strict=Null:C1517)
+				OB REMOVE:C1226($body; "strict")
+			End if 
+			
+			return $body
 			
 		: (This:C1470.type="custom")  // for response endpoints
 			
@@ -67,7 +77,7 @@ Function body() : Object
 	End case 
 	
 	// build-in? for response endpoint
-	var $body:={type: This:C1470.type}
+	$body:={type: This:C1470.type}
 	
 	// type: "web_search" 
 	// type: "file_search",    vector_store_idsvector_store_ids
