@@ -223,6 +223,13 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 	
 	// Determine baseURL (use resolved if available, otherwise use instance baseURL)
 	var $baseURL : Text:=(Length:C16($resolvedConfig.baseURL)>0) ? $resolvedConfig.baseURL : This:C1470.baseURL
+	Case of 
+		: (Length:C16($baseURL)=0)
+			$baseURL:="https://api.openai.com/v1"
+		: ($baseURL[[Length:C16($baseURL)]]="/")
+			$baseURL:=Substring:C12($baseURL; 1; Length:C16($baseURL)-1)  // drop it
+	End case 
+	
 	var $url:=$baseURL+$path
 	var $headers:=This:C1470._headers($resolvedConfig)
 	

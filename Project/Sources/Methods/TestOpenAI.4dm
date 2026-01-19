@@ -29,4 +29,17 @@ End if
 // $client.baseURL:="http://127.0.0.1:80/v1"
 // $client.apiKey:="none"
 
+var $providerName:=""  // name of position starting with 1
+var $providers:=cs:C1710.OpenAIProviders.new()
+If (Num:C11($providerName)>0)
+	$providerName:=$providers.list()[Num:C11($providerName)-1]
+End if 
+
+If (Length:C16($providerName)>0)
+	var $providerData:=$providers.get($providerName)
+	If (Asserted:C1132($providerData#Null:C1517; "No defined provider "+$providerName))
+		$client:=cs:C1710.OpenAI.new($providerData)
+	End if 
+End if 
+
 return $client

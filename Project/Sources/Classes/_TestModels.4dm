@@ -22,6 +22,11 @@ Class constructor($client : cs:C1710.OpenAI)
 			This:C1470.embeddings:=""
 			This:C1470.chats:="claude-haiku-4-5"
 			
+		: (Position:C15("googleapis"; $client.baseURL)>0)
+			
+			This:C1470.embeddings:="gemini-embedding-001"
+			This:C1470.chats:="gemini-3-flash-preview"
+			
 	End case 
 	
 	// XXX: could check $client.models.list()
