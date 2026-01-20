@@ -218,6 +218,18 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 	End if 
 	var $result : cs:C1710.OpenAIResult:=$resultType.new()
 	
+	var $url:=This:C1470.baseURL+$path
+	var $headers:=This:C1470._headers()
+	
+	var $options:={method: $httpMethod; headers: $headers; dataType: "auto"}
+	
+	If (OB Instance of:C1731($parameters; cs:C1710.OpenAIChatCompletionsParameters))
+		var $chatCompletionsParameters : cs:C1710.OpenAIChatCompletionsParameters:=$parameters
+		If ($chatCompletionsParameters.stream)
+			$options.decodeData:=True:C214  //Gemini returns encoded data
+		End if 
+	End if 
+	
 	If (Not:C34(OB Instance of:C1731($parameters; cs:C1710.OpenAIParameters)))
 		$parameters:=cs:C1710.OpenAIParameters.new($parameters)
 	End if 
@@ -242,7 +254,7 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 	var $url:=$baseURL+$path
 	var $headers:=This:C1470._headers($resolvedConfig)
 	
-	var $options:={method: $httpMethod; headers: $headers; dataType: "auto"}
+	var $options:={method: $httpMethod; headers: $headers; dataType: "auto"; decodeData: True:C214}
 	
 	var $async:=$parameters._isAsync()
 	If ($async)
