@@ -11,7 +11,8 @@ If (Asserted:C1132(Bool:C1537($modelsResult.success); "Cannot get model list: "+
 		
 		If (Asserted:C1132($modelsResult.models.length>0; "Model list must not be empty"))
 			
-			var $modelResult:=$client.models.retrieve($modelsResult.models.first().id)
+			var $modelName : Text:=$modelsResult.models.first().id
+			var $modelResult:=$client.models.retrieve($modelName)
 			
 			If (Asserted:C1132(Bool:C1537($modelResult.success); "Cannot get model: "+JSON Stringify:C1217($modelResult)))
 				
