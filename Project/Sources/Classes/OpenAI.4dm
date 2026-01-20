@@ -182,9 +182,16 @@ Function _resolveModelFromBody($body : Variant) : Object
 	
 	// MARK:- headers
 	
-Function _authHeaders($resolvedConfig : Object) : Object
-	// Use resolved API key if available, otherwise use instance apiKey
-	var $apiKey : Text:=(Length:C16($resolvedConfig.apiKey)>0) ? $resolvedConfig.apiKey : This:C1470.apiKey
+Function _authHeaders() : Object
+	If (Length:C16(String:C10(This:C1470.apiKey))=0)
+		return {}
+	End if 
+	var $headers:={Authorization: "Bearer "+String:C10(This:C1470.apiKey)}
+	If (String:C10(This:C1470.baseURL)="https://api.anthropic.com/v1")
+		$headers["x-api-key"]:=String:C10(This:C1470.apiKey)
+		$headers["anthropic-version"]:="2023-06-01"
+	End if 
+	return $headers
 	
 	If (Length:C16(String:C10($apiKey))=0)
 		return {}
@@ -196,6 +203,8 @@ Function _authHeaders($resolvedConfig : Object) : Object
 	If (String:C10($baseURL)="https://api.anthropic.com/v1")
 		$headers["x-api-key"]:=String:C10($apiKey)
 		$headers["anthropic-version"]:="2023-06-01"
+		$headers["anthropic-beta"]:="structured-outputs-2025-11-13"
+		//https://platform.claude.com/docs/en/build-with-claude/structured-outputs
 	End if 
 	return $headers
 	
@@ -217,6 +226,18 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 		$resultType:=cs:C1710.OpenAIResult
 	End if 
 	var $result : cs:C1710.OpenAIResult:=$resultType.new()
+	
+	var $url:=This:C1470.baseURL+$path
+	var $headers:=This:C1470._headers()
+	
+	var $options:={method: $httpMethod; headers: $headers; dataType: "auto"}
+	
+	If (OB Instance of:C1731($parameters; cs:C1710.OpenAIChatCompletionsParameters))
+		var $chatCompletionsParameters : cs:C1710.OpenAIChatCompletionsParameters:=$parameters
+		If ($chatCompletionsParameters.stream)
+			$options.decodeData:=True:C214  //Gemini returns encoded data
+		End if 
+	End if 
 	
 	If (Not:C34(OB Instance of:C1731($parameters; cs:C1710.OpenAIParameters)))
 		$parameters:=cs:C1710.OpenAIParameters.new($parameters)
