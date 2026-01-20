@@ -77,6 +77,8 @@ Function _resolveModel($modelString : Text) : Object
 	// Simple provider model
 	$config.baseURL:=$provider.baseURL || ""
 	$config.apiKey:=$provider.apiKey || ""
+	$config.organization:=$provider.organization || ""
+	$config.project:=$provider.project || ""
 	$config.model:=$modelName
 	
 	// Try to get apiKey from environment variable if not found
