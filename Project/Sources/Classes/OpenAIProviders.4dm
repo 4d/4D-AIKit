@@ -18,6 +18,15 @@ Function _load()
 		This:C1470._providers:=_AIProvidersObject()  // executed on server if remote
 		// if private, maybe must reload each call?
 		
+		If ((This:C1470._providers=Null:C1517) && (This:C1470._providers.providers#Null:C1517))
+			// Encode keys that contain ":"
+			var $name : Text
+			For each ($name; OB Keys:C1719(This:C1470._providers.providers).filter(Formula:C1597(Position:C15(":"; $1.value)>0)))
+				This:C1470._providers.providers[Replace string:C233($name; ":"; "%3A")]:=This:C1470._providers.providers[$name]
+				OB REMOVE:C1226(This:C1470._providers.providers; $name)
+			End for each 
+		End if 
+		
 	Catch
 		This:C1470.errors:=Last errors:C1799
 	End try
@@ -30,6 +39,7 @@ Function get($name : Text) : Object
 	If ((This:C1470._providers=Null:C1517) || (This:C1470._providers.providers=Null:C1517))
 		return Null:C1517
 	End if 
+	$name:=Replace string:C233($name; ":"; "%3A")
 	If (Value type:C1509(This:C1470._providers.providers[$name])=Is object:K8:27)
 		return OB Copy:C1225(This:C1470._providers.providers[$name])
 	End if 
