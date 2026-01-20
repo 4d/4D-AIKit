@@ -4,6 +4,7 @@ property headers : Object
 property dataType : Text
 property body : Variant
 property timeout : Integer
+property decodeData : Boolean
 
 property _parameters : cs:C1710.OpenAIChatCompletionsParameters
 property _result : cs:C1710.OpenAIResult
@@ -22,6 +23,7 @@ Class constructor($options : Object; $client : cs:C1710.OpenAI; $parameters : cs
 	This:C1470._result:=$result
 	If (Bool:C1537(This:C1470._parameters.stream))
 		This:C1470.dataType:="text"
+		This:C1470.decodeData:=True:C214
 	End if 
 	
 	
