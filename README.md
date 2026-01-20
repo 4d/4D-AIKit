@@ -1,160 +1,68 @@
-# 4D AIKit
-
+# AIKit
 
 ## Overview
 
-4D AIKit is a built-in 4D component that enables interaction with third-party AI APIs.
+[4D AIKit](https://github.com/4d/4D-AIKit) is a built-in 4D component that enables interaction with third-party AI APIs.
 
-## OpenAI
+This repo was forked for experimentation and testing purposes.
 
-The [`OpenAI`](Documentation/Classes/OpenAI.md) class allows you to make requests to the [OpenAI API](https://platform.openai.com/docs/api-reference/).
+Normally you should use the offical releases.
 
-### Configuration
+## Install
 
-First of all, initialize the OpenAI client using your API key
+Add `https://github.com/miyako/AIKit/` (without the official `4D-` prefix) to `dependencies.json`
 
-```4d
-var $client:=cs.AIKit.OpenAI.new("your api key")
-```
+## History
 
-For a [compatible provider](Documentation/compatible-openai.md) API, you need to configure the server URL by setting the `baseURL` parameter.
+* [feature-google-stream](https://github.com/miyako/AIKit/tree/feature-google-stream): Gemini chat completion stream support and tool calling support
 
-```4d
-var $client:=cs.AIKit.OpenAI.new({apiKey: "your api key"; baseURL: "https://your.server.ai"})
-```
+#### OpenAI Compatibility with AIKit function calling
 
-or 
+|Model&nbsp;Family|Version|Function&nbsp;Calling|Remarks
+|-|-|:-:|-|
+|GPT|3.5||This is not a chat model and thus not supported in the v1/chat/completions endpoint. 
+||3.5-turbo||This is not a chat model and thus not supported in the v1/chat/completions endpoint. 
+||o1||This model is only supported in v1/responses and not in v1/chat/completions.
+||o3||This is not a chat model and thus not supported in the v1/chat/completions endpoint. 
+||o4||Unsupported value: 'temperature' does not support 0 with this model. Only the default (1) value is supported.
+||4||
+||4o|✅|
+||4-turbo|✅|
+||4.1|✅|
+||5||This model is only supported in v1/responses and not in v1/chat/completions.
+||5.1|✅|
+||5.2|✅|
 
-```4d
-$client.baseURL:="https://your.server.ai"
-```
+For function calling you would want to use a **reasoning** (thinking, chain of thought) model. The first reasoning model from OpenAI is **4o** which was released between 4 and 4.1. 4.1 is the last non-reasoning model. After 4.1 came o1, o3, and o4 which are all reasoning models. GPT 5 series are all reasoninig models. As of today, 3.5, 4o, 4.1, o1, o3, o4 are legacy models.
 
-### Making requests
+> Use 4o, 4-turbo, 4.1, 5.1, or 5.2.
 
-`OpenAI` provides different endpoints called resources, each offering various functions.
+#### Google Compatibility with AIKit function calling
 
-```4d
-var $result:=$client.<resource>.<function>(<parameters...>)
-```
+|Model&nbsp;Family|Version|Function&nbsp;Calling|Remarks
+|-|-|:-:|-|
+|Gemini|2.0|
+||2.5|✅|
+| |3||
 
-The `$result` contains the `HTTPRequest`, a `success` status, a collection of `errors` and more. See [OpenAIResult](Documentation/Classes/OpenAIResult.md)
+> Use Gemini 2.5. Gemini 3 (preview) on OpenAI compatibility seems to have a regression.
 
-See some examples below.
+#### Google Compatibility with AIKit function calling
 
-#### Chat
+|Model&nbsp;Family|Version|Function&nbsp;Calling|Remarks
+|-|-|:-:|-|
+|Gemini|2.0|
+||2.5|✅|
+| |3||
 
-https://platform.openai.com/docs/api-reference/chat
+> Use 2.5. Gemini 3 (preview) on OpenAI compatibility seems to have a regression.
 
-##### Completions
+#### Claude Compatibility with AIKit function calling
 
-https://platform.openai.com/docs/api-reference/chat/create
+|Model&nbsp;Family|Version|Function&nbsp;Calling|Remarks
+|-|-|:-:|-|
+|Haiku|4.5|✅|
+|Opus|4.5|✅|
+|Sonnet|4.5|✅|Request might exceed the rate limit of 10,000 input tokens per minute.
 
-```4d
-var $messages:=[{role: "system"; content: "You are a helpful assistant."}]
-$messages.push({role: "user"; content: "Could you explain me why 42 is a special number"})
-var $result:=$client.chat.completions.create($messages; {model: "gpt-4o-mini"})
-// result in $result.choice
-```
-
-##### Chat helper
-
-This helper allows you to maintain a list of user messages and assistant responses.
-
-```4d
-var $helper:=$client.chat.create("You are a helpful assistant.")
-var $result:=$helper.prompt("Could you explain me why 42 is a special number")
-$result:=$helper.prompt("and could you decompose this number")
-// conversation in $helper.messages
-```
-
-##### Vision helper
-
-This helper enables image analysis through the chat.
-
-```4d
-var $result:=$client.chat.vision.create($imageUrl).prompt("give me a description of the image")
-```
-
-#### Images
-
-https://platform.openai.com/docs/api-reference/images
-
-```4d
-var $images:=$client.images.generate("A futuristic city skyline at sunset"; {size: "1024x1024"}).images
-```
-
-#### Models
-
-https://platform.openai.com/docs/api-reference/models
-
-Get full list of models
-
-```4d
-var $models:=$client.models.list().models // you can then extract the `id`
-```
-
-Get one model information by id
-
-```4d
-var $model:=$client.models.retrieve("a model id").model
-```
-
-#### Files
-
-https://platform.openai.com/docs/api-reference/files
-
-Upload a file for use with other endpoints
-
-```4d
-var $file:=File("/path/to/your/file.jsonl")
-var $result:=$client.files.create($file; "fine-tune")
-var $fileId:=$result.file.id
-```
-
-List all files
-
-```4d
-var $files:=$client.files.list().files
-```
-
-Retrieve file information
-
-```4d
-var $fileInfo:=$client.files.retrieve($fileId).file
-```
-
-Delete a file
-
-```4d
-var $deleteResult:=$client.files.delete($fileId)
-```
-
-#### Moderations
-
-https://platform.openai.com/docs/api-reference/moderations
-
-```4d
-var $moderation:=$client.moderations.create("This text contains inappropriate language and offensive behavior.").moderation
-``` 
-
-#### Asynchronous code
-
-If you do not want to wait for the OpenAPI response when sending a request to its API, you need to use asynchronous code. The result object will be received in a callback function.
-
-See [detailed documentation for examples](Documentation/asynchronous-call.md)
-
-## License
-
-See the [LICENSE][license-url] file for details
-
-## Copyright
-
-- This library is not affiliated with, endorsed by, or officially connected to OpenAI in any way. 
-- "OpenAI" and any related marks are trademarks or registered trademarks of OpenAI, LLC. All rights related to OpenAI's services, APIs, and technologies remain the property of OpenAI.
-- This project simply provides an interface to OpenAI’s services and does not claim any ownership over their technology, branding, or intellectual property.
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[code-shield]: https://img.shields.io/static/v1?label=language&message=4d&color=blue
-[code-url]: https://developer.4d.com/
-[license-url]: LICENSE.md
+> Use Haiku or Opus if you have a low quota.

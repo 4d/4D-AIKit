@@ -9,8 +9,7 @@ property decodeData : Boolean
 property _parameters : cs:C1710.OpenAIChatCompletionsParameters
 property _result : cs:C1710.OpenAIResult
 property _onStreamError : Boolean:=False:C215
-
-property _chunkBuffer : Text:=""
+property _eventStreamBuffer : 4D:C1709.Blob
 
 // MARK:- constructor
 Class constructor($options : Object; $client : cs:C1710.OpenAI; $parameters : cs:C1710.OpenAIChatCompletionsParameters; $result : cs:C1710.OpenAIResult)
@@ -40,6 +39,15 @@ Function onTerminate($request : 4D:C1709.HTTPRequest; $event : Object)
 Function onData($request : 4D:C1709.HTTPRequest; $event : Object)
 	// $event: {chunk: true; type: "data"; data: blob}
 	
+	If (This:C1470._eventStreamBuffer=Null:C1517)
+		This:C1470._eventStreamBuffer:=4D:C1709.Blob.new($event.data)
+	Else 
+		var $eventStreamBuffer : Blob
+		$eventStreamBuffer:=This:C1470._eventStreamBuffer
+		COPY BLOB:C558($event.data; $eventStreamBuffer; 0; BLOB size:C605($eventStreamBuffer); $event.data.size)
+		This:C1470._eventStreamBuffer:=$eventStreamBuffer
+	End if 
+	
 	If ((This:C1470._parameters.onData=Null:C1517) && (This:C1470._parameters.formula=Null:C1517))
 		return   // no callback no notify
 	End if 
@@ -50,17 +58,7 @@ Function onData($request : 4D:C1709.HTTPRequest; $event : Object)
 	
 	// TODO: ignore if not sse_event.object == "chat.completion.chunk" 
 	
-	var $textData:=BLOB to text:C555($event.data; UTF8 C string:K22:15)
-	
-	$textData:=This:C1470._chunkBuffer+$textData
-	This:C1470._chunkBuffer:=""
-	
-	If (Position:C15("{"; $textData)=1)
-		This:C1470._onStreamError:=True:C214
-		// ignore chunk, will be for onTerminate
-		return 
-	End if 
-	
+	var $textData:=Convert to text:C1012(This:C1470._eventStreamBuffer; "utf-8")
 	var $lines:=Split string:C1554($textData; "\n")
 	
 	var $lineIndex : Integer
@@ -75,10 +73,9 @@ Function onData($request : 4D:C1709.HTTPRequest; $event : Object)
 		End if 
 		
 		var $chunkResult:=cs:C1710.OpenAIChatCompletionsStreamResult.new($request; $line; False:C215)
-		If (($chunkResult._decodingErrors#Null:C1517) && ($chunkResult._decodingErrors.length>0) && (Position:C15("data:"; $line)>0) && ($lineIndex=($lines.length-1)))
-			// if we cannot decode last line, we suppose packet not complete, keep in buffer for next line
-			// to do better, maybe analyse brackets etc...
-			This:C1470._chunkBuffer:=$line
+		If ($chunkResult._decodingErrors=Null:C1517)
+			This:C1470._eventStreamBuffer:=4D:C1709.Blob.new()
+		Else 
 			continue
 		End if 
 		
@@ -87,11 +84,6 @@ Function onData($request : 4D:C1709.HTTPRequest; $event : Object)
 		End if 
 		If (This:C1470._parameters.formula#Null:C1517)
 			This:C1470._parameters.formula.call(This:C1470._parameters._formulaThis; $chunkResult)
-		End if 
-		
-		If (($chunkResult._decodingErrors#Null:C1517) && (Position:C15("data: "; $line)<=0))  // XXX: maybe skip before and even do not try to decode invalid SSE packet
-			This:C1470._onStreamError:=True:C214
-			break  // ignore next 
 		End if 
 		
 	End for 
