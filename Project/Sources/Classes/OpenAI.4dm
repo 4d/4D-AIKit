@@ -76,12 +76,21 @@ Function _configureParameters($object : Object)
 		End if 
 		
 	Else 
+		
+		If (Value type:C1509($object.provider)=Is text:K8:3)
+			var $provider:=This:C1470._providers.get($object.provider)
+			If ($provider#Null:C1517)
+				This:C1470._configureParameters($provider)
+			End if 
+		End if 
+		
 		var $key : Text
 		For each ($key; $object)
 			If (This:C1470._configurable.includes($key))
 				This:C1470[$key]:=$object[$key]
 			End if 
 		End for each 
+		
 	End if 
 	
 /*
