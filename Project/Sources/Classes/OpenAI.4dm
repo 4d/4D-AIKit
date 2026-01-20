@@ -167,7 +167,16 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 	End if 
 	var $result : cs:C1710.OpenAIResult:=$resultType.new()
 	
-	var $url:=This:C1470.baseURL+$path
+	
+	var $baseURL : Text:=This:C1470.baseURL
+	Case of 
+		: (Length:C16($baseURL)=0)
+			$baseURL:="https://api.openai.com/v1"
+		: ($baseURL[[Length:C16($baseURL)]]="/")
+			$baseURL:=Substring:C12($baseURL; 1; Length:C16($baseURL)-1)  // drop it
+	End case 
+
+	var $url:=$baseURL+$path
 	var $headers:=This:C1470._headers()
 	
 	var $options:={method: $httpMethod; headers: $headers; dataType: "auto"}
