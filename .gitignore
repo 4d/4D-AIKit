@@ -20,4 +20,4 @@ Thumbs.db
 
 Logs/*
 /python/*
-AIProviders.json
+**/AIProviders.json

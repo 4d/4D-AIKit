@@ -1,4 +1,4 @@
-//%attributes = {"invisible":true}
+//%attributes = {}
 var $client:=TestOpenAI()
 If ($client=Null:C1517)
 	return   // skip test
