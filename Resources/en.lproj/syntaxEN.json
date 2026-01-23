@@ -2095,7 +2095,10 @@
 		"model": {
 			"Syntax": "model : Text"
 		},
-		"_inheritedFrom_": "OpenAIParameters"
+		"_inheritedFrom_": "OpenAIParameters",
+		"top_p": {
+			"Syntax": "top_p : Real"
+		}
 	},
 	"_Env": {},
 	"OpenAIEmbedding": {

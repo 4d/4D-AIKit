@@ -19,3 +19,6 @@ ehthumbs.db
 Thumbs.db
 
 Logs/*
+/python/*
+**/AIProviders.json
+data.Match

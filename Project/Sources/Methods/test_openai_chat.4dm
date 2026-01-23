@@ -142,3 +142,36 @@ If (Asserted:C1132(Bool:C1537($result.success); "Cannot complete chat with text 
 	End if 
 	
 End if 
+
+// MARK:- top_p parameter tests
+
+// Test top_p parameter is included when set to a valid value
+var $topPMessages:=[cs:C1710.OpenAIMessage.new({role: "system"; content: "You are a helpful assistant."})]
+$topPMessages.push({role: "user"; content: "What is the capital of France?"})
+
+var $topPParams:=cs:C1710.OpenAIChatCompletionsParameters.new(New object:C1471("model"; $modelName; "top_p"; 0.5))
+
+// Verify top_p is serialized into the request body
+var $topPBody:=$topPParams.body()
+ASSERT:C1129($topPBody.top_p=0.5; "top_p should be in body when set to a valid value")
+
+$result:=$client.chat.completions.create($topPMessages; $topPParams)
+
+If (Asserted:C1132(Bool:C1537($result.success); "Cannot complete chat with top_p parameter: "+JSON Stringify:C1217($result)))
+	
+	If (Asserted:C1132($result.choice#Null:C1517; "top_p chat do not return a choice"))
+		
+		If (Asserted:C1132($result.choice.message#Null:C1517; "top_p chat do not return a message"))
+			
+			ASSERT:C1129(Length:C16($result.choice.message.text)>0; "top_p chat do not return a message text")
+			
+		End if 
+		
+	End if 
+	
+End if 
+
+// Test that top_p=0 is not sent to server (verify by checking body construction)
+var $zeroTopPParams:=cs:C1710.OpenAIChatCompletionsParameters.new(New object:C1471("model"; $modelName; "top_p"; 0))
+var $body:=$zeroTopPParams.body()
+ASSERT:C1129($body.top_p=Null:C1517; "top_p should not be in body when set to 0")
