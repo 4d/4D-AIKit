@@ -1965,6 +1965,9 @@
 		},
 		"method": {
 			"Syntax": "method : Text"
+		},
+		"decodeData": {
+			"Syntax": "decodeData : Boolean"
 		}
 	},
 	"_FormDemo": {

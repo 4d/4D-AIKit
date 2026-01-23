@@ -102,6 +102,7 @@
 			"FormDemo"
 		],
 		"methods": [
+			"_onTestErrors",
 			"_runTests",
 			"_runTestsCLI",
 			"_test_model_aliases_multi_pro",

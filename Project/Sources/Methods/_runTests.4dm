@@ -11,16 +11,23 @@ ARRAY TO COLLECTION:C1563($tests.tests; $tTxt_tests)
 
 $tests.tests:=$tests.tests.map(Formula:C1597({name: $1.value}))
 
+var $methodOnError:=Method called on error:C704
+
 var $test : Object
 For each ($test; $tests.tests)
 	
+	ON ERR CALL:C155("_onTestErrors"; ek global:K92:2)
+	_onTestErrors(True:C214)
+	
 	Try(Formula from string:C1601($test.name).call())
 	
-	$test.errors:=Last errors:C1799
+	$test.errors:=Last errors:C1799 || ((Storage:C1525.errors.last#Null:C1517) ? Storage:C1525.errors.last.copy() : Null:C1517)
 	If ($test.errors#Null:C1517)
 		// TRACE
 	End if 
 	$test.success:=($test.errors=Null:C1517)
+	
+	ON ERR CALL:C155($methodOnError; ek global:K92:2)
 	
 End for each 
 

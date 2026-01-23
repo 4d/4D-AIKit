@@ -5,13 +5,13 @@ If ($client=Null:C1517)
 End if 
 
 var $modelName:=cs:C1710._TestModels.new($client).chats
+var $messages:=[cs:C1710.OpenAIMessage.new({role: "system"; content: "You are a helpful assistant."})]
+$messages.push({role: "user"; content: "Could you explain me why 42 is a special number"})
 
 // MARK:- chat.completions.create without stream but async
 
 cs:C1710._TestSignal.me.init()
 
-var $messages:=[cs:C1710.OpenAIMessage.new({role: "system"; content: "You are a helpful assistant."})]
-$messages.push({role: "user"; content: "Could you explain me why 42 is a special number"})
 
 CALL WORKER:C1389(Current method name:C684; Formula:C1597($client.chat.completions.create($messages; {model: $modelName; onTerminate: Formula:C1597(cs:C1710._TestSignal.me.trigger($1))})))
 

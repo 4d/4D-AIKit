@@ -30,6 +30,9 @@ End if
 // $client.apiKey:="none"
 
 var $providerName:=""  // name of position starting with 1
+If (Shift down:C543)
+	$providerName:=Request:C163("Provider name?")
+End if 
 var $providers:=cs:C1710.OpenAIProviders.new()
 If (Num:C11($providerName)>0)
 	$providerName:=$providers.list()[Num:C11($providerName)-1]

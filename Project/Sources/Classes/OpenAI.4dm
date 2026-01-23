@@ -226,8 +226,10 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 	var $resolvedConfig:=This:C1470._resolveModelFromBody($body)
 	
 	// Update body.model if resolution was applied
-	If (Length:C16(String:C10($resolvedConfig.model))>0 && (Value type:C1509($body)=Is object:K8:27) && (Not:C34(OB Instance of:C1731($body; 4D:C1709.Blob))))
-		$body.model:=$resolvedConfig.model
+	If ((Length:C16(String:C10($resolvedConfig.model))>0) && (Value type:C1509($body)=Is object:K8:27))
+		If (Not:C34(OB Instance of:C1731($body; 4D:C1709.Blob)))
+			$body.model:=$resolvedConfig.model
+		End if 
 	End if 
 	
 	// Determine baseURL (use resolved if available, otherwise use instance baseURL)

@@ -7,7 +7,7 @@ property moderation : Text:="omni-moderation-latest"
 Class constructor($client : cs:C1710.OpenAI)
 	
 	Case of 
-		: (Position:C15("ollama"; $client.baseURL)>0)
+		: ((Position:C15("ollama"; $client.baseURL)>0) || (Position:C15(":11434"; $client.baseURL)>0))
 			
 			This:C1470.embeddings:="nomic-embed-text"
 			This:C1470.chats:="llama3"
