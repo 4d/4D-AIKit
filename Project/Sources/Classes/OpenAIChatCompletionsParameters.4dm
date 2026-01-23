@@ -16,7 +16,7 @@ property n : Integer:=1
 //  What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
 property temperature : Real:=-1
 
-// An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
+// An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered. Valid values are between 0 and 1; 0 (and the default -1) mean this parameter is omitted and the API's default behavior is used.
 property top_p : Real:=-1
 
 // Whether or not to store the output of this chat completion request.

@@ -155,6 +155,11 @@ var $topPMessages:=[cs:C1710.OpenAIMessage.new({role: "system"; content: "You ar
 $topPMessages.push({role: "user"; content: "What is the capital of France?"})
 
 var $topPParams:=cs:C1710.OpenAIChatCompletionsParameters.new(New object:C1471("model"; $modelName; "top_p"; 0.5))
+
+// Verify top_p is serialized into the request body
+var $topPBody:=$topPParams.body()
+ASSERT:C1129($topPBody.top_p=0.5; "top_p should be in body when set to a valid value")
+
 $result:=$client.chat.completions.create($topPMessages; $topPParams)
 
 If (Asserted:C1132(Bool:C1537($result.success); "Cannot complete chat with top_p parameter: "+JSON Stringify:C1217($result)))
