@@ -20,6 +20,7 @@ property tools : Collection:=[]
 
 // Contains formulas to execute tool calls
 property _toolHandlers : Object:={}
+property _toolHandlersThis : Object:={}
 
 // Boolean indicating whether tool calls are handled automatically using registered tools
 property autoHandleToolCalls : Boolean:=True:C214
@@ -146,6 +147,7 @@ Function registerTool($tool : Object; $handler : Object)
 		End if 
 	End if 
 	
+	var $originalTool:=$tool
 	If (Not:C34(OB Instance of:C1731($tool; cs:C1710.OpenAITool)))
 		$tool:=cs:C1710.OpenAITool.new($tool)
 	End if 
@@ -181,6 +183,7 @@ Function registerTool($tool : Object; $handler : Object)
 	
 	// Register the handler function
 	This:C1470._toolHandlers[$functionName]:=$handler
+	This:C1470._toolHandlersThis[$functionName]:=$originalTool
 	
 	// Add tools to parameters if not already set
 	If (This:C1470.parameters.tools=Null:C1517)
@@ -264,6 +267,9 @@ Function unregisterTool($functionName : Text)
 	If (This:C1470._toolHandlers[$functionName]#Null:C1517)
 		OB REMOVE:C1226(This:C1470._toolHandlers; $functionName)
 	End if 
+	If (This:C1470._toolHandlersThis[$functionName]#Null:C1517)
+		OB REMOVE:C1226(This:C1470._toolHandlersThis; $functionName)
+	End if 
 	
 	// Remove from tools collection
 	var $index : Integer:=0
@@ -293,6 +299,8 @@ Function unregisterTool($functionName : Text)
 Function unregisterTools()
 	// Clear all tool handlers
 	This:C1470._toolHandlers:={}
+	This:C1470._toolHandlersThis:={}
+	
 	
 	// Clear tools collection
 	This:C1470.tools:=[]
@@ -570,6 +578,7 @@ Function _processToolCalls($message : cs:C1710.OpenAIMessage) : Collection
 		
 		var $functionName : Text:=$toolCall.function.name
 		var $handler : Object:=This:C1470._toolHandlers[$functionName]
+		var $handlerThis : Object:=This:C1470._toolHandlersThis[$functionName]
 		
 		If ($handler=Null:C1517)
 			// No handler registered for this function
@@ -611,11 +620,12 @@ Function _processToolCalls($message : cs:C1710.OpenAIMessage) : Collection
 		// Execute the tool function
 		Try
 			var $resultHandler : Variant
-			If (OB Instance of:C1731($handler; 4D:C1709.Function))
-				$resultHandler:=$handler.call(This:C1470; $arguments)
-			Else 
-				$resultHandler:=$handler[$toolCall.function.name]($arguments)
-			End if 
+			Case of 
+				: (OB Instance of:C1731($handler; 4D:C1709.Function))
+					$resultHandler:=$handler.call($handlerThis || This:C1470; $arguments)
+				Else 
+					$resultHandler:=$handler[$toolCall.function.name]($arguments)
+			End case 
 			
 			var $toolResponse:=cs:C1710.OpenAIMessage.new()
 			$toolResponse.role:="tool"
