@@ -16,7 +16,7 @@ The client automatically loads provider configurations from the first existing f
 | Priority | Location | File Path |
 |----------|----------|-----------|
 | 1 (highest) | userData | `<data folder>/Settings/AIProviders.json` |
-| 2 | user | `<database folder>/Settings/AIProviders.json` |
+| 2 | user | `<project folder>/Settings/AIProviders.json` |
 | 3 (lowest) | structure | `/SOURCES/AIProviders.json` |
 
 **Important:** Only the **first existing file** is loaded. There is no merging of multiple files.
@@ -77,7 +77,7 @@ Use the `provider:model_name` syntax in any API call that accepts a model parame
 var $client := cs.AIKit.OpenAI.new()
 
 // Chat completions
-var $result := $client.chat.completions.create($messages; {model: "openai:gpt-4o"})
+var $result := $client.chat.completions.create($messages; {model: "openai:gpt-5.1"})
 var $result := $client.chat.completions.create($messages; {model: "anthropic:claude-3-opus"})
 var $result := $client.chat.completions.create($messages; {model: "local:llama3"})
 
@@ -94,7 +94,7 @@ var $result := $client.images.generate("prompt"; {model: "openai:dall-e-3"})
 When you use the `provider:model` syntax, the client automatically:
 
 1. **Parses** the model string to extract provider name and model name
-   - Example: `"openai:gpt-4o"` → provider=`"openai"`, model=`"gpt-4o"`
+   - Example: `"openai:gpt-5.1"` → provider=`"openai"`, model=`"gpt-5.1"`
 
 2. **Looks up** the provider configuration from the loaded JSON file
    - Retrieves `baseURL`, `apiKey`, `organization`, `project`
@@ -109,7 +109,7 @@ If you specify a model name **without** a provider prefix, the client uses the c
 ```4d
 // Use constructor configuration
 var $client := cs.AIKit.OpenAI.new({apiKey: "sk-..."; baseURL: "https://api.openai.com/v1"})
-var $result := $client.chat.completions.create($messages; {model: "gpt-4o"})
+var $result := $client.chat.completions.create($messages; {model: "gpt-5.1"})
 
 // Override with provider alias
 var $result := $client.chat.completions.create($messages; {model: "anthropic:claude-3-opus"})
@@ -125,7 +125,7 @@ var $messages := []
 $messages.push({role: "user"; content: "What is the capital of France?"})
 
 // Try OpenAI
-var $result := $client.chat.completions.create($messages; {model: "openai:gpt-4o"})
+var $result := $client.chat.completions.create($messages; {model: "openai:gpt-5.1"})
 
 // Try Anthropic
 var $result := $client.chat.completions.create($messages; {model: "anthropic:claude-3-5-sonnet"})
@@ -141,7 +141,7 @@ var $client := cs.AIKit.OpenAI.new()
 var $provider := "openai"  // Could come from user preference
 
 // Build model string dynamically
-var $modelString := $provider + ":gpt-4o"
+var $modelString := $provider + ":gpt-5.1"
 var $result := $client.chat.completions.create($messages; {model: $modelString})
 ```
 
@@ -160,7 +160,7 @@ var $embedding2 := $client.embeddings.create($text; "local:nomic-embed-text")
 
 ## Configuration Management
 
-Provider configurations can be managed through [4D Settings](https://developer.4d.com/docs/settings/overview) or by directly editing JSON files.
+Provider configurations can be managed through [4D Settings](https://developer.4d.com/docs/settings/ai) or by directly editing JSON files.
 
 **To add or modify providers:**
 1. Use 4D Settings interface (recommended), or
@@ -182,7 +182,7 @@ var $client := cs.AIKit.OpenAI.new()
 
 ## Security Considerations
 
-When using 4D in remote/server mode, it is **strongly recommended** to execute AI-related code on the server side to protect API tokens and credentials from exposure to client machines.
+When using 4D in client/server mode, it is **strongly recommended** to execute AI-related code on the server side to protect API tokens and credentials from exposure to client machines.
 
 ## Common Use Cases
 
@@ -243,8 +243,8 @@ var $result := $client.chat.completions.create($messages; {model: "local:llama3.
 
 ```4d
 // Route to different organizations
-var $resultA := $client.chat.completions.create($messages; {model: "openai-team-a:gpt-4o"})
-var $resultB := $client.chat.completions.create($messages; {model: "openai-team-b:gpt-4o"})
+var $resultA := $client.chat.completions.create($messages; {model: "openai-team-a:gpt-5.1"})
+var $resultB := $client.chat.completions.create($messages; {model: "openai-team-b:gpt-5.1"})
 ```
 
 ## Related Documentation
