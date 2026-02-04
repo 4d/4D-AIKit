@@ -16,7 +16,7 @@ The client automatically loads provider configurations from the first existing f
 | Priority | Location | File Path |
 |----------|----------|-----------|
 | 1 (highest) | userData | `<data folder>/Settings/AIProviders.json` |
-| 2 | user | `<project folder>/Settings/AIProviders.json` |
+| 2 | user | `<package folder>/Settings/AIProviders.json` |
 | 3 (lowest) | structure | `/SOURCES/AIProviders.json` |
 
 **Important:** Only the **first existing file** is loaded. There is no merging of multiple files.
