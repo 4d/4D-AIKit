@@ -20,63 +20,9 @@ The `OpenAI` class automatically loads provider configurations when instantiated
 var $providers := cs.OpenAIProviders.new()
 ```
 
-Creates a new instance that loads provider configuration from the first existing file found (in priority order):
-
-| Priority | Location | File Path |
-|----------|----------|-----------|
-| 1 (highest) | userData | `<data folder>/Settings/AIProviders.json` |
-| 2 | user | `<database folder>/Settings/AIProviders.json` |
-| 3 (lowest) | structure | `/SOURCES/AIProviders.json` |
+Creates a new instance that loads provider configuration from the `AIProviders.json` file. See [Configuration Files](../provider-model-aliases.md#configuration-files) in the Provider Model Aliases documentation for details on file locations and format.
 
 **Important:** Only the **first existing file** is loaded. There is no merging of multiple files.
-
-## Configuration File Format
-
-### Structure
-
-```json
-{
-  "providers": {
-    "provider_name": {
-      "baseURL": "https://api.example.com/v1",
-      "apiKey": "optional-key",
-      "organization": "optional-org-id",
-      "project": "optional-project-id"
-    }
-  }
-}
-```
-
-### Provider Fields
-
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `baseURL` | Text | Yes | API endpoint URL |
-| `apiKey` | Text | No | API key value |
-| `organization` | Text | No | Organization ID (optional, OpenAI-specific) |
-| `project` | Text | No | Project ID (optional, OpenAI-specific) |
-
-### Example Configuration
-
-```json
-{
-  "providers": {
-    "openai": {
-      "baseURL": "https://api.openai.com/v1"
-    },
-    "anthropic": {
-      "baseURL": "https://api.anthropic.com/v1"
-    },
-    "local": {
-      "baseURL": "http://localhost:11434/v1"
-    },
-    "mistral": {
-      "baseURL": "https://api.mistral.ai/v1",
-      "apiKey": "your-mistral-key"
-    }
-  }
-}
-```
 
 ## Usage
 
@@ -86,7 +32,7 @@ Creates a new instance that loads provider configuration from the first existing
 var $client := cs.OpenAI.new()
 
 // Use model aliases with provider:model syntax
-var $result := $client.chat.completions.create($messages; {model: "openai:gpt-4o"})
+var $result := $client.chat.completions.create($messages; {model: "openai:gpt-5.1"})
 var $result := $client.chat.completions.create($messages; {model: "anthropic:claude-3-opus"})
 var $result := $client.chat.completions.create($messages; {model: "local:llama3"})
 ```
@@ -105,7 +51,7 @@ var $names := $providers.list()
 // Returns: ["openai", "anthropic", "mistral", "local"]
 ```
 
-## Public Methods
+## Functions
 
 ### get()
 
@@ -157,11 +103,11 @@ The `provider:model` syntax allows you to specify which provider to use for a gi
 
 ```4d
 var $client := cs.OpenAI.new()
-$client.chat.completions.create($messages; {model: "openai:gpt-4o"})
+$client.chat.completions.create($messages; {model: "openai:gpt-5.1"})
 ```
 
 This is resolved internally to:
-1. Split `"openai:gpt-4o"` into provider=`"openai"` and model=`"gpt-4o"`
+1. Split `"openai:gpt-5.1"` into provider=`"openai"` and model=`"gpt-5.1"`
 2. Look up the `"openai"` provider configuration
 3. Extract `baseURL` and `apiKey`
 4. Make the API request using the resolved configuration
@@ -169,26 +115,6 @@ This is resolved internally to:
 **Format:** `provider:model_name`
 
 **Examples:**
-- `"openai:gpt-4o"` → Use OpenAI provider with gpt-4o model
+- `"openai:gpt-5.1"` → Use OpenAI provider with gpt-5.1 model
 - `"anthropic:claude-3-opus"` → Use Anthropic provider with claude-3-opus
 - `"local:llama3"` → Use local provider with llama3 model
-
-## Configuration Management
-
-### No Reload Capability
-
-Once a `OpenAIProviders` instance is created, it cannot be reloaded. If you need to pick up configuration changes, create a new instance:
-
-```4d
-// Configuration changed - create new instance
-var $providers := cs.OpenAIProviders.new()
-```
-
-### Management Options
-
-Provider configurations can be managed through [4D Settings](https://developer.4d.com/docs/settings/overview) or by directly editing JSON files.
-
-**To add or modify providers:**
-1. Use 4D Settings interface (recommended), or
-2. Edit the appropriate JSON file (userData, user, or structure)
-3. Create a new `OpenAIProviders` instance to load the changes
