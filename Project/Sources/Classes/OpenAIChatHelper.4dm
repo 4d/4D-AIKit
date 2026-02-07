@@ -102,7 +102,7 @@ Function prompt($prompt : Variant) : cs:C1710.OpenAIChatCompletionsResult
 					$message:=cs:C1710.OpenAIMessage.new({role: "user"; content: $prompt})
 			End case 
 		Else 
-			throw:C1805(1; "Cannot prompt with parameter of type "+String:C10(Value type:C1509($type))+". Must a Text or OpenAIMessage")
+			throw:C1805(1; "Cannot prompt with parameter of type "+String:C10($type)+". Must be a Text or OpenAIMessage")
 	End case 
 	
 	This:C1470._pushMessage($message)
@@ -455,7 +455,7 @@ Function _manageResponse($result : Object) : Object
 			
 		Else 
 			
-			This:C1470.lastErrors:=$result.error
+			This:C1470.lastErrors:=$result.errors
 			
 		End if 
 		
