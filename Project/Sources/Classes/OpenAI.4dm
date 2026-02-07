@@ -307,7 +307,7 @@ Function _calculateRetryTimeout($options : Object; $result : cs:C1710.OpenAIResu
 	
 Function _delayProcessAfterRetry($options : Object; $result : cs:C1710.OpenAIResult) : Integer
 	var $duration:=This:C1470._calculateRetryTimeout($options; $result)
-	DELAY PROCESS:C323(Current process:C322; $duration)
+	DELAY PROCESS:C323(Current process:C322; $duration*60)
 	
 	// MARK:- http utils
 	
