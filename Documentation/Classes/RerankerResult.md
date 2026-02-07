@@ -1,6 +1,6 @@
-# _Reranker
+# RerankerResult
 
-The `_Reranker` internal class provides utility functions for reranking. 
+The `RerankerResult` class is designed to handle the response from HTTP requests and provides functions to evaluate the success of the rerank request.
 
 ## Functions
 
