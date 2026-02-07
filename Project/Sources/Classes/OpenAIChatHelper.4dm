@@ -84,8 +84,7 @@ Function _pushMessage($message : cs:C1710.OpenAIMessage)
 		This:C1470.messages.push($message)
 	End if 
 	
-Function prompt($prompt : Text) : cs:C1710.OpenAIChatCompletionsResult
-	
+Function prompt($prompt : Text) : cs:C1710.OpenAIChatCompletionsResult	
 	This:C1470._pushMessage(cs:C1710.OpenAIMessage.new({role: "user"; content: $prompt}))
 	
 	var $messages : Collection:=This:C1470.messages.copy()
@@ -436,7 +435,7 @@ Function _manageResponse($result : Object) : Object
 			
 		Else 
 			
-			This:C1470.lastErrors:=$result.error
+			This:C1470.lastErrors:=$result.errors
 			
 		End if 
 		
