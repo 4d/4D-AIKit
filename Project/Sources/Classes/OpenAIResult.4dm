@@ -19,7 +19,7 @@ Function get success : Boolean
 	
 	// True if the requested is terminated
 Function get terminated : Boolean
-	return This:C1470._terminated || This:C1470.request.terminated
+	return This:C1470._terminated || ((This.request#Null) && This.request.terminated)
 	
 Function _objectBody() : Object
 	If (This:C1470._parsed#Null:C1517)
