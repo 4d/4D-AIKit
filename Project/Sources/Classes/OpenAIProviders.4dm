@@ -18,7 +18,7 @@ Function _load()
 		This:C1470._providers:=_AIProvidersObject()  // executed on server if remote
 		// if private, maybe must reload each call?
 		
-		If ((This:C1470._providers=Null:C1517) && (This:C1470._providers.providers#Null:C1517))
+		If ((This:C1470._providers#Null:C1517) && (This:C1470._providers.providers#Null:C1517))
 			// Encode keys that contain ":"
 			var $name : Text
 			For each ($name; OB Keys:C1719(This:C1470._providers.providers).filter(Formula:C1597(Position:C15(":"; $1.value)>0)))
