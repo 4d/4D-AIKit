@@ -4,7 +4,7 @@ Class constructor
 	
 	Super:C1705()
 	
-Function sigmoid($x : Real) : Real
+Function _sigmoid($x : Real) : Real
 	
 	return 1/(1+Exp:C21(-$x))
 	
@@ -39,7 +39,7 @@ Function get results : Collection
 	
 	If ($shouldNormalize)
 		For each ($result; $results)
-			$result.relevance_score:=This:C1470.sigmoid($result.relevance_score)
+			$result.relevance_score:=This:C1470._sigmoid($result.relevance_score)
 		End for each 
 	End if 
 	
