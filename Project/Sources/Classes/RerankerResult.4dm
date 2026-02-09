@@ -4,9 +4,9 @@ Class constructor
 	
 	Super:C1705()
 	
-Function _sigmoid($x : Real) : Real
+Function _sigmoid($element : Object)
 	
-	return 1/(1+Exp:C21(-$x))
+	$element.result:={index: $element.value.index; relevance_score: 1/(1+Exp:C21(-$element.value.relevance_score))}
 	
 Function get results : Collection
 	var $body:=This:C1470._objectBody()
@@ -21,26 +21,8 @@ Function get results : Collection
 			$results:=[]
 	End case 
 	
-	var $result : Object
-	var $relevance_score : Real
-	var $shouldNormalize : Boolean
-	
-	For each ($result; $results)
-		$relevance_score:=$result.relevance_score
-		Case of 
-			: ($relevance_score>1)
-				$shouldNormalize:=True:C214
-				break
-			: ($relevance_score<0)
-				$shouldNormalize:=True:C214
-				break
-		End case 
-	End for each 
-	
-	If ($shouldNormalize)
-		For each ($result; $results)
-			$result.relevance_score:=This:C1470._sigmoid($result.relevance_score)
-		End for each 
+	If ($results.some(Formula:C1597($1.result:=($1.value.relevance_score>1) || ($1.value.relevance_score<0))))
+		$results:=$results.map(This:C1470._sigmoid)
 	End if 
 	
 	return $results
