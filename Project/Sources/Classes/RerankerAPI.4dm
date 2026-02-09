@@ -6,7 +6,7 @@ Class constructor($client : cs:C1710.Reranker)
 	
 Function create($query : cs:C1710.RerankerQuery; $parameters : cs:C1710.RerankerParameters) : cs:C1710.RerankerResult
 	If (Not:C34(OB Instance of:C1731($parameters; cs:C1710.RerankerParameters)))
-		$parameters:=cs:C1710.OpenAIEmbeddingsParameters.new($parameters)
+		$parameters:=cs:C1710.RerankerParameters.new($parameters)
 	End if 
 	
 	var $body:=$parameters.body()
