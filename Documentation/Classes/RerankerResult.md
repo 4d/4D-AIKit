@@ -2,18 +2,17 @@
 
 The `RerankerResult` class is designed to handle the response from HTTP requests and provides functions to evaluate the success of the rerank request.
 
-## Functions
+## Computed properties
 
-### sigmoid
+| Property    | Type       | Description                                                                 |
+|-------------|------------|-----------------------------------------------------------------------------|
+| `results`   | Collecion   | Returns a collection of `result` objects.   |
 
-Takes any real number as input and "squashes" it into a range between `0` and `1`.
+### result
 
-| Argument | Type | Description |
-|----------|------|-------------|
-| $x     | Real | The value to squash. |
+Each element of the `results` property is an object with the following properties:
 
-**Returns**: Real between `0` and `1`.
-
-```4d
-ASSERT(0.5=cs._Reranker.new().sigmoid(0))
-```
+| Field       | Type   | Description                                      |
+|-------------|--------|--------------------------------------------------|
+|`index`|Integer|The `0`-based position index in the original list of documents submitted for reranking. 
+|`relevance_score`|Real|A score between `0` and `1` inclusive. A score closer to `1` indicates a high relevance to the query. A score closer to `0` indicates a low relevance to the query. 
