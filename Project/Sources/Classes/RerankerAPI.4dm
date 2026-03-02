@@ -1,6 +1,6 @@
 Class extends OpenAIAPIResource
 
-Class constructor($client : cs:C1710.Reranker)
+Class constructor($client : cs:C1710.OpenAI)
 	Super:C1705($client)
 	
 	
