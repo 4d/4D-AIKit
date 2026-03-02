@@ -65,7 +65,7 @@ Function body() : Object
 		$body.user:=This:C1470.user
 	End if 
 	
-	return {}
+	return $body
 	
 Function _isAsync() : Boolean
 	return ((This:C1470.onTerminate#Null:C1517) && (OB Instance of:C1731(This:C1470.onTerminate; 4D:C1709.Function)))\
