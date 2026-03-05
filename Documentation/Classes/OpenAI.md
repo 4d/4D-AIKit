@@ -63,6 +63,7 @@ The API provides access to multiple resources that allow seamless interaction wi
 | `moderations`     | [OpenAIModerationsAPI](OpenAIModerationsAPI.md) | Access to the Moderations API. |
 | `embeddings`      | [OpenAIEmbeddingsAPI](OpenAIEmbeddingsAPI.md)   | Access to the Embeddings API.  |
 | `files`           | [OpenAIFilesAPI](OpenAIFilesAPI.md)             | Access to the Files API.       |
+| `reranker`        | [Reranker](Reranker.md)                         | Access to the Reranker API.    |
 
 ### Example Usage
 
@@ -71,6 +72,7 @@ $client.chat.completions.create(...)
 $client.images.generate(...)
 $client.files.create(...)
 $client.model.lists(...)
+$client.reranker.create(...)
 ```
 
 ## Provider Model Aliases

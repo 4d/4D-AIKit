@@ -101,8 +101,10 @@
 		"classes": [
 			"Reranker",
 			"RerankerAPI",
+			"RerankerLLMFilterAPI",
 			"RerankerParameters",
 			"RerankerQuery",
+			"RerankerRankGPTAPI",
 			"RerankerResult"
 		]
 	},
@@ -137,6 +139,9 @@
 			"test_openai_msg",
 			"test_openai_msg_accumulate",
 			"test_openai_vision",
+			"test_reranker",
+			"test_reranker_llmfilter",
+			"test_reranker_rankgpt",
 			"TestOpenAI"
 		],
 		"classes": [

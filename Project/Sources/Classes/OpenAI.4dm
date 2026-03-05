@@ -563,3 +563,8 @@ Function _formData($body : Object; $files : Object; $boundary : Text) : 4D:C1709
 	
 	return $result
 	
+	// MARK:- reranking
+	
+	// Return a Reranker instance based on current OpenAI client configuration
+Function get reranker : cs:C1710.Reranker
+	return cs:C1710.Reranker.new(This:C1470)
