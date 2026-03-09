@@ -442,7 +442,7 @@ End if
 var $modelName:=cs._TestModels.new($client).[feature]
 
 // Setup test parameters
-var $params:=cs.OpenAI[Feature]Parameters.new()
+var $params:=cs.AIKit.OpenAI[Feature]Parameters.new()
 $params.property1:="test_value"
 $params.model:=$modelName
 
@@ -464,7 +464,7 @@ If (Asserted($result.success; "Cannot complete [feature]: "+JSON Stringify($resu
 End if
 
 // MARK:- Test error handling
-var $invalidParams:=cs.OpenAI[Feature]Parameters.new()
+var $invalidParams:=cs.AIKit.OpenAI[Feature]Parameters.new()
 $invalidParams.model:="fake-model"  // Invalid model
 
 $result:=$client.[feature].[method]($invalidParams)

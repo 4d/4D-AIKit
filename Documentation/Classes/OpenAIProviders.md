@@ -17,7 +17,7 @@ The `OpenAI` class automatically loads provider configurations when instantiated
 ## Constructor
 
 ```4d
-var $providers := cs.OpenAIProviders.new()
+var $providers := cs.AIKit.OpenAIProviders.new()
 ```
 
 Creates a new instance that loads provider configuration from the `AIProviders.json` file. See [Configuration Files](../provider-model-aliases.md#configuration-files) in the Provider Model Aliases documentation for details on file locations and format.
@@ -29,7 +29,7 @@ Creates a new instance that loads provider configuration from the `AIProviders.j
 ### Integration with OpenAI Class
 
 ```4d
-var $client := cs.OpenAI.new()
+var $client := cs.AIKit.OpenAI.new()
 
 // Use model aliases with provider:model syntax
 var $result := $client.chat.completions.create($messages; {model: "openai:gpt-5.1"})
@@ -40,7 +40,7 @@ var $result := $client.chat.completions.create($messages; {model: "local:llama3"
 ### Direct Provider Access
 
 ```4d
-var $providers := cs.OpenAIProviders.new()
+var $providers := cs.AIKit.OpenAIProviders.new()
 
 // Get a specific provider configuration
 var $config := $providers.get("openai")
@@ -72,7 +72,7 @@ If ($config # Null)
     // Use $config.baseURL, $config.apiKey, etc.
 
     // We could build a client with it
-    var $client:=cs.OpenAI.new($config)
+    var $client:=cs.AIKit.OpenAI.new($config)
 End if
 ```
 
@@ -102,7 +102,7 @@ End for each
 The `provider:model` syntax allows you to specify which provider to use for a given model:
 
 ```4d
-var $client := cs.OpenAI.new()
+var $client := cs.AIKit.OpenAI.new()
 $client.chat.completions.create($messages; {model: "openai:gpt-5.1"})
 ```
 

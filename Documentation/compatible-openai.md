@@ -25,6 +25,7 @@ Some of them
 |https://www.perplexity.ai/|https://api.perplexity.ai| 
 |https://x.ai/|https://api.x.ai/v1|
 |https://z.ai/|https://api.z.ai/api/coding/paas/v4|
+|http://cohere.com/|https://api.cohere.ai/compatibility/v1|
 
 ## Local
 
