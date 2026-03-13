@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Build
       uses: 4d/build4d-action@main
@@ -28,7 +28,7 @@ jobs:
     runs-on: [self-hosted, macOS, ARM64]
     name: Git Repo Sync
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         fetch-depth: 0
         lfs: true 
