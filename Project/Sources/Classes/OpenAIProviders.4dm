@@ -52,9 +52,31 @@ Function list() : Collection
 	End if 
 	return OB Keys:C1719(This:C1470._providers.providers)
 	
+	// MARK:- Model Access
+	
+	// Get all model aliases
+Function models() : Collection
+	If ((This:C1470._providers=Null:C1517) || (This:C1470._providers.models=Null:C1517))
+		return []
+	End if 
+	var $result:=[]
+	var $key : Text
+	For each ($key; This:C1470._providers.models)
+		var $m : Variant:=This:C1470._providers.models[$key]
+		If (Value type:C1509($m)=Is object:K8:27)
+			$result.push({\
+				name: $key; \
+				provider: $m.provider || ""; \
+				model: $m.model || ""; \
+				capabilities: $m.capabilities || {}\
+				})
+		End if 
+	End for each 
+	return $result.orderBy("name asc")
+	
 	// MARK:- Model Resolution
 	
-	// Return all information extracted from a model name with format provider:modelName
+	// Return all information extracted from a model name with format provider:modelName or :modelAlias
 Function _resolveModel($modelString : Text) : Object
 	var $config:={success: False:C215; baseURL: ""; apiKey: ""; model: $modelString; error: Null:C1517}
 	
@@ -64,32 +86,60 @@ Function _resolveModel($modelString : Text) : Object
 		return $config
 	End if 
 	
+	// Check for :modelAlias syntax (starts with ":")
+	If ($modelString[[1]]=":")
+		return This:C1470._resolveModelAlias(Substring:C12($modelString; 2))
+	End if 
+	
 	var $parts:=Split string:C1554($modelString; ":")
 	If ($parts.length<2)
 		return $config
 	End if 
-	
-	$config.success:=False:C215
 	
 	var $providerName : Text:=$parts[0]
 	// Join remaining parts to handle model names with colons (e.g., "provider:model:version")
 	$parts.shift()
 	var $modelName : Text:=$parts.join(":")
 	
-	// Validate provider exists
-	var $provider:=This:C1470.get($providerName)
+	return This:C1470._resolveProviderConfig($providerName; $modelName)
 	
+	// Resolve a model alias name to full provider + model config
+Function _resolveModelAlias($aliasName : Text) : Object
+	var $config:={success: False:C215; baseURL: ""; apiKey: ""; model: ""; error: Null:C1517}
+	
+	If ((This:C1470._providers=Null:C1517) || (This:C1470._providers.models=Null:C1517))
+		$config.error:="No models configured"
+		return $config
+	End if 
+	
+	var $modelDef : Variant:=This:C1470._providers.models[$aliasName]
+	If ((Value type:C1509($modelDef)#Is object:K8:27) || ($modelDef=Null:C1517))
+		$config.error:="Model alias '"+$aliasName+"' not found in configuration"
+		return $config
+	End if 
+	
+	var $providerName : Text:=$modelDef.provider || ""
+	If (Length:C16($providerName)=0)
+		$config.error:="Model alias '"+$aliasName+"' has no provider defined"
+		return $config
+	End if 
+	
+	return This:C1470._resolveProviderConfig($providerName; $modelDef.model || "")
+	
+	// Common provider resolution: lookup provider, extract config, env fallback, validate
+Function _resolveProviderConfig($providerName : Text; $modelName : Text) : Object
+	var $config:={success: False:C215; baseURL: ""; apiKey: ""; model: $modelName; error: Null:C1517}
+	
+	var $provider:=This:C1470.get($providerName)
 	If ($provider=Null:C1517)
 		$config.error:="Provider '"+$providerName+"' not found in configuration"
 		return $config
 	End if 
 	
-	// Simple provider model
 	$config.baseURL:=$provider.baseURL || ""
 	$config.apiKey:=$provider.apiKey || ""
 	$config.organization:=$provider.organization || ""
 	$config.project:=$provider.project || ""
-	$config.model:=$modelName
 	
 	// Try to get apiKey from environment variable if not found
 	If (Length:C16($config.apiKey)=0)

@@ -10,7 +10,9 @@ For complete usage documentation, see [Provider Model Aliases](../provider-model
 
 This class enables multi-provider support by:
 - Loading provider configurations from a single JSON file
+- Loading named model aliases that map to providers and model IDs
 - Resolving `provider:model` syntax to full API configurations
+- Resolving `:modelAlias` syntax to full provider + model configurations
 
 The `OpenAI` class automatically loads provider configurations when instantiated.
 
@@ -97,9 +99,43 @@ For each ($name; $names)
 End for each
 ```
 
+### models()
+
+**models**() : Collection
+
+Get all configured model aliases.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| Function result | Collection | Collection of model alias objects |
+
+Each object in the collection contains:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `name` | Text | Model alias name |
+| `provider` | Text | Provider name |
+| `model` | Text | Model ID used by the provider |
+| `capabilities` | Object | Capability flags |
+
+#### Example
+
+```4d
+var $models := $providers.models()
+// Returns: [{name: "my-gpt", provider: "openai", model: "gpt-5.1", capabilities: {}}, ...]
+
+For each ($m; $models)
+    // $m.name, $m.provider, $m.model, $m.capabilities.supportsEmbedding
+End for each
+```
+
 ## Model Resolution
 
-The `provider:model` syntax allows you to specify which provider to use for a given model:
+Two syntaxes are supported for model resolution:
+
+### Provider alias (`provider:model`)
+
+Specify the provider and model name directly:
 
 ```4d
 var $client := cs.AIKit.OpenAI.new()
@@ -112,9 +148,26 @@ This is resolved internally to:
 3. Extract `baseURL` and `apiKey`
 4. Make the API request using the resolved configuration
 
-**Format:** `provider:model_name`
-
 **Examples:**
 - `"openai:gpt-5.1"` → Use OpenAI provider with gpt-5.1 model
 - `"anthropic:claude-3-opus"` → Use Anthropic provider with claude-3-opus
 - `"local:llama3"` → Use local provider with llama3 model
+
+### Model alias (`:modelAlias`)
+
+Reference a named model from the `models` section of the configuration:
+
+```4d
+var $client := cs.AIKit.OpenAI.new()
+$client.chat.completions.create($messages; {model: ":my-gpt"})
+```
+
+This is resolved internally to:
+1. Look up `"my-gpt"` in the `models` configuration
+2. Find its `provider` (e.g., `"openai"`) and `model` (e.g., `"gpt-5.1"`)
+3. Resolve the provider to get `baseURL` and `apiKey`
+4. Make the API request using the resolved configuration
+
+**Examples:**
+- `":my-gpt"` → Use the model alias "my-gpt" (resolves to its configured provider and model)
+- `":my-embedding"` → Use the model alias "my-embedding" for embedding operations
