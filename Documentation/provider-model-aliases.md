@@ -1,12 +1,14 @@
-# Provider Model Aliases
+# Provider & Model Aliases
 
-The OpenAI client supports provider model aliases, allowing you to define provider configurations in JSON files and reference them using a simple `provider:model` syntax.
+The OpenAI client supports provider and model aliases, allowing you to define provider configurations and named model aliases in JSON files and reference them using simple syntaxes.
 
 ## Overview
 
 Instead of hard-coding API endpoints and credentials in your code, you can:
 - Define provider configurations in a JSON file
-- Use the `provider:model` syntax in API calls
+- Use the `provider:model` syntax to specify a provider and model directly
+- Define named model aliases that map to a provider and a model ID
+- Use a named model alias by bare name (e.g., `my-gpt`)
 - Switch between providers (OpenAI, Anthropic, local Ollama, etc.) easily
 
 ## Configuration Files
@@ -32,6 +34,12 @@ The client automatically loads provider configurations from the first existing f
       "organization": "optional-org-id",
       "project": "optional-project-id"
     }
+  },
+  "models": {
+    "model_alias_name": {
+      "provider": "provider_name",
+      "model": "actual-model-id"
+    }
   }
 }
 ```
@@ -44,6 +52,13 @@ The client automatically loads provider configurations from the first existing f
 | `apiKey` | Text | No | API key value |
 | `organization` | Text | No | Organization ID (optional, OpenAI-specific) |
 | `project` | Text | No | Project ID (optional, OpenAI-specific) |
+
+### Model Alias Fields
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `provider` | Text | Yes | Name of the provider (must exist in `providers`) |
+| `model` | Text | Yes | Model ID used by the provider |
 
 ### Example Configuration
 
@@ -63,13 +78,36 @@ The client automatically loads provider configurations from the first existing f
       "baseURL": "https://api.mistral.ai/v1",
       "apiKey": "your-mistral-key"
     }
+  },
+  "models": {
+    "my-gpt": {
+      "provider": "openai",
+      "model": "gpt-5.1"
+    },
+    "my-claude": {
+      "provider": "anthropic",
+      "model": "claude-3-5-sonnet-20241022"
+    },
+    "my-embedding": {
+      "provider": "openai",
+      "model": "text-embedding-3-small"
+    }
   }
 }
 ```
 
 ## Usage in API Calls
 
-### Model Parameter Format
+### Model Parameter Formats
+
+Two syntaxes are supported:
+
+| Syntax | Description |
+|--------|-------------|
+| `provider:model_name` | Provider alias — specify provider and model directly |
+| `model_alias` | Model alias — reference a named model from the `models` configuration by bare name |
+
+#### Provider alias syntax
 
 Use the `provider:model_name` syntax in any API call that accepts a model parameter:
 
@@ -89,7 +127,24 @@ var $result := $client.embeddings.create("text"; "local:nomic-embed-text")
 var $result := $client.images.generate("prompt"; {model: "openai:dall-e-3"})
 ```
 
+#### Model alias syntax
+
+Use a bare model name to reference a named model defined in the `models` section of the configuration file. The provider, model ID, and credentials are resolved automatically:
+
+```4d
+var $client := cs.AIKit.OpenAI.new()
+
+// Use a named model alias
+var $result := $client.chat.completions.create($messages; {model: "my-gpt"})
+var $result := $client.chat.completions.create($messages; {model: "my-claude"})
+
+// Embeddings with a named model alias
+var $result := $client.embeddings.create("text"; "my-embedding")
+```
+
 ### How It Works
+
+#### Provider alias (`provider:model`)
 
 When you use the `provider:model` syntax, the client automatically:
 
@@ -102,6 +157,17 @@ When you use the `provider:model` syntax, the client automatically:
 3. **Makes the API request** using the resolved configuration
    - Sends request to the provider's `baseURL` with the correct `apiKey`
 
+#### Model alias (bare name)
+
+When you use a bare model name that matches a configured alias, the client automatically:
+
+1. **Looks up** the model alias in the `models` section of the configuration
+   - Example: `"my-gpt"` → finds entry with `provider: "openai"`, `model: "gpt-5.1"`
+
+2. **Resolves** the associated provider to get `baseURL` and `apiKey`
+
+3. **Makes the API request** using the provider's endpoint and the stored model ID
+
 ### Using Plain Model Names
 
 If you specify a model name **without** a provider prefix, the client uses the configuration from its constructor:
@@ -113,6 +179,9 @@ var $result := $client.chat.completions.create($messages; {model: "gpt-5.1"})
 
 // Override with provider alias
 var $result := $client.chat.completions.create($messages; {model: "anthropic:claude-3-opus"})
+
+// Override with model alias (bare name)
+var $result := $client.chat.completions.create($messages; {model: "my-gpt"})
 ```
 
 ## Examples
@@ -132,17 +201,6 @@ var $result := $client.chat.completions.create($messages; {model: "anthropic:cla
 
 // Try local Ollama
 var $result := $client.chat.completions.create($messages; {model: "local:llama3.2"})
-```
-
-### Dynamic Provider Selection
-
-```4d
-var $client := cs.AIKit.OpenAI.new()
-var $provider := "openai"  // Could come from user preference
-
-// Build model string dynamically
-var $modelString := $provider + ":gpt-5.1"
-var $result := $client.chat.completions.create($messages; {model: $modelString})
 ```
 
 ### Embeddings with Multiple Providers
@@ -201,6 +259,56 @@ When using 4D in client/server mode, it is **strongly recommended** to execute A
 ```4d
 var $client := cs.AIKit.OpenAI.new()
 var $result := $client.chat.completions.create($messages; {model: "local:llama3.2"})
+```
+
+### Named Model Aliases
+
+Define models once, use them everywhere by name:
+
+```json
+{
+  "providers": {
+    "openai": {
+      "baseURL": "https://api.openai.com/v1",
+      "apiKey": "your-openai-key"
+    },
+    "anthropic": {
+      "baseURL": "https://api.anthropic.com/v1",
+      "apiKey": "your-anthropic-key"
+    }
+  },
+  "models": {
+    "chat": {
+      "provider": "openai",
+      "model": "gpt-5.1"
+    },
+    "fast": {
+      "provider": "anthropic",
+      "model": "claude-3-5-haiku-20241022"
+    },
+    "embedding": {
+      "provider": "openai",
+      "model": "text-embedding-3-small"
+    }
+  }
+}
+```
+
+```4d
+var $client := cs.AIKit.OpenAI.new()
+
+// Use named model aliases — no need to remember provider or model ID
+var $result := $client.chat.completions.create($messages; {model: "chat"})
+var $result := $client.chat.completions.create($messages; {model: "fast"})
+var $embedding := $client.embeddings.create("text"; "embedding")
+```
+
+### List All Configured Models
+
+```4d
+var $providers := cs.AIKit.OpenAIProviders.new()
+var $models := $providers.modelAliases()
+// Returns: [{name: "chat", provider: "openai", model: "gpt-5.1"}, ...]
 ```
 
 ### Production with Multiple Cloud Providers
