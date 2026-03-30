@@ -42,9 +42,12 @@ Function get($name : Text) : Object
 	var $providerName : Text:=$name
 	var $encodedProviderName : Text:=Replace string:C233($providerName; ":"; "%3A")
 	If (Value type:C1509(This:C1470._providers.providers[$encodedProviderName])=Is object:K8:27)
+		
 		var $provider : Object:=OB Copy:C1225(This:C1470._providers.providers[$encodedProviderName])
+		$provider.name:=$providerName
+		
 		var $aliases:=[]
-		If ((This:C1470._providers#Null:C1517) && (This:C1470._providers.models#Null:C1517))
+		If (This:C1470._providers.models#Null:C1517)
 			var $key : Text
 			For each ($key; This:C1470._providers.models)
 				var $m : Variant:=This:C1470._providers.models[$key]
@@ -61,6 +64,7 @@ Function get($name : Text) : Object
 			End for each 
 		End if 
 		$provider.modelAliases:=$aliases.orderBy("name asc")
+		
 		return $provider
 	End if 
 	return Null:C1517
@@ -75,7 +79,7 @@ Function list() : Collection
 	// MARK:- Model Access
 	
 	// Get all model aliases
-	Function modelAliases() : Collection
+Function modelAliases() : Collection
 	If ((This:C1470._providers=Null:C1517) || (This:C1470._providers.models=Null:C1517))
 		return []
 	End if 
