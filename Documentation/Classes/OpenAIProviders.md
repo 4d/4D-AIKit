@@ -24,7 +24,10 @@ var $providers := cs.AIKit.OpenAIProviders.new()
 
 Creates a new instance that loads provider configuration from the `AIProviders.json` file. See [Configuration Files](../provider-model-aliases.md#configuration-files) in the Provider Model Aliases documentation for details on file locations and format.
 
-**Important:** Only the **first existing file** is loaded. There is no merging of multiple files.
+**Important:**
+
+- Only the first existing file is loaded. There is no merging of multiple files.
+- The configuration is read once at instantiation time. If the `AIProviders.json` file is modified afterward, those changes will not be reflected in the existing instance. You must create a new instance of `OpenAIProviders` to reload the updated configuration.
 
 ## Usage
 
