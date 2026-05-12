@@ -89,12 +89,12 @@ Function get headers : Object
 	return This:C1470.request.response.headers
 	
 	// RateLimit information
-	// https://platform.openai.com/docs/guides/rate-limits
+	// https://developers.openai.com/api/docs/guides/rate-limits
 Function get rateLimit : Object
 	If (This:C1470.headers=Null:C1517)
 		return Null:C1517
 	End if 
-	// https://platform.openai.com/docs/guides/rate-limits#rate-limits-in-headers
+	// https://developers.openai.com/api/docs/guides/rate-limits#rate-limits-in-headers
 	return {limit: {request: (This:C1470.headers["x-ratelimit-limit-requests"]#Null:C1517) ? Num:C11(This:C1470.headers["x-ratelimit-limit-requests"]) : Null:C1517; \
 		tokens: (This:C1470.headers["x-ratelimit-limit-tokens"]#Null:C1517) ? Num:C11(This:C1470.headers["x-ratelimit-limit-tokens"]) : Null:C1517}; \
 		remaining: {request: (This:C1470.headers["x-ratelimit-remaining-requests"]#Null:C1517) ? Num:C11(This:C1470.headers["x-ratelimit-remaining-requests"]) : Null:C1517; \

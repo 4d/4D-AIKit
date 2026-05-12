@@ -17,7 +17,7 @@ Function generate($prompt : Text; $parameters : cs:C1710.OpenAIImageParameters) 
 	return This:C1470._client._post("/images/generations"; $body; $parameters; cs:C1710.OpenAIImagesResult)
 	
 /*
-* Edit an image. Only dall-e-2
+* Edit an image. Only dall-e-2, gpt-image-2
 * $image: The image to use as the basis for the variation(s). Must be a valid PNG file, less than 4MB, and square.
 $ $mask: An additional image whose fully transparent areas (e.g. where alpha is zero) indicate where image should be edited. Must be a valid PNG file, less than 4MB, and have the same dimensions as
  */

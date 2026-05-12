@@ -4,7 +4,7 @@ property message : Text
 property body : Object
 property response : Object
 
-// https://platform.openai.com/docs/guides/error-codes
+// https://developers.openai.com/api/docs/guides/error-codes
 Class constructor($response : Object; $body : Object)
 	This:C1470.response:=$response
 	This:C1470.body:=$body
