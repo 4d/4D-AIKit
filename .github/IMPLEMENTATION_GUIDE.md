@@ -408,7 +408,7 @@ Function get audio() : cs.AIKit.OpenAIAudioAPI
 ## 📞 Getting Help
 
 - Check existing implementations in `Project/Sources/Classes/`
-- Review OpenAI API documentation: https://platform.openai.com/docs
+- Review OpenAI API documentation: https://developers.openai.com/api/docs
 - Look at examples in `Documentation/`
 - Use the patterns from `OpenAIChatAPI` as a reference
 

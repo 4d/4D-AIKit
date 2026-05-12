@@ -2,7 +2,7 @@
 
 The `OpenAIChatCompletionsAPI` class is designed for managing chat completions with OpenAI's API. It provides methods to create, retrieve, update, delete, and list chat completions.
 
-https://platform.openai.com/docs/api-reference/chat
+https://developers.openai.com/api/reference/resources/chat
 
 ## Functions
 
@@ -18,7 +18,7 @@ https://platform.openai.com/docs/api-reference/chat
 
 Creates a model response for the given chat conversation.
 
-https://platform.openai.com/docs/api-reference/chat/create
+https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create
 
 #### Example Usage
 
@@ -54,7 +54,7 @@ $messages.push($result.choice.message) // {"role":"assistant"; "content": "xxx" 
 
 Get a stored chat completion.
 
-https://platform.openai.com/docs/api-reference/chat/get
+https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/retrieve
 
 ### update()
 
@@ -69,7 +69,7 @@ https://platform.openai.com/docs/api-reference/chat/get
 
 Modify a stored chat completion.
 
-https://platform.openai.com/docs/api-reference/chat/update
+https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/update
 
 ### delete()
 
@@ -83,7 +83,7 @@ https://platform.openai.com/docs/api-reference/chat/update
 
 Delete a stored chat compltions.
 
-https://platform.openai.com/docs/api-reference/chat/delete
+https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/delete
 
 ### list()
 
@@ -96,4 +96,4 @@ https://platform.openai.com/docs/api-reference/chat/delete
 
 List stored chat completions.
 
-https://platform.openai.com/docs/api-reference/chat/list
+https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/list

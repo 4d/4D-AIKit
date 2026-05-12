@@ -32,13 +32,6 @@ Of course you could propose a fix using pull request
 * Methods must be private ie. set invisible by default, if not documented and not to be acceded from outside.
 * Method must be set preemptive if possible.
 
-### Naming rules
-
-* Name of public methods must start with `Mobile App` then category if any (ex: `Action`) and finally a name.
-  * This rules could be changed
-* Create a folder by category
-  * Create a `Compiler_categoryName` inside each folders for compilation declarations
-
 ### Only touch relevant files
 
 * Make sure your PR stays focused on a single feature or category.

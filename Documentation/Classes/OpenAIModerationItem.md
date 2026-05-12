@@ -1,6 +1,6 @@
 # OpenAIModerationItem
 
-https://platform.openai.com/docs/api-reference/moderations/object#moderations/object-results
+https://developers.openai.com/api/reference/resources/moderations#moderations/object-results
 
 ## Properties
 
