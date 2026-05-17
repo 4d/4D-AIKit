@@ -97,6 +97,21 @@
 			"OpenAIProviders"
 		]
 	},
+	"Responses": {
+		"classes": [
+			"OpenAIResponseDeleted",
+			"OpenAIResponseDeletedResult",
+			"OpenAIResponse",
+			"OpenAIResponsesAPI",
+			"OpenAIResponsesCompactParameters",
+			"OpenAIResponsesInputItemsParameters",
+			"OpenAIResponsesInputItemsResult",
+			"OpenAIResponsesInputTokensResult",
+			"OpenAIResponsesParameters",
+			"OpenAIResponsesResult",
+			"OpenAIResponsesStreamResult"
+		]
+	},
 	"Tests": {
 		"groups": [
 			"FormDemo"
@@ -127,6 +142,8 @@
 			"test_openai_moderations",
 			"test_openai_msg",
 			"test_openai_msg_accumulate",
+			"test_openai_responses",
+			"test_openai_responses_async",
 			"test_openai_vision",
 			"TestOpenAI"
 		],

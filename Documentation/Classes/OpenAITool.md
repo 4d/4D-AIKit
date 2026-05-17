@@ -95,5 +95,6 @@ var $parameters := cs.AIKit.OpenAIChatCompletionsParameters.new({ \
 ## See Also
 
 - [OpenAIChatCompletionsParameters](OpenAIChatCompletionsParameters.md) - For tool configuration
+- [OpenAIResponsesParameters](OpenAIResponsesParameters.md) - For Responses tool configuration
 - [OpenAIChatHelper](OpenAIChatHelper.md) - For automatic tool call handling
 - [OpenAIMessage](OpenAIMessage.md) - For tool call responses

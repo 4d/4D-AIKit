@@ -52,3 +52,13 @@ Several classes inherit from `OpenAIParameters` to extend its functionality for 
 - [OpenAIChatCompletionsMessagesParameters](OpenAIChatCompletionsMessagesParameters.md)
 - [OpenAIImageParameters](OpenAIImageParameters.md)
 - [OpenAIEmbeddingsParameters](OpenAIEmbeddingsParameters.md)
+- [OpenAIResponsesParameters](OpenAIResponsesParameters.md)
+- [OpenAIResponsesCompactParameters](OpenAIResponsesCompactParameters.md)
+- [OpenAIResponsesInputItemsParameters](OpenAIResponsesInputItemsParameters.md)
+
+## See also
+
+- [OpenAIChatCompletionsParameters](OpenAIChatCompletionsParameters.md)
+- [OpenAIResponsesParameters](OpenAIResponsesParameters.md)
+- [OpenAIResponsesCompactParameters](OpenAIResponsesCompactParameters.md)
+- [OpenAIResponsesInputItemsParameters](OpenAIResponsesInputItemsParameters.md)

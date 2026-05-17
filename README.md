@@ -56,6 +56,15 @@ var $result:=$client.chat.completions.create($messages; {model: "gpt-4o-mini"})
 // result in $result.choice
 ```
 
+#### Responses
+
+https://platform.openai.com/docs/api-reference/responses
+
+```4d
+var $result:=$client.responses.create("Could you explain why 42 is a special number?"; {model: "gpt-5"})
+// extracted convenience text in $result.outputText
+```
+
 ##### Chat helper
 
 This helper allows you to maintain a list of user messages and assistant responses.
@@ -139,7 +148,7 @@ var $moderation:=$client.moderations.create("This text contains inappropriate la
 
 #### Asynchronous code
 
-If you do not want to wait for the OpenAPI response when sending a request to its API, you need to use asynchronous code. The result object will be received in a callback function.
+If you do not want to wait for the OpenAI response when sending a request to its API, you need to use asynchronous code. The result object will be received in a callback function.
 
 See [detailed documentation for examples](Documentation/asynchronous-call.md)
 

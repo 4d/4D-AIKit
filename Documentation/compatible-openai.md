@@ -8,7 +8,7 @@ To do so you just have to set the `baseURL` to the provider one and use their ap
 $client.baseURL:="https://api.mistral.ai/v1"
 ```
 
-Some of them
+> Endpoint compatibility varies by provider. Chat completions are the most commonly supported path, while newer endpoints such as Responses, file-backed inputs, response retrieval, and response updates may be OpenAI-only or only partially implemented by compatible providers.
 
 ## Remote
 

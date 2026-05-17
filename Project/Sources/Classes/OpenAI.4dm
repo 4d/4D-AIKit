@@ -11,6 +11,7 @@ property images : cs:C1710.OpenAIImagesAPI
 // property audio : cs.OpenAIAudioAPI
 property moderations : cs:C1710.OpenAIModerationsAPI
 property models : cs:C1710.OpenAIModelsAPI
+property responses : cs:C1710.OpenAIResponsesAPI
 // property fineTunings : cs.OpenAIFineTuningsAPI
 // property beta : cs.OpenAIBetaAPI
 // property batches : cs.OpenAIBatchesAPI
@@ -109,6 +110,7 @@ Class constructor( ...  : Variant)
 	// This.audio:=cs.OpenAIAudioAPI.new(This)
 	This:C1470.moderations:=cs:C1710.OpenAIModerationsAPI.new(This:C1470)
 	This:C1470.models:=cs:C1710.OpenAIModelsAPI.new(This:C1470)
+	This:C1470.responses:=cs:C1710.OpenAIResponsesAPI.new(This:C1470)
 	
 	If (Count parameters:C259=0)
 		This:C1470._fillDefaultParameters()
