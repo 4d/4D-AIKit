@@ -514,6 +514,7 @@ Function _continueConversationAfterToolCalls($result : cs:C1710.OpenAIChatComple
 	
 	// Create a copy of parameters without modifying the original
 	var $parameters : cs:C1710.OpenAIChatCompletionsParameters:=cs:C1710.OpenAIChatCompletionsParameters.new(This:C1470.parameters)
+	$parameters._formulaThis:=This:C1470  // Fix: preserve ChatHelper reference after copy
 	
 	// Make another call to continue the conversation
 	var $newResult:=This:C1470.chat.completions.create($messages; $parameters)
