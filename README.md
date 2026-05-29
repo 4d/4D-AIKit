@@ -129,11 +129,11 @@ Delete a file
 var $deleteResult:=$client.files.delete($fileId)
 ```
 
-:::tip Related blog post
+> [!TIP]
+> Related blog post
+>
+> [Transform Static Documents into Actionable Knowledge with 4D AIKit](https://blog.4d.com/transform-static-documents-into-actionable-knowledge-with-4d-aikit).
 
-[Transform Static Documents into Actionable Knowledge with 4D AIKit](https://blog.4d.com/transform-static-documents-into-actionable-knowledge-with-4d-aikit).
-
-:::
 
 #### Moderations
 
