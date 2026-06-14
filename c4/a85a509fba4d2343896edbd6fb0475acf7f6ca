@@ -1,0 +1,37 @@
+Documentation/Classes/OpenAIImageParameters.md
+  s_e199c38349b474::t_031b98223c98fa 19-24
+Documentation/Classes/OpenAITool.md
+  s_e199c38349b474::t_031b98223c98fa 82-89
+Documentation/Classes/OpenAIChatCompletionsStreamResult.md
+  s_e199c38349b474::t_031b98223c98fa 27
+Documentation/Classes/OpenAIChatCompletionsMessagesParameters.md
+  s_e199c38349b474::t_031b98223c98fa 15-20
+Documentation/Classes/OpenAIParameters.md
+  s_e199c38349b474::t_031b98223c98fa 47-54
+Documentation/Classes/OpenAIFileListParameters.md
+  s_e199c38349b474::t_031b98223c98fa 30-35
+Documentation/Classes/OpenAIFileParameters.md
+  s_e199c38349b474::t_031b98223c98fa 35-40
+Documentation/Classes/OpenAIChatCompletionsParameters.md
+  s_e199c38349b474::t_031b98223c98fa 132-137
+Documentation/Classes/OpenAIChatCompletionsListParameters.md
+  s_e199c38349b474::t_031b98223c98fa 19-24
+Documentation/Classes/OpenAIEmbeddingsParameters.md
+  s_e199c38349b474::t_031b98223c98fa 16-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.4",
+  "base_commit_sha": "c4a85a509fba4d2343896edbd6fb0475acf7f6ca",
+  "prompts": {},
+  "sessions": {
+    "s_e199c38349b474": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "765b7d3c-3324-4476-89e9-d8b008876ddf",
+        "model": "gpt-5.3-codex"
+      },
+      "human_author": "Eric Marchand <eric.marchand@4d.com>"
+    }
+  }
+}
