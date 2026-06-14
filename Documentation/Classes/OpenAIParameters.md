@@ -44,6 +44,14 @@ See [documentation about asynchronous code for examples](../asynchronous-call.md
 |-------------------|---------|---------------------------------------------------------------------------------------------------------------------------------|
 | `throw`           | Boolean | If true, throws an error if one occurs. Only if no formula callback defined. |
 
+## Functions
+
+### body()
+
+**body**() : Object
+
+Builds and returns the request body object sent to the OpenAI API from the parameter properties. Subclasses override this function to add their endpoint-specific fields to the body.
+
 ## Inherited Classes
 
 Several classes inherit from `OpenAIParameters` to extend its functionality for specific use cases. Below are some of the classes that extend `OpenAIParameters`:

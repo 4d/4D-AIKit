@@ -27,6 +27,12 @@ $params.order:="desc"
 var $result:=$client.files.list($params)
 ```
 
+## Functions
+
+### body()
+
+Overrides [`OpenAIParameters.body()`](OpenAIParameters.md#body) to add this class's specific parameters to the request body.
+
 ## See also
 
 - [OpenAIFilesAPI](OpenAIFilesAPI.md)

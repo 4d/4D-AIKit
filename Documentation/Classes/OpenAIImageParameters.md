@@ -16,6 +16,12 @@ The `OpenAIImageParameters` class is designed to configure and manage the parame
 | `style`           | Text    | ""             | The style of the generated images (must be either `vivid` or `natural`).                       |
 | `response_format` | Text    | "url"          | The format for returned images, can be either `url` or `b64_json`.                             |
 
+## Functions
+
+### body()
+
+Overrides [`OpenAIParameters.body()`](OpenAIParameters.md#body) to add this class's specific parameters to the request body.
+
 ## See also
 
 - [OpenAIImagesAPI](OpenAIImagesAPI.md)

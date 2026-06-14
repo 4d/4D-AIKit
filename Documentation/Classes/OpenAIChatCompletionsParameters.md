@@ -129,6 +129,12 @@ When using `json_schema` type, you can specify:
 - Invalid JSON responses will result in an error when using JSON formats
 - JSON schema validation ensures type safety and required field presence
 
+## Functions
+
+### body()
+
+Overrides [`OpenAIParameters.body()`](OpenAIParameters.md#body) to add this class's specific parameters to the request body.
+
 ## See also
 
 - [OpenAIChatCompletionsAPI](OpenAIChatCompletionsAPI.md)

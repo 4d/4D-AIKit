@@ -12,6 +12,12 @@
 | `limit`    | Integer| 0            | Number of messages to retrieve. |
 | `order`    | Text  | "asc"         | Sort order for messages by timestamp. Use `asc` for ascending order or `desc` for descending order. Defaults to `asc`. |
 
+## Functions
+
+### body()
+
+Overrides [`OpenAIParameters.body()`](OpenAIParameters.md#body) to add this class's specific parameters to the request body.
+
 ## See also
 
 - [OpenAIChatCompletionsMessagesAPI](OpenAIChatCompletionsMessagesAPI.md)

@@ -79,6 +79,14 @@ var $tool := cs.AIKit.OpenAITool.new({ \
 })
 ```
 
+## Functions
+
+### body()
+
+**body**() : Object
+
+Returns the tool definition formatted for the OpenAI API request body.
+
 ## Integration with Chat Completions
 
 Tools are typically used with the `OpenAIChatCompletionsParameters.tools` property:

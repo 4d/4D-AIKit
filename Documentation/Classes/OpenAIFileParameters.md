@@ -32,6 +32,12 @@ $params.expires_after.anchor:="created_at"
 $params.expires_after.seconds:=604800  // 7 days
 ```
 
+## Functions
+
+### body()
+
+Overrides [`OpenAIParameters.body()`](OpenAIParameters.md#body) to add this class's specific parameters to the request body.
+
 ## See also
 
 - [OpenAIFilesAPI](OpenAIFilesAPI.md)

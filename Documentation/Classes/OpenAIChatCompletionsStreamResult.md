@@ -24,6 +24,7 @@
 | `success`    | Boolean | Returns `True` if the streaming data was successfully decoded as an object. |
 | `terminated` | Boolean  | A Boolean indicating whether the HTTP request was terminated. ie `onTerminate` called.          |
 | `usage`      | Object   | Returns token usage information from the stream data (only available in the final chunk when `stream_options.include_usage` is set to `True`). |
+| `errors`     | Collection | Returns a collection of errors found in the streamed data, the request, or the decoding step. |
 
 ### usage
 
