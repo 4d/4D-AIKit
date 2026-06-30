@@ -16,6 +16,20 @@
 |------------|----------------------------------------|---------------------------------------------------------------------|
 | `choice`   | [OpenAIChoice](OpenAIChoice.md) | Returns a choice data, with a `delta` message.                             |
 | `choices`  | Collection  | Returns a collection of [OpenAIChoice](OpenAIChoice.md) data, with `delta` messages.           |
+| `stopReason` | Text      | Why the response stopped. See [stopReason](#stopreason).                            |
+
+### stopReason
+
+`stopReason` explains why the streamed response stopped, derived from the result itself (so it is
+meaningful whether or not you go through [OpenAIChatHelper](OpenAIChatHelper.md)):
+
+1. an explicit reason set by the agent loop (e.g. `"max_iterations"`, `"cancelled"`) wins;
+2. otherwise the final [choice](OpenAIChoice.md)'s `finish_reason` verbatim (`"stop"`, `"length"`,
+   `"tool_calls"`, `"content_filter"`, or any value the provider returns);
+3. otherwise `"error"` if the request failed;
+4. otherwise `""` while the stream is still in progress (no `finish_reason` yet).
+
+See the [Agent loop](OpenAIChatHelper.md#agent-loop) section for the full list of values.
 
 ### Overridden properties
 

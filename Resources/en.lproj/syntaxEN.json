@@ -800,7 +800,29 @@
 		"data": {
 			"Syntax": "data : Object"
 		},
-		"_inheritedFrom_": "OpenAIResult"
+		"_inheritedFrom_": "OpenAIResult",
+		"set stopReason()": {
+			"Syntax": "**.set stopReason**( *value* : Text )",
+			"Params": [
+				[
+					"value",
+					"Text",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"get stopReason()": {
+			"Syntax": "**.get stopReason**() : Text",
+			"Params": [
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		}
 	},
 	"OpenAIFileResult": {
 		"get file()": {
@@ -1189,7 +1211,29 @@
 			],
 			"Summary": ""
 		},
-		"_inheritedFrom_": "OpenAIResult"
+		"_inheritedFrom_": "OpenAIResult",
+		"set stopReason()": {
+			"Syntax": "**.set stopReason**( *value* : Text )",
+			"Params": [
+				[
+					"value",
+					"Text",
+					"->"
+				]
+			],
+			"Summary": ""
+		},
+		"get stopReason()": {
+			"Syntax": "**.get stopReason**() : Text",
+			"Params": [
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		}
 	},
 	"OpenAIChatCompletionsMessagesParameters": {
 		"body()": {
@@ -1786,6 +1830,12 @@
 		},
 		"systemPrompt": {
 			"Syntax": "systemPrompt : cs.AIKit.OpenAIMessage"
+		},
+		"stopReason": {
+			"Syntax": "stopReason : Text"
+		},
+		"maxIterations": {
+			"Syntax": "maxIterations : Integer"
 		}
 	},
 	"OpenAIParameters": {
@@ -2811,6 +2861,17 @@
 		},
 		"errors": {
 			"Syntax": "errors : Collection"
+		},
+		"modelAliases()": {
+			"Syntax": "**.modelAliases**() : Collection",
+			"Params": [
+				[
+					"",
+					"Collection",
+					"<-"
+				]
+			],
+			"Summary": ""
 		}
 	}
 }

@@ -1,6 +1,10 @@
 // Contain the stream data send by server
 property data : Object
 
+// Loop-level stop reason set by the agent loop (OpenAIChatHelper), e.g. "max_iterations"
+// or "cancelled". Empty means: derive stopReason from the response itself.
+property _stopReason : Text
+
 property _body : Object
 
 property _decodingErrors : Collection
@@ -8,6 +12,25 @@ property _decodingErrors : Collection
 // property _chunks : Collection
 
 Class extends OpenAIResult
+
+// Why the response stopped. An explicit reason set by the agent loop wins; otherwise it is
+// derived from the response: the choice finish_reason verbatim ("stop", "length", "tool_calls",
+// "content_filter", ...), "error" if the request failed, or "" if not terminated yet.
+Function get stopReason : Text
+	If (Length:C16(String:C10(This:C1470._stopReason))>0)
+		return This:C1470._stopReason
+	End if
+	If (Not:C34(This:C1470.success))
+		return "error"
+	End if
+	var $choice : cs:C1710.OpenAIChoice:=This:C1470.choice
+	If (($choice#Null:C1517) && (Length:C16(String:C10($choice.finish_reason))>0))
+		return String:C10($choice.finish_reason)
+	End if
+	return ""
+
+Function set stopReason($value : Text)
+	This:C1470._stopReason:=$value
 
 // Build stream result with event blob data.
 Class constructor($request : 4D:C1709.HTTPRequest; $body : Variant; $terminated : Boolean)

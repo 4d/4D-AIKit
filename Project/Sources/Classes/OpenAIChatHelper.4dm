@@ -24,6 +24,18 @@ property _toolHandlers : Object:={}
 // Boolean indicating whether tool calls are handled automatically using registered tools
 property autoHandleToolCalls : Boolean:=True:C214
 
+// Agent loop guard: maximum number of tool-call rounds (LLM -> tools -> LLM) per prompt() turn.
+// 0 or less means unlimited. When reached, the loop stops with stopReason "max_iterations".
+property maxIterations : Integer:=10
+
+// Number of tool-call rounds performed in the active turn. Reset on each prompt().
+property _iteration : Integer:=0
+
+// Why the last agentic loop stopped, mirror of the value set on the returned result.
+// Usually the terminal completion finish_reason ("stop", "length", "tool_calls",
+// "content_filter", ...); or a loop-level reason: "max_iterations", "cancelled", "error".
+property stopReason : Text:=""
+
 // Initialize the chat helper with a system prompt and some parameters
 Class constructor($chat : cs:C1710.OpenAIChatAPI; $systemPrompt : Text; $parameters : cs:C1710.OpenAIChatCompletionsParameters)
 	This:C1470.chat:=$chat
@@ -85,6 +97,10 @@ Function _pushMessage($message : cs:C1710.OpenAIMessage)
 	End if 
 	
 Function prompt($prompt : Variant) : cs:C1710.OpenAIChatCompletionsResult
+	// Start a new turn: reset the loop guard and terminal state
+	This:C1470._iteration:=0
+	This:C1470.stopReason:=""
+
 	var $type:=Value type:C1509($prompt)
 	Case of 
 		: ($type=Is text:K8:3)
@@ -118,13 +134,16 @@ Function prompt($prompt : Variant) : cs:C1710.OpenAIChatCompletionsResult
 	
 	// Reset chat context, ie. remove messages and tools
 Function reset()
-	
+
+	This:C1470._iteration:=0
+	This:C1470.stopReason:=""
+
 	If (This:C1470.parameters._isAsync())
 		This:C1470.messages:=New shared collection:C1527
-	Else 
+	Else
 		This:C1470.messages:=[]
-	End if 
-	
+	End if
+
 	This:C1470.unregisterTools()
 	
 	// Register a tool with its handler function or a handler object where we call the function with the tool name
@@ -398,15 +417,25 @@ Function _manageResponse($result : Object) : Object
 			End if 
 			
 			If (This:C1470.autoHandleToolCalls && ($result.success) && ($result.choice#Null:C1517) && (String:C10($result.choice.finish_reason)="tool_calls"))
-				
-				var $lastMessage:=This:C1470.messages.last()
-				This:C1470._handleAsyncToolCalls($result; $lastMessage)
-				If ($result._newResult#Null:C1517)
-					return $result._newResult  // we already manage _notifyOnTerminate
-				End if 
-				
-			End if 
-			
+
+				If (This:C1470._reachedMaxIterations())
+					This:C1470._setStopReason($result; "max_iterations")
+				Else
+					This:C1470._iteration+=1
+					var $lastMessage:=This:C1470.messages.last()
+					This:C1470._handleAsyncToolCalls($result; $lastMessage)
+					If ($result._newResult#Null:C1517)
+						return $result._newResult  // we already manage _notifyOnTerminate
+					End if
+					This:C1470.stopReason:=$result.stopReason  // derived by the result itself
+				End if
+
+			Else
+
+				This:C1470.stopReason:=$result.stopReason  // derived by the result itself
+
+			End if
+
 			This:C1470._notifyOnTerminate($result)
 			
 		Else 
@@ -447,23 +476,46 @@ Function _manageResponse($result : Object) : Object
 			
 			// Check for tool calls and handle them automatically
 			If (This:C1470.autoHandleToolCalls) && ($result.choice.message.tool_calls#Null:C1517)
-				This:C1470._handleToolCalls($result)
-				If ($result._newResult#Null:C1517)
-					return $result._newResult  // we already manage _notifyOnTerminate
-				End if 
-			End if 
-			
-		Else 
-			
+				If (This:C1470._reachedMaxIterations())
+					This:C1470._setStopReason($result; "max_iterations")
+				Else
+					This:C1470._iteration+=1
+					This:C1470._handleToolCalls($result)
+					If ($result._newResult#Null:C1517)
+						return $result._newResult  // we already manage _notifyOnTerminate
+					End if
+					This:C1470.stopReason:=$result.stopReason  // derived by the result itself
+				End if
+			Else
+				This:C1470.stopReason:=$result.stopReason  // derived by the result itself
+			End if
+
+		Else
+
 			This:C1470.lastErrors:=$result.errors
-			
-		End if 
+			This:C1470.stopReason:=$result.stopReason  // derived as "error" by the result
+
+		End if
 		
 		This:C1470._notifyOnTerminate($result)
 		
 	End if 
 	return $result
 	
+	// True if the per-turn tool-call budget (maxIterations) has been reached.
+Function _reachedMaxIterations() : Boolean
+	If (This:C1470.maxIterations<=0)
+		return False:C215  // unlimited
+	End if
+	return This:C1470._iteration>=This:C1470.maxIterations
+
+	// Store the agentic loop stop reason on the helper and on the returned result.
+Function _setStopReason($result : Object; $reason : Text)
+	This:C1470.stopReason:=$reason
+	If ($result#Null:C1517)
+		$result.stopReason:=$reason
+	End if
+
 Function _notifyOnTerminate($result)
 	If ($result.success)
 		

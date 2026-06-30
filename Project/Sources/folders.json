@@ -110,6 +110,7 @@
 			"test_openai_chat",
 			"test_openai_chat_async",
 			"test_openai_chat_helper",
+			"test_openai_chat_helper_agent",
 			"test_openai_chat_helper_as_tool",
 			"test_openai_chat_helper_async",
 			"test_openai_chat_helper_m_tools",

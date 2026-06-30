@@ -13,7 +13,52 @@ The chat helper allow to keep a list of messages in memory and make consecutive 
 | `messages`           | Collection of [OpenAIMessage](OpenAIMessage.md)                 | []                               | The collection of messages exchanged in the chat session.                          |
 | `tools`              | Collection of [OpenAITool](OpenAITool.md)    | []                               | List of registered OpenAI tools for function calling.                              |
 | `autoHandleToolCalls`| Boolean                     | True                             | Boolean indicating whether tool calls are handled automatically using registered tools. |
+| `maxIterations`      | Integer                     | 10                               | Agent loop guard: maximum number of tool-call rounds (LLM → tools → LLM) per `prompt()` turn. `0` or less means unlimited. |
+| `stopReason`         | Text                        | ""                               | Why the last `prompt()` turn stopped. See [Agent loop](#agent-loop). Mirrors the value derived by the returned result. |
 | `lastErrors`         | Collection                  | -                                | Collection containing the last errors encountered during chat operations.           |
+
+## Agent loop
+
+When tools are registered and `autoHandleToolCalls` is `True`, `prompt()` runs a tool loop: it
+calls the model, executes any requested tools, feeds the results back, and repeats until the model
+answers without requesting more tools.
+
+Two properties make that loop controllable:
+
+- **`maxIterations`** bounds the loop. It counts tool-call rounds, so a budget of `N` allows up to
+  `N + 1` model completions before stopping. Reset at the start of every `prompt()`. Set it to `0`
+  (or less) for an unbounded loop.
+- **`stopReason`** reports why the turn ended. It is a computed property of the result
+  ([OpenAIChatCompletionsResult](OpenAIChatCompletionsResult.md), and the streamed
+  [OpenAIChatCompletionsStreamResult](OpenAIChatCompletionsStreamResult.md) delivered to your
+  callbacks); `OpenAIChatHelper.stopReason` simply mirrors the last one. Because it is derived by
+  the result, it is also meaningful when you call `chat.completions.create()` directly, without
+  the helper.
+
+`stopReason` carries the terminal completion's `finish_reason` verbatim, plus a few loop-level
+sentinels the model cannot express (set only by the agent loop):
+
+| `stopReason`     | Meaning                                                                 |
+|------------------|------------------------------------------------------------------------|
+| `stop`           | The model finished its answer (normal end of turn).                    |
+| `length`         | The model hit its output token limit.                                  |
+| `tool_calls`     | The model asked for tools while `autoHandleToolCalls` is `False` — run them yourself. |
+| `content_filter` | The provider's content filter stopped the response.                   |
+| `max_iterations` | The `maxIterations` budget was reached; the loop was stopped.          |
+| `error`          | The request or API call failed (see `lastErrors`).                     |
+
+Other values are possible: any `finish_reason` a provider returns is passed through unchanged.
+
+```4D
+var $helper:=$client.chat.create("You are a helpful assistant.")
+$helper.registerTool($tool; $handler)
+$helper.maxIterations:=5  // stop after at most 5 tool-call rounds
+
+var $result:=$helper.prompt("Plan and book the trip.")
+If ($result.stopReason="max_iterations")
+    // the agent ran out of its step budget before finishing
+End if
+```
 
 ## Constructor
 

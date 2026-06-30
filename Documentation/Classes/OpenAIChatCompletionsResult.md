@@ -10,7 +10,23 @@
 |-----------|---------------|-----------------------------------------------------------------------------|
 | `choices` | Collection    | Returns a collection of [OpenAIChoice](OpenAIChoice.md) from the OpenAI response. |
 | `choice`  | OpenAIChoice  | Returns the first [OpenAIChoice](OpenAIChoice.md) from the choices collection.    |
+| `stopReason` | Text       | Why the response stopped. See [stopReason](#stopreason).                          |
 | `usage`   | Object        | Returns token usage information (inherited from [OpenAIResult](OpenAIResult.md)). |
+
+### stopReason
+
+`stopReason` explains why the response stopped, derived from the result itself (so it is
+meaningful whether or not you go through [OpenAIChatHelper](OpenAIChatHelper.md)):
+
+1. an explicit reason set by the agent loop (e.g. `"max_iterations"`, `"cancelled"`) wins;
+2. otherwise the [choice](OpenAIChoice.md)'s `finish_reason` verbatim (`"stop"`, `"length"`,
+   `"tool_calls"`, `"content_filter"`, or any value the provider returns);
+3. otherwise `"error"` if the request failed;
+4. otherwise `""` if the response is not terminated.
+
+The agent loop uses this property both ways: it sets it (loop-level reasons) and reads it
+(deriving the model's `finish_reason`). See the [Agent loop](OpenAIChatHelper.md#agent-loop)
+section for the full list of values.
 
 ### usage
 
