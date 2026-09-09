@@ -75,11 +75,16 @@ Function onData($request : 4D:C1709.HTTPRequest; $event : Object)
 		End if 
 		
 		var $chunkResult:=cs:C1710.OpenAIChatCompletionsStreamResult.new($request; $line; False:C215)
-		If (($chunkResult._decodingErrors#Null:C1517) && ($chunkResult._decodingErrors.length>0) && (Position:C15("data:"; $line)>0) && ($lineIndex=($lines.length-1)))
-			// if we cannot decode last line, we suppose packet not complete, keep in buffer for next line
-			// to do better, maybe analyse brackets etc...
+		var $undecodable : Boolean:=($chunkResult._decodingErrors#Null:C1517) && ($chunkResult._decodingErrors.length>0)
+		
+		If ($undecodable && ($lineIndex=($lines.length-1)))
+			// if we cannot decode the last line, we suppose the packet is not complete, keep it in buffer for the next read
 			This:C1470._chunkBuffer:=$line
 			continue
+		End if 
+		
+		If ($undecodable)
+			continue  // invalid SSE packet in the middle of the stream, skip it without stopping the stream
 		End if 
 		
 		If (This:C1470._parameters.onData#Null:C1517)
@@ -87,11 +92,6 @@ Function onData($request : 4D:C1709.HTTPRequest; $event : Object)
 		End if 
 		If (This:C1470._parameters.formula#Null:C1517)
 			This:C1470._parameters.formula.call(This:C1470._parameters._formulaThis; $chunkResult)
-		End if 
-		
-		If (($chunkResult._decodingErrors#Null:C1517) && (Position:C15("data: "; $line)<=0))  // XXX: maybe skip before and even do not try to decode invalid SSE packet
-			This:C1470._onStreamError:=True:C214
-			break  // ignore next 
 		End if 
 		
 	End for 
