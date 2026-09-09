@@ -45,6 +45,7 @@ Upload a file that can be used across various endpoints.
 - **Batch API:** Only supports `.jsonl` files up to 200 MB with specific required format
 - **Assistants API:** Supports specific file types (see Assistants Tools guide)
 - **Chat Completions API:** PDFs are only supported
+- **Responses API:** Uploaded files can also be referenced from Responses API inputs, depending on the input type supported by the target model
 
 #### Example
 

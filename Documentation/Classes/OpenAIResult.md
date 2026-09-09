@@ -31,6 +31,8 @@ See the specific result class documentation for endpoint-specific usage structur
 - [OpenAIChatCompletionsStreamResult](OpenAIChatCompletionsStreamResult.md#usage) - Streaming chat usage
 - [OpenAIEmbeddingsResult](OpenAIEmbeddingsResult.md#usage) - Embeddings usage
 - [OpenAIImagesResult](OpenAIImagesResult.md#usage) - Image generation usage
+- [OpenAIResponsesResult](OpenAIResponsesResult.md) - Responses API usage
+- [OpenAIResponsesInputTokensResult](OpenAIResponsesInputTokensResult.md) - Responses input token counting
 
 ### rateLimit
 
@@ -67,3 +69,16 @@ Several classes inherit from `OpenAIResult` to extend its functionality for spec
 - [OpenAIModelListResult](OpenAIModelListResult.md)
 - [OpenAIModerationResult](OpenAIModerationResult.md)
 - [OpenAIEmbeddingsResult](OpenAIEmbeddingsResult.md)
+- [OpenAIResponsesResult](OpenAIResponsesResult.md)
+- [OpenAIResponsesStreamResult](OpenAIResponsesStreamResult.md)
+- [OpenAIResponsesInputItemsResult](OpenAIResponsesInputItemsResult.md)
+- [OpenAIResponsesInputTokensResult](OpenAIResponsesInputTokensResult.md)
+- [OpenAIResponseDeletedResult](OpenAIResponseDeletedResult.md)
+
+## See also
+
+- [OpenAIResponsesResult](OpenAIResponsesResult.md)
+- [OpenAIResponsesStreamResult](OpenAIResponsesStreamResult.md)
+- [OpenAIResponsesInputItemsResult](OpenAIResponsesInputItemsResult.md)
+- [OpenAIResponsesInputTokensResult](OpenAIResponsesInputTokensResult.md)
+- [OpenAIResponseDeletedResult](OpenAIResponseDeletedResult.md)
