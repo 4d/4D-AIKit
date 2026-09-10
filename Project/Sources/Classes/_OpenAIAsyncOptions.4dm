@@ -14,6 +14,8 @@ property _onStreamError : Boolean:=False:C215
 property _chunkBuffer : Text:=""
 // SSE packets we could not decode. Reported on the terminate result, see `errors`.
 property _streamErrors : Collection
+// Trailing bytes of an utf8 sequence cut by the read, waiting for their continuation.
+property _pendingBytes : Collection
 
 // MARK:- constructor
 Class constructor($options : Object; $client : cs:C1710.OpenAI; $parameters : cs:C1710.OpenAIChatCompletionsParameters; $result : cs:C1710.OpenAIResult)
@@ -25,6 +27,7 @@ Class constructor($options : Object; $client : cs:C1710.OpenAI; $parameters : cs
 	This:C1470._parameters:=$parameters
 	This:C1470._result:=$result
 	This:C1470._streamErrors:=[]
+	This:C1470._pendingBytes:=[]
 	If (Bool:C1537(This:C1470._parameters.stream))
 		This:C1470.dataType:="text"
 		This:C1470.decodeData:=True:C214
@@ -65,10 +68,17 @@ Function onData($request : 4D:C1709.HTTPRequest; $event : Object)
 	
 	// TODO: ignore if not sse_event.object == "chat.completion.chunk" 
 	
-	var $textData:=BLOB to text:C555($event.data; UTF8 C string:K22:15)
+	var $textData:=This:C1470._decodeChunk($event.data)
 	
 	$textData:=This:C1470._chunkBuffer+$textData
 	This:C1470._chunkBuffer:=""
+	
+	// a byte order mark can only be at the very beginning of the stream, it is not part of any field
+	//%W-533.1
+	If ((Length:C16($textData)>0) && (Character code:C91($textData[[1]])=0xFEFF))
+		//%W+533.1
+		$textData:=Substring:C12($textData; 2)
+	End if 
 	
 	If (Position:C15("{"; $textData)=1)
 		This:C1470._onStreamError:=True:C214
@@ -82,6 +92,9 @@ Function onData($request : 4D:C1709.HTTPRequest; $event : Object)
 	$textData:=Replace string:C233($textData; Char:C90(Carriage return:K15:38); Char:C90(Line feed:K15:40))
 	
 	var $lines:=Split string:C1554($textData; "\n")
+	If ($lines.length=0)
+		return   // empty read, Split string returns an empty collection for an empty text
+	End if 
 	
 	// only a line feed terminates a line: the trailing segment is always incomplete, keep it for the next read.
 	// (it is an empty text when the read did end on a line feed)
@@ -137,3 +150,55 @@ Function _handleSSELine($request : 4D:C1709.HTTPRequest; $line : Text) : Boolean
 	End if 
 	
 	return True:C214
+
+	// MARK:- utf8
+	// Decode a read as text, keeping back the bytes of an utf8 sequence cut by the read boundary.
+	// Decoding them separately would silently give a wrong character, ie. "é" read as "©".
+Function _decodeChunk($chunk : Blob) : Text
+	
+	var $data : Blob:=$chunk
+	var $pending : Integer:=This:C1470._pendingBytes.length
+	var $size : Integer:=BLOB size:C605($data)
+	
+	var $blob : Blob
+	SET BLOB SIZE:C606($blob; $pending+$size)
+	var $index : Integer
+	For ($index; 0; $pending-1)
+		$blob{$index}:=This:C1470._pendingBytes[$index]
+	End for 
+	If ($size>0)
+		COPY BLOB:C558($data; $blob; 0; $pending; $size)
+	End if 
+	This:C1470._pendingBytes:=[]
+	
+	var $total : Integer:=BLOB size:C605($blob)
+	
+	// walk back over the continuation bytes (10xxxxxx) to find the lead byte of the last sequence
+	var $lead : Integer:=$total-1
+	While (($lead>=0) && ($lead>($total-4)) && (($blob{$lead} & 0x00C0)=0x0080))
+		$lead:=$lead-1
+	End while 
+	
+	If ($lead>=0)
+		var $expected : Integer:=1
+		Case of 
+			: (($blob{$lead} & 0x00E0)=0x00C0)
+				$expected:=2
+			: (($blob{$lead} & 0x00F0)=0x00E0)
+				$expected:=3
+			: (($blob{$lead} & 0x00F8)=0x00F0)
+				$expected:=4
+		End case 
+		
+		If (($total-$lead)<$expected)  // sequence not complete, wait for the next read
+			For ($index; $lead; $total-1)
+				This:C1470._pendingBytes.push($blob{$index})
+			End for 
+			SET BLOB SIZE:C606($blob; $lead)
+		End if 
+	End if 
+	
+	If (BLOB size:C605($blob)=0)
+		return ""
+	End if 
+	return BLOB to text:C555($blob; UTF8 C string:K22:15)

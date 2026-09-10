@@ -122,12 +122,22 @@ Function _parseDataLine($textData : Text) : Object
 		$textData:=Substring:C12($textData; $pos)  // ie. remove "data: before json line", XXX: maybe just check data: 
 	End if 
 	
-	var $data:=Try(JSON Parse:C1218($textData))
-	If ($data=Null:C1517)
-		If (This:C1470._decodingErrors=Null:C1517)
-			This:C1470._decodingErrors:=Last errors:C1799
-		Else 
-			This:C1470._decodingErrors.combine(Last errors:C1799)
-		End if 
+	var $parsed : Variant:=Try(JSON Parse:C1218($textData))
+	var $errors : Collection:=Last errors:C1799
+	
+	// JSON Parse accepts a trailing garbage, "1}" is parsed as the number 1,
+	// so a truncated packet can be decoded without any error. A chunk is always an object.
+	If ((Value type:C1509($parsed)#Is object:K8:27) && ($errors=Null:C1517))
+		$errors:=[{message: "Unexpected stream data, an object was expected: "+$textData}]
 	End if 
-	return $data
+	
+	If ($errors#Null:C1517)
+		If (This:C1470._decodingErrors=Null:C1517)
+			This:C1470._decodingErrors:=$errors
+		Else 
+			This:C1470._decodingErrors.combine($errors)
+		End if 
+		return Null:C1517
+	End if 
+	
+	return $parsed
