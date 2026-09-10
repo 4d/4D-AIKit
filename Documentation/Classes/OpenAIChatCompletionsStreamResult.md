@@ -26,6 +26,9 @@
 | `usage`      | Object   | Returns token usage information from the stream data (only available in the final chunk when `stream_options.include_usage` is set to `True`). |
 | `errors`     | Collection | Returns a collection of errors found in the streamed data, the request, or the decoding step. |
 
+> [!NOTE]
+> On the final result, `errors` can be filled while `success` is `True`. This happens when some SSE packets could not be decoded: they are skipped instead of interrupting the stream, so the accumulated message may be incomplete. Check `errors` even on success if you rely on the streamed content.
+
 ### usage
 
 The `usage` property returns an object containing token usage information, available only in the final streaming chunk when enabled via `stream_options.include_usage: True` in the request parameters.

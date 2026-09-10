@@ -5,6 +5,9 @@ property _body : Object
 
 property _decodingErrors : Collection
 
+// Errors on SSE packets skipped during the stream, set on the terminate result.
+property _streamErrors : Collection
+
 // property _chunks : Collection
 
 Class extends OpenAIResult
@@ -62,7 +65,7 @@ Function get success : Boolean
 	
 	// Return errors if we manage to find some. 
 Function get errors : Collection
-	If ((This:C1470.request.errors#Null:C1517) && (This:C1470.request.errors.length>0))
+	If ((This:C1470.request#Null:C1517) && (This:C1470.request.errors#Null:C1517) && (This:C1470.request.errors.length>0))
 		return This:C1470.request.errors
 	End if 
 	
@@ -76,6 +79,10 @@ Function get errors : Collection
 	
 	If ((This:C1470._body#Null:C1517) && (This:C1470._body.error#Null:C1517))
 		return [This:C1470._body.error]
+	End if 
+	
+	If ((This:C1470._streamErrors#Null:C1517) && (This:C1470._streamErrors.length>0))
+		return This:C1470._streamErrors  // success could be True: data is there but incomplete
 	End if 
 	
 	return []

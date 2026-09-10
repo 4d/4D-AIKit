@@ -397,6 +397,11 @@ Function _manageResponse($result : Object) : Object
 				This:C1470._trim()
 			End if 
 			
+			var $streamErrors : Collection:=$result.errors
+			If ($streamErrors.length>0)
+				This:C1470.lastErrors:=$streamErrors  // could be set even on success if some packets were skipped
+			End if 
+			
 			If (This:C1470.autoHandleToolCalls && ($result.success) && ($result.choice#Null:C1517) && (String:C10($result.choice.finish_reason)="tool_calls"))
 				
 				var $lastMessage:=This:C1470.messages.last()

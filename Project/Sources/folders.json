@@ -127,6 +127,7 @@
 			"test_openai_moderations",
 			"test_openai_msg",
 			"test_openai_msg_accumulate",
+			"test_openai_stream_sse",
 			"test_openai_vision",
 			"TestOpenAI"
 		],
