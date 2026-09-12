@@ -282,3 +282,22 @@ $options.onData(Null:C1517; {data: $blob})
 ASSERT:C1129($collector.received.length=0; "A split data field is not concatenated, got: "+String:C10($collector.received.length))
 ASSERT:C1129($options._streamErrors.length>=2; "But both halves must be reported, not silently lost, got: "+String:C10($options._streamErrors.length))  // 4D pushes several errors per malformed json
 ASSERT:C1129(Not:C34($options._onStreamError); "And the stream must stay alive")
+
+// MARK:- Test 25: data field whose value is an SSE comment (Qwen/MLX keepalive)
+$collector:={stream: True:C214; received: []; onData: Formula:C1597(This:C1470.received.push($1))}
+$options:=cs:C1710._OpenAIAsyncOptions.new({}; Null:C1517; cs:C1710.OpenAIChatCompletionsParameters.new($collector); cs:C1710.OpenAIResult.new())
+
+TEXT TO BLOB:C554(": keepalive\ndata: : keepalive\ndata: {\"a\":1}\ndata: : keepalive\ndata: [DONE]\n"; $blob; UTF8 text without length:K22:17)
+$options.onData(Null:C1517; {data: $blob})
+ASSERT:C1129($collector.received.length=1; "data: : keepalive must be ignored, got: "+String:C10($collector.received.length))
+ASSERT:C1129($collector.received[0].data.a=1; "Chunk after keepalive must be decoded, got: "+JSON Stringify:C1217($collector.received[0].data || Null:C1517))
+ASSERT:C1129(Not:C34($options._onStreamError); "Keepalive data field must not stop the stream")
+ASSERT:C1129($options._streamErrors.length=0; "Keepalive data field must not be reported as an error")
+
+// MARK:- Test 26: terminated body whose last data segment is a keepalive
+var $terminated : cs:C1710.OpenAIChatCompletionsStreamResult
+$terminated:=cs:C1710.OpenAIChatCompletionsStreamResult.new(Null:C1517; \
+	"data: {\"choices\":[{\"delta\":{\"content\":\"Hi\"}}]}\n\ndata: : keepalive\n\ndata: [DONE]\n"; True:C214)
+ASSERT:C1129($terminated.data#Null:C1517; "Terminate must skip trailing keepalive and keep the last JSON chunk")
+ASSERT:C1129($terminated.choice#Null:C1517; "Terminate must expose the last choice after keepalive")
+ASSERT:C1129($terminated._decodingErrors=Null:C1517; "Keepalive must not produce a JSON decode error")

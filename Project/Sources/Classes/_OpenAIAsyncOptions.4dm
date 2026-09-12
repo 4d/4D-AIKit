@@ -135,6 +135,11 @@ Function _handleSSELine($request : 4D:C1709.HTTPRequest; $line : Text) : Boolean
 		return False:C215
 	End if 
 	
+	// Qwen/MLX send "data: : keepalive" — a data field whose value is an SSE comment.
+	If (Position:C15(":"; $payload)=1) || (Position:C15("{"; $payload)=0)
+		return True:C214
+	End if 
+	
 	var $chunkResult:=cs:C1710.OpenAIChatCompletionsStreamResult.new($request; $payload; False:C215)
 	If (($chunkResult._decodingErrors#Null:C1517) && ($chunkResult._decodingErrors.length>0))
 		// a complete data packet we cannot decode: keep the stream alive but remember it

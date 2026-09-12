@@ -29,16 +29,9 @@ Class constructor($request : 4D:C1709.HTTPRequest; $body : Variant; $terminated 
 			End while 
 			
 			If ($terminated)
-				var $lines:=Split string:C1554($textData; "data: ")
-				var $done : Text:=$lines.pop()
-				If ($done="[DONE]")
-					This:C1470.data:=This:C1470._parseDataLine($lines.last())  // send last chunk with finish reason
-					
-					// This._chunks:=$lines.filter(Formula(Length($1.value)>0)).map(Formula(Try($2._parseDataLine($1.value))); This)
-					
-				Else 
-					This:C1470.data:=This:C1470._parseDataLine($done)  // could have have errors
-				End if 
+				// Last "data:" segment is often ": keepalive" or [DONE] on local
+				// servers (Qwen/MLX). Walk back to the last JSON object.
+				This:C1470.data:=This:C1470._parseLastTerminatedFragment($textData)
 			Else 
 				This:C1470.data:=This:C1470._parseDataLine($textData)
 			End if 
@@ -116,8 +109,65 @@ Function get choices : Collection
 Function get usage : Object
 	return (This:C1470.data=Null:C1517) ? Null:C1517 : This:C1470.data.usage
 	
+Function _parseLastTerminatedFragment($textData : Text) : Object
+	var $lines : Collection
+	var $index : Integer
+	var $fragment : Text
+	var $parsed : Object
+	
+	$lines:=Split string:C1554($textData; "data: ")
+	If ($lines.length=0)
+		$lines:=Split string:C1554($textData; "data:")
+	End if 
+	
+	For ($index; $lines.length-1; 0; -1)
+		$fragment:=$lines[$index]
+		If (This:C1470._isKeepaliveOrDone($fragment))
+			continue
+		End if 
+		$parsed:=This:C1470._parseDataLine($fragment)
+		If ($parsed#Null:C1517)
+			return $parsed
+		End if 
+	End for 
+	
+	return Null:C1517
+	
+Function _isKeepaliveOrDone($textData : Text) : Boolean
+	var $trimmed : Text
+	var $char : Text
+	
+	$trimmed:=$textData
+	While (Length:C16($trimmed)>0)
+		$char:=Substring:C12($trimmed; 1; 1)
+		If (($char=" ") | ($char=Char:C90(Line feed:K15:40)) | ($char=Char:C90(Carriage return:K15:38)) | ($char=Char:C90(Tab:K15:37)))
+			$trimmed:=Substring:C12($trimmed; 2)
+		Else 
+			break
+		End if 
+	End while 
+	
+	If ($trimmed="")
+		return True:C214
+	End if 
+	If ($trimmed="[DONE]")
+		return True:C214
+	End if 
+	If (Position:C15(":"; $trimmed)=1)
+		return True:C214  // ": keepalive" as a data payload
+	End if 
+	If (Position:C15("{"; $trimmed)=0)
+		return True:C214
+	End if 
+	
+	return False:C215
+	
 Function _parseDataLine($textData : Text) : Object
 	var $pos:=Position:C15("{"; $textData)
+	If ($pos=0)
+		// Keepalive / comment / [DONE] — not a JSON error.
+		return Null:C1517
+	End if 
 	If ($pos>0)
 		$textData:=Substring:C12($textData; $pos)  // ie. remove "data: before json line", XXX: maybe just check data: 
 	End if 
