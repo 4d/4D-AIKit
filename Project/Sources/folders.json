@@ -97,6 +97,15 @@
 			"OpenAIProviders"
 		]
 	},
+	"Reranker": {
+		"classes": [
+			"Reranker",
+			"RerankerAPI",
+			"RerankerParameters",
+			"RerankerQuery",
+			"RerankerResult"
+		]
+	},
 	"Tests": {
 		"groups": [
 			"FormDemo"
