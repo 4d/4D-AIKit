@@ -301,3 +301,43 @@ $terminated:=cs:C1710.OpenAIChatCompletionsStreamResult.new(Null:C1517; \
 ASSERT:C1129($terminated.data#Null:C1517; "Terminate must skip trailing keepalive and keep the last JSON chunk")
 ASSERT:C1129($terminated.choice#Null:C1517; "Terminate must expose the last choice after keepalive")
 ASSERT:C1129($terminated._decodingErrors=Null:C1517; "Keepalive must not produce a JSON decode error")
+
+// MARK:- Test 27: terminated body without the optional space, "data:{...}"
+// The streaming path already accepts it, see test 12, terminate must too.
+$terminated:=cs:C1710.OpenAIChatCompletionsStreamResult.new(Null:C1517; \
+"data:{\"choices\":[{\"delta\":{\"content\":\"Hi\"}}]}\ndata:[DONE]\n"; True:C214)
+ASSERT:C1129($terminated.data#Null:C1517; "Terminate must decode a data field without space")
+ASSERT:C1129($terminated.choice#Null:C1517; "Terminate must expose the choice of a data field without space")
+ASSERT:C1129($terminated._decodingErrors=Null:C1517; "data: without space must not produce a decode error")
+
+// MARK:- Test 28: the content of the last chunk contains the literal "data: "
+// Framing on the "data: " text instead of on the lines cuts the json in the middle.
+$terminated:=cs:C1710.OpenAIChatCompletionsStreamResult.new(Null:C1517; \
+"data: {\"choices\":[{\"delta\":{\"content\":\"data: x\"}}]}\ndata: [DONE]\n"; True:C214)
+ASSERT:C1129($terminated.data#Null:C1517; "A content holding \"data: \" must not break the framing")
+ASSERT:C1129($terminated.choice#Null:C1517; "A content holding \"data: \" must still expose its choice")
+ASSERT:C1129($terminated._decodingErrors=Null:C1517; "A content holding \"data: \" must not produce a decode error")
+
+// MARK:- Test 29: a data payload that is not json at all is still an error, not a keep alive
+$collector:={stream: True:C214; received: []; onData: Formula:C1597(This:C1470.received.push($1))}
+$options:=cs:C1710._OpenAIAsyncOptions.new({}; Null:C1517; cs:C1710.OpenAIChatCompletionsParameters.new($collector); cs:C1710.OpenAIResult.new())
+
+TEXT TO BLOB:C554("data: oops\ndata: {\"a\":1}\n"; $blob; UTF8 text without length:K22:17)
+$options.onData(Null:C1517; {data: $blob})
+ASSERT:C1129($collector.received.length=1; "Only the decodable packet must be notified, got: "+String:C10($collector.received.length))
+ASSERT:C1129($options._streamErrors.length>0; "A non json data payload must not be silently dropped")
+
+// MARK:- Test 30: a json error body instead of an event stream, seen by onTerminate
+$terminated:=cs:C1710.OpenAIChatCompletionsStreamResult.new(Null:C1517; \
+"{\"error\":{\"message\":\"invalid api key\"}}"; True:C214)
+ASSERT:C1129($terminated.errors.length=1; "A json error body must still be reported, got: "+JSON Stringify:C1217($terminated.errors))
+ASSERT:C1129(String:C10($terminated.errors[0].message)="invalid api key"; "The error message must be kept, got: "+JSON Stringify:C1217($terminated.errors))
+
+// MARK:- Test 31: several chunks without the optional space, the last one must win
+// Framing on "data: " leaves the whole body as one fragment, and JSON Parse stops
+// on the first object: the terminate result then holds the very first chunk.
+$terminated:=cs:C1710.OpenAIChatCompletionsStreamResult.new(Null:C1517; \
+"data:{\"choices\":[{\"delta\":{\"content\":\"Hi\"},\"finish_reason\":null}]}\ndata:{\"choices\":[{\"delta\":{\"content\":\" there\"},\"finish_reason\":\"stop\"}]}\ndata:[DONE]\n"; True:C214)
+ASSERT:C1129($terminated.choice#Null:C1517; "Terminate must expose a choice without the optional space")
+ASSERT:C1129(String:C10($terminated.choice.delta.content)=" there"; "Terminate must keep the last chunk, got: '"+String:C10($terminated.choice.delta.content)+"'")
+ASSERT:C1129(String:C10($terminated.choice.finish_reason)="stop"; "Terminate must keep the finish reason, got: '"+String:C10($terminated.choice.finish_reason)+"'")
