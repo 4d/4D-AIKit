@@ -134,10 +134,8 @@ Function _handleSSELine($request : 4D:C1709.HTTPRequest; $line : Text) : Boolean
 	If ($payload="[DONE]")
 		return False:C215
 	End if 
-	
-	// Qwen/MLX send "data: : keepalive" — a data field whose value is an SSE comment.
-	If (Position:C15(":"; $payload)=1) || (Position:C15("{"; $payload)=0)
-		return True:C214
+	If (Position:C15(":"; $payload)=1)
+		return True:C214  // some local servers (Qwen, MLX) send their keep alive comment as a data value: "data: : ping"
 	End if 
 	
 	var $chunkResult:=cs:C1710.OpenAIChatCompletionsStreamResult.new($request; $payload; False:C215)

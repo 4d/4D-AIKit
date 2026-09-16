@@ -29,9 +29,7 @@ Class constructor($request : 4D:C1709.HTTPRequest; $body : Variant; $terminated 
 			End while 
 			
 			If ($terminated)
-				// Last "data:" segment is often ": keepalive" or [DONE] on local
-				// servers (Qwen/MLX). Walk back to the last JSON object.
-				This:C1470.data:=This:C1470._parseLastTerminatedFragment($textData)
+				This:C1470.data:=This:C1470._parseLastDataLine($textData)  // the last chunk, with the finish reason
 			Else 
 				This:C1470.data:=This:C1470._parseDataLine($textData)
 			End if 
@@ -109,65 +107,30 @@ Function get choices : Collection
 Function get usage : Object
 	return (This:C1470.data=Null:C1517) ? Null:C1517 : This:C1470.data.usage
 	
-Function _parseLastTerminatedFragment($textData : Text) : Object
-	var $lines : Collection
+	// Return the last data packet of a complete event stream body.
+Function _parseLastDataLine($textData : Text) : Object
+	
+	// SSE allows CRLF, LF and bare CR as line separator, normalize before framing.
+	// Framing on the "data: " text instead would cut a chunk whose content holds it.
+	$textData:=Replace string:C233($textData; Char:C90(Carriage return:K15:38)+Char:C90(Line feed:K15:40); Char:C90(Line feed:K15:40))
+	$textData:=Replace string:C233($textData; Char:C90(Carriage return:K15:38); Char:C90(Line feed:K15:40))
+	
+	var $lines : Collection:=Split string:C1554($textData; Char:C90(Line feed:K15:40))
 	var $index : Integer
-	var $fragment : Text
-	var $parsed : Object
-	
-	$lines:=Split string:C1554($textData; "data: ")
-	If ($lines.length=0)
-		$lines:=Split string:C1554($textData; "data:")
-	End if 
-	
 	For ($index; $lines.length-1; 0; -1)
-		$fragment:=$lines[$index]
-		If (This:C1470._isKeepaliveOrDone($fragment))
-			continue
-		End if 
-		$parsed:=This:C1470._parseDataLine($fragment)
-		If ($parsed#Null:C1517)
-			return $parsed
+		
+		// the last data field holding a json object: this skips the blank lines, the other
+		// fields, the "[DONE]" marker, the ": ping" comments and the "data: : ping" of some
+		// local servers (Qwen, MLX), whatever the optional space after the field name.
+		If ((Position:C15("data:"; $lines[$index])=1) && (Position:C15("{"; $lines[$index])>0))
+			return This:C1470._parseDataLine($lines[$index])  // could have errors
 		End if 
 	End for 
 	
-	return Null:C1517
-	
-Function _isKeepaliveOrDone($textData : Text) : Boolean
-	var $trimmed : Text
-	var $char : Text
-	
-	$trimmed:=$textData
-	While (Length:C16($trimmed)>0)
-		$char:=Substring:C12($trimmed; 1; 1)
-		If (($char=" ") | ($char=Char:C90(Line feed:K15:40)) | ($char=Char:C90(Carriage return:K15:38)) | ($char=Char:C90(Tab:K15:37)))
-			$trimmed:=Substring:C12($trimmed; 2)
-		Else 
-			break
-		End if 
-	End while 
-	
-	If ($trimmed="")
-		return True:C214
-	End if 
-	If ($trimmed="[DONE]")
-		return True:C214
-	End if 
-	If (Position:C15(":"; $trimmed)=1)
-		return True:C214  // ": keepalive" as a data payload
-	End if 
-	If (Position:C15("{"; $trimmed)=0)
-		return True:C214
-	End if 
-	
-	return False:C215
+	return This:C1470._parseDataLine($textData)  // not an event stream: a json body, ie. an error
 	
 Function _parseDataLine($textData : Text) : Object
 	var $pos:=Position:C15("{"; $textData)
-	If ($pos=0)
-		// Keepalive / comment / [DONE] — not a JSON error.
-		return Null:C1517
-	End if 
 	If ($pos>0)
 		$textData:=Substring:C12($textData; $pos)  // ie. remove "data: before json line", XXX: maybe just check data: 
 	End if 
