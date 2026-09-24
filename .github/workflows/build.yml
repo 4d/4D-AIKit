@@ -39,7 +39,7 @@ jobs:
         repository: 4d/gitlabsync-action
         ref: main
         path: .github/workflows/external/sync
-        token: ${{ secrets.DLTK }}
+        token: ${{ secrets.CI_GIT_SYNC }}
 
     - id: Sync
       uses: ./.github/workflows/external/sync/
