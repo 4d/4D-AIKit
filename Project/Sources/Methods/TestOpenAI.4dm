@@ -4,6 +4,7 @@ var $client:=cs:C1710.OpenAI.new()
 
 If ((Length:C16($client.apiKey)=0) && (Folder:C1567(fk home folder:K87:24).file(".openai").exists))
 	$client.apiKey:=Folder:C1567(fk home folder:K87:24).file(".openai").getText()
+	$client.apiKey:=Replace string:C233(Replace string:C233($client.apiKey; "\n"; ""); "\r"; "")  // the file could end with a line feed
 End if 
 
 // local

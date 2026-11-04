@@ -8,7 +8,7 @@ property chat : cs:C1710.OpenAIChatAPI
 property embeddings : cs:C1710.OpenAIEmbeddingsAPI
 property files : cs:C1710.OpenAIFilesAPI
 property images : cs:C1710.OpenAIImagesAPI
-// property audio : cs.OpenAIAudioAPI
+property audio : cs:C1710.OpenAIAudioAPI
 property moderations : cs:C1710.OpenAIModerationsAPI
 property models : cs:C1710.OpenAIModelsAPI
 // property fineTunings : cs.OpenAIFineTuningsAPI
@@ -106,7 +106,7 @@ Class constructor( ...  : Variant)
 	This:C1470.embeddings:=cs:C1710.OpenAIEmbeddingsAPI.new(This:C1470)
 	This:C1470.files:=cs:C1710.OpenAIFilesAPI.new(This:C1470)
 	This:C1470.images:=cs:C1710.OpenAIImagesAPI.new(This:C1470)
-	// This.audio:=cs.OpenAIAudioAPI.new(This)
+	This:C1470.audio:=cs:C1710.OpenAIAudioAPI.new(This:C1470)
 	This:C1470.moderations:=cs:C1710.OpenAIModerationsAPI.new(This:C1470)
 	This:C1470.models:=cs:C1710.OpenAIModelsAPI.new(This:C1470)
 	
@@ -222,9 +222,9 @@ Function _request($httpMethod : Text; $path : Text; $body : Variant; $parameters
 		$parameters:=cs:C1710.OpenAIParameters.new($parameters)
 	End if 
 	
-	// Resolve model alias from body.model if applicable
-	var $resolvedConfig:=This:C1470._resolveModelFromBody($body)
-	
+	// Resolve model alias from body.model if applicable (multipart body: already done by _postFiles)
+	var $resolvedConfig : Object:=$parameters["_resolvedConfig"] || This:C1470._resolveModelFromBody($body)
+
 	// Update body.model if resolution was applied
 	If ((Length:C16(String:C10($resolvedConfig.model))>0) && (Value type:C1509($body)=Is object:K8:27))
 		If (Not:C34(OB Instance of:C1731($body; 4D:C1709.Blob)))
@@ -347,13 +347,20 @@ Function _getApiList($path : Text; $queryParameters : Object; $parameters : cs:C
 	return This:C1470._request("GET"; $path+This:C1470._encodeQueryParameters($queryParameters); Null:C1517; $parameters; $resultType)
 	
 Function _postFiles($path : Text; $body : Object; $files : Object; $parameters : cs:C1710.OpenAIParameters; $resultType : 4D:C1709.Class) : cs:C1710.OpenAIResult
+	// the model must be resolved now, _request could not read it from the blob
+	var $resolvedConfig:=This:C1470._resolveModelFromBody($body)
+	If (Length:C16(String:C10($resolvedConfig.model))>0)
+		$body.model:=$resolvedConfig.model
+	End if
+
 	var $boundary : Text:=Generate UUID:C1066
 	var $formDataBlob:=This:C1470._formData($body; $files; $boundary)
-	// Store boundary for _request to use
+	// Store boundary and resolved model for _request to use
 	If ($parameters=Null:C1517)
 		$parameters:=cs:C1710.OpenAIParameters.new()
-	End if 
+	End if
 	$parameters["_boundary"]:=$boundary
+	$parameters["_resolvedConfig"]:=$resolvedConfig
 	return This:C1470._request("POST"; $path; $formDataBlob; $parameters; $resultType)
 	
 	// MARK:- retry utils
@@ -452,41 +459,54 @@ Function _mimeType($fileName : Text) : Text
 	var $ext : Text:=Split string:C1554($fileName; ".").last()
 	return cs:C1710._MimeTypes.me.getMimeType($ext)
 	
+Function _formField($name : Text; $value : Variant; $boundary : Text) : Text
+	var $text : Text
+	Case of
+		: (Value type:C1509($value)=Is boolean:K8:9)
+			$text:=$value ? "true" : "false"  // not String, it returns "True"
+		: ((Value type:C1509($value)=Is real:K8:4) || (Value type:C1509($value)=Is longint:K8:6))
+			$text:=JSON Stringify:C1217($value)  // not String, it depends on the system decimal separator
+		Else
+			$text:=String:C10($value)
+	End case
+	return "--"+$boundary+"\r\nContent-Disposition: form-data; name=\""+$name+"\"\r\n\r\n"+$text+"\r\n"
+
 Function _formData($body : Object; $files : Object; $boundary : Text) : 4D:C1709.Blob
-	
+
 	var $result : Blob
 	var $temp : Blob
 	var $textPart : Text
-	
+
 	var $key : Text
 	For each ($key; $body)
-		
+
 		var $instance : Variant:=$body[$key]
-		
-		If (Value type:C1509($instance)=Is object:K8:27)
-			// Handle nested objects with array notation
-			// ex: -F expires_after[anchor]="created_at"
-			// ex: -F expires_after[seconds]=2592000
-			var $subkey : Text
-			For each ($subkey; $instance)
-				$textPart:="--"+$boundary+"\r\n"
-				$textPart+="Content-Disposition: form-data; name=\""+$key+"["+$subkey+"]\"\r\n\r\n"
-				$textPart+=String:C10($body[$key][$subkey])+"\r\n"
-				TEXT TO BLOB:C554($textPart; $temp; UTF8 text without length:K22:17)
-				COPY BLOB:C558($temp; $result; 0; BLOB size:C605($result); BLOB size:C605($temp))
-			End for each 
-		Else 
-			// Simple scalar values
-			// ex: -F purpose="fine-tune"
-			$textPart:="--"+$boundary+"\r\n"
-			$textPart+="Content-Disposition: form-data; name=\""+$key+"\"\r\n\r\n"
-			$textPart+=String:C10($instance)+"\r\n"
-			TEXT TO BLOB:C554($textPart; $temp; UTF8 text without length:K22:17)
-			COPY BLOB:C558($temp; $result; 0; BLOB size:C605($result); BLOB size:C605($temp))
-		End if 
-		
-	End for each 
-	
+
+		Case of
+			: (Value type:C1509($instance)=Is object:K8:27)
+				// Handle nested objects with array notation
+				// ex: -F expires_after[anchor]="created_at"
+				// ex: -F expires_after[seconds]=2592000
+				var $subkey : Text
+				For each ($subkey; $instance)
+					$textPart+=This:C1470._formField($key+"["+$subkey+"]"; $instance[$subkey]; $boundary)
+				End for each
+			: (Value type:C1509($instance)=Is collection:K8:32)
+				// One part per value
+				// ex: -F include[]="logprobs"
+				var $item : Variant
+				For each ($item; $instance)
+					$textPart+=This:C1470._formField($key+"[]"; $item; $boundary)
+				End for each
+			Else
+				// Simple scalar values
+				// ex: -F purpose="fine-tune"
+				$textPart+=This:C1470._formField($key; $instance; $boundary)
+		End case
+
+	End for each
+	TEXT TO BLOB:C554($textPart; $result; UTF8 text without length:K22:17)
+
 	For each ($key; $files)
 		var $fileBlob : Blob
 		var $filename : Text

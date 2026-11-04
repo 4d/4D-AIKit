@@ -25,10 +25,15 @@ Function _objectBody() : Object
 	If (This:C1470._parsed#Null:C1517)
 		return This:C1470._parsed
 	End if 
-	Case of 
+	Case of
+		: ((This:C1470.request=Null:C1517) || (This:C1470.request.response=Null:C1517))
+			return Null:C1517
 		: (This:C1470.request.response.body=Null:C1517)
 			return Null:C1517
 		: (Value type:C1509(This:C1470.request.response.body)=Is object:K8:27)
+			If (OB Instance of:C1731(This:C1470.request.response.body; 4D:C1709.Blob))
+				return Null:C1517  // binary content, not a parsed body
+			End if
 			return This:C1470.request.response.body
 		: (Value type:C1509(This:C1470.request.response.body)=Is text:K8:3)  // sometime not decoded, maybe some errors do not return content type
 			Case of 

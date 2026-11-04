@@ -542,6 +542,58 @@
 				"Params": [],
 				"Summary": ""
 			}
+		},
+		"OpenAIAudioTranscription": {
+			"new()": {
+				"Syntax": "**.new**( *object* : Object )",
+				"Params": [
+					[
+						"object",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"OpenAIAudioTranscriptionParameters": {
+			"new()": {
+				"Syntax": "**.new**( *object* : Object )",
+				"Params": [
+					[
+						"object",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"OpenAIAudioAPI": {
+			"new()": {
+				"Syntax": "**.new**( *client* : cs.AIKit.OpenAI )",
+				"Params": [
+					[
+						"client",
+						"cs.AIKit.OpenAI",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"OpenAIAudioSpeechParameters": {
+			"new()": {
+				"Syntax": "**.new**( *object* : Object )",
+				"Params": [
+					[
+						"object",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
 		}
 	},
 	"OpenAIModerationItem": {
@@ -1676,6 +1728,9 @@
 		},
 		"files": {
 			"Syntax": "files : cs.AIKit.OpenAIFilesAPI"
+		},
+		"audio": {
+			"Syntax": "audio : cs.AIKit.OpenAIAudioAPI"
 		}
 	},
 	"OpenAIEmbeddingsParameters": {
@@ -2811,6 +2866,262 @@
 		},
 		"errors": {
 			"Syntax": "errors : Collection"
+		},
+		"modelAliases()": {
+			"Syntax": "**.modelAliases**() : Collection",
+			"Params": [
+				[
+					"",
+					"Collection",
+					"<-"
+				]
+			],
+			"Summary": ""
 		}
+	},
+	"OpenAIAudioTranscription": {
+		"usage": {
+			"Syntax": "usage : Object"
+		},
+		"words": {
+			"Syntax": "words : Collection"
+		},
+		"logprobs": {
+			"Syntax": "logprobs : Collection"
+		},
+		"languages": {
+			"Syntax": "languages : Collection"
+		},
+		"language": {
+			"Syntax": "language : Text"
+		},
+		"segments": {
+			"Syntax": "segments : Collection"
+		},
+		"duration": {
+			"Syntax": "duration : Real"
+		},
+		"task": {
+			"Syntax": "task : Text"
+		},
+		"text": {
+			"Syntax": "text : Text"
+		}
+	},
+	"OpenAIAudioTranscriptionParameters": {
+		"body()": {
+			"Syntax": "**.body**() : Object",
+			"Params": [
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"filename": {
+			"Syntax": "filename : Text"
+		},
+		"timestamp_granularities": {
+			"Syntax": "timestamp_granularities : Collection"
+		},
+		"known_speaker_names": {
+			"Syntax": "known_speaker_names : Collection"
+		},
+		"temperature": {
+			"Syntax": "temperature : Real"
+		},
+		"response_format": {
+			"Syntax": "response_format : Text"
+		},
+		"prompt": {
+			"Syntax": "prompt : Text"
+		},
+		"stream": {
+			"Syntax": "stream : Boolean"
+		},
+		"languages": {
+			"Syntax": "languages : Collection"
+		},
+		"chunking_strategy": {
+			"Syntax": "chunking_strategy : Variant"
+		},
+		"language": {
+			"Syntax": "language : Text"
+		},
+		"known_speaker_references": {
+			"Syntax": "known_speaker_references : Collection"
+		},
+		"include": {
+			"Syntax": "include : Collection"
+		},
+		"keywords": {
+			"Syntax": "keywords : Collection"
+		},
+		"_inheritedFrom_": "OpenAIParameters"
+	},
+	"OpenAIAudioTranscriptionResult": {
+		"get textContent()": {
+			"Syntax": "**.get textContent**() : Text",
+			"Params": [
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get text()": {
+			"Syntax": "**.get text**() : Text",
+			"Params": [
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get transcription()": {
+			"Syntax": "**.get transcription**() : cs.AIKit.OpenAIAudioTranscription",
+			"Params": [
+				[
+					"",
+					"cs.AIKit.OpenAIAudioTranscription",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIResult"
+	},
+	"OpenAIAudioAPI": {
+		"transcription()": {
+			"Syntax": "**.transcription**( *file* : Variant; *model* : Text; *parameters* : cs.AIKit.OpenAIAudioTranscriptionParameters ) : cs.AIKit.OpenAIAudioTranscriptionResult",
+			"Params": [
+				[
+					"file",
+					"Variant",
+					"->"
+				],
+				[
+					"model",
+					"Text",
+					"->"
+				],
+				[
+					"parameters",
+					"cs.AIKit.OpenAIAudioTranscriptionParameters",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit.OpenAIAudioTranscriptionResult",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"speech()": {
+			"Syntax": "**.speech**( *input* : Text; *model* : Text; *voice* : Variant; *parameters* : cs.AIKit.OpenAIAudioSpeechParameters ) : cs.AIKit.OpenAIAudioSpeechResult",
+			"Params": [
+				[
+					"input",
+					"Text",
+					"->"
+				],
+				[
+					"model",
+					"Text",
+					"->"
+				],
+				[
+					"voice",
+					"Variant",
+					"->"
+				],
+				[
+					"parameters",
+					"cs.AIKit.OpenAIAudioSpeechParameters",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit.OpenAIAudioSpeechResult",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIAPIResource"
+	},
+	"OpenAIAudioSpeechResult": {
+		"saveAudioToDisk()": {
+			"Syntax": "**.saveAudioToDisk**( *file* : 4D.File ) : Boolean",
+			"Params": [
+				[
+					"file",
+					"4D.File",
+					"->"
+				],
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"get mimeType()": {
+			"Syntax": "**.get mimeType**() : Text",
+			"Params": [
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"asBlob()": {
+			"Syntax": "**.asBlob**() : 4D.Blob",
+			"Params": [
+				[
+					"",
+					"4D.Blob",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIResult"
+	},
+	"OpenAIAudioSpeechParameters": {
+		"body()": {
+			"Syntax": "**.body**() : Object",
+			"Params": [
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"stream_format": {
+			"Syntax": "stream_format : Text"
+		},
+		"response_format": {
+			"Syntax": "response_format : Text"
+		},
+		"speed": {
+			"Syntax": "speed : Real"
+		},
+		"instructions": {
+			"Syntax": "instructions : Text"
+		},
+		"_inheritedFrom_": "OpenAIParameters"
 	}
 }
