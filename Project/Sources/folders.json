@@ -45,7 +45,20 @@
 			"OpenAIAudioSpeechResult",
 			"OpenAIAudioTranscription",
 			"OpenAIAudioTranscriptionParameters",
-			"OpenAIAudioTranscriptionResult"
+			"OpenAIAudioTranscriptionResult",
+			"OpenAIAudioVoice",
+			"OpenAIAudioVoiceConsent",
+			"OpenAIAudioVoiceConsentListParameters",
+			"OpenAIAudioVoiceConsentListResult",
+			"OpenAIAudioVoiceConsentResult",
+			"OpenAIAudioVoiceConsentsAPI",
+			"OpenAIAudioVoiceDeleted",
+			"OpenAIAudioVoiceDeletedResult",
+			"OpenAIAudioVoiceListParameters",
+			"OpenAIAudioVoiceListResult",
+			"OpenAIAudioVoiceParameters",
+			"OpenAIAudioVoiceResult",
+			"OpenAIAudioVoicesAPI"
 		]
 	},
 	"Files": {
@@ -131,6 +144,7 @@
 			"test_openai_audio",
 			"test_openai_audio_async",
 			"test_openai_audio_format",
+			"test_openai_audio_voices",
 			"test_openai_files",
 			"test_openai_files_async",
 			"test_openai_images",

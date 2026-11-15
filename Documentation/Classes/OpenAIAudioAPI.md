@@ -15,6 +15,17 @@ https://developers.openai.com/api/reference/resources/audio
 > The Realtime API is not available in this component. See the [deprecations page](https://developers.openai.com/api/docs/deprecations).
 > These dates only concern OpenAI: the same functions keep working with a [local server](#local-servers).
 
+## Properties
+
+| Property        | Type                                                          | Description |
+|-----------------|---------------------------------------------------------------|-------------|
+| `voices`        | [OpenAIAudioVoicesAPI](OpenAIAudioVoicesAPI.md)               | Create, delete and list the voices. |
+| `voiceConsents` | [OpenAIAudioVoiceConsentsAPI](OpenAIAudioVoiceConsentsAPI.md) | The consent recordings needed to create a voice from an audio sample. |
+
+```4d
+var $voices:=$client.audio.voices.list().voices
+```
+
 ## Functions
 
 ### speech()
@@ -36,6 +47,8 @@ An error is thrown if *input*, *model* or *voice* is empty. The other limits are
 #### Available Voices
 
 `alloy`, `ash`, `ballad`, `cedar`, `coral`, `echo`, `fable`, `marin`, `nova`, `onyx`, `sage`, `shimmer`, `verse`
+
+Get them, or the ones of another server, with [voices.list()](OpenAIAudioVoicesAPI.md#list). See also [Listing voices](../audio-voices.md).
 
 https://developers.openai.com/api/reference/resources/audio/subresources/speech/methods/create
 
@@ -63,7 +76,7 @@ var $params:=cs.AIKit.OpenAIAudioSpeechParameters.new({instructions: "Speak in a
 var $result:=$client.audio.speech("Welcome to our podcast!"; "gpt-4o-mini-tts"; "coral"; $params)
 ```
 
-Using a [custom voice](https://developers.openai.com/api/docs/guides/custom-voices) that you already created:
+Using a [custom voice](https://developers.openai.com/api/docs/guides/custom-voices) that you already created, see [voices.create()](OpenAIAudioVoicesAPI.md#create):
 
 ```4d
 var $result:=$client.audio.speech("Hello"; "gpt-4o-mini-tts"; {id: "voice_1234"})
@@ -190,6 +203,8 @@ var $result:=$client.audio.speech("Hello"; "phonon"; "Zoey"; {response_format: "
 
 ## See also
 
+- [OpenAIAudioVoicesAPI](OpenAIAudioVoicesAPI.md)
+- [OpenAIAudioVoiceConsentsAPI](OpenAIAudioVoiceConsentsAPI.md)
 - [OpenAIAudioSpeechParameters](OpenAIAudioSpeechParameters.md)
 - [OpenAIAudioSpeechResult](OpenAIAudioSpeechResult.md)
 - [OpenAIAudioTranscriptionParameters](OpenAIAudioTranscriptionParameters.md)

@@ -72,6 +72,7 @@ $client.chat.completions.create(...)
 $client.images.generate(...)
 $client.audio.speech(...)
 $client.audio.transcription(...)
+$client.audio.voices.list(...)
 $client.files.create(...)
 $client.model.lists(...)
 ```

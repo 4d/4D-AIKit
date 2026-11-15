@@ -594,6 +594,145 @@
 				],
 				"Summary": ""
 			}
+		},
+		"OpenAIAudioVoice": {
+			"new()": {
+				"Syntax": "**.new**( *voice* : Variant )",
+				"Params": [
+					[
+						"voice",
+						"Variant",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"OpenAIAudioVoiceConsent": {
+			"new()": {
+				"Syntax": "**.new**( *object* : Object )",
+				"Params": [
+					[
+						"object",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"OpenAIAudioVoiceConsentListParameters": {
+			"new()": {
+				"Syntax": "**.new**( *object* : Object )",
+				"Params": [
+					[
+						"object",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"OpenAIAudioVoiceConsentListResult": {
+			"new()": {
+				"Syntax": "**.new**()",
+				"Params": [],
+				"Summary": ""
+			}
+		},
+		"OpenAIAudioVoiceConsentResult": {
+			"new()": {
+				"Syntax": "**.new**()",
+				"Params": [],
+				"Summary": ""
+			}
+		},
+		"OpenAIAudioVoiceConsentsAPI": {
+			"new()": {
+				"Syntax": "**.new**( *client* : cs.AIKit.OpenAI )",
+				"Params": [
+					[
+						"client",
+						"cs.AIKit.OpenAI",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"OpenAIAudioVoiceDeleted": {
+			"new()": {
+				"Syntax": "**.new**( *object* : Object )",
+				"Params": [
+					[
+						"object",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"OpenAIAudioVoiceDeletedResult": {
+			"new()": {
+				"Syntax": "**.new**()",
+				"Params": [],
+				"Summary": ""
+			}
+		},
+		"OpenAIAudioVoiceListParameters": {
+			"new()": {
+				"Syntax": "**.new**( *object* : Object )",
+				"Params": [
+					[
+						"object",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"OpenAIAudioVoiceListResult": {
+			"new()": {
+				"Syntax": "**.new**()",
+				"Params": [],
+				"Summary": ""
+			}
+		},
+		"OpenAIAudioVoiceParameters": {
+			"new()": {
+				"Syntax": "**.new**( *object* : Object )",
+				"Params": [
+					[
+						"object",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"OpenAIAudioVoiceResult": {
+			"new()": {
+				"Syntax": "**.new**()",
+				"Params": [],
+				"Summary": ""
+			}
+		},
+		"OpenAIAudioVoicesAPI": {
+			"new()": {
+				"Syntax": "**.new**( *client* : cs.AIKit.OpenAI )",
+				"Params": [
+					[
+						"client",
+						"cs.AIKit.OpenAI",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
 		}
 	},
 	"OpenAIModerationItem": {
@@ -3055,7 +3194,13 @@
 			],
 			"Summary": ""
 		},
-		"_inheritedFrom_": "OpenAIAPIResource"
+		"_inheritedFrom_": "OpenAIAPIResource",
+		"voices": {
+			"Syntax": "voices : cs.AIKit.OpenAIAudioVoicesAPI"
+		},
+		"voiceConsents": {
+			"Syntax": "voiceConsents : cs.AIKit.OpenAIAudioVoiceConsentsAPI"
+		}
 	},
 	"OpenAIAudioSpeechResult": {
 		"saveAudioToDisk()": {
@@ -3123,5 +3268,401 @@
 			"Syntax": "instructions : Text"
 		},
 		"_inheritedFrom_": "OpenAIParameters"
+	},
+	"OpenAIAudioVoice": {
+		"id": {
+			"Syntax": "id : Text"
+		},
+		"name": {
+			"Syntax": "name : Text"
+		},
+		"object": {
+			"Syntax": "object : Text"
+		},
+		"created_at": {
+			"Syntax": "created_at : Integer"
+		},
+		"type": {
+			"Syntax": "type : Text"
+		},
+		"prompt": {
+			"Syntax": "prompt : Text"
+		},
+		"model": {
+			"Syntax": "model : Text"
+		},
+		"custom": {
+			"Syntax": "custom : Boolean"
+		}
+	},
+	"OpenAIAudioVoiceConsent": {
+		"id": {
+			"Syntax": "id : Text"
+		},
+		"object": {
+			"Syntax": "object : Text"
+		},
+		"name": {
+			"Syntax": "name : Text"
+		},
+		"language": {
+			"Syntax": "language : Text"
+		},
+		"created_at": {
+			"Syntax": "created_at : Integer"
+		}
+	},
+	"OpenAIAudioVoiceConsentListParameters": {
+		"after": {
+			"Syntax": "after : Text"
+		},
+		"limit": {
+			"Syntax": "limit : Integer"
+		},
+		"body()": {
+			"Syntax": "**.body**() : Object",
+			"Params": [
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIParameters"
+	},
+	"OpenAIAudioVoiceConsentListResult": {
+		"_inheritedFrom_": "OpenAIResult"
+	},
+	"OpenAIAudioVoiceConsentResult": {
+		"_inheritedFrom_": "OpenAIResult"
+	},
+	"OpenAIAudioVoiceConsentsAPI": {
+		"create()": {
+			"Syntax": "**.create**( *name* : Text; *language* : Text; *recording* : Variant; *parameters* : cs.AIKit.OpenAIParameters ) : cs.AIKit.OpenAIAudioVoiceConsentResult",
+			"Params": [
+				[
+					"name",
+					"Text",
+					"->"
+				],
+				[
+					"language",
+					"Text",
+					"->"
+				],
+				[
+					"recording",
+					"Variant",
+					"->"
+				],
+				[
+					"parameters",
+					"cs.AIKit.OpenAIParameters",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit.OpenAIAudioVoiceConsentResult",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"list()": {
+			"Syntax": "**.list**( *parameters* : cs.AIKit.OpenAIAudioVoiceConsentListParameters ) : cs.AIKit.OpenAIAudioVoiceConsentListResult",
+			"Params": [
+				[
+					"parameters",
+					"cs.AIKit.OpenAIAudioVoiceConsentListParameters",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit.OpenAIAudioVoiceConsentListResult",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"retrieve()": {
+			"Syntax": "**.retrieve**( *consentId* : Text; *parameters* : cs.AIKit.OpenAIParameters ) : cs.AIKit.OpenAIAudioVoiceConsentResult",
+			"Params": [
+				[
+					"consentId",
+					"Text",
+					"->"
+				],
+				[
+					"parameters",
+					"cs.AIKit.OpenAIParameters",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit.OpenAIAudioVoiceConsentResult",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"update()": {
+			"Syntax": "**.update**( *consentId* : Text; *name* : Text; *parameters* : cs.AIKit.OpenAIParameters ) : cs.AIKit.OpenAIAudioVoiceConsentResult",
+			"Params": [
+				[
+					"consentId",
+					"Text",
+					"->"
+				],
+				[
+					"name",
+					"Text",
+					"->"
+				],
+				[
+					"parameters",
+					"cs.AIKit.OpenAIParameters",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit.OpenAIAudioVoiceConsentResult",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"delete()": {
+			"Syntax": "**.delete**( *consentId* : Text; *parameters* : cs.AIKit.OpenAIParameters ) : cs.AIKit.OpenAIAudioVoiceDeletedResult",
+			"Params": [
+				[
+					"consentId",
+					"Text",
+					"->"
+				],
+				[
+					"parameters",
+					"cs.AIKit.OpenAIParameters",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit.OpenAIAudioVoiceDeletedResult",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIAPIResource"
+	},
+	"OpenAIAudioVoiceDeleted": {
+		"id": {
+			"Syntax": "id : Text"
+		},
+		"deleted": {
+			"Syntax": "deleted : Boolean"
+		},
+		"object": {
+			"Syntax": "object : Text"
+		}
+	},
+	"OpenAIAudioVoiceDeletedResult": {
+		"_inheritedFrom_": "OpenAIResult"
+	},
+	"OpenAIAudioVoiceListParameters": {
+		"path": {
+			"Syntax": "path : Text"
+		},
+		"model": {
+			"Syntax": "model : Text"
+		},
+		"query": {
+			"Syntax": "query : Object"
+		},
+		"custom": {
+			"Syntax": "custom : Boolean"
+		},
+		"body()": {
+			"Syntax": "**.body**() : Object",
+			"Params": [
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIParameters"
+	},
+	"OpenAIAudioVoiceListResult": {
+		"_inheritedFrom_": "OpenAIResult"
+	},
+	"OpenAIAudioVoiceParameters": {
+		"audio_sample": {
+			"Syntax": "audio_sample : Variant"
+		},
+		"consent": {
+			"Syntax": "consent : Text"
+		},
+		"filename": {
+			"Syntax": "filename : Text"
+		},
+		"prompt": {
+			"Syntax": "prompt : Text"
+		},
+		"type": {
+			"Syntax": "type : Text"
+		},
+		"model": {
+			"Syntax": "model : Text"
+		},
+		"script_hint": {
+			"Syntax": "script_hint : Text"
+		},
+		"body()": {
+			"Syntax": "**.body**() : Object",
+			"Params": [
+				[
+					"",
+					"Object",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIParameters"
+	},
+	"OpenAIAudioVoiceResult": {
+		"_inheritedFrom_": "OpenAIResult"
+	},
+	"OpenAIAudioVoicesAPI": {
+		"custom": {
+			"Syntax": "custom : Collection"
+		},
+		"create()": {
+			"Syntax": "**.create**( *name* : Text; *parameters* : cs.AIKit.OpenAIAudioVoiceParameters ) : cs.AIKit.OpenAIAudioVoiceResult",
+			"Params": [
+				[
+					"name",
+					"Text",
+					"->"
+				],
+				[
+					"parameters",
+					"cs.AIKit.OpenAIAudioVoiceParameters",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit.OpenAIAudioVoiceResult",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"delete()": {
+			"Syntax": "**.delete**( *voiceId* : Text; *parameters* : cs.AIKit.OpenAIParameters ) : cs.AIKit.OpenAIAudioVoiceDeletedResult",
+			"Params": [
+				[
+					"voiceId",
+					"Text",
+					"->"
+				],
+				[
+					"parameters",
+					"cs.AIKit.OpenAIParameters",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit.OpenAIAudioVoiceDeletedResult",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"list()": {
+			"Syntax": "**.list**( *parameters* : cs.AIKit.OpenAIAudioVoiceListParameters ) : cs.AIKit.OpenAIAudioVoiceListResult",
+			"Params": [
+				[
+					"parameters",
+					"cs.AIKit.OpenAIAudioVoiceListParameters",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit.OpenAIAudioVoiceListResult",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"add()": {
+			"Syntax": "**.add**( *voice* : Variant ) : cs.AIKit.OpenAIAudioVoice",
+			"Params": [
+				[
+					"voice",
+					"Variant",
+					"->"
+				],
+				[
+					"",
+					"cs.AIKit.OpenAIAudioVoice",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"remove()": {
+			"Syntax": "**.remove**( *voiceId* : Text ) : Boolean",
+			"Params": [
+				[
+					"voiceId",
+					"Text",
+					"->"
+				],
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"save()": {
+			"Syntax": "**.save**( *file* : 4D.File ) : Boolean",
+			"Params": [
+				[
+					"file",
+					"4D.File",
+					"->"
+				],
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"load()": {
+			"Syntax": "**.load**( *file* : 4D.File ) : Boolean",
+			"Params": [
+				[
+					"file",
+					"4D.File",
+					"->"
+				],
+				[
+					"",
+					"Boolean",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"_inheritedFrom_": "OpenAIAPIResource"
 	}
 }

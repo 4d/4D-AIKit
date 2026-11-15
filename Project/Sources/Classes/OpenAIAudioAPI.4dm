@@ -1,10 +1,18 @@
 // API resource for OpenAI Audio endpoints
 // Supports text-to-speech and speech-to-text (transcription)
 
+// The text-to-speech voices: create, delete and list
+property voices : cs:C1710.OpenAIAudioVoicesAPI
+
+// The consent recordings needed to create a voice from an audio sample
+property voiceConsents : cs:C1710.OpenAIAudioVoiceConsentsAPI
+
 Class extends OpenAIAPIResource
 
 Class constructor($client : cs:C1710.OpenAI)
 	Super:C1705($client)
+	This:C1470.voices:=cs:C1710.OpenAIAudioVoicesAPI.new($client)
+	This:C1470.voiceConsents:=cs:C1710.OpenAIAudioVoiceConsentsAPI.new($client)
 
 /*
 * Generate audio from input text (text-to-speech).
@@ -110,6 +118,22 @@ Function transcription($file : Variant; $model : Text; $parameters : cs:C1710.Op
 	return This:C1470._client._postFiles("/audio/transcriptions"; $body; $files; $parameters; cs:C1710.OpenAIAudioTranscriptionResult)
 
 	// MARK:- utils
+	
+	// The part to send an audio file or blob in a multipart request, Null if it is not one of them.
+Function _filePart($file : Variant; $filename : Text) : Object
+	Case of 
+		: (Value type:C1509($file)=Is BLOB:K8:12)
+			$file:=4D:C1709.Blob.new($file)
+		: (Value type:C1509($file)#Is object:K8:27)
+			return Null:C1517
+		: (OB Instance of:C1731($file; 4D:C1709.File))
+			return (Length:C16($filename)>0) ? {file: $file; filename: $filename} : {file: $file; filename: $file.fullName}
+		: (Not:C34(OB Instance of:C1731($file; 4D:C1709.Blob)))
+			return Null:C1517
+	End case 
+	
+	// the server identifies the audio format with the extension of the file name
+	return {file: $file; filename: (Length:C16($filename)>0) ? $filename : This:C1470._audioFilename($file)}
 	
 	// Find a file name for an audio blob, from the signature of its format.
 Function _audioFilename($blob : 4D:C1709.Blob) : Text
