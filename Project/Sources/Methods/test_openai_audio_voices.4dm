@@ -108,28 +108,169 @@ If ($list.success)  // else no such server running
 	ASSERT(Length(String($list.voices[0].name))>0; "Voice name must be filled")
 End if 
 
-// MARK:- OpenAI voice consents
+// MARK:- Voice consents and voices
 var $client:=TestOpenAI()
-If (($client=Null) || (Position("api.openai.com"; $client.baseURL)=0) || (Length($client.apiKey)=0))
-	return   // skip
+If ($client=Null)
+	return   // skip test
 End if 
 
-var $consents:=$client.audio.voiceConsents.list({limit: 5})
-If (Not($consents.success))
-	return   // custom voices are limited to eligible customers
-End if 
-
-ASSERT(Value type($consents.consents)=Is collection; "Consents must be a collection")
-If ($consents.consents.length>0)
-	var $consent : cs.OpenAIAudioVoiceConsent:=$consents.consents[0]
-	ASSERT(Length(String($consent.id))>0; "Consent id must not be empty")
+If (Position("api.openai.com"; $client.baseURL)>0)
 	
-	var $retrieved:=$client.audio.voiceConsents.retrieve($consent.id)
-	If (Asserted($retrieved.success; "Cannot retrieve consent: "+JSON Stringify($retrieved.errors)))
-		ASSERT($retrieved.consent.id=$consent.id; "Retrieved consent must match")
+	// MARK: OpenAI: read only, custom voices are limited to eligible customers
+	var $consents:=$client.audio.voiceConsents.list({limit: 5})
+	If ($consents.success)
+		ASSERT(Value type($consents.consents)=Is collection; "Consents must be a collection")
+		If ($consents.consents.length>0)
+			var $first : cs.OpenAIAudioVoiceConsent:=$consents.consents[0]
+			var $retrieved:=$client.audio.voiceConsents.retrieve($first.id)
+			If (Asserted($retrieved.success; "Cannot retrieve consent: "+JSON Stringify($retrieved.errors)))
+				ASSERT($retrieved.consent.id=$first.id; "Retrieved consent must match")
+			End if 
+		End if 
+	End if 
+	
+	var $missing:=$client.audio.voices.delete("voice_does_not_exist")
+	ASSERT(Not($missing.success); "Deleting an unknown voice must fail")
+	ASSERT($missing.deleted=Null; "No deletion status on error")
+	return 
+	
+End if 
+
+// MARK: Create consent
+var $audio : Blob
+TEXT TO BLOB("RIFF____WAVEfmt mock audio"; $audio; UTF8 text without length)  // the file name comes from the signature
+
+var $consentResult:=$client.audio.voiceConsents.create("Test consent"; "en-US"; $audio)
+If ((Not($consentResult.success)) && ($consentResult.errors.length>0) && ([404; 405].includes(Num($consentResult.errors[0].status))))
+	return   // a server without custom voices
+End if 
+
+If (Not(Asserted($consentResult.success; "Cannot create consent: "+JSON Stringify($consentResult.errors))))
+	return 
+End if 
+
+var $consent:=$consentResult.consent
+If (Not(Asserted($consent#Null; "Consent must not be null")))
+	return 
+End if 
+ASSERT(Length(String($consent.id))>0; "Consent id must not be empty")
+ASSERT(String($consent.object)="audio.voice_consent"; "Wrong consent object type")
+ASSERT(String($consent.name)="Test consent"; "Consent name must match")
+ASSERT(String($consent.language)="en-US"; "Consent language must match")
+
+// MARK: Consent from a file
+var $audioFile:=Folder(Temporary folder; fk platform path).file("OpenAI_Test_consent.wav")
+$audioFile.setContent($audio)
+var $fileConsent:=$client.audio.voiceConsents.create("Test consent file"; "fr-FR"; $audioFile)
+ASSERT($fileConsent.success; "Cannot create consent from a file: "+JSON Stringify($fileConsent.errors))
+
+// MARK: List consents, with pagination
+var $listParams:=cs.OpenAIAudioVoiceConsentListParameters.new({limit: 1})
+var $consentList:=$client.audio.voiceConsents.list($listParams)
+If (Asserted($consentList.success; "Cannot list consents: "+JSON Stringify($consentList.errors)))
+	ASSERT($consentList.consents.length=1; "One consent by page expected")
+	ASSERT($consentList.has_more; "More consents expected")
+	ASSERT($consentList.first_id=$consentList.consents[0].id; "first_id must be the first consent")
+	ASSERT($consentList.last_id=$consentList.consents[0].id; "last_id must be the last consent")
+	
+	var $allConsents : Collection:=$consentList.consents
+	var $pages:=1
+	While ($consentList.success && $consentList.has_more && ($pages<1000))
+		$listParams.after:=$consentList.last_id
+		$consentList:=$client.audio.voiceConsents.list($listParams)
+		$allConsents:=$allConsents.concat($consentList.consents)
+		$pages+=1
+	End while 
+	ASSERT($allConsents.query("id = :1"; $consent.id).length=1; "Created consent must be listed once")
+End if 
+
+// MARK: Retrieve and update consent
+var $consentRead:=$client.audio.voiceConsents.retrieve($consent.id)
+If (Asserted($consentRead.success; "Cannot retrieve consent: "+JSON Stringify($consentRead.errors)))
+	ASSERT($consentRead.consent.id=$consent.id; "Retrieved consent must match")
+End if 
+
+$consentRead:=$client.audio.voiceConsents.update($consent.id; "Renamed consent")
+If (Asserted($consentRead.success; "Cannot update consent: "+JSON Stringify($consentRead.errors)))
+	ASSERT($consentRead.consent.name="Renamed consent"; "Consent must be renamed")
+End if 
+ASSERT($client.audio.voiceConsents.retrieve($consent.id).consent.name="Renamed consent"; "New name must be kept")
+
+$consentRead:=$client.audio.voiceConsents.retrieve("cons_does_not_exist")
+ASSERT(Not($consentRead.success); "Retrieving an unknown consent must fail")
+ASSERT($consentRead.consent=Null; "No consent on error")
+
+// MARK: Create voice from an audio sample
+var $api:=$client.audio.voices
+var $voiceResult:=$api.create("Test voice"; {audio_sample: $audio; consent: $consent.id})
+var $voiceId:=""
+If (Asserted($voiceResult.success; "Cannot create voice: "+JSON Stringify($voiceResult.errors)))
+	If (Asserted($voiceResult.voice#Null; "Voice must not be null"))
+		$voiceId:=$voiceResult.voice.id
+		ASSERT(Length($voiceId)>0; "Voice id must not be empty")
+		ASSERT(String($voiceResult.voice.object)="audio.voice"; "Wrong voice object type")
+		ASSERT(String($voiceResult.voice.name)="Test voice"; "Voice name must match")
+		ASSERT(String($voiceResult.voice.type)="audio_sample"; "Voice type must be audio_sample")
+		ASSERT($api.custom.query("id = :1"; $voiceId).length=1; "Created voice must be a custom voice of the client")
 	End if 
 End if 
 
-var $missing:=$client.audio.voices.delete("voice_does_not_exist")
-ASSERT(Not($missing.success); "Deleting an unknown voice must fail")
-ASSERT($missing.deleted=Null; "No deletion status on error")
+$voiceResult:=$api.create("Test voice"; {audio_sample: $audioFile; consent: "cons_does_not_exist"})
+ASSERT(Not($voiceResult.success); "Creating a voice with an unknown consent must fail")
+ASSERT($voiceResult.voice=Null; "No voice on error")
+
+// MARK: Create voice from a prompt
+$voiceResult:=$api.create("Prompt voice"; {prompt: "A warm and calm narrator"; model: "auto"})
+var $promptVoiceId:=""
+If (Asserted($voiceResult.success; "Cannot create voice from a prompt: "+JSON Stringify($voiceResult.errors)))
+	$promptVoiceId:=String($voiceResult.voice.id)
+	ASSERT(String($voiceResult.voice.type)="prompt"; "Voice type must be prompt")
+End if 
+
+// MARK: List the voices of the server
+$list:=$api.list()
+If (Asserted($list.success; "Cannot list voices: "+JSON Stringify($list.errors)))
+	ASSERT($list.request#Null; "The server must be requested")
+	ASSERT($list.voices.length>=2; "Voices expected")
+	ASSERT($list.voices.every(Formula(Length(String($1.value.id))>0)); "All voices must have an id")
+	ASSERT($list.voices.every(Formula(Length(String($1.value.name))>0)); "All voices must have a name")
+	If (Length($voiceId)>0)
+		ASSERT($list.voices.query("id = :1"; $voiceId).length=1; "Created voice must be listed")
+	End if 
+End if 
+
+// MARK: Speech with the custom voice
+If (Length($voiceId)>0)
+	var $speech:=$client.audio.speech("Hello"; "gpt-4o-mini-tts"; $api.custom.query("id = :1"; $voiceId).first().reference)
+	ASSERT($speech.success; "Cannot generate speech with a custom voice: "+JSON Stringify($speech.errors))
+End if 
+
+// MARK: Delete voices
+var $id : Text
+For each ($id; [$voiceId; $promptVoiceId])
+	If (Length($id)>0)
+		var $deleted:=$api.delete($id)
+		If (Asserted($deleted.success; "Cannot delete voice: "+JSON Stringify($deleted.errors)))
+			ASSERT($deleted.deleted.id=$id; "Deleted voice id must match")
+			ASSERT($deleted.deleted.deleted; "Voice must be deleted")
+			ASSERT($api.custom.query("id = :1"; $id).length=0; "Deleted voice must be removed from the custom voices")
+		End if 
+		
+		$deleted:=$api.delete($id)
+		ASSERT(Not($deleted.success); "Deleting a voice twice must fail")
+		ASSERT($deleted.deleted=Null; "No deletion status on error")
+	End if 
+End for each 
+
+// MARK: Delete consents
+For each ($id; [$consent.id; String($fileConsent.consent.id)])
+	If (Length($id)>0)
+		$deleted:=$client.audio.voiceConsents.delete($id)
+		If (Asserted($deleted.success; "Cannot delete consent: "+JSON Stringify($deleted.errors)))
+			ASSERT($deleted.deleted.id=$id; "Deleted consent id must match")
+			ASSERT($deleted.deleted.deleted; "Consent must be deleted")
+		End if 
+		ASSERT(Not($client.audio.voiceConsents.retrieve($id).success); "Deleted consent must not be found")
+	End if 
+End for each 
+$audioFile.delete()
