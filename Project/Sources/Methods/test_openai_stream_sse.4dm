@@ -341,3 +341,14 @@ $terminated:=cs:C1710.OpenAIChatCompletionsStreamResult.new(Null:C1517; \
 ASSERT:C1129($terminated.choice#Null:C1517; "Terminate must expose a choice without the optional space")
 ASSERT:C1129(String:C10($terminated.choice.delta.content)=" there"; "Terminate must keep the last chunk, got: '"+String:C10($terminated.choice.delta.content)+"'")
 ASSERT:C1129(String:C10($terminated.choice.finish_reason)="stop"; "Terminate must keep the finish reason, got: '"+String:C10($terminated.choice.finish_reason)+"'")
+
+// MARK:- Test 32: an empty or blank terminated body, e.g. a connection closed before any data
+// Trimming the trailing line feeds must not compare a boolean with a text.
+$terminated:=cs:C1710.OpenAIChatCompletionsStreamResult.new(Null:C1517; ""; True:C214)
+ASSERT:C1129(Not:C34($terminated.success); "An empty body must be reported as a failure")
+ASSERT:C1129($terminated.errors.length>0; "An empty body must not be silently accepted")
+$terminated:=cs:C1710.OpenAIChatCompletionsStreamResult.new(Null:C1517; "\n\n"; True:C214)
+ASSERT:C1129(Not:C34($terminated.success); "A body of blank lines must be reported as a failure")
+ASSERT:C1129($terminated.errors.length>0; "A body of blank lines must not be silently accepted")
+$terminated:=cs:C1710.OpenAIChatCompletionsStreamResult.new(Null:C1517; "data: {\"choices\":[{\"delta\":{\"content\":\"Hi\"}}]}\n\n\n"; True:C214)
+ASSERT:C1129($terminated.choice#Null:C1517; "Trailing blank lines must still be trimmed before decoding")

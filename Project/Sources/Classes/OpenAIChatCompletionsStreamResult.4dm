@@ -23,7 +23,7 @@ Class constructor($request : 4D:C1709.HTTPRequest; $body : Variant; $terminated 
 			
 			// trim blank lines at the end
 			//%W-533.1
-			While ((Length:C16($textData)>0) && $textData[[Length:C16($textData)]]="\n")
+			While ((Length:C16($textData)>0) && ($textData[[Length:C16($textData)]]="\n"))
 				//%W+533.1
 				$textData:=Substring:C12($textData; 1; Length:C16($textData)-1)
 			End while 
